@@ -1,9 +1,11 @@
 interface SectionTitleProps {
   children: React.ReactNode;
-  /** Italic coloured word(s) to highlight within the title */
+  /** Italic coloured word(s) appended after children */
   emphasis?: string;
   as?: "h1" | "h2" | "h3";
   className?: string;
+  /** Cream body text + yellow emphasis — for dark green backgrounds */
+  light?: boolean;
 }
 
 export default function SectionTitle({
@@ -11,16 +13,23 @@ export default function SectionTitle({
   emphasis,
   as: Tag = "h2",
   className = "",
+  light = false,
 }: SectionTitleProps) {
   return (
     <Tag
-      className={`font-[var(--font-cormorant)] text-[var(--text-dark)] leading-tight ${className}`}
+      className={[
+        "font-[var(--font-cormorant)] leading-tight",
+        light ? "text-[var(--cream)]" : "text-[var(--text-dark)]",
+        className,
+      ].join(" ")}
     >
       {children}
       {emphasis && (
         <>
           {" "}
-          <em className="not-italic italic text-[var(--green)]">{emphasis}</em>
+          <em className={`not-italic italic ${light ? "text-[var(--yellow)]" : "text-[var(--green)]"}`}>
+            {emphasis}
+          </em>
         </>
       )}
     </Tag>
