@@ -8,11 +8,11 @@ import { Menu, X } from "lucide-react";
 
 const NAV_LINKS = [
   { label: "Home",     href: "/" },
-  { label: "Services", href: "#services" },
-  { label: "About",    href: "#about" },
-  { label: "Work",     href: "#work" },
+  { label: "Services", href: "/services" },
+  { label: "About",    href: "/about" },
+  { label: "Work",     href: "/work" },
   { label: "Blog",     href: "/blog" },
-  { label: "Contact",  href: "#contact" },
+  { label: "Contact",  href: "/contact" },
 ];
 
 // Stagger wrapper for mobile links
@@ -94,7 +94,7 @@ export default function Nav() {
 
           {/* ── Desktop CTA ── */}
           <Link
-            href="#contact"
+            href="/contact"
             className="hidden lg:inline-flex items-center justify-center bg-[var(--yellow)] text-[var(--text-dark)] text-sm font-semibold font-[var(--font-dm-sans)] px-5 py-2.5 rounded-sm hover:bg-[var(--yellow-soft)] transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--yellow)]"
           >
             Book a Free Consultation
@@ -176,7 +176,7 @@ export default function Nav() {
 
             {/* CTA */}
             <Link
-              href="#contact"
+              href="/contact"
               onClick={() => setIsOpen(false)}
               className="mt-8 inline-flex items-center justify-center bg-[var(--yellow)] text-[var(--text-dark)] font-semibold font-[var(--font-dm-sans)] px-8 py-4 rounded-sm hover:bg-[var(--yellow-soft)] transition-colors duration-200 text-base"
             >
