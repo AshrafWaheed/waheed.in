@@ -34,23 +34,20 @@ const cardItem: Variants = {
 const SERVICE_CARDS = [
   {
     icon: Code2,
-    title: "Web Development",
-    description:
-      "Shariah-compliant websites, apps, and digital products built with intention.",
+    title: "Web, Mobile & Software",
+    description: "Shariah-conscious digital products built to perform.",
     floatClass: "animate-float",
   },
   {
     icon: TrendingUp,
-    title: "Social Media",
-    description:
-      "Ethical content strategies that build genuine trust and loyal community.",
+    title: "Social Media Marketing",
+    description: "Ethical strategies that build trust, not pressure.",
     floatClass: "animate-float-delayed",
   },
   {
     icon: BookOpen,
-    title: "Business Coaching",
-    description:
-      "Purpose-driven growth coaching aligned with your values and vision.",
+    title: "Halal Business Coaching",
+    description: "Growth aligned with your faith and values.",
     floatClass: "animate-float-delayed-2",
   },
 ] as const;
@@ -65,14 +62,20 @@ export default function Hero() {
       id="hero"
       className="relative min-h-screen bg-[#2A4D38] overflow-hidden flex flex-col"
     >
-      {/* ── Islamic geometry — top-right ── */}
-      <div className="absolute -top-20 -right-32 pointer-events-none select-none" aria-hidden="true">
+      {/* ── Islamic geometry — top-right, z-0 ── */}
+      <div
+        className="absolute top-0 right-0 z-0 pointer-events-none select-none translate-x-1/4 -translate-y-1/4"
+        aria-hidden="true"
+      >
         <IslamicGeometry size={680} color="#F5F0E8" opacity={0.06} />
       </div>
 
-      {/* ── Islamic geometry echo — bottom-left ── */}
-      <div className="absolute -bottom-40 -left-48 pointer-events-none select-none" aria-hidden="true">
-        <IslamicGeometry size={500} color="#F5F0E8" opacity={0.03} />
+      {/* ── Islamic geometry echo — bottom-left, z-0 ── */}
+      <div
+        className="absolute bottom-0 left-0 z-0 pointer-events-none select-none -translate-x-1/4 translate-y-1/4"
+        aria-hidden="true"
+      >
+        <IslamicGeometry size={500} color="#F5F0E8" opacity={0.04} />
       </div>
 
       {/* ── Main content ── */}
