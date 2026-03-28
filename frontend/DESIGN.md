@@ -25,7 +25,11 @@
 - Button: primary (yellow bg), outline (cream on green), ghost (text only)
 - SectionTag: small uppercase label with line prefix
 - SectionTitle: Cormorant Garamond, italic em colour variant
-- ServiceCard: number, icon, title, description, hover → dark green bg
+- ServiceCard: displays a SERVICE GROUP — number (Cormorant, yellow), icon, group title, description, sub-service bullet list (·), hover → dark green bg with cream text, "View Pricing →" ghost CTA linking to /services
+  - Group 01 — Development: Web Design, Mobile App (React Native / Flutter), Custom Software & SaaS
+  - Group 02 — Marketing: Content Strategy, Community Management, Paid Campaigns (halal only)
+  - Group 03 — Coaching: Group Sessions (₹1,000), Private Coaching (₹10,000), ISLAMify Course
+  - NOTE: Project-based services include Mobile App Dev + Custom Software (React Native, Flutter, Laravel backend, FCM push notifications)
 - TrustStrip: horizontal icon + text indicators
 - ProcessStep: circle number, connector line, title, description
 - TestimonialCard: quote mark, italic text, author + avatar

@@ -22,6 +22,8 @@
 ## Tech Stack
 - Frontend: Next.js 14+ App Router, TypeScript, Tailwind CSS, Framer Motion, Lucide React
 - Backend: Laravel 11, Sanctum auth, MySQL, Redis queues
+- Mobile: React Native / Flutter (project-based)
+- Custom Software / SaaS: Laravel backend, FCM push notifications (project-based)
 - Fonts: Cormorant Garamond, DM Sans, Amiri (Google Fonts via next/font)
 - Analytics: GA4
 - Payments: PayPal Checkout
@@ -53,7 +55,7 @@
   - ✅ Nav — W*HEED logo, 6 links, desktop CTA, scroll-shrink, mobile framer-motion overlay
   - ✅ Hero — Bismillah, Islamic geometry SVG, SectionTag, H1, sub, 2 CTAs, 3 floating cards, scroll hint
   - ✅ Trust Strip — 5 indicators, ✦ yellow bullet, cream-dark bg, 2-col mobile, scroll fade-in
-  - ✅ Featured Services — 3 cards, group-hover dark green flip, stagger, ghost CTA with ArrowRight
+  - ✅ Featured Services — 3 grouped cards (Development / Marketing / Coaching), each with sub-service list, group-hover dark green flip, "View Pricing →" CTA → /services
   - ✅ What We Do — dark green split layout, 4 pillars 2×2, video placeholder, slide-in animation
   - ⬜ Manifesto Band, How It Works
   - ⬜ Case Studies, Testimonials, Blog Preview, Newsletter, Footer
@@ -72,3 +74,4 @@
 - Session 3: Phase 2 Nav + Hero complete. Nav: W*HEED logo (yellow *), 6 links with active yellow underline, scroll-shrink (1.4rem→0.9rem), framer-motion mobile overlay with staggered link entrance, body scroll lock. Hero: Bismillah (Amiri, cream, 65% opacity), IslamicGeometry SVG (two instances, top-right + bottom-left echo), SectionTag light variant, H1 clamp(3rem,6.5vw,6rem) italic Cormorant, subheadline, 2 CTAs, 3 floating service cards with staggered CSS float + framer entrance, scroll hint. Fixed Framer Motion v12 Variants TypeScript strictness (ease must be Easing tuple). Updated globals.css to @import "tailwindcss" (v4 syntax). Clean build, HTTP 200.
   - NOTE: Framer Motion v12 requires ease values in Variants to be typed as const tuples [x1,y1,x2,y2] not strings. Always import type Variants and define EASE_OUT as const tuple.
 - Session 4: TrustStrip, FeaturedServices, WhatWeDo complete. SectionTag: added accent prop (yellow). SectionTitle: added light prop (cream text + yellow emphasis). ServiceCards use Tailwind group-hover for CSS-only hover state flip. WhatWeDo uses whileInView with slide-in from opposing sides. All scroll animations use viewport once:true. Clean build, HTTP 200.
+- Session 5: Updated FeaturedServices to 3 grouped service cards (Development / Marketing / Coaching). Each card now shows sub-service bullet list. CTA changed to "View Pricing →" linking to /services. Added Mobile App Dev + Custom Software to tech stack. Updated DESIGN.md to document service group structure and project-based capabilities.
