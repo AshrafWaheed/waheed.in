@@ -49,7 +49,11 @@
 
 ## Build Phases
 - Phase 1 ✅ — Server, Next.js, Laravel, Nginx, PM2, DESIGN.md, component library
-- Phase 2 — Homepage (12 sections, static data)
+- Phase 2 🔄 — Homepage (12 sections, static data)
+  - ✅ Nav — W*HEED logo, 6 links, desktop CTA, scroll-shrink, mobile framer-motion overlay
+  - ✅ Hero — Bismillah, Islamic geometry SVG, SectionTag, H1, sub, 2 CTAs, 3 floating cards, scroll hint
+  - ⬜ Trust Strip, Featured Services, What We Do, Manifesto Band, How It Works
+  - ⬜ Case Studies, Testimonials, Blog Preview, Newsletter, Footer
 - Phase 3 — Core pages
 - Phase 4 — Backend & CMS
 - Phase 5 — LMS & Payments
@@ -62,3 +66,5 @@
 ## Session Log
 - Session 1: Installed Node.js v22, PHP 8.3, Composer, MySQL, Redis, PM2. Created Next.js frontend, Laravel backend. Configured Nginx, PM2, SSL intact. Both services returning HTTP 200.
 - Session 2: Created CLAUDE.md + DESIGN.md. Set up design tokens in globals.css (CSS vars for all brand colours, float/fade-up keyframes, prefers-reduced-motion). Configured layout.tsx with Cormorant Garamond, DM Sans, Amiri via next/font. Scaffolded Button, SectionTag, SectionTitle, ArabicText, IslamicGeometry, Nav, Footer components. Installed framer-motion + lucide-react. Built and restarted PM2. Both services HTTP 200.
+- Session 3: Phase 2 Nav + Hero complete. Nav: W*HEED logo (yellow *), 6 links with active yellow underline, scroll-shrink (1.4rem→0.9rem), framer-motion mobile overlay with staggered link entrance, body scroll lock. Hero: Bismillah (Amiri, cream, 65% opacity), IslamicGeometry SVG (two instances, top-right + bottom-left echo), SectionTag light variant, H1 clamp(3rem,6.5vw,6rem) italic Cormorant, subheadline, 2 CTAs, 3 floating service cards with staggered CSS float + framer entrance, scroll hint. Fixed Framer Motion v12 Variants TypeScript strictness (ease must be Easing tuple). Updated globals.css to @import "tailwindcss" (v4 syntax). Clean build, HTTP 200.
+  - NOTE: Framer Motion v12 requires ease values in Variants to be typed as const tuples [x1,y1,x2,y2] not strings. Always import type Variants and define EASE_OUT as const tuple.

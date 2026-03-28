@@ -1,25 +1,35 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
 :root {
   /* Brand colours */
-  --green:        #3d6b4f;
-  --green-dark:   #2a4d38;
-  --green-light:  #5a8a6a;
-  --cream:        #f5f0e8;
-  --cream-dark:   #ede7d9;
-  --yellow:       #e8c547;
-  --yellow-soft:  #f0d778;
-  --text-dark:    #1a2e22;
-  --text-mid:     #3d5245;
-  --text-light:   #7a9080;
+  --green:       #3d6b4f;
+  --green-dark:  #2a4d38;
+  --green-light: #5a8a6a;
+  --cream:       #f5f0e8;
+  --cream-dark:  #ede7d9;
+  --yellow:      #e8c547;
+  --yellow-soft: #f0d778;
+  --text-dark:   #1a2e22;
+  --text-mid:    #3d5245;
+  --text-light:  #7a9080;
 
-  /* Semantic aliases */
-  --background:   var(--cream);
-  --foreground:   var(--text-dark);
+  /* Semantic */
+  --background:  var(--cream);
+  --foreground:  var(--text-dark);
 }
 
+/* ─── Keyframes ──────────────────────────────────────────── */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-12px); }
+}
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ─── Base styles ────────────────────────────────────────── */
 @layer base {
   *, *::before, *::after {
     box-sizing: border-box;
@@ -42,20 +52,14 @@
     line-height: 1.15;
   }
 
-  /* Arabic text baseline */
   [lang="ar"], .arabic {
     font-family: var(--font-amiri), Georgia, serif;
     direction: rtl;
   }
 }
 
+/* ─── Custom utilities ───────────────────────────────────── */
 @layer utilities {
-  /* Float animation for hero cards */
-  @keyframes float {
-    0%, 100% { transform: translateY(0px); }
-    50%       { transform: translateY(-12px); }
-  }
-
   .animate-float {
     animation: float 6s ease-in-out infinite;
   }
@@ -64,10 +68,8 @@
     animation: float 6s ease-in-out 2s infinite;
   }
 
-  /* Fade-up for scroll reveals */
-  @keyframes fade-up {
-    from { opacity: 0; transform: translateY(24px); }
-    to   { opacity: 1; transform: translateY(0); }
+  .animate-float-delayed-2 {
+    animation: float 6s ease-in-out 4s infinite;
   }
 
   .animate-fade-up {
@@ -77,6 +79,7 @@
   @media (prefers-reduced-motion: reduce) {
     .animate-float,
     .animate-float-delayed,
+    .animate-float-delayed-2,
     .animate-fade-up {
       animation: none;
     }
