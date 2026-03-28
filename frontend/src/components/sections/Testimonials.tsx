@@ -105,10 +105,10 @@ export default function Testimonials() {
           whileInView="visible"
           viewport={{ once: true, margin: "-80px" }}
         >
-          <SectionTag className="mb-4">Testimonials</SectionTag>
+          <SectionTag className="mb-4">Kind Words</SectionTag>
           <SectionTitle className="text-4xl md:text-5xl">
-            Clients who grew with{" "}
-            <em className="not-italic italic text-[var(--green)]">integrity</em>
+            What our{" "}
+            <em className="not-italic italic text-[var(--green)]">clients say</em>
           </SectionTitle>
         </motion.div>
 

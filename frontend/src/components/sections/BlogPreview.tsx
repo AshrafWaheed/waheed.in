@@ -131,10 +131,10 @@ export default function BlogPreview() {
           whileInView="visible"
           viewport={{ once: true, margin: "-80px" }}
         >
-          <SectionTag accent className="mb-4">From the Blog</SectionTag>
+          <SectionTag accent className="mb-4">Perspectives</SectionTag>
           <SectionTitle light className="text-4xl md:text-5xl">
-            Thoughts on{" "}
-            <em className="not-italic italic text-[var(--yellow)]">ethical growth</em>
+            Thinking out loud on{" "}
+            <em className="not-italic italic text-[var(--yellow)]">faith, business &amp; the web</em>
           </SectionTitle>
         </motion.div>
 

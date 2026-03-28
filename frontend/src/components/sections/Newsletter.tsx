@@ -6,10 +6,10 @@ import SectionTag from "@/components/ui/SectionTag";
 
 const EASE_OUT: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
-const STATS = [
-  { value: "2,400+", label: "Muslim entrepreneurs subscribed" },
-  { value: "Weekly",  label: "Halal business insights" },
-  { value: "Zero",   label: "Dark patterns. Ever." },
+const INDICATORS = [
+  "100% Halal Content",
+  "No Ads. Ever.",
+  "Unsubscribe Anytime",
 ];
 
 const leftVariant: Variants = {
@@ -60,22 +60,19 @@ export default function Newsletter() {
             Weekly insights on halal business strategy, ethical digital marketing, and faith-aligned growth — straight to your inbox.
           </p>
 
-          {/* Stats */}
-          <ul className="space-y-4">
-            {STATS.map((stat) => (
-              <li key={stat.label} className="flex items-baseline gap-3">
+          {/* Indicators */}
+          <ul className="space-y-3">
+            {INDICATORS.map((text) => (
+              <li key={text} className="flex items-center gap-2.5">
                 <span
-                  className="text-[var(--yellow)] shrink-0"
-                  style={{ fontSize: "0.7rem" }}
+                  className="text-[#1A2E22] shrink-0"
+                  style={{ fontSize: "0.65rem" }}
                   aria-hidden="true"
                 >
                   ✦
                 </span>
-                <span className="font-[var(--font-dm-sans)] font-semibold text-[#1A2E22] text-sm">
-                  {stat.value}
-                </span>
-                <span className="font-[var(--font-dm-sans)] text-[var(--text-mid)] text-sm">
-                  {stat.label}
+                <span className="font-[var(--font-dm-sans)] text-sm text-[var(--text-mid)]">
+                  {text}
                 </span>
               </li>
             ))}
