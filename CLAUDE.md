@@ -57,8 +57,10 @@
   - ✅ Trust Strip — 5 indicators, ✦ yellow bullet, cream-dark bg, 2-col mobile, scroll fade-in
   - ✅ Featured Services — 3 grouped cards (Development / Marketing / Coaching), each with sub-service list, group-hover dark green flip, "View Pricing →" CTA → /services
   - ✅ What We Do — dark green split layout, 4 pillars 2×2, video placeholder, slide-in animation
-  - ⬜ Manifesto Band, How It Works
-  - ⬜ Case Studies, Testimonials, Blog Preview, Newsletter, Footer
+  - ✅ Manifesto Band — full-bleed yellow, Cormorant italic quote, scale+fade entrance, ✦ decorative stars
+  - ✅ How It Works — 3 steps, dark green circle numbers, dashed connectors (desktop), mobile vertical dashes, stagger 0.2s, "Start with a Free Call" CTA
+  - ✅ Case Studies — dark green, asymmetric 3/5+2/5 grid, featured + 2 secondary cards, category chips, gradient placeholder images, discretion note
+  - ⬜ Testimonials, Blog Preview, Newsletter, Footer
 - Phase 3 — Core pages
 - Phase 4 — Backend & CMS
 - Phase 5 — LMS & Payments
@@ -76,3 +78,4 @@
 - Session 4: TrustStrip, FeaturedServices, WhatWeDo complete. SectionTag: added accent prop (yellow). SectionTitle: added light prop (cream text + yellow emphasis). ServiceCards use Tailwind group-hover for CSS-only hover state flip. WhatWeDo uses whileInView with slide-in from opposing sides. All scroll animations use viewport once:true. Clean build, HTTP 200.
 - Session 5: Updated FeaturedServices to 3 grouped service cards (Development / Marketing / Coaching). Each card now shows sub-service bullet list. CTA changed to "View Pricing →" linking to /services. Added Mobile App Dev + Custom Software to tech stack. Updated DESIGN.md to document service group structure and project-based capabilities.
 - Session 6: Synced Hero floating card titles/descriptions to match grouped service structure (Web Mobile & Software / Social Media Marketing / Halal Business Coaching). Fixed IslamicGeometry SVG rendering — root cause was compound opacity: per-element fillOpacity/strokeOpacity (0.12, 0.08, 0.4) were multiplying against SVG-level opacity:0.06, producing effective opacity as low as 0.007 (invisible). Fixed by removing all per-element opacity overrides — SVG-level opacity is now the single control. Also switched geometry positioning from negative offset classes to translate-x/y so it renders correctly within overflow-hidden parent.
+- Session 7: ManifestoBand, HowItWorks, CaseStudies complete. ManifestoBand: full-bleed yellow, Cormorant italic quote clamp(2.5rem–5rem), scale 0.95→1 + fade on scroll, ✦ stars at opacity 0.12 with staggered fade-in. HowItWorks: 3-step process with dark green circle numbers, dashed horizontal connectors (desktop) and dashed vertical spacers (mobile) via Fragment, stagger 0.2s, yellow CTA. CaseStudies: 5-col asymmetric grid (lg:col-span-3 + lg:col-span-2), gradient placeholder images, CategoryChip sub-component, ArrowRight nudge on hover, discretion note. Clean build, HTTP 200.
