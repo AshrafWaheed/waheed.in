@@ -1,0 +1,64 @@
+# CLAUDE.md — WAHEED Project Context
+
+## Project
+- Name: WAHEED — India's First Halal Digital Studio
+- Domain: waheed.in
+- Founder: Ashraf Waheed
+- Mission: Shariah-aligned digital studio for Muslim-led brands
+
+## Server
+- Provider: Hetzner Cloud, Ubuntu 24.04 LTS
+- IP: 116.203.45.2
+- User: dev (sudo, passwordless)
+- Root: /var/www/waheed.in
+- Frontend: /var/www/waheed.in/frontend (Next.js → port 3000)
+- Backend: /var/www/waheed.in/backend (Laravel → port 8000)
+- Nginx: waheed.in → :3000, waheed.in/api → :8000
+- PM2: waheed-frontend + waheed-backend both running, startup registered
+- SSL: Let's Encrypt via Certbot
+- MySQL: database=waheed, user=waheed_user
+- Redis: running + enabled
+
+## Tech Stack
+- Frontend: Next.js 14+ App Router, TypeScript, Tailwind CSS, Framer Motion, Lucide React
+- Backend: Laravel 11, Sanctum auth, MySQL, Redis queues
+- Fonts: Cormorant Garamond, DM Sans, Amiri (Google Fonts via next/font)
+- Analytics: GA4
+- Payments: PayPal Checkout
+- Version Control: git@github.com:AshrafWaheed/waheed.in.git, branch: main
+
+## Git Workflow
+- Always commit and push as dev from /var/www/waheed.in
+- git add . && git commit -m "message" && git push
+
+## Brand
+- Primary: Forest Green #3D6B4F
+- Dark: #2A4D38
+- Accent Yellow: #E8C547
+- Cream: #F5F0E8
+- Text Dark: #1A2E22
+- Text Secondary: #7A9080
+- Fonts: Cormorant Garamond (display), DM Sans (body), Amiri (Arabic)
+- Voice: Calm, respectful, clear. Never: "guaranteed", "viral", "hack", "dominate"
+
+## Shariah Boundaries (NON-NEGOTIABLE)
+- No gambling, alcohol, adult, riba-based fintech, crypto scams
+- No dark UX patterns, fake countdowns, hidden fees
+- No Google Analytics (privacy) — using GA4 with consent
+- No ad networks — WAHEED is ad-free by principle
+
+## Build Phases
+- Phase 1 ✅ — Server, Next.js, Laravel, Nginx, PM2, DESIGN.md, component library
+- Phase 2 — Homepage (12 sections, static data)
+- Phase 3 — Core pages
+- Phase 4 — Backend & CMS
+- Phase 5 — LMS & Payments
+- Phase 6 — Pre-launch
+
+## Current Status
+- Phase 1 in progress
+- Update this file after every session with what was completed
+
+## Session Log
+- Session 1: Installed Node.js v22, PHP 8.3, Composer, MySQL, Redis, PM2. Created Next.js frontend, Laravel backend. Configured Nginx, PM2, SSL intact. Both services returning HTTP 200.
+- Session 2: Created CLAUDE.md + DESIGN.md. Set up design tokens in globals.css (CSS vars for all brand colours, float/fade-up keyframes, prefers-reduced-motion). Configured layout.tsx with Cormorant Garamond, DM Sans, Amiri via next/font. Scaffolded Button, SectionTag, SectionTitle, ArabicText, IslamicGeometry, Nav, Footer components. Installed framer-motion + lucide-react. Built and restarted PM2. Both services HTTP 200.
