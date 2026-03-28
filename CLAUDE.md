@@ -51,7 +51,7 @@
 
 ## Build Phases
 - Phase 1 ✅ — Server, Next.js, Laravel, Nginx, PM2, DESIGN.md, component library
-- Phase 2 🔄 — Homepage (12 sections, static data)
+- Phase 2 ✅ — Homepage (12 sections, static data)
   - ✅ Nav — W*HEED logo, 6 links, desktop CTA, scroll-shrink, mobile framer-motion overlay
   - ✅ Hero — Bismillah, Islamic geometry SVG, SectionTag, H1, sub, 2 CTAs, 3 floating cards, scroll hint
   - ✅ Trust Strip — 5 indicators, ✦ yellow bullet, cream-dark bg, 2-col mobile, scroll fade-in
@@ -60,7 +60,11 @@
   - ✅ Manifesto Band — full-bleed yellow, Cormorant italic quote, scale+fade entrance, ✦ decorative stars
   - ✅ How It Works — 3 steps, dark green circle numbers, dashed connectors (desktop), mobile vertical dashes, stagger 0.2s, "Start with a Free Call" CTA
   - ✅ Case Studies — dark green, asymmetric 3/5+2/5 grid, featured + 2 secondary cards, category chips, gradient placeholder images, discretion note
-  - ⬜ Testimonials, Blog Preview, Newsletter, Footer
+  - ✅ Testimonials — cream bg, 3 cards with large yellow quote mark, Cormorant italic quote, divider line, initials avatar (dark green circle), stagger animation
+  - ✅ Blog Preview — dark green bg, 3 blog cards with category chips + date, Cormorant title, line-clamp-2 excerpt, ArrowRight hover nudge, "Visit the Blog →" outline CTA
+  - ✅ Newsletter — yellow bg, 2-col layout (left: stats with ✦ bullets; right: email form), controlled input with useState, success state "JazakAllahu Khayran"
+  - ✅ Footer — #1A2E22 darkest green, W*HEED logo + tagline + social icons (inline SVG), Services + Company link columns, Contact column (yellow CTA + email + location), bottom bar with duaa (Amiri)
+- Phase 2 ✅ COMPLETE — all 12 sections live
 - Phase 3 — Core pages
 - Phase 4 — Backend & CMS
 - Phase 5 — LMS & Payments
@@ -79,3 +83,4 @@
 - Session 5: Updated FeaturedServices to 3 grouped service cards (Development / Marketing / Coaching). Each card now shows sub-service bullet list. CTA changed to "View Pricing →" linking to /services. Added Mobile App Dev + Custom Software to tech stack. Updated DESIGN.md to document service group structure and project-based capabilities.
 - Session 6: Synced Hero floating card titles/descriptions to match grouped service structure (Web Mobile & Software / Social Media Marketing / Halal Business Coaching). Fixed IslamicGeometry SVG rendering — root cause was compound opacity: per-element fillOpacity/strokeOpacity (0.12, 0.08, 0.4) were multiplying against SVG-level opacity:0.06, producing effective opacity as low as 0.007 (invisible). Fixed by removing all per-element opacity overrides — SVG-level opacity is now the single control. Also switched geometry positioning from negative offset classes to translate-x/y so it renders correctly within overflow-hidden parent.
 - Session 7: ManifestoBand, HowItWorks, CaseStudies complete. ManifestoBand: full-bleed yellow, Cormorant italic quote clamp(2.5rem–5rem), scale 0.95→1 + fade on scroll, ✦ stars at opacity 0.12 with staggered fade-in. HowItWorks: 3-step process with dark green circle numbers, dashed horizontal connectors (desktop) and dashed vertical spacers (mobile) via Fragment, stagger 0.2s, yellow CTA. CaseStudies: 5-col asymmetric grid (lg:col-span-3 + lg:col-span-2), gradient placeholder images, CategoryChip sub-component, ArrowRight nudge on hover, discretion note. Clean build, HTTP 200.
+- Session 8: Phase 2 COMPLETE. Testimonials: cream bg, 3 cards, Cormorant quote, divider + initials avatar. BlogPreview: dark green, 3 blog cards, stagger grid, "Visit the Blog →" CTA. Newsletter: yellow 2-col, controlled email input, success state. Footer: rewrote scaffold — #1A2E22, W*HEED logo, inline SVG social icons (lucide doesn't carry brand icons), 4-col grid, Arabic duaa bottom bar. Footer moved to layout.tsx so it appears on all pages. lucide-react does not export Instagram/Twitter/Linkedin/Youtube — use inline SVG paths for social brand icons. Clean build, HTTP 200.

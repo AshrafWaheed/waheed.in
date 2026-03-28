@@ -6,6 +6,9 @@ import WhatWeDo         from "@/components/sections/WhatWeDo";
 import ManifestoBand    from "@/components/sections/ManifestoBand";
 import HowItWorks       from "@/components/sections/HowItWorks";
 import CaseStudies      from "@/components/sections/CaseStudies";
+import Testimonials     from "@/components/sections/Testimonials";
+import BlogPreview      from "@/components/sections/BlogPreview";
+import Newsletter       from "@/components/sections/Newsletter";
 
 export default function HomePage() {
   return (
@@ -18,6 +21,9 @@ export default function HomePage() {
       <ManifestoBand />
       <HowItWorks />
       <CaseStudies />
+      <Testimonials />
+      <BlogPreview />
+      <Newsletter />
     </main>
   );
 }
