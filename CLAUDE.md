@@ -1,5 +1,8 @@
 # CLAUDE.md — WAHEED Project Context
 
+> **Always read CONTEXT.md first for full project context.**
+> CONTEXT.md contains the complete reference: infrastructure, design system, all components, services pricing, DB schema, API endpoints, and what to build next.
+
 ## Project
 - Name: WAHEED — India's First Halal Digital Studio
 - Domain: waheed.in
@@ -88,3 +91,4 @@
 - Session 9: Fixed 3 homepage issues. Newsletter: removed fake subscriber count stats, replaced with 3 honest indicators (✦ 100% Halal Content / No Ads. Ever. / Unsubscribe Anytime) — no numbers, no social proof. BlogPreview: SectionTag → "Perspectives", SectionTitle → "Thinking out loud on faith, business & the web". Testimonials: SectionTag → "Kind Words", SectionTitle → "What our clients say". Clean build, HTTP 200.
 - Session 10: Phase 3 started — Services page complete at /services. Split into server page.tsx (metadata) + client ServicesContent.tsx (animations). 5 sections: Hero (dark green, IslamicGeometry, Bismillah, fade-up stagger), Fixed Pricing (4 PricingGroups × stagger cards — Web Dev 3 tiers, Social Media 3 tiers, Maintenance 3 tiers, Coaching 2 tiers), Project-Based (Mobile App + Custom Software slide-in cards), ISLAMify teaser (yellow, scale+fade), Bottom CTA. PricingCard: popular badge absolute top-right, border-2 yellow, md:scale-[1.02]. ISLAMify CTA uses direct Link with dark green bg (no matching Button variant). Clean build, HTTP 200.
 - Session 11: Fixed Nav links — all hash anchors replaced with proper page routes (/services, /about, /work, /contact). Both "Book a Free Consultation" CTAs (desktop + mobile) updated from #contact to /contact. usePathname active detection and close-on-click were already correct. Clean build, HTTP 200.
+- Session 12: Created comprehensive CONTEXT.md at /var/www/waheed.in/CONTEXT.md — full project handoff document covering all 15 sections: project identity, Shariah boundaries, server infrastructure, complete tech stack, design system, all file descriptions, phase build history, what to build next, services pricing, DB schema, API endpoints, git workflow, Claude Code rules, known issues, and content checklist. Added "Always read CONTEXT.md first" header to CLAUDE.md.
