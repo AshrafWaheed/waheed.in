@@ -1,5 +1,13 @@
 # CLAUDE.md — WAHEED Project Context
 
+## IMPORTANT — File Size Rule
+CLAUDE.md must stay under 40KB at all times.
+Only keep essential quick-reference context here.
+Full project documentation, decisions, and session logs
+go in CONTEXT.md — not here.
+Before adding anything to CLAUDE.md, ask: does this need
+to be here for quick reference, or does it belong in CONTEXT.md?
+
 > **Always read CONTEXT.md first for full project context.**
 > CONTEXT.md contains the complete reference: infrastructure, design system, all components, services pricing, DB schema, API endpoints, and what to build next.
 

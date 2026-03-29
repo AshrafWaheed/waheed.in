@@ -1011,3 +1011,49 @@ These items must be sourced from the founder before the site goes live:
 
 *Last updated: Session 12 — CONTEXT.md created*
 *For session-by-session history, see `/var/www/waheed.in/CLAUDE.md`*
+
+---
+
+## How To Use These Files
+
+**CLAUDE.md** — lean quick reference only, always under 40KB.
+  Contains: current phase status, server details, brand colours,
+  key rules. Read first at start of every session.
+
+**CONTEXT.md** — full project documentation and session log.
+  Contains: complete history, every decision, session logs,
+  full service details, API endpoints, schema, everything.
+  Update the session log after every session.
+
+**DESIGN.md** — design system source of truth.
+  Read before touching any frontend component.
+
+---
+
+## Session Log
+
+### Session 1 — March 2026
+Completed:
+- Server setup: Node.js v22, PHP 8.3, Composer, MySQL 8, Redis, PM2
+- Next.js frontend at /var/www/waheed.in/frontend
+- Laravel backend at /var/www/waheed.in/backend
+- Nginx: waheed.in → :3000, waheed.in/api → :8000
+- PM2 ecosystem.config.js: both processes persistent on reboot
+- CLAUDE.md, CONTEXT.md, DESIGN.md created
+- Phase 2 COMPLETE: all 12 homepage sections
+  Nav, Hero, TrustStrip, FeaturedServices, WhatWeDo,
+  ManifestoBand, HowItWorks, CaseStudies, Testimonials,
+  BlogPreview, Newsletter, Footer
+- Phase 3 started:
+  ✅ Services page (/services) — full pricing tables
+  ✅ Nav links fixed — Next.js Link + usePathname
+  ⏳ About page — not started
+  ⏳ Contact page — not started
+  ⏳ Blog pages — not started
+
+Notes:
+- Custom logo pending — owner has designed logo, will upload later
+- GA4 in use, Matomo references in brief are outdated
+- All content is placeholder — real content needed before launch
+- CLAUDE.md must stay under 40KB going forward
+- CONTEXT.md is the session log and full documentation file
