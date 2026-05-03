@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Cormorant_Garamond, DM_Sans, Amiri } from "next/font/google";
 import "./globals.css";
+import "@/styles/homepage-v3.css";
 import Footer from "@/components/layout/Footer";
 
 const cormorant = Cormorant_Garamond({
