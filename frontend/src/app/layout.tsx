@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Cormorant_Garamond, DM_Sans, Amiri } from "next/font/google";
+import { Cormorant_Garamond, Dancing_Script, DM_Sans, Amiri } from "next/font/google";
 import "./globals.css";
 import Footer from "@/components/layout/Footer";
 
@@ -21,6 +21,13 @@ const dmSans = DM_Sans({
 const amiri = Amiri({
   variable: "--font-amiri",
   subsets: ["arabic", "latin"],
+  weight: ["400", "700"],
+  display: "swap",
+});
+
+const dancingScript = Dancing_Script({
+  variable: "--font-dancing",
+  subsets: ["latin"],
   weight: ["400", "700"],
   display: "swap",
 });
@@ -49,7 +56,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${cormorant.variable} ${dmSans.variable} ${amiri.variable} h-full`}
+      className={`${cormorant.variable} ${dmSans.variable} ${amiri.variable} ${dancingScript.variable} h-full`}
     >
       <body className="min-h-full flex flex-col antialiased">
         {children}
