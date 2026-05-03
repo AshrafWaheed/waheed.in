@@ -1057,3 +1057,6 @@ Notes:
 - All content is placeholder — real content needed before launch
 - CLAUDE.md must stay under 40KB going forward
 - CONTEXT.md is the session log and full documentation file
+
+### Session 13 — May 2026
+- V3 homepage (GSAP, custom cursor, noise overlay) removed. V4 homepage built — Tether-inspired layout, Framer Motion only, mobile-first. 11 new components in frontend/src/components/home/: HomeNav (sticky scroll-aware, mobile overlay), HomeHero (word-by-word title animation, floating service cards), HomeMarquee (CSS infinite scroll), HomePhilosophy (sticky left + scrolling right cards), HomeServices (sticky active panel + left scroll), HomeManifesto (word-by-word IntersectionObserver reveal on yellow bg), HomeProcess (stacking sticky cards), HomeWork (asymmetric work grid), HomeTestimonial (featured + 3 cards), HomeBlog (3-col journal grid), HomeNewsletter (2-col form). Footer rebuilt with Tailwind. Homepage v3 CSS and component files deleted. SectionTitle component updated to accept style prop. Clean build, HTTP 200.

@@ -1,9 +1,12 @@
+import type { CSSProperties } from 'react';
+
 interface SectionTitleProps {
   children: React.ReactNode;
   /** Italic coloured word(s) appended after children */
   emphasis?: string;
   as?: "h1" | "h2" | "h3";
   className?: string;
+  style?: CSSProperties;
   /** Cream body text + yellow emphasis — for dark green backgrounds */
   light?: boolean;
 }
@@ -13,6 +16,7 @@ export default function SectionTitle({
   emphasis,
   as: Tag = "h2",
   className = "",
+  style,
   light = false,
 }: SectionTitleProps) {
   return (
@@ -22,6 +26,7 @@ export default function SectionTitle({
         light ? "text-[var(--cream)]" : "text-[var(--text-dark)]",
         className,
       ].join(" ")}
+      style={style}
     >
       {children}
       {emphasis && (
