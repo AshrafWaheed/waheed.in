@@ -13,6 +13,3 @@ frontend/.next/
 
 # General
 .DS_Store
-
-# Guest data — never commit
-data/dawat-guests.json
