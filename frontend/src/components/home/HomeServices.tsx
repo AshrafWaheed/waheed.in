@@ -61,7 +61,7 @@ function ServicePanel({ service }: { service: Service }) {
           style={{ fontSize: 'clamp(1.75rem, 3vw, 2.5rem)' }}>
         {service.title}
       </h3>
-      <p className="font-[var(--font-dm-sans)] text-[rgba(245,240,232,0.7)] text-sm">
+      <p className="font-[var(--font-dm-sans)] text-[rgba(245,240,232,0.7)] text-base">
         {service.tagline}
       </p>
     </motion.div>
@@ -105,7 +105,7 @@ function ServiceBlock({
           style={{ fontSize: 'clamp(1.75rem, 3vw, 2.25rem)' }}>
         {service.title}
       </h3>
-      <p className="font-[var(--font-dm-sans)] text-[rgba(245,240,232,0.65)] text-sm leading-relaxed mb-6">
+      <p className="font-[var(--font-dm-sans)] text-[rgba(245,240,232,0.65)] text-base leading-relaxed mb-6">
         {service.desc}
       </p>
       <ul className="space-y-2 mb-6">
@@ -175,7 +175,7 @@ export default function HomeServices() {
               <h3 className="font-[var(--font-cormorant)] text-[var(--cream)] font-light text-2xl mb-3">
                 {service.title}
               </h3>
-              <p className="font-[var(--font-dm-sans)] text-[rgba(245,240,232,0.65)] text-sm leading-relaxed mb-4">
+              <p className="font-[var(--font-dm-sans)] text-[rgba(245,240,232,0.65)] text-base leading-relaxed mb-4">
                 {service.desc}
               </p>
               <ul className="space-y-2 mb-4">

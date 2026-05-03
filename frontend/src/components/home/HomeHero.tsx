@@ -1,5 +1,4 @@
 'use client';
-import { useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { Code2, TrendingUp, BookOpen } from 'lucide-react';
@@ -15,30 +14,30 @@ const CARDS = [
     title: 'Web, Mobile & Software',
     desc: 'Shariah-conscious digital products.',
     duration: 4,
-    delay: 0,
+    floatDelay: 0,
+    offsetX: 0,
   },
   {
     icon: TrendingUp,
     title: 'Social Media Marketing',
     desc: 'Ethical strategies that build trust.',
     duration: 5,
-    delay: 0.8,
+    floatDelay: 1.5,
+    offsetX: 40,
   },
   {
     icon: BookOpen,
     title: 'Halal Business Coaching',
     desc: 'Growth aligned with your faith.',
     duration: 4.5,
-    delay: 1.6,
+    floatDelay: 3,
+    offsetX: 10,
   },
 ];
 
 export default function HomeHero() {
-  const containerRef = useRef<HTMLDivElement>(null);
-
   return (
     <section
-      ref={containerRef}
       className="relative min-h-screen bg-[#2A4D38] overflow-hidden flex items-center"
     >
       {/* Islamic geometry decoration */}
@@ -67,18 +66,18 @@ export default function HomeHero() {
 
             {/* Tag */}
             <motion.p
-              className="font-[var(--font-dm-sans)] text-[var(--text-light)] text-xs uppercase tracking-widest mb-6"
+              className="font-[var(--font-dm-sans)] text-[var(--text-light)] text-sm italic mb-6"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.6, delay: 0.2 }}
             >
-              — India&apos;s First Halal Digital Studio
+              A studio aligned with your values
             </motion.p>
 
             {/* H1 — word by word */}
             <h1
               className="font-[var(--font-cormorant)] italic font-light text-[var(--cream)] leading-tight mb-6"
-              style={{ fontSize: 'clamp(3rem, 6.5vw, 6rem)' }}
+              style={{ fontSize: 'clamp(2.8rem, 4.5vw, 4.2rem)' }}
             >
               {WORDS.map((word, i) => (
                 <span
@@ -103,7 +102,8 @@ export default function HomeHero() {
 
             {/* Subheadline */}
             <motion.p
-              className="font-[var(--font-dm-sans)] text-[rgba(245,240,232,0.7)] max-w-lg leading-relaxed text-base"
+              className="font-[var(--font-dm-sans)] text-[rgba(245,240,232,0.7)] max-w-xl"
+              style={{ fontSize: '1.125rem', lineHeight: '1.75' }}
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.6, ease: EASE_OUT }}
@@ -135,52 +135,36 @@ export default function HomeHero() {
 
           {/* Right column — floating service cards (desktop only) */}
           <div className="hidden md:flex flex-col gap-4">
-            {CARDS.map(({ icon: Icon, title, desc, duration, delay }, i) => (
-              <motion.div
+            {CARDS.map(({ icon: Icon, title, desc, duration, floatDelay, offsetX }, i) => (
+              <div
                 key={i}
-                className="bg-[#3D6B4F] border border-[#4a7a5f] rounded-2xl p-5"
-                initial={{ opacity: 0, x: 30 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.7, delay: 1.2 + i * 0.15, ease: EASE_OUT }}
                 style={{
-                  animation: `floatCard${i} ${duration}s ease-in-out ${delay}s infinite`,
+                  marginLeft: `${offsetX}px`,
+                  animation: `floatCard ${duration}s ease-in-out ${floatDelay}s infinite`,
                 }}
               >
-                <Icon size={20} className="text-[var(--yellow)] mb-3" />
-                <p className="font-[var(--font-dm-sans)] font-medium text-[var(--cream)] text-sm mb-1">
-                  {title}
-                </p>
-                <p className="font-[var(--font-dm-sans)] text-xs text-[rgba(245,240,232,0.6)]">
-                  {desc}
-                </p>
-              </motion.div>
+                <motion.div
+                  className="bg-[#3D6B4F] border border-[#4a7a5f] rounded-2xl p-5"
+                  initial={{ opacity: 0, x: 30 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.7, delay: 1.2 + i * 0.15, ease: EASE_OUT }}
+                >
+                  <Icon size={20} className="text-[var(--yellow)] mb-3" />
+                  <p className="font-[var(--font-dm-sans)] font-medium text-[var(--cream)] text-sm mb-1">
+                    {title}
+                  </p>
+                  <p className="font-[var(--font-dm-sans)] text-xs text-[rgba(245,240,232,0.6)]">
+                    {desc}
+                  </p>
+                </motion.div>
+              </div>
             ))}
           </div>
         </div>
       </div>
 
-      {/* Scroll indicator */}
-      <motion.div
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.7, delay: 1.5 }}
-      >
-        <p className="font-[var(--font-dm-sans)] text-xs tracking-widest text-[rgba(245,240,232,0.4)] uppercase">
-          Scroll
-        </p>
-        <motion.div
-          className="w-px h-8 bg-[rgba(245,240,232,0.2)]"
-          animate={{ scaleY: [0, 1, 0] }}
-          transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
-          style={{ transformOrigin: 'top' }}
-        />
-      </motion.div>
-
       <style>{`
-        @keyframes floatCard0 { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-8px); } }
-        @keyframes floatCard1 { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-8px); } }
-        @keyframes floatCard2 { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-8px); } }
+        @keyframes floatCard { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-8px); } }
       `}</style>
     </section>
   );

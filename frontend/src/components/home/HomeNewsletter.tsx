@@ -29,7 +29,7 @@ export default function HomeNewsletter() {
             >
               Occasional thoughts on faith, business &amp; the web.
             </h2>
-            <p className="font-[var(--font-dm-sans)] text-[var(--text-mid)] text-sm leading-relaxed mt-4">
+            <p className="font-[var(--font-dm-sans)] text-[var(--text-mid)] text-base leading-relaxed mt-4">
               No spam. No hype. Just honest reflections — sent only when there is something worth saying.
             </p>
             <ul className="mt-6 space-y-2">

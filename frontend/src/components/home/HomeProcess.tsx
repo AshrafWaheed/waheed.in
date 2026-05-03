@@ -49,7 +49,7 @@ export default function HomeProcess() {
               <h3 className="font-[var(--font-cormorant)] text-[var(--text-dark)] text-3xl font-light mb-4">
                 {title}
               </h3>
-              <p className="font-[var(--font-dm-sans)] text-[var(--text-light)] text-sm leading-relaxed">
+              <p className="font-[var(--font-dm-sans)] text-[var(--text-light)] text-base leading-relaxed">
                 {body}
               </p>
             </div>

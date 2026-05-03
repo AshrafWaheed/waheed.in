@@ -47,7 +47,7 @@ export default function HomePhilosophy() {
               <br />
               <em className="italic text-[var(--yellow)]">intention.</em>
             </h2>
-            <p className="font-[var(--font-dm-sans)] text-[var(--text-light)] text-sm leading-relaxed mt-6 max-w-sm">
+            <p className="font-[var(--font-dm-sans)] text-[var(--text-light)] text-base leading-relaxed mt-6 max-w-sm">
               Every project begins with a question: does this serve a real need, respect the user, and hold up to accountability before Allah?
             </p>
           </div>

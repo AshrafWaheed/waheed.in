@@ -71,7 +71,7 @@ export default function HomeBlog() {
               <h3 className="font-[var(--font-cormorant)] text-[var(--cream)] text-xl font-light leading-snug mb-3">
                 {title}
               </h3>
-              <p className="font-[var(--font-dm-sans)] text-xs text-[rgba(245,240,232,0.6)] leading-relaxed line-clamp-3 mb-4">
+              <p className="font-[var(--font-dm-sans)] text-sm text-[rgba(245,240,232,0.6)] leading-relaxed line-clamp-3 mb-4">
                 {excerpt}
               </p>
               <Link href="/blog" className="font-[var(--font-dm-sans)] text-[var(--yellow)] text-sm hover:underline">
