@@ -2038,6 +2038,149 @@
   50%       { opacity: 0.9; }
 }
 
+/* ─── Our Story Page ─────────────────────────────────────────── */
+
+/* Split hero */
+.story-hero {
+  display:   grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 80vh;
+}
+.story-left {
+  background: #254851;
+  padding:    9rem 5vw 6rem;
+  position:   relative;
+  overflow:   hidden;
+  display:    flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+.story-left::before {
+  content:    '';
+  position:   absolute;
+  inset:      -20%;
+  background: radial-gradient(500px circle at 30% 60%, rgba(201,162,39,.07) 0%, transparent 55%);
+  pointer-events: none;
+}
+.story-h1 {
+  font-family:    var(--font-serif);
+  font-size:      clamp(2.4rem, 4vw, 3.8rem);
+  font-weight:    500;
+  color:          #FFFDF9;
+  line-height:    1.1;
+  margin:         .8rem 0 1rem;
+}
+.story-h1 em { font-style: italic; color: #fff3b0; font-weight: 400; }
+.story-sub {
+  font-size:   1rem;
+  color:       rgba(247,243,237,.65);
+  line-height: 1.7;
+  max-width:   420px;
+}
+.story-right {
+  background:  #1a363d;
+  padding:     9rem 5vw 6rem;
+  display:     flex;
+  align-items: flex-end;
+}
+.story-right-inner { max-width: 460px; }
+.story-arabic {
+  font-family:   var(--font-amiri);
+  font-size:     1.6rem;
+  color:         rgba(255,243,176,.55);
+  line-height:   1.6;
+  margin-bottom: 1.2rem;
+  direction:     rtl;
+}
+.story-origin-h {
+  font-family:   var(--font-serif);
+  font-size:     1.3rem;
+  font-weight:   500;
+  color:         #FFFDF9;
+  margin-bottom: .6rem;
+}
+.story-origin-p {
+  font-size:   .92rem;
+  color:       rgba(247,243,237,.6);
+  line-height: 1.75;
+  margin:      0;
+}
+
+/* Founding narrative */
+.story-section-h {
+  font-family:   var(--font-serif);
+  font-size:     clamp(1.8rem, 2.5vw, 2.4rem);
+  font-weight:   500;
+  color:         #254851;
+  line-height:   1.12;
+  margin:        .5rem 0 1.4rem;
+}
+.story-p {
+  font-size:     .97rem;
+  color:         #4A5568;
+  line-height:   1.8;
+  margin-bottom: 1.1rem;
+  max-width:     66ch;
+}
+.story-blockquote {
+  font-family:    var(--font-serif);
+  font-size:      1.18rem;
+  font-style:     italic;
+  color:          #254851;
+  border-left:    3px solid #9c7d1c;
+  padding:        1rem 1.4rem;
+  margin:         1.8rem 0;
+  background:     rgba(37,72,81,.05);
+  border-radius:  0 6px 6px 0;
+  line-height:    1.65;
+}
+
+/* Manifesto blocks */
+.manifesto-blocks {
+  display:               grid;
+  grid-template-columns: 1fr 1fr;
+  gap:                   1.5rem;
+}
+.mb {
+  background:    #FFFDF9;
+  border:        1px solid #E6DED3;
+  border-radius: 14px;
+  padding:       2rem 2.2rem;
+  display:       flex;
+  flex-direction: column;
+  gap:           .8rem;
+}
+.mb-arabic {
+  font-family: var(--font-amiri);
+  font-size:   1.3rem;
+  color:       rgba(156,125,28,.7);
+  direction:   rtl;
+  margin:      0;
+  line-height: 1.6;
+}
+.mb-q {
+  font-family:  var(--font-serif);
+  font-size:    1.1rem;
+  font-style:   italic;
+  color:        #254851;
+  line-height:  1.65;
+  margin:       0;
+}
+
+@media (max-width: 860px) {
+  .story-hero              { grid-template-columns: 1fr; min-height: auto; }
+  .story-left              { padding: 7rem 6vw 4rem; justify-content: flex-end; }
+  .story-right             { padding: 3.5rem 6vw 4rem; }
+  .manifesto-blocks        { grid-template-columns: 1fr; }
+}
+@media (max-width: 640px) {
+  .story-h1                { font-size: clamp(2rem, 9vw, 2.8rem); }
+  .story-left              { padding: 6rem 5vw 3.5rem; }
+  .story-right             { padding: 3rem 5vw 3.5rem; }
+  .mb                      { padding: 1.5rem 1.4rem; }
+  .mb-q                    { font-size: 1rem; }
+}
+
 /* ─── Legal pages (Privacy / Terms) ──────────────────────────── */
 .legal-body h2 {
   font-family:   var(--font-serif);

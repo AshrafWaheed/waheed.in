@@ -1,10 +1,11 @@
 import Link from 'next/link';
 
 const NAV = [
-  { label: 'About',    href: '/about'    },
-  { label: 'Services', href: '/services' },
-  { label: 'FAQs',     href: '/faq'      },
-  { label: 'Apply',    href: '/contact'  },
+  { label: 'About',     href: '/about'    },
+  { label: 'Our Story', href: '/story'    },
+  { label: 'Services',  href: '/services' },
+  { label: 'FAQs',      href: '/faq'      },
+  { label: 'Apply',     href: '/contact'  },
 ];
 
 const SOCIAL = [
