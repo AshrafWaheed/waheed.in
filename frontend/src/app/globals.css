@@ -321,8 +321,111 @@
   .burger    { display: flex; }
 }
 
+/* ─── Hero ───────────────────────────────────────────────────── */
+.home-hero {
+  min-height: 100vh;
+  display:    block;
+  background: linear-gradient(160deg, #4a7d8a 0%, #335C67 50%, #254851 100%);
+}
+.hh-left {
+  display:         flex;
+  flex-direction:  column;
+  justify-content: center;
+  align-items:     center;
+  text-align:      center;
+  padding:         9rem 5% 6rem;
+  position:        relative;
+  overflow:        hidden;
+  min-height:      100vh;
+}
+.hh-text {
+  display:        flex;
+  flex-direction: column;
+  align-items:    center;
+  max-width:      860px;
+  width:          100%;
+}
+.hh-bismillah {
+  font-family:   var(--font-arabic);
+  font-size:     1.1rem;
+  color:         rgba(255, 255, 255, 0.85);
+  margin-bottom: 1.8rem;
+  direction:     rtl;
+  letter-spacing: 0.03em;
+  line-height:   2;
+}
+.hh-tag {
+  font-size:      0.67rem;
+  font-weight:    600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color:          #fff3b0;
+  display:        flex;
+  align-items:    center;
+  justify-content: center;
+  gap:            0.6rem;
+  margin-bottom:  1.6rem;
+  max-width:      680px;
+}
+.hh-h1 {
+  font-family:   var(--font-serif);
+  font-size:     clamp(2.6rem, 4.2vw, 3.8rem);
+  font-weight:   500;
+  line-height:   1.08;
+  color:         #FFFDF9;
+  margin-bottom: 1.4rem;
+  margin-left:   auto;
+  margin-right:  auto;
+}
+.hh-h1 em {
+  font-style: italic;
+  color:      #fff3b0;
+}
+.hh-sub {
+  font-size:     0.97rem;
+  color:         rgba(247, 243, 237, 0.7);
+  max-width:     640px;
+  line-height:   1.8;
+  margin-bottom: 2.6rem;
+  margin-left:   auto;
+  margin-right:  auto;
+}
+.hh-ctas {
+  display:         flex;
+  justify-content: center;
+  gap:             0.9rem;
+  flex-wrap:       wrap;
+}
+
+/* Scroll cue */
+.scroll-cue {
+  position:       absolute;
+  bottom:         2rem;
+  left:           50%;
+  transform:      translateX(-50%);
+  display:        flex;
+  flex-direction: column;
+  align-items:    center;
+  gap:            0.5rem;
+  font-size:      0.6rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color:          rgba(247, 243, 237, 0.35);
+  pointer-events: none;
+}
+.scroll-line {
+  width:      1px;
+  height:     2.5rem;
+  background: linear-gradient(to bottom, rgba(247, 243, 237, 0.35), transparent);
+  animation:  sp 2s ease-in-out infinite;
+}
+
 /* ─── Keyframes ──────────────────────────────────────────────── */
 @keyframes pulse-dot {
   0%, 100% { opacity: 0.4; }
   50%       { opacity: 1; }
+}
+@keyframes sp {
+  0%, 100% { opacity: 0.35; }
+  50%       { opacity: 0.9; }
 }
