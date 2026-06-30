@@ -1642,6 +1642,62 @@
   .team-card-top { padding: 2rem 1.6rem 1.6rem; }
 }
 
+/* ─── Services Page extras ───────────────────────────────────── */
+.svc-card-cta {
+  margin-top:  auto;
+  padding-top: 1.6rem;
+  align-self:  flex-start;
+}
+/* btn-outline on light card */
+.svc-card:not(.featured) .btn-outline {
+  border-color: #254851;
+  color:        #254851;
+}
+.svc-card:not(.featured) .btn-outline:hover {
+  background:  #254851;
+  color:       #FFFDF9;
+}
+
+.svc-why-grid {
+  display:               grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap:                   2rem;
+  margin-top:            3.5rem;
+}
+.svc-why-item {
+  padding-top:  1.4rem;
+  border-top:   2px solid #E6DED3;
+}
+.svc-why-num {
+  display:        block;
+  font-size:      .68rem;
+  font-weight:    700;
+  letter-spacing: .2em;
+  color:          #a8801a;
+  margin-bottom:  .8rem;
+}
+.svc-why-title {
+  font-family:    var(--font-serif);
+  font-size:      1.15rem;
+  font-weight:    500;
+  color:          #254851;
+  margin-bottom:  .6rem;
+  line-height:    1.2;
+}
+.svc-why-desc {
+  font-size:   .88rem;
+  color:       #6B6B6B;
+  line-height: 1.65;
+  margin:      0;
+}
+
+@media (max-width: 900px) {
+  .svc-why-grid { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 600px) {
+  .svc-why-grid { grid-template-columns: 1fr; }
+}
+
 /* ─── Hero ───────────────────────────────────────────────────── */
 .home-hero {
   min-height: 100vh;
