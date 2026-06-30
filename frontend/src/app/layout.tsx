@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Cormorant_Garamond, Dancing_Script, DM_Sans, Amiri } from "next/font/google";
 import "./globals.css";
-import Footer from "@/components/layout/Footer";
 
 const cormorant = Cormorant_Garamond({
   variable: "--font-cormorant",
@@ -33,6 +32,7 @@ const dancingScript = Dancing_Script({
 });
 
 export const metadata: Metadata = {
+  other: { 'man-site-verification': '4448e038432f15e8da67b866b4fb98b8' },
   title: "WAHEED — India's First Halal Digital Studio",
   description:
     "We help Muslim-led brands grow with integrity. Strategy, design, and digital products built on Shariah-aligned values. No shortcuts. No compromise.",
@@ -60,7 +60,6 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col antialiased">
         {children}
-        <Footer />
       </body>
     </html>
   );
