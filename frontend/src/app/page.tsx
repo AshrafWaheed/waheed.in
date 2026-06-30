@@ -3,7 +3,8 @@ import TrustStrip   from '@/components/home/TrustStrip';
 import Expertise    from '@/components/home/Expertise';
 import AudienceBand from '@/components/home/AudienceBand';
 import Services     from '@/components/home/Services';
-import Manifesto    from '@/components/home/Manifesto';
+import Manifesto     from '@/components/home/Manifesto';
+import IhsanProcess  from '@/components/home/IhsanProcess';
 
 export default function HomePage() {
   return (
@@ -14,6 +15,7 @@ export default function HomePage() {
       <AudienceBand />
       <Services />
       <Manifesto />
+      <IhsanProcess />
     </main>
   );
 }
