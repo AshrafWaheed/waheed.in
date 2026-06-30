@@ -3,6 +3,7 @@ import TrustStrip   from '@/components/home/TrustStrip';
 import Expertise    from '@/components/home/Expertise';
 import AudienceBand from '@/components/home/AudienceBand';
 import Services     from '@/components/home/Services';
+import Manifesto    from '@/components/home/Manifesto';
 
 export default function HomePage() {
   return (
@@ -12,6 +13,7 @@ export default function HomePage() {
       <Expertise />
       <AudienceBand />
       <Services />
+      <Manifesto />
     </main>
   );
 }
