@@ -3,13 +3,33 @@
 import { useState } from 'react';
 
 export default function Newsletter() {
-  const [email,     setEmail]     = useState('');
-  const [submitted, setSubmitted] = useState(false);
+  const [email,       setEmail]       = useState('');
+  const [submitting,  setSubmitting]  = useState(false);
+  const [submitted,   setSubmitted]   = useState(false);
+  const [error,       setError]       = useState('');
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!email.trim()) return;
-    setSubmitted(true);
+    const val = email.trim();
+    if (!val) return;
+    setError('');
+    setSubmitting(true);
+    try {
+      const res = await fetch('/api/newsletter', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify({ email: val }),
+      });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.error ?? 'Something went wrong');
+      }
+      setSubmitted(true);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Please try again.');
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   return (
@@ -46,11 +66,15 @@ export default function Newsletter() {
                   onChange={(e) => setEmail(e.target.value)}
                   required
                   aria-label="Email address"
+                  disabled={submitting}
                 />
-                <button type="submit" className="btn btn-gold">
-                  Subscribe →
+                <button type="submit" className="btn btn-gold" disabled={submitting}>
+                  {submitting ? 'Saving…' : 'Subscribe →'}
                 </button>
               </form>
+            )}
+            {error && (
+              <p style={{ fontSize: '.8rem', color: '#f9a8a8', marginTop: '.5rem' }}>{error}</p>
             )}
             <p className="nl-note">
               Confirmed opt-in. Unsubscribe any time. We never sell or share your data.

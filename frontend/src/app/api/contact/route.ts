@@ -1,5 +1,6 @@
 import { writeFileSync, readFileSync, existsSync, mkdirSync } from 'fs';
 import path from 'path';
+import { sendMail } from '@/lib/mailer';
 
 const DATA_DIR = path.join(process.cwd(), 'data');
 const FILE     = path.join(DATA_DIR, 'contact-submissions.json');
@@ -71,6 +72,30 @@ export async function POST(req: Request) {
   const rows = load();
   rows.push(submission);
   save(rows);
+
+  // Alert email (no-op until SMTP creds are in .env.local)
+  const alertTo = process.env.ALERT_TO ?? process.env.SMTP_USER ?? '';
+  if (alertTo) {
+    const lines = [
+      `Name:     ${submission.name}`,
+      `Email:    ${submission.email}`,
+      `Brand:    ${submission.brand}`,
+      `Service:  ${submission.service}${submission.customServices.length ? ' → ' + submission.customServices.join(', ') : ''}`,
+      submission.stage    ? `Stage:    ${submission.stage}`    : '',
+      submission.budget   ? `Budget:   ${submission.budget}`   : '',
+      submission.timeline ? `Timeline: ${submission.timeline}` : '',
+      submission.whatsapp ? `WhatsApp: ${submission.whatsapp}` : '',
+      submission.location ? `Location: ${submission.location}` : '',
+      `\nMessage:\n${submission.message}`,
+    ].filter(Boolean).join('\n');
+
+    await sendMail({
+      to:      alertTo,
+      subject: `New project application — ${submission.name} (${submission.brand})`,
+      text:    lines,
+      html:    `<pre style="font-family:monospace;font-size:14px;line-height:1.6">${lines}</pre>`,
+    }).catch(err => console.error('[contact] mail error:', err));
+  }
 
   return Response.json({ ok: true }, { status: 201 });
 }
