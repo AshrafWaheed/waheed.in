@@ -5,6 +5,9 @@ import AudienceBand from '@/components/home/AudienceBand';
 import Services     from '@/components/home/Services';
 import Manifesto     from '@/components/home/Manifesto';
 import IhsanProcess  from '@/components/home/IhsanProcess';
+import RefusalPanel  from '@/components/home/RefusalPanel';
+import Newsletter    from '@/components/home/Newsletter';
+import FinalCTA      from '@/components/home/FinalCTA';
 
 export default function HomePage() {
   return (
@@ -16,6 +19,9 @@ export default function HomePage() {
       <Services />
       <Manifesto />
       <IhsanProcess />
+      <RefusalPanel />
+      <Newsletter />
+      <FinalCTA />
     </main>
   );
 }

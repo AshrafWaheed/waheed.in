@@ -371,7 +371,8 @@
   color:          #a8801a;
   margin-bottom:  1.2rem;
 }
-.eyebrow-v2.center { justify-content: center; }
+.eyebrow-v2.center   { justify-content: center; }
+.eyebrow-v2.on-dark  { color: rgba(255,243,176,.75); }
 
 .expertise-doors { position: relative; }
 
@@ -1034,6 +1035,144 @@
   .ip-step.active .ip-name-en,
   .ip-step.active .ip-desc .ln { opacity: 1; transform: none; }
 }
+
+/* ─── Refusal Panel ──────────────────────────────────────────── */
+.refusal {
+  background:    #EFE9DC;
+  padding:       6rem 0;
+  border-top:    1px solid #E6DED3;
+}
+.refusal-grid {
+  display:               grid;
+  grid-template-columns: 1fr 1.3fr;
+  gap:                   5rem;
+  align-items:           center;
+}
+.refusal-h {
+  font-family:    var(--font-serif);
+  font-size:      clamp(2.2rem, 3.4vw, 3rem);
+  font-weight:    400;
+  color:          #254851;
+  line-height:    1.05;
+  letter-spacing: -0.01em;
+  margin-bottom:  .6rem;
+}
+.refusal-h em       { font-style: italic; color: #a8801a; }
+.refusal-intro      { font-size: .94rem; color: #6B6B6B; line-height: 1.75; margin-top: 1.4rem; max-width: 380px; }
+.refusal-list       { display: grid; grid-template-columns: 1fr 1fr; gap: 0 2rem; }
+.refusal-item {
+  display:      flex;
+  gap:          1rem;
+  padding:      1.2rem 0;
+  border-bottom: 1px solid #d4c9b5;
+  align-items:  flex-start;
+}
+.refusal-x {
+  flex-shrink:     0;
+  width:           24px;
+  height:          24px;
+  display:         flex;
+  align-items:     center;
+  justify-content: center;
+  color:           #a8801a;
+  font-family:     var(--font-serif);
+  font-size:       1.4rem;
+  line-height:     1;
+  border:          1px solid #a8801a;
+  margin-top:      0.1rem;
+}
+.refusal-text {
+  font-family:    var(--font-serif);
+  font-size:      1.1rem;
+  color:          #254851;
+  font-weight:    500;
+  line-height:    1.4;
+  letter-spacing: -0.005em;
+  margin: 0;
+}
+@media (max-width: 768px) {
+  .refusal-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+  .refusal-list { grid-template-columns: 1fr; }
+}
+
+/* ─── Newsletter ──────────────────────────────────────────────── */
+.nl-sec {
+  background:  #254851;
+  border-top:  1px solid rgba(201,162,39,.12);
+  overflow:    hidden;
+}
+.nl-grid {
+  display:               grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap:                   4rem;
+  align-items:           center;
+}
+.nl-h {
+  font-family:    var(--font-serif);
+  font-size:      clamp(1.9rem, 2.8vw, 2.5rem);
+  font-weight:    400;
+  color:          #FFFDF9;
+  margin-bottom:  .8rem;
+  line-height:    1.1;
+  letter-spacing: -0.01em;
+}
+.nl-h em     { font-style: italic; color: #fff3b0; }
+.nl-p        { font-size: .93rem; color: rgba(249,247,243,.65); line-height: 1.7; max-width: 420px; }
+.nl-form {
+  display:   flex;
+  gap:       .6rem;
+  flex-wrap: wrap;
+  margin-top: 0;
+}
+.nl-input {
+  flex:         1;
+  min-width:    220px;
+  background:   rgba(249,247,243,.06);
+  border:       1px solid rgba(249,247,243,.18);
+  border-radius: 3px;
+  padding:      .95rem 1.2rem;
+  font-family:  var(--font-sans);
+  font-size:    .88rem;
+  color:        #FFFDF9;
+  outline:      none;
+  transition:   border-color .2s;
+  letter-spacing: .01em;
+}
+.nl-input::placeholder { color: rgba(249,247,243,.42); }
+.nl-input:focus        { border-color: #fff3b0; }
+.nl-note    { font-size: .7rem; color: rgba(249,247,243,.4); margin-top: .6rem; letter-spacing: .04em; }
+.nl-success {
+  font-family:    var(--font-serif);
+  font-size:      1.2rem;
+  color:          #fff3b0;
+  font-style:     italic;
+  line-height:    1.5;
+  margin-bottom:  .6rem;
+}
+@media (max-width: 768px) {
+  .nl-grid { grid-template-columns: 1fr; gap: 2rem; }
+}
+
+/* ─── Final CTA ───────────────────────────────────────────────── */
+.cta-banner {
+  background: #F7F3ED;
+  padding:    7rem 0;
+  text-align: center;
+  overflow:   hidden;
+}
+.cta-h {
+  font-family:    var(--font-serif);
+  font-size:      clamp(2.2rem, 3.6vw, 3.2rem);
+  font-weight:    400;
+  color:          #254851;
+  max-width:      660px;
+  margin:         0 auto 1.2rem;
+  line-height:    1.05;
+  letter-spacing: -0.01em;
+}
+.cta-h em  { font-style: italic; color: #9c7d1c; }
+.cta-p     { font-size: .95rem; color: #6B6B6B; max-width: 460px; margin: 0 auto 2.2rem; line-height: 1.7; }
+.cta-acts  { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
 
 /* ─── Manifesto Band ─────────────────────────────────────────── */
 @keyframes heroDrift1 {

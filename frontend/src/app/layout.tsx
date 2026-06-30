@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Cormorant_Garamond, DM_Sans, Amiri } from "next/font/google";
 import ScrollProgress from "@/components/ScrollProgress";
+import ScrollReveal   from "@/components/ScrollReveal";
 import Nav from "@/components/Nav";
 import "./globals.css";
 
@@ -57,6 +58,7 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col antialiased">
         <div className="scroll-progress" id="scrollProgress" />
         <ScrollProgress />
+        <ScrollReveal />
         <Nav />
         {children}
       </body>
