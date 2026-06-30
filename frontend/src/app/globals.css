@@ -32,6 +32,7 @@
   --r:           8px;
   --r-sm:        4px;
   --r-lg:        12px;
+  --pill:        100px;
   --site-white:  #FFFDF9;
 }
 
@@ -1513,6 +1514,132 @@
   .manifesto-band.entered .manifesto-stage { animation: none; }
   .manifesto-medallion,
   .manifesto-band::before   { animation: none; }
+}
+
+/* ─── Page Hero (shared across inner pages) ──────────────────── */
+.page-hero {
+  padding:    9rem 0 5.5rem;
+  background: #254851;
+  position:   relative;
+  overflow:   hidden;
+  text-align: center;
+}
+.page-hero::before {
+  content:    '';
+  position:   absolute;
+  inset:      -20%;
+  pointer-events: none;
+  z-index:    0;
+  background:
+    radial-gradient(600px circle at 20% 40%, rgba(201,162,39,.05) 0%, transparent 55%),
+    radial-gradient(500px circle at 80% 60%, rgba(74,125,138,.08) 0%, transparent 55%);
+  filter: blur(2px);
+}
+.page-hero > .cnt { position: relative; z-index: 1; }
+.page-hero .lbl   { color: rgba(200,155,90,.75); justify-content: center; }
+.page-hero h1 {
+  font-family:    var(--font-serif);
+  font-size:      clamp(2.4rem, 4vw, 3.6rem);
+  font-weight:    500;
+  color:          #FFFDF9;
+  margin-bottom:  1rem;
+  max-width:      680px;
+  margin-inline:  auto;
+  line-height:    1.1;
+}
+.page-hero h1 em { font-style: italic; color: #fff3b0; font-weight: 400; }
+.page-hero p {
+  font-size:  1rem;
+  color:      rgba(247,243,237,.6);
+  max-width:  500px;
+  margin:     0 auto;
+  line-height: 1.7;
+}
+
+/* ─── About: Founding Narrative ──────────────────────────────── */
+.about-narrative { display: flex; flex-direction: column; gap: 2rem; }
+
+.about-narrative-h {
+  font-family:    var(--font-serif);
+  font-size:      clamp(1.8rem, 2.5vw, 2.3rem);
+  color:          #254851;
+  font-weight:    500;
+  margin-bottom:  1.3rem;
+}
+.about-narrative p {
+  font-size:   .92rem;
+  color:       #6B6B6B;
+  line-height: 1.85;
+  margin-bottom: 1rem;
+}
+.about-blockquote {
+  font-family:   var(--font-serif);
+  font-size:     1.2rem;
+  font-style:    italic;
+  color:         #254851;
+  background:    rgba(37,72,81,.07);
+  border-radius: 6px;
+  padding:       1rem 1.4rem;
+  line-height:   1.6;
+  margin-bottom: 1.5rem;
+  border:        none;
+}
+
+/* ─── About: Team Cards ───────────────────────────────────────── */
+.team-cards {
+  display:               grid;
+  grid-template-columns: 1fr 1fr;
+  gap:                   2rem;
+  margin-top:            3.5rem;
+}
+.team-card {
+  background:    #FFFDF9;
+  border:        1px solid #E6DED3;
+  border-radius: var(--r-lg);
+  overflow:      hidden;
+}
+.team-card-top {
+  background: linear-gradient(135deg, #3d6e7a 0%, #254851 100%);
+  padding:    3rem 2.5rem 2rem;
+  display:    flex;
+  align-items: flex-end;
+  gap:        1.5rem;
+}
+.team-card-top.gold-top {
+  background: linear-gradient(135deg, #a8801a, #fff3b0);
+}
+.team-av {
+  width:           80px;
+  height:          80px;
+  border-radius:   50%;
+  background:      rgba(255,255,255,.1);
+  border:          2px solid rgba(200,155,90,.4);
+  display:         flex;
+  align-items:     center;
+  justify-content: center;
+  flex-shrink:     0;
+}
+.team-card-name { font-family: var(--font-serif); font-size: 1.4rem; font-weight: 600; color: #FFFDF9; }
+.team-card-role { font-size: .78rem; color: rgba(247,243,237,.55); letter-spacing: .04em; }
+.team-card-top.gold-top .team-card-role { color: rgba(31,31,31,.55); }
+.team-card-top.gold-top .team-card-name { color: #1F1F1F; }
+
+.team-card-body   { padding: 1.8rem 2rem; }
+.team-card-body p { font-size: .87rem; color: #6B6B6B; line-height: 1.8; margin: 0; }
+.team-card-skills { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: 1.2rem; }
+.skill-chip {
+  background:    #F7F3ED;
+  border:        1px solid #E6DED3;
+  border-radius: var(--pill);
+  padding:       .3rem .85rem;
+  font-size:     .72rem;
+  color:         #254851;
+  font-weight:   500;
+}
+
+@media (max-width: 768px) {
+  .team-cards { grid-template-columns: 1fr; }
+  .team-card-top { padding: 2rem 1.6rem 1.6rem; }
 }
 
 /* ─── Hero ───────────────────────────────────────────────────── */
