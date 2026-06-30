@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
-import { Cormorant_Garamond, Dancing_Script, DM_Sans, Amiri } from "next/font/google";
+import { Cormorant_Garamond, DM_Sans, Amiri } from "next/font/google";
+import ScrollProgress from "@/components/ScrollProgress";
 import "./globals.css";
 
 const cormorant = Cormorant_Garamond({
   variable: "--font-cormorant",
   subsets: ["latin"],
-  weight: ["400", "600", "700"],
+  weight: ["300", "400", "500", "600", "700"],
   style: ["normal", "italic"],
   display: "swap",
 });
@@ -13,7 +14,7 @@ const cormorant = Cormorant_Garamond({
 const dmSans = DM_Sans({
   variable: "--font-dm-sans",
   subsets: ["latin"],
-  weight: ["400", "500", "600"],
+  weight: ["300", "400", "500", "600"],
   display: "swap",
 });
 
@@ -21,13 +22,7 @@ const amiri = Amiri({
   variable: "--font-amiri",
   subsets: ["arabic", "latin"],
   weight: ["400", "700"],
-  display: "swap",
-});
-
-const dancingScript = Dancing_Script({
-  variable: "--font-dancing",
-  subsets: ["latin"],
-  weight: ["400", "700"],
+  style: ["normal", "italic"],
   display: "swap",
 });
 
@@ -56,9 +51,11 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${cormorant.variable} ${dmSans.variable} ${amiri.variable} ${dancingScript.variable} h-full`}
+      className={`${cormorant.variable} ${dmSans.variable} ${amiri.variable} h-full`}
     >
       <body className="min-h-full flex flex-col antialiased">
+        <div className="scroll-progress" id="scrollProgress" />
+        <ScrollProgress />
         {children}
       </body>
     </html>
