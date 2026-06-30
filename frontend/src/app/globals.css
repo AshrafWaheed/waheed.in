@@ -214,6 +214,113 @@
   }
 }
 
+/* ─── Nav ────────────────────────────────────────────────────── */
+.nav {
+  position:        fixed;
+  top: 0; left: 0; right: 0;
+  z-index:         200;
+  padding:         1.1rem 0;
+  background:      rgba(255, 254, 252, 1);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border-bottom:   1px solid rgba(37, 72, 81, 0.10);
+  transition:      all 0.35s ease;
+}
+.nav.scrolled {
+  padding:    0.75rem 0;
+  border-color: rgba(37, 72, 81, 0.12);
+  box-shadow: 0 2px 20px rgba(37, 72, 81, 0.07);
+}
+.nav-inner {
+  display:         flex;
+  align-items:     center;
+  justify-content: space-between;
+  gap:             1rem;
+}
+.nav-logo-img {
+  height:     clamp(36px, 4vw, 54px);
+  width:      auto;
+  max-width:  200px;
+  object-fit: contain;
+  display:    block;
+}
+.nav-links {
+  display:     flex;
+  align-items: center;
+  gap:         2.2rem;
+  list-style:  none;
+  margin:      0;
+  padding:     0;
+}
+.nav-links a {
+  font-size:      0.82rem;
+  font-weight:    400;
+  color:          #3a3a3a;
+  transition:     color 0.2s;
+  letter-spacing: 0.01em;
+  position:       relative;
+  padding:        0.3rem 0;
+}
+.nav-links a::after {
+  content:          '';
+  position:         absolute;
+  left: 0; right: 0; bottom: -2px;
+  height:           2px;
+  background:       #a8801a;
+  transform:        scaleX(0);
+  transform-origin: left;
+  transition:       transform 0.25s ease;
+}
+.nav-links a:hover               { color: #254851; }
+.nav-links a:hover::after,
+.nav-links a.active::after       { transform: scaleX(1); }
+.nav-links a.active              { color: #254851; }
+
+.burger {
+  display:         none;
+  flex-direction:  column;
+  gap:             5px;
+  background:      none;
+  border:          none;
+  cursor:          pointer;
+  padding:         4px;
+}
+.burger span {
+  display:       block;
+  width:         22px;
+  height:        2px;
+  background:    #254851;
+  border-radius: 2px;
+  transition:    all 0.3s;
+}
+
+/* Mobile menu — full-screen overlay; Framer Motion handles mount/unmount */
+.mob-menu {
+  position:  fixed;
+  inset:     0;
+  z-index:   199;
+  background: #F7F3ED;
+  padding:    5.5rem 2rem 2rem;
+  display:    flex;
+  flex-direction: column;
+  gap:        1.8rem;
+}
+.mob-menu a {
+  font-family: var(--font-serif);
+  font-size:   1.9rem;
+  font-weight: 500;
+  color:       #254851;
+  transition:  color 0.2s;
+}
+.mob-menu a:hover { color: #335C67; }
+
+/* ─── Responsive ─────────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .nav-links { display: none; }
+  .nav-cta   { display: none !important; }
+  .burger    { display: flex; }
+}
+
 /* ─── Keyframes ──────────────────────────────────────────────── */
 @keyframes pulse-dot {
   0%, 100% { opacity: 0.4; }
