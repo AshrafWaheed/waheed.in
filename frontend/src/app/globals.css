@@ -1698,6 +1698,53 @@
   .svc-why-grid { grid-template-columns: 1fr; }
 }
 
+/* ─── FAQ Page ───────────────────────────────────────────────── */
+.faq-wrap { max-width: 820px; }
+
+/* Filter tabs */
+.faq-filters {
+  display:        flex;
+  flex-wrap:      wrap;
+  gap:            .5rem;
+  margin-bottom:  2.8rem;
+}
+.faq-filter-btn {
+  all:            unset;
+  cursor:         pointer;
+  font-family:    var(--font-sans);
+  font-size:      .78rem;
+  font-weight:    600;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  padding:        .45rem 1.1rem;
+  border-radius:  var(--pill);
+  border:         1.5px solid #D4C9BE;
+  color:          #6B6B6B;
+  transition:     background .2s, border-color .2s, color .2s;
+  line-height:    1;
+}
+.faq-filter-btn:hover  { border-color: #335C67; color: #335C67; }
+.faq-filter-btn.active { background: #335C67; border-color: #335C67; color: #FFFDF9; }
+
+/* Category header */
+.faq-section       { margin-bottom: 3rem; }
+.faq-section:last-child { margin-bottom: 0; }
+.faq-cat-header    { display: flex; align-items: center; gap: .7rem; margin-bottom: 1.4rem; }
+.faq-cat-bar       { display: block; width: 3px; height: 1.3rem; background: #9c7d1c; border-radius: 2px; flex-shrink: 0; }
+.faq-cat-label     { font-size: .68rem; font-weight: 700; letter-spacing: .22em; text-transform: uppercase; color: #254851; }
+
+/* Accordion overrides — slimmer than AudienceBand */
+.faq-acc .aud-acc-head        { padding: 1.1rem 0; gap: 1.2rem; }
+.faq-acc .aud-acc-title       { font-size: clamp(.95rem, 1.3vw, 1.05rem); font-weight: 500; line-height: 1.4; }
+.faq-acc .aud-acc-body        { padding-left: 0; }
+.faq-acc .aud-acc-item.open .aud-acc-body { padding-left: 0; padding-bottom: 1.3rem; }
+.faq-acc .aud-acc-body > p    { font-size: .9rem; max-width: none; }
+
+@media (max-width: 640px) {
+  .faq-filter-btn  { font-size: .72rem; padding: .4rem .9rem; }
+  .faq-acc .aud-acc-title { font-size: .95rem; }
+}
+
 /* ─── Contact Page ───────────────────────────────────────────── */
 .contact-grid {
   display:               grid;
