@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import { Cormorant_Garamond, DM_Sans, Amiri } from "next/font/google";
-import ScrollProgress from "@/components/ScrollProgress";
-import ScrollReveal   from "@/components/ScrollReveal";
-import Nav from "@/components/Nav";
+import ScrollProgress  from "@/components/ScrollProgress";
+import ScrollReveal    from "@/components/ScrollReveal";
+import Nav             from "@/components/Nav";
+import Footer          from "@/components/Footer";
+import WhatsAppFloat   from "@/components/WhatsAppFloat";
 import "./globals.css";
 
 const cormorant = Cormorant_Garamond({
@@ -61,6 +63,8 @@ export default function RootLayout({
         <ScrollReveal />
         <Nav />
         {children}
+        <Footer />
+        <WhatsAppFloat />
       </body>
     </html>
   );
