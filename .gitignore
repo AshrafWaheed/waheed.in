@@ -12,5 +12,9 @@ frontend/node_modules/
 frontend/.next/
 frontend/data/
 
+# Docs / planning (*.md files; CLAUDE.md exempt as already-tracked)
+*.md
+
 # General
 .DS_Store
+Waheed-handoff.zip

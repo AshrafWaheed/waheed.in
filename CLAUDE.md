@@ -19,9 +19,12 @@
 - Fonts: Cormorant Garamond, DM Sans, Amiri, Dancing Script (via next/font)
 
 ## Brand
-- Green: #3D6B4F · Dark: #2A4D38 · Darkest: #1A2E22
-- Yellow: #E8C547 · Cream: #F5F0E8 · Text secondary: #7A9080
+- Teal: #335C67 · Dark: #254851 · Deepest: #1a363d
+- Gold: #9c7d1c (text) · Gold soft: #fff3b0 (bg) · Ivory: #F7F3ED · White: #FFFDF9
 - Fonts: Cormorant Garamond (display/headings), DM Sans (body), Amiri (Arabic)
+
+## Active Build
+- Full site implementation in progress — see SESSION_PLAN.md for per-session scope
 
 ## Git
 - Repo: git@github.com:AshrafWaheed/waheed.in.git, branch: main
