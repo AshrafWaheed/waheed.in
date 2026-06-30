@@ -2037,3 +2037,72 @@
   0%, 100% { opacity: 0.35; }
   50%       { opacity: 0.9; }
 }
+
+/* ─── Legal pages (Privacy / Terms) ──────────────────────────── */
+.legal-body h2 {
+  font-family:   var(--font-serif);
+  font-size:     1.2rem;
+  font-weight:   500;
+  color:         #254851;
+  margin-top:    2rem;
+  margin-bottom: .5rem;
+}
+.legal-body p, .legal-body ul, .legal-body li {
+  font-size:   .92rem;
+  color:       #4A5568;
+  line-height: 1.75;
+}
+.legal-body ul { padding-left: 1.3rem; margin-bottom: .8rem; }
+.legal-body li { margin-bottom: .3rem; }
+.legal-body a  { color: #335C67; text-decoration: underline; text-underline-offset: 2px; }
+.legal-body a:hover { color: #1a363d; }
+
+/* ═══ GLOBAL MOBILE POLISH (Session 14) ══════════════════════ */
+@media (max-width: 640px) {
+  /* Section rhythm */
+  .sec     { padding-block: 3.5rem; }
+  .sec-sm  { padding-block: 2.2rem; }
+
+  /* Page hero */
+  .page-hero   { padding: 5.5rem 0 3rem; }
+  .page-hero h1 { font-size: clamp(2rem, 8vw, 2.8rem); }
+  .page-hero p  { font-size: .9rem; }
+
+  /* Home hero */
+  .hh-ctas { flex-direction: column; align-items: stretch; gap: .7rem; }
+  .hh-ctas .btn { justify-content: center; }
+
+  /* CTA banner */
+  .cta-banner { padding: 4.5rem 0; }
+  .cta-h      { font-size: clamp(1.9rem, 8.5vw, 2.6rem); }
+  .cta-p      { font-size: .88rem; }
+  .cta-acts   { flex-direction: column; align-items: stretch; gap: .75rem; }
+  .cta-acts .btn { justify-content: center; }
+
+  /* About */
+  .about-narrative-h { font-size: 1.7rem; }
+  .about-blockquote  { font-size: 1.05rem; }
+
+  /* Contact */
+  .contact-form-wrap { padding: 1.6rem 1.2rem; }
+
+  /* FAQ */
+  .faq-section { margin-bottom: 2.2rem; }
+
+  /* WhatsApp — smaller on very small screens */
+  .wa-float { width: 48px; height: 48px; bottom: 1.2rem; right: 1.2rem; }
+  .wa-icon  { width: 22px; height: 22px; }
+}
+
+/* prefers-reduced-motion — skip all entry animations */
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity:    1 !important;
+    transform:  none !important;
+    transition: none !important;
+  }
+  .trust-track            { animation-play-state: paused; }
+  .wa-pulse               { animation: none !important; }
+  .manifesto-medallion,
+  .manifesto-band::before { animation: none !important; }
+}
