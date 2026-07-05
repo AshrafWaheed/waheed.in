@@ -6,7 +6,7 @@ const ITEMS = [
   {
     num: '01',
     title: 'Halal D2C Brands',
-    body: 'Halal D2C founders in food, modest fashion, lifestyle, and beauty that have built something truly impactful for the Ummah and want to grow it the right way.',
+    body: 'Halal D2C brands in food, modest fashion, lifestyle, and beauty that have built something truly impactful for the Ummah and want to grow it the right way.',
   },
   {
     num: '02',
@@ -88,8 +88,8 @@ export default function AudienceBand() {
           <div>
             <span className="eyebrow-v2">Who we work with</span>
             <h2 className="reveal">
-              We work with brands who have{' '}
-              <em style={{ color: '#254851' }}>outgrown shortcuts.</em>
+              We transform brands that{' '}
+              <em style={{ color: '#254851' }}>refuse to compromise their values.</em>
             </h2>
           </div>
         </div>

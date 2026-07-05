@@ -32,17 +32,17 @@ const amiri = Amiri({
 
 export const metadata: Metadata = {
   other: { 'man-site-verification': '4448e038432f15e8da67b866b4fb98b8' },
-  title: "WAHEED — India's First Halal Digital Studio",
+  title: "WAHEED — Halal Digital Studio",
   description:
     "We help Muslim-led brands grow with integrity. Strategy, design, and digital products built on Shariah-aligned values. No shortcuts. No compromise.",
   metadataBase: new URL("https://waheed.in"),
   openGraph: {
-    title: "WAHEED — India's First Halal Digital Studio",
+    title: "WAHEED — Halal Digital Studio",
     description:
       "We help Muslim-led brands grow with integrity. Strategy, design, and digital products built on Shariah-aligned values.",
     url: "https://waheed.in",
     siteName: "WAHEED",
-    locale: "en_IN",
+    locale: "en_GB",
     type: "website",
   },
 };
@@ -54,7 +54,7 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="en"
+      lang="en-GB"
       className={`${cormorant.variable} ${dmSans.variable} ${amiri.variable} h-full`}
     >
       <body className="min-h-full flex flex-col antialiased">

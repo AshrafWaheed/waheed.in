@@ -143,7 +143,7 @@ export default function ContactPage() {
                       <polyline points="22,6 12,13 2,6"/>
                     </svg>
                   </div>
-                  info@waheed.in
+                  ashraf@waheed.in
                 </div>
               </div>
 

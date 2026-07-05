@@ -6,10 +6,10 @@ import nodemailer from 'nodemailer';
 //   SMTP_HOST=mail.privateemail.com  (Hostinger / Namecheap private email)
 //   SMTP_PORT=465
 //   SMTP_SECURE=true                 (true = SSL on 465, false = STARTTLS on 587)
-//   SMTP_USER=info@waheed.in
+//   SMTP_USER=ashraf@waheed.in
 //   SMTP_PASS=<your password>
-//   SMTP_FROM="WAHEED <info@waheed.in>"
-//   ALERT_TO=info@waheed.in          (where alert emails land)
+//   SMTP_FROM="WAHEED <ashraf@waheed.in>"
+//   ALERT_TO=ashraf@waheed.in          (where alert emails land)
 
 function createTransport() {
   const host = process.env.SMTP_HOST;

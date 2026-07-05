@@ -67,7 +67,7 @@ export default function Services() {
             The infrastructure halal brands are built on.
           </h2>
           <p className="svc-section-sub reveal delay-1">
-            Three engagement levels, each strategically crafted to move the business forward.
+            Top tier packages, each strategically crafted to move the business forward.
           </p>
         </div>
 
@@ -100,25 +100,10 @@ export default function Services() {
           ))}
         </div>
 
-        {/* Custom plan banner */}
-        <div className="svc-custom-banner reveal">
-          <div className="svc-custom-left">
-            <span className="svc-custom-tag">Not sure what you need?</span>
-            <h3 className="svc-custom-h">Request a custom service plan.</h3>
-            <p className="svc-custom-p">
-              Tell us your goals, your budget, and where you are right now.
-              We&apos;ll put together a curated scope that fits.
-            </p>
-          </div>
-          <Link href="/contact" className="btn btn-teal svc-custom-btn">
-            Let&apos;s talk →
-          </Link>
-        </div>
-
         {/* Footer link */}
         <div style={{ textAlign: 'center', marginTop: '2.5rem' }}>
           <Link href="/services" className="btn btn-outline reveal">
-            View Full Services →
+            View all packages →
           </Link>
         </div>
 

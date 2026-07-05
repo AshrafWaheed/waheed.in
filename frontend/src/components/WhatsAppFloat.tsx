@@ -1,5 +1,4 @@
-// WhatsApp number: update this before launch (confirm with Ashraf)
-const WA_NUMBER = '919876543210';
+const WA_NUMBER = '915424072195';
 const WA_URL    = `https://wa.me/${WA_NUMBER}?text=Assalamu%20Alaikum%2C%20I%27d%20like%20to%20know%20more%20about%20your%20services.`;
 
 export default function WhatsAppFloat() {

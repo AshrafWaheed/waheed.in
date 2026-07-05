@@ -86,15 +86,19 @@ export default function Hero() {
           </motion.div>
         </div>
 
-        {/* Scroll cue */}
+        {/* Portrait rail */}
         <motion.div
-          className="scroll-cue"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1, delay: 1.2, ease: EASE }}
+          className="hh-portrait"
+          initial={{ opacity: 0, x: 24 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.9, ease: EASE, delay: 0.35 }}
         >
-          <span>scroll</span>
-          <div className="scroll-line" />
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/hero-portrait.png"
+            alt="Halal brands and founders Waheed builds for"
+            className="hh-portrait-img"
+          />
         </motion.div>
       </div>
     </section>

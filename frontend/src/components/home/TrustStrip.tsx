@@ -1,9 +1,15 @@
+import { Fragment } from 'react';
+
 const ITEMS = [
   'Delivered with Ihsan',
   'Human Customer Care',
   'Long-Term Impact',
   '100% Shariah-Compliant',
 ];
+
+// Repeat the base items so a single group is wider than any viewport —
+// that's what makes the 2-group translateX(-50%) loop perfectly seamless.
+const GROUP = Array.from({ length: 3 }, () => ITEMS).flat();
 
 function StarSep() {
   return (
@@ -22,11 +28,11 @@ function StarSep() {
 function TrackGroup({ hidden }: { hidden?: boolean }) {
   return (
     <div className="trust-group" aria-hidden={hidden}>
-      {ITEMS.map((item, i) => (
-        <span key={i}>
+      {GROUP.map((item, i) => (
+        <Fragment key={i}>
           <span className="trust-item">{item}</span>
           <StarSep />
-        </span>
+        </Fragment>
       ))}
     </div>
   );

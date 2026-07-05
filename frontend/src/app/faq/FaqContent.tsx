@@ -14,17 +14,17 @@ const FAQS: FaqItem[] = [
   {
     cat: 'General',
     q: 'What makes Waheed different from other digital agencies?',
-    a: 'Waheed combines strategic technology, web and app development, and digital growth with a Shariah-aligned approach. We build high-performing digital products and marketing systems that prioritize clarity, conversion, and long-term credibility — without manipulative tactics or compromising your values. We believe barakah and real business results are not opposites. When technology, strategy, and marketing are built with integrity and excellence, growth becomes sustainable.',
+    a: 'Waheed combines strategic technology, web and app development, and digital growth with a Shariah-aligned approach. We build high-performing digital products and marketing systems that prioritise clarity, conversion, and long-term credibility — without manipulative tactics or compromising your values. We believe barakah and real business results are not opposites. When technology, strategy, and marketing are built with integrity and excellence, growth becomes sustainable.',
   },
   {
     cat: 'General',
     q: 'Do you only work with Muslim clients?',
-    a: 'We primarily serve Muslim-led brands and organizations. However, we also welcome values-aligned clients who respect our ethical and faith-based principles and serve Muslim audiences.',
+    a: 'We primarily serve Muslim-led brands and organisations. However, we also welcome values-aligned clients who respect our ethical and faith-based principles and serve Muslim audiences.',
   },
   {
     cat: 'General',
     q: 'What does "faith-aligned" actually mean?',
-    a: 'Faith-aligned means ethical marketing, modest branding, and no deceptive or haram practices. We avoid manipulative tactics and prioritize trust, transparency, and long-term impact.',
+    a: 'Faith-aligned means ethical marketing, modest branding, and no deceptive or haram practices. We avoid manipulative tactics and prioritise trust, transparency, and long-term impact.',
   },
   {
     cat: 'General',
@@ -56,7 +56,7 @@ const FAQS: FaqItem[] = [
   {
     cat: 'Website & App',
     q: 'What kinds of websites do you build?',
-    a: 'We build custom websites tailored to your brand, audience, and business goals — from corporate websites and service businesses to e-commerce stores, nonprofit organizations, and startup platforms.',
+    a: 'We build custom websites tailored to your brand, audience, and business goals — from corporate websites and service businesses to e-commerce stores, non-profit organisations, and startup platforms.',
   },
   {
     cat: 'Website & App',
@@ -86,7 +86,7 @@ const FAQS: FaqItem[] = [
   {
     cat: 'Website & App',
     q: 'Will our website or app be fast and secure?',
-    a: 'Yes. We prioritize speed, performance, and security throughout development, following industry best practices to ensure a reliable and trustworthy user experience.',
+    a: 'Yes. We prioritise speed, performance, and security throughout development, following industry best practices to ensure a reliable and trustworthy user experience.',
   },
   {
     cat: 'Website & App',

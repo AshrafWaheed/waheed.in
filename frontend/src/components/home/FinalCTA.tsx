@@ -13,7 +13,7 @@ export default function FinalCTA() {
           24 hours, in sha Allah.
         </p>
         <div className="cta-acts reveal delay-2">
-          <Link href="/contact" className="btn btn-teal">
+          <Link href="/contact" className="btn btn-gold">
             Apply for a Free Discovery Call →
           </Link>
         </div>

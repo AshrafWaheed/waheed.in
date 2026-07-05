@@ -53,7 +53,7 @@ export default function ServicesPage() {
       </div>
 
       {/* ── Offer Ladder ── */}
-      <section className="sec" style={{ background: '#F7F3ED', paddingBottom: '4rem' }}>
+      <section className="sec" style={{ background: '#F7F3ED' }}>
         <div className="cnt">
           <div className="svc-grid" style={{ marginTop: 0 }}>
             {CARDS.map((card) => (
@@ -75,7 +75,7 @@ export default function ServicesPage() {
                 <p className="svc-desc">{card.desc}</p>
                 <Link
                   href="/contact"
-                  className={`btn svc-card-cta ${card.featured ? 'btn-gold' : 'btn-outline'}`}
+                  className={`btn btn-sm svc-card-cta ${card.featured ? 'btn-gold' : 'btn-outline'}`}
                 >
                   Apply →
                 </Link>
@@ -100,71 +100,6 @@ export default function ServicesPage() {
         </div>
       </section>
 
-      {/* ── Why Waheed ── */}
-      <section className="sec" style={{ background: '#FFFDF9' }}>
-        <div className="cnt">
-          <div style={{ maxWidth: 640, margin: '0 auto', textAlign: 'center' }}>
-            <span className="eyebrow-v2 center reveal">Built different</span>
-            <h2 className="svc-section-h reveal delay-1">
-              Every engagement is Shariah-compliant by design.
-            </h2>
-            <p className="svc-section-sub reveal delay-2">
-              We only take on two to three clients per quarter — so your project gets the full weight
-              of the studio, not a slice of an overloaded team. No interest-based pricing structures,
-              no manipulative sales tactics, no compromise on quality or on deen.
-            </p>
-          </div>
-
-          <div className="svc-why-grid">
-            {WHY_ITEMS.map((item, i) => (
-              <div key={item.title} className={`svc-why-item reveal delay-${i + 1}`}>
-                <span className="svc-why-num">0{i + 1}</span>
-                <h4 className="svc-why-title">{item.title}</h4>
-                <p className="svc-why-desc">{item.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── CTA ── */}
-      <section className="cta-banner">
-        <div className="cnt" style={{ position: 'relative', zIndex: 1 }}>
-          <span className="eyebrow-v2 center">Ready when you are</span>
-          <h2 className="cta-h reveal">
-            Apply for a free <em>Discovery Call.</em>
-          </h2>
-          <p className="cta-p reveal delay-1">
-            30 minutes. No pressure. We&apos;ll review your application personally and respond
-            within 24 hours, in sha Allah.
-          </p>
-          <div className="cta-acts reveal delay-2">
-            <Link href="/contact" className="btn btn-teal">
-              Apply Now →
-            </Link>
-          </div>
-        </div>
-      </section>
-
     </main>
   );
 }
-
-const WHY_ITEMS = [
-  {
-    title: 'Limited Capacity',
-    desc:  'Two to three clients per quarter. Your project is never diluted across a hundred others.',
-  },
-  {
-    title: 'Values-Aligned Strategy',
-    desc:  'Every recommendation is filtered through Shariah principles — no grey-area tactics, ever.',
-  },
-  {
-    title: 'Transparent Scope',
-    desc:  'Strategy and deliverables agreed in writing before a single pixel is drawn or a line coded.',
-  },
-  {
-    title: 'Post-Launch Partnership',
-    desc:  'Every engagement includes post-launch support. We do not disappear after go-live.',
-  },
-] as const;

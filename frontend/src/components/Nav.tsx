@@ -7,7 +7,6 @@ import { AnimatePresence, motion } from 'framer-motion';
 
 const LINKS = [
   { href: '/about',    label: 'About'    },
-  { href: '/story',    label: 'Our Story' },
   { href: '/services', label: 'Services' },
   { href: '/faq',      label: 'FAQs'     },
 ];
@@ -64,7 +63,7 @@ export default function Nav() {
 
           {/* Desktop CTA */}
           <Link href="/contact" className="btn btn-teal btn-sm nav-cta">
-            Apply →
+            Let&apos;s talk →
           </Link>
 
           {/* Burger */}
@@ -105,7 +104,7 @@ export default function Nav() {
               className="btn btn-gold"
               style={{ alignSelf: 'flex-start', marginTop: '1rem' }}
             >
-              Apply for a Discovery Call →
+              Let&apos;s talk →
             </Link>
           </motion.div>
         )}
