@@ -47,10 +47,10 @@ export default function PrivacyPage() {
             <p>Form submissions are stored securely on our server in India. We retain contact records only as long as necessary to manage client relationships, and no longer than 3 years after the last contact.</p>
 
             <h2>Your rights</h2>
-            <p>You may request access to, correction of, or deletion of your personal information at any time by emailing us at <a href="mailto:ashraf@waheed.in">ashraf@waheed.in</a>. We will respond within 10 business days, in shā' Allāh.</p>
+            <p>You may request access to, correction of, or deletion of your personal information at any time by emailing us at <a href="mailto:info@waheed.in">info@waheed.in</a>. We will respond within 10 business days, in shā' Allāh.</p>
 
             <h2>Contact</h2>
-            <p>For any privacy-related questions: <a href="mailto:ashraf@waheed.in">ashraf@waheed.in</a></p>
+            <p>For any privacy-related questions: <a href="mailto:info@waheed.in">info@waheed.in</a></p>
 
           </div>
 

@@ -11,9 +11,6 @@ const LINES = [
 function QuoteLayer() {
   return (
     <>
-      <p className="m-arabic" aria-hidden="true">
-        إِنَّ مَعَ الْعُسْرِ يُسْرًا
-      </p>
       <blockquote className="m-quote">
         {LINES.map((line) => (
           <span key={line} className="m-line">{line}</span>

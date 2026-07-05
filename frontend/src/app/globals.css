@@ -975,20 +975,20 @@
   font-family:    var(--font-serif);
   font-weight:    300;
   font-style:     italic;
-  font-size:      clamp(7rem, 18vw, 16rem);
+  font-size:      clamp(4.5rem, 10vw, 8.5rem);
   line-height:    .9;
   letter-spacing: -.02em;
   opacity:        .85;
-  margin-bottom:  2.2rem;
+  margin-bottom:  1.4rem;
 }
 
-/* Phase name (Arabic/Islamic term) */
+/* Phase name (the work) */
 .ip-name {
   font-family:    var(--font-serif);
   font-weight:    400;
-  font-size:      clamp(2.6rem, 5.5vw, 4.6rem);
+  font-size:      clamp(2rem, 4.2vw, 3.6rem);
   letter-spacing: -.01em;
-  line-height:    1;
+  line-height:    1.05;
   margin:         0 0 .6rem;
   opacity:        0;
   transform:      translateY(16px);
@@ -1003,7 +1003,7 @@
   font-size:      1.05rem;
   font-weight:    400;
   letter-spacing: .04em;
-  margin:         0 0 2rem;
+  margin:         0 0 1.3rem;
   opacity:        0;
   transform:      translateY(12px);
   transition:     opacity   .8s ease .35s,
@@ -1036,8 +1036,10 @@
 @media (max-width: 768px) {
   .ihsan-stage    { justify-content: flex-start; }
   .ip-step        { padding: 0 6vw; justify-content: center; }
-  .ip-counter     { font-size: clamp(5rem, 22vw, 9rem); margin-bottom: 1.4rem; }
-  .ip-name        { font-size: clamp(2rem, 9vw, 3rem); }
+  .ip-counter     { font-size: clamp(3.5rem, 15vw, 6rem); margin-bottom: 1rem; }
+  .ip-name        { font-size: clamp(1.8rem, 7vw, 2.6rem); }
+  .ip-name-en     { font-size: .95rem; margin-bottom: 1rem; }
+  .ip-desc        { font-size: .92rem; }
   .ihsan-dots     { right: 2vw; }
 }
 @media (prefers-reduced-motion: reduce) {
@@ -1072,7 +1074,7 @@
 }
 .footer-tagline {
   font-family:    var(--font-serif);
-  font-size:      1.4rem;
+  font-size:      1.2rem;
   font-weight:    400;
   font-style:     italic;
   color:          rgba(247,243,237,.9);

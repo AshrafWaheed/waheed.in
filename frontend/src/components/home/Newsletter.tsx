@@ -41,12 +41,12 @@ export default function Newsletter() {
           <div className="reveal">
             <span className="eyebrow-v2 on-dark">Halal Brand Letters</span>
             <h2 className="nl-h">
-              One idea per week that builds your business{' '}
-              <em>without any filter nor pitch.</em>
+              No pitch. Just one useful idea,{' '}
+              <em>every Thursday.</em>
             </h2>
             <p className="nl-p">
-              Strategic notes for halal founders — on positioning, conversion, brand integrity,
-              and growing without compromise. Sent every Thursday.
+              Strategic notes for halal brand &amp; organisation founders — on positioning,
+              conversion, brand integrity, and growing without compromise.
             </p>
           </div>
 

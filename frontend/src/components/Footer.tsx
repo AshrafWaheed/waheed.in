@@ -50,13 +50,13 @@ export default function Footer() {
               className="footer-logo-img"
             />
             <p className="footer-tagline">
-              For halal brands that refuse to compromise their values
+              A long-term partner for halal brands that refuse to compromise their values
             </p>
             <div className="footer-meta">
               <span>
                 <b>Email</b>
                 {' · '}
-                <a href="mailto:ashraf@waheed.in">ASHRAF@WAHEED.IN</a>
+                <a href="mailto:info@waheed.in">INFO@WAHEED.IN</a>
               </span>
             </div>
 

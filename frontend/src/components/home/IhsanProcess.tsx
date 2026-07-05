@@ -4,47 +4,39 @@ import { useEffect, useRef } from 'react';
 
 const STEPS = [
   {
-    num:    1,
-    phase:  'Niyyah',
-    en:     'Intent',
-    bg:     'ivory',
-    lines:  [
-      'A free clarity call.',
-      'We learn your goals, your audience, and the values you refuse to compromise.',
-      'We name your intent before we name the work.',
-    ],
+    num: 1,
+    title: 'Discovery + Diagnosis',
+    grounded: 'the right Niyyah (Intention)',
+    bg: 'ivory',
+    desc: `We start by understanding your challenges, your goals, your ideal audience, the values you refuse to compromise, and what "growth" actually needs to mean for you before anything is designed. This is where we surface what's working, what isn't, and what you're really trying to build.`,
   },
   {
-    num:    2,
-    phase:  'Tasawwur',
-    en:     'Conception',
-    bg:     'teal',
-    lines:  [
-      'A documented strategy and visual direction.',
-      'Brand foundations, content architecture, conversion path —',
-      'agreed in writing before a pixel is drawn.',
-    ],
+    num: 2,
+    title: 'Strategy Roadmap',
+    grounded: 'Tadbir (Wise planning)',
+    bg: 'teal',
+    desc: `A clear picture of the site, brand, and system before a single pixel is drawn. Direction, architecture, and priorities are agreed in writing, so both sides know exactly what's being built and why.`,
   },
   {
-    num:    3,
-    phase:  'Ihsan',
-    en:     'Execution',
-    bg:     'ivory',
-    lines:  [
-      'Build, test, launch.',
-      'Excellence applied to code, copy, contracts, and conduct.',
-      'Weekly check-ins. Honest communication throughout.',
-    ],
+    num: 3,
+    title: 'Build & Execution',
+    grounded: 'Ihsan (Excellence)',
+    bg: 'ivory',
+    desc: `The work gets built with care at every stage, not just at the parts a client will see. Ihsan means doing something as if it's being watched closely, even when it isn't.`,
   },
   {
-    num:    4,
-    phase:  'Amanah',
-    en:     'Stewardship',
-    bg:     'teal',
-    lines:  [
-      'Post-launch optimisation, quarterly reviews, ongoing care.',
-      'Because a strong digital presence requires consistent stewardship.',
-    ],
+    num: 4,
+    title: 'Optimise what works',
+    grounded: 'Itqan (Mastery)',
+    bg: 'teal',
+    desc: `Once something is live, we refine it against real data instead of guesswork. Itqan is precision — the discipline of not leaving something "good enough" when it could be exact.`,
+  },
+  {
+    num: 5,
+    title: 'Long-term Partnership',
+    grounded: 'Amanah (Trust)',
+    bg: 'ivory',
+    desc: `The relationship doesn't end at launch. Amanah means trust held responsibly — we stay accountable for what we built and keep showing up for it.`,
   },
 ];
 
@@ -140,7 +132,7 @@ export default function IhsanProcess() {
             The Ihsan Process. <em>How we build.</em>
           </h2>
           <p className="ihsan-sub reveal delay-1">
-            Four phases that bring clarity and organisation to the process — each grounded in an Islamic principle.
+            Five phases that bring clarity and organisation to the process — each grounded in an Islamic principle.
           </p>
         </div>
 
@@ -167,7 +159,7 @@ export default function IhsanProcess() {
             <div className="ihsan-process">
               {STEPS.map((step, i) => (
                 <div
-                  key={step.phase}
+                  key={step.grounded}
                   className={`ip-step${i === 0 ? ' active' : ''}`}
                   ref={(el) => { stepEls.current[i] = el; }}
                   data-i={i}
@@ -183,13 +175,9 @@ export default function IhsanProcess() {
                     </span>
                   </div>
 
-                  <h3 className="ip-name">{step.phase}</h3>
-                  <p className="ip-name-en">{step.en}</p>
-                  <p className="ip-desc">
-                    {step.lines.map((ln) => (
-                      <span key={ln} className="ln">{ln}</span>
-                    ))}
-                  </p>
+                  <h3 className="ip-name">{step.title}</h3>
+                  <p className="ip-name-en">grounded in {step.grounded}</p>
+                  <p className="ip-desc">{step.desc}</p>
                 </div>
               ))}
             </div>

@@ -9,12 +9,12 @@ export default function FinalCTA() {
           Ready to grow with <em>clarity and Barakah?</em>
         </h2>
         <p className="cta-p reveal delay-1">
-          A 30-minute fit call. We review every application personally and respond within
+          A 15–30 minute fit call. We review every application personally and respond within
           24 hours, in sha Allah.
         </p>
         <div className="cta-acts reveal delay-2">
           <Link href="/contact" className="btn btn-gold">
-            Apply for a Free Discovery Call →
+            Book a free clarity call →
           </Link>
         </div>
       </div>

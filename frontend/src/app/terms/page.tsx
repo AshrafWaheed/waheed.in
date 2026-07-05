@@ -48,7 +48,7 @@ export default function TermsPage() {
             <p>These terms are governed by the laws of India. Any disputes shall be resolved through mutual consultation in good faith before any formal proceedings.</p>
 
             <h2>Contact</h2>
-            <p>For questions about these terms: <a href="mailto:ashraf@waheed.in">ashraf@waheed.in</a></p>
+            <p>For questions about these terms: <a href="mailto:info@waheed.in">info@waheed.in</a></p>
 
           </div>
 
