@@ -453,6 +453,52 @@
 .adm-upload-btn:hover { border-color: #9c7d1c; background: #fff; }
 .adm-cover-url { font-size: .8rem !important; }
 
+/* ── Public blog (/blog) ─────────────────────────────────────────── */
+.blog-wrap { max-width: 760px; margin: 0 auto; padding: 4rem 1.5rem 6rem; }
+.blog-hero { text-align: center; margin-bottom: 3.5rem; }
+.blog-eyebrow { font-family: var(--font-sans); font-size: .72rem; letter-spacing: .22em; text-transform: uppercase; color: #9c7d1c; margin-bottom: .8rem; }
+.blog-hero h1 { font-family: var(--font-serif); font-size: clamp(2.6rem, 6vw, 3.8rem); font-weight: 500; color: #254851; line-height: 1.1; }
+.blog-hero-sub { font-family: var(--font-sans); color: #5a6b6f; font-size: 1.02rem; line-height: 1.7; max-width: 520px; margin: .8rem auto 0; }
+.blog-empty { text-align: center; color: #7a8a8e; font-family: var(--font-sans); padding: 3rem 0; }
+
+.blog-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 2rem; }
+.blog-card { display: block; text-decoration: none; border: 1px solid rgba(37,72,81,.1); border-radius: 14px; overflow: hidden; background: #FFFDF9; transition: transform .2s, box-shadow .2s, border-color .2s; }
+.blog-card:hover { transform: translateY(-3px); box-shadow: 0 20px 40px -20px rgba(37,72,81,.35); border-color: rgba(156,125,28,.4); }
+.blog-card-cover { aspect-ratio: 16 / 9; overflow: hidden; background: #eceae4; }
+.blog-card-cover img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.blog-card-body { padding: 1.3rem 1.4rem 1.5rem; }
+.blog-card-body h2 { font-family: var(--font-serif); font-size: 1.4rem; font-weight: 600; color: #254851; line-height: 1.2; }
+.blog-card-excerpt { font-family: var(--font-sans); font-size: .9rem; color: #5a6b6f; line-height: 1.6; margin-top: .5rem; }
+.blog-card-meta { font-family: var(--font-sans); font-size: .75rem; color: #9aa7ab; margin-top: .9rem; letter-spacing: .02em; }
+.blog-pager { display: flex; align-items: center; justify-content: space-between; gap: 1.4rem; margin-top: 3rem; font-family: var(--font-sans); font-size: .88rem; }
+.blog-pager a { color: #335C67; text-decoration: none; }
+.blog-pager a:hover { color: #9c7d1c; }
+.blog-pager span { color: #7a8a8e; }
+
+.blog-back { font-family: var(--font-sans); font-size: .85rem; margin-bottom: 1.5rem; }
+.blog-back a { color: #335C67; text-decoration: none; }
+.blog-back a:hover { color: #9c7d1c; }
+.blog-article-head h1 { font-family: var(--font-serif); font-size: clamp(2.2rem, 5vw, 3.2rem); font-weight: 500; color: #1a363d; line-height: 1.12; }
+.blog-article-meta { font-family: var(--font-sans); font-size: .85rem; color: #7a8a8e; margin-top: 1rem; }
+.blog-article-cover { margin: 2.2rem 0; border-radius: 14px; overflow: hidden; }
+.blog-article-cover img { width: 100%; height: auto; display: block; }
+
+.blog-content { font-family: var(--font-sans); font-size: 1.08rem; line-height: 1.8; color: #2b3c40; }
+.blog-content > * + * { margin-top: 1.3rem; }
+.blog-content h2 { font-family: var(--font-serif); font-size: 1.9rem; font-weight: 600; color: #254851; margin-top: 2.4rem; }
+.blog-content h3 { font-family: var(--font-serif); font-size: 1.5rem; font-weight: 600; color: #254851; margin-top: 2rem; }
+.blog-content h4 { font-family: var(--font-serif); font-size: 1.25rem; font-weight: 600; color: #254851; margin-top: 1.6rem; }
+.blog-content a { color: #335C67; text-decoration: underline; text-underline-offset: 2px; }
+.blog-content a:hover { color: #9c7d1c; }
+.blog-content ul, .blog-content ol { padding-left: 1.5rem; }
+.blog-content li { margin-top: .5rem; }
+.blog-content blockquote { border-left: 3px solid #9c7d1c; padding-left: 1.3rem; font-style: italic; color: #4a5a5e; font-family: var(--font-serif); font-size: 1.25rem; }
+.blog-content img { max-width: 100%; height: auto; border-radius: 10px; margin: 1.5rem 0; }
+.blog-content code { background: rgba(37,72,81,.08); padding: .12em .4em; border-radius: 4px; font-size: .9em; }
+.blog-content pre { background: #1a363d; color: #F7F3ED; padding: 1.2rem 1.4rem; border-radius: 10px; overflow-x: auto; }
+.blog-content pre code { background: none; color: inherit; padding: 0; }
+.blog-content hr { border: none; border-top: 1px solid rgba(37,72,81,.15); margin: 2rem 0; }
+
 /* ─── Scroll progress bar ────────────────────────────────────── */
 .scroll-progress {
   position:       fixed;

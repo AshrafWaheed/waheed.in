@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\PostController;
+use App\Http\Controllers\PublicPostController;
 use Illuminate\Support\Facades\Route;
 
 // ── Admin portal API (BFF: called by the Next.js server, Bearer-token auth) ──
@@ -16,3 +17,7 @@ Route::prefix('admin')->group(function () {
         Route::apiResource('posts', PostController::class);
     });
 });
+
+// ── Public blog API (read-only; consumed by Next.js SSR over loopback) ──
+Route::get('posts', [PublicPostController::class, 'index']);
+Route::get('posts/{post:slug}', [PublicPostController::class, 'show']);
