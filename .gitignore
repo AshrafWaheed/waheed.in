@@ -1,5 +1,6 @@
 # Laravel
 backend/.env
+backend/ADMIN_CREDENTIALS.txt
 backend/vendor/
 backend/node_modules/
 backend/storage/logs/*
