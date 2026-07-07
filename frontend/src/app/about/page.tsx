@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 
 export const metadata: Metadata = {
-  title:       'About — WAHEED',
+  title:       'About · WAHEED',
   description: 'Built for brands that refuse to compromise. The founding story and team behind Waheed Digital Studio.',
 };
 
@@ -78,10 +78,10 @@ export default function AboutPage() {
             <div>
               <span className="eyebrow-v2">The Founding Story</span>
               <h2 className="about-narrative-h reveal delay-1">
-                We Saw the Same Gap — Again and Again.
+                We Saw the Same Gap, Again and Again.
               </h2>
               <p className="reveal delay-2">
-                Powerful halal businesses and Muslim organisations with big visions — but very
+                Powerful halal businesses and Muslim organisations with big visions, but very
                 little strategic digital infrastructure to support them in a way that aligns with
                 Islamic values.
               </p>
@@ -96,7 +96,7 @@ export default function AboutPage() {
               </p>
               <blockquote className="about-blockquote reveal delay-3">
                 We deeply understand that you want a website that converts and content that truly
-                connects with your ideal audience — all without compromising your principles, your
+                connects with your ideal audience, all without compromising your principles, your
                 modesty, or your peace of mind.
               </blockquote>
               <p className="reveal delay-3">

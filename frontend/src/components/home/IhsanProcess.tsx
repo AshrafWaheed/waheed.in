@@ -29,14 +29,14 @@ const STEPS = [
     title: 'Optimise what works',
     grounded: 'Itqan (Mastery)',
     bg: 'teal',
-    desc: `Once something is live, we refine it against real data instead of guesswork. Itqan is precision — the discipline of not leaving something "good enough" when it could be exact.`,
+    desc: `Once something is live, we refine it against real data instead of guesswork. Itqan is precision, the discipline of not leaving something "good enough" when it could be exact.`,
   },
   {
     num: 5,
     title: 'Long-term Partnership',
     grounded: 'Amanah (Trust)',
     bg: 'ivory',
-    desc: `The relationship doesn't end at launch. Amanah means trust held responsibly — we stay accountable for what we built and keep showing up for it.`,
+    desc: `The relationship doesn't end at launch. Amanah means trust held responsibly, we stay accountable for what we built and keep showing up for it.`,
   },
 ];
 
@@ -132,7 +132,7 @@ export default function IhsanProcess() {
             The Ihsan Process. <em>How we build.</em>
           </h2>
           <p className="ihsan-sub reveal delay-1">
-            Five phases that bring clarity and organisation to the process — each grounded in an Islamic principle.
+            Five phases that bring clarity and organisation to the process, each grounded in an Islamic principle.
           </p>
         </div>
 
@@ -155,7 +155,7 @@ export default function IhsanProcess() {
               ))}
             </div>
 
-            {/* Steps — all stacked, active one shown */}
+            {/* Steps, all stacked, active one shown */}
             <div className="ihsan-process">
               {STEPS.map((step, i) => (
                 <div

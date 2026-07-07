@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 
 export const metadata: Metadata = {
-  title:       'Services — WAHEED',
+  title:       'Services · WAHEED',
   description: 'Three engagement levels built for halal brands: Foundations Engagement, The Authority System, and Halal Brand Partnership.',
 };
 
@@ -10,7 +10,7 @@ const CARDS = [
   {
     eyebrow:  'Web & Brand',
     title:    'Foundations Engagement',
-    subtitle: 'For halal brands that need a digital home built to last — not to impress for three months.',
+    subtitle: 'For halal brands that need a digital home built to last, not to impress for three months.',
     desc:     'Full website + brand foundations + 30-day post-launch optimisation. Conversion-fluent, mobile-first, built on a system you can grow into.',
     featured: false,
     badge:    null,

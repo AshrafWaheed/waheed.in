@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import { Cormorant_Garamond, DM_Sans, Amiri } from "next/font/google";
 import ScrollProgress  from "@/components/ScrollProgress";
 import ScrollReveal    from "@/components/ScrollReveal";
 import Nav             from "@/components/Nav";
 import Footer          from "@/components/Footer";
 import WhatsAppFloat   from "@/components/WhatsAppFloat";
+import { COMING_SOON } from "@/lib/site-config";
 import "./globals.css";
 
 const cormorant = Cormorant_Garamond({
@@ -32,12 +34,12 @@ const amiri = Amiri({
 
 export const metadata: Metadata = {
   other: { 'man-site-verification': '4448e038432f15e8da67b866b4fb98b8' },
-  title: "WAHEED — Halal Digital Studio",
+  title: "WAHEED · Halal Digital Studio",
   description:
     "We help Muslim-led brands grow with integrity. Strategy, design, and digital products built on Shariah-aligned values. No shortcuts. No compromise.",
   metadataBase: new URL("https://waheed.in"),
   openGraph: {
-    title: "WAHEED — Halal Digital Studio",
+    title: "WAHEED · Halal Digital Studio",
     description:
       "We help Muslim-led brands grow with integrity. Strategy, design, and digital products built on Shariah-aligned values.",
     url: "https://waheed.in",
@@ -58,13 +60,44 @@ export default function RootLayout({
       className={`${cormorant.variable} ${dmSans.variable} ${amiri.variable} h-full`}
     >
       <body className="min-h-full flex flex-col antialiased">
-        <div className="scroll-progress" id="scrollProgress" />
-        <ScrollProgress />
-        <ScrollReveal />
-        <Nav />
-        {children}
-        <Footer />
-        <WhatsAppFloat />
+        {COMING_SOON ? (
+          children
+        ) : (
+          <>
+            <div className="scroll-progress" id="scrollProgress" />
+            <ScrollProgress />
+            <ScrollReveal />
+            <Nav />
+            {children}
+            <Footer />
+            <WhatsAppFloat />
+          </>
+        )}
+
+        {/* Google Analytics (gtag.js) — loads on all pages, incl. coming-soon */}
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-JWK6HQKXGY"
+          strategy="afterInteractive"
+        />
+        <Script id="ga-gtag" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-JWK6HQKXGY');
+          `}
+        </Script>
+
+        {/* Microsoft Clarity */}
+        <Script id="ms-clarity" strategy="afterInteractive">
+          {`
+            (function(c,l,a,r,i,t,y){
+                c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+                t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+                y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+            })(window, document, "clarity", "script", "xi6caj4oqk");
+          `}
+        </Script>
       </body>
     </html>
   );

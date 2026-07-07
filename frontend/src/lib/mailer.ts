@@ -36,7 +36,7 @@ export interface MailOptions {
 export async function sendMail(opts: MailOptions): Promise<void> {
   const transport = createTransport();
   if (!transport) {
-    // SMTP not configured yet — log and continue silently
+    // SMTP not configured yet, log and continue silently
     console.log('[mailer] SMTP_HOST not set, skipping email:', opts.subject);
     return;
   }

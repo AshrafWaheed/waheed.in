@@ -14,7 +14,7 @@ const FAQS: FaqItem[] = [
   {
     cat: 'General',
     q: 'What makes Waheed different from other digital agencies?',
-    a: 'Waheed combines strategic technology, web and app development, and digital growth with a Shariah-aligned approach. We build high-performing digital products and marketing systems that prioritise clarity, conversion, and long-term credibility — without manipulative tactics or compromising your values. We believe barakah and real business results are not opposites. When technology, strategy, and marketing are built with integrity and excellence, growth becomes sustainable.',
+    a: 'Waheed combines strategic technology, web and app development, and digital growth with a Shariah-aligned approach. We build high-performing digital products and marketing systems that prioritise clarity, conversion, and long-term credibility, without manipulative tactics or compromising your values. We believe barakah and real business results are not opposites. When technology, strategy, and marketing are built with integrity and excellence, growth becomes sustainable.',
   },
   {
     cat: 'General',
@@ -44,7 +44,7 @@ const FAQS: FaqItem[] = [
   {
     cat: 'General',
     q: "We've worked with agencies before and didn't see results. How are you different?",
-    a: 'We begin with research and strategy — not just design. Every recommendation is based on your audience, positioning, and business objectives, ensuring your website and marketing work together to generate meaningful results.',
+    a: 'We begin with research and strategy, not just design. Every recommendation is based on your audience, positioning, and business objectives, ensuring your website and marketing work together to generate meaningful results.',
   },
   {
     cat: 'General',
@@ -56,7 +56,7 @@ const FAQS: FaqItem[] = [
   {
     cat: 'Website & App',
     q: 'What kinds of websites do you build?',
-    a: 'We build custom websites tailored to your brand, audience, and business goals — from corporate websites and service businesses to e-commerce stores, non-profit organisations, and startup platforms.',
+    a: 'We build custom websites tailored to your brand, audience, and business goals, from corporate websites and service businesses to e-commerce stores, non-profit organisations, and startup platforms.',
   },
   {
     cat: 'Website & App',
@@ -128,7 +128,7 @@ const FAQS: FaqItem[] = [
   {
     cat: 'Social Media',
     q: 'Will social media actually grow our business?',
-    a: 'When approached strategically, yes. Social media builds awareness, trust, authority, and relationships — but success comes from clear positioning and consistency rather than simply posting frequently.',
+    a: 'When approached strategically, yes. Social media builds awareness, trust, authority, and relationships, but success comes from clear positioning and consistency rather than simply posting frequently.',
   },
   {
     cat: 'Social Media',
@@ -150,7 +150,7 @@ const FAQS: FaqItem[] = [
   {
     cat: 'Payment',
     q: 'Do you offer payment plans?',
-    a: "Yes. We typically require an upfront deposit, with the remaining balance divided into milestone-based payments throughout the project. We don't use interest-based payment plans — our structure is straightforward, fair, and transparent.",
+    a: "Yes. We typically require an upfront deposit, with the remaining balance divided into milestone-based payments throughout the project. We don't use interest-based payment plans, our structure is straightforward, fair, and transparent.",
   },
 ];
 

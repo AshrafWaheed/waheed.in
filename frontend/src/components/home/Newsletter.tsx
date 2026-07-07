@@ -37,7 +37,7 @@ export default function Newsletter() {
       <div className="cnt">
         <div className="nl-grid">
 
-          {/* Left — copy */}
+          {/* Left, copy */}
           <div className="reveal">
             <span className="eyebrow-v2 on-dark">Halal Brand Letters</span>
             <h2 className="nl-h">
@@ -45,16 +45,16 @@ export default function Newsletter() {
               <em>every Thursday.</em>
             </h2>
             <p className="nl-p">
-              Strategic notes for halal brand &amp; organisation founders — on positioning,
+              Strategic notes for halal brand &amp; organisation founders, on positioning,
               conversion, brand integrity, and growing without compromise.
             </p>
           </div>
 
-          {/* Right — form */}
+          {/* Right, form */}
           <div className="reveal delay-2">
             {submitted ? (
               <p className="nl-success">
-                You&rsquo;re on the list — Jazakallahu Khayran.
+                You&rsquo;re on the list, Jazakallahu Khayran.
               </p>
             ) : (
               <form className="nl-form" onSubmit={handleSubmit} noValidate>

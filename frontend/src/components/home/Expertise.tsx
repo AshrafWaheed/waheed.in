@@ -20,14 +20,14 @@ const DOORS = [
   {
     num: '03',
     title: 'Brand Strategy',
-    desc: 'A weak brand competes on price; a strong brand commands premium trust. We craft positioning, narrative and visual systems that make the right buyer feel chosen — and the wrong buyer move on.',
+    desc: 'A weak brand competes on price; a strong brand commands premium trust. We craft positioning, narrative and visual systems that make the right buyer feel chosen, and the wrong buyer move on.',
     promise: 'Positioning that pre-sells.',
     soon: false,
   },
   {
     num: '04',
     title: 'SEO',
-    desc: 'Ads stop the moment you stop paying. We compound your visibility on Google with technical fixes, intent-driven content, and authority signals that bring qualified buyers to your door — for years.',
+    desc: 'Ads stop the moment you stop paying. We compound your visibility on Google with technical fixes, intent-driven content, and authority signals that bring qualified buyers to your door, for years.',
     promise: 'Traffic that compounds.',
     soon: false,
   },
@@ -41,14 +41,14 @@ const DOORS = [
   {
     num: '06',
     title: 'Conversion Copywriting',
-    desc: 'Beautiful design without sharp words leaves money on the table. We write headlines, landing pages and email sequences that move readers from curious to convinced — and convinced to customer.',
+    desc: 'Beautiful design without sharp words leaves money on the table. We write headlines, landing pages and email sequences that move readers from curious to convinced, and convinced to customer.',
     promise: 'Words that close.',
     soon: true,
   },
   {
     num: '07',
     title: 'Ad Creatives',
-    desc: 'Sharp targeting still dies on weak creative. We design and write scroll-stopping ad creatives — static, motion, and copy — engineered to earn attention and turn cold audiences into buyers, without clickbait or compromise.',
+    desc: 'Sharp targeting still dies on weak creative. We design and write scroll-stopping ad creatives (static, motion, and copy) engineered to earn attention and turn cold audiences into buyers, without clickbait or compromise.',
     promise: 'Creative that earns the click.',
     soon: true,
   },
@@ -79,12 +79,12 @@ export default function Expertise() {
       const total    = sc!.offsetHeight - vh;
       const scrolled = Math.min(Math.max(-r.top, 0), total);
 
-      // Phase 1 — cards separate (eased)
+      // Phase 1, cards separate (eased)
       const p1    = sepPx > 0 ? Math.min(1, scrolled / sepPx) : 1;
       const eased = 1 - Math.pow(1 - p1, 3);
       sc!.style.setProperty('--p', eased.toFixed(4));
 
-      // Phase 2 — cards scroll horizontally, 1:1 with continued vertical scroll
+      // Phase 2, cards scroll horizontally, 1:1 with continued vertical scroll
       const p2 = maxScroll > 0
         ? Math.min(1, Math.max(0, (scrolled - sepPx) / maxScroll))
         : 0;
@@ -93,7 +93,7 @@ export default function Expertise() {
 
     function measure() {
       if (isMobile()) {
-        // Mobile: no pin — static section with native horizontal swipe
+        // Mobile: no pin, static section with native horizontal swipe
         sc!.style.height = '';
         sc!.style.setProperty('--p', '1');
         row!.scrollLeft = 0;

@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 
 export const metadata: Metadata = {
-  title: 'Privacy Policy — WAHEED',
+  title: 'Privacy Policy · WAHEED',
   description: 'How Waheed Digital Studio collects, uses, and protects your personal information.',
 };
 

@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation';
 import { AnimatePresence, motion } from 'framer-motion';
 
 const LINKS = [
+  { href: '/',         label: 'Home'     },
   { href: '/about',    label: 'About'    },
   { href: '/services', label: 'Services' },
   { href: '/faq',      label: 'FAQs'     },
@@ -53,7 +54,7 @@ export default function Nav() {
               <li key={href}>
                 <Link
                   href={href}
-                  className={pathname.startsWith(href) ? 'active' : ''}
+                  className={(href === '/' ? pathname === '/' : pathname.startsWith(href)) ? 'active' : ''}
                 >
                   {label}
                 </Link>
@@ -90,8 +91,6 @@ export default function Nav() {
             exit={{ opacity: 0, y: -8 }}
             transition={{ duration: 0.25, ease: EASE }}
           >
-            <Link href="/" onClick={() => setOpen(false)}>Home</Link>
-
             {LINKS.map(({ href, label }) => (
               <Link key={href} href={href} onClick={() => setOpen(false)}>
                 {label}

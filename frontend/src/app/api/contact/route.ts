@@ -91,7 +91,7 @@ export async function POST(req: Request) {
 
     await sendMail({
       to:      alertTo,
-      subject: `New project application — ${submission.name} (${submission.brand})`,
+      subject: `New project application, ${submission.name} (${submission.brand})`,
       text:    lines,
       html:    `<pre style="font-family:monospace;font-size:14px;line-height:1.6">${lines}</pre>`,
     }).catch(err => console.error('[contact] mail error:', err));

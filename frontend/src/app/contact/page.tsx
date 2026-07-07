@@ -6,7 +6,7 @@ const SERVICES = [
   'Foundations Engagement',
   'The Authority System',
   'Halal Brand Partnership',
-  'Not Sure Yet — Need Guidance',
+  'Not Sure Yet, Need Guidance',
   'Custom',
 ] as const;
 
@@ -20,7 +20,7 @@ const CUSTOM_OPTS = [
 ] as const;
 
 const STAGES   = ['Idea stage', 'Pre-launch', '0–1 year', '1–3 years', 'Established (3+ years)'];
-const BUDGETS  = ['Under $1,000', '$1,000–$3,000', '$3,000–$5,000', '$5,000+', 'Not sure — open to proposal'];
+const BUDGETS  = ['Under $1,000', '$1,000–$3,000', '$3,000–$5,000', '$5,000+', 'Not sure, open to proposal'];
 const TIMELINE = ['Immediately', 'Within 1 month', '1–3 months', 'Just exploring'];
 
 interface FormData {
@@ -130,7 +130,7 @@ export default function ContactPage() {
             <div className="reveal">
               <h2 className="contact-info-h">Start a Conversation</h2>
               <p className="contact-intro">
-                Whether you&apos;re exploring your options or ready to start immediately — we&apos;d
+                Whether you&apos;re exploring your options or ready to start immediately, we&apos;d
                 love to hear about your brand. Fill out the form and we&apos;ll be in touch,
                 in&nbsp;shā&apos;&nbsp;Allāh.
               </p>

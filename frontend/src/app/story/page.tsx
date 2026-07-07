@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 
 export const metadata: Metadata = {
-  title:       'Our Story — WAHEED',
+  title:       'Our Story · WAHEED',
   description: 'Where conviction meets craft. The story behind Waheed Digital Studio and what we believe about halal business in the digital age.',
 };
 
@@ -13,7 +13,7 @@ const MANIFESTO_BLOCKS = [
   },
   {
     arabic: null,
-    quote:  '"We believe that Deen and duniya are not opposites. They are meant to be aligned. Ethics and Islamic principles are not obstacles to growth — they are the foundation of it."',
+    quote:  '"We believe that Deen and duniya are not opposites. They are meant to be aligned. Ethics and Islamic principles are not obstacles to growth, they are the foundation of it."',
   },
   {
     arabic: null,
@@ -21,7 +21,7 @@ const MANIFESTO_BLOCKS = [
   },
   {
     arabic: 'إِنَّ مَعَ الْعُسْرِ يُسْرًا',
-    quote:  '"WAHEED does not preach loudly. Our dawah is through honesty, consistency, refusing what is doubtful, and doing excellent work — while delivering impact that scales your business."',
+    quote:  '"WAHEED does not preach loudly. Our dawah is through honesty, consistency, refusing what is doubtful, and doing excellent work, while delivering impact that scales your business."',
   },
 ] as const;
 
@@ -32,7 +32,7 @@ export default function StoryPage() {
       {/* ── Story Hero (split) ── */}
       <div className="story-hero">
 
-        {/* Left — headline */}
+        {/* Left, headline */}
         <div className="story-left">
           <svg
             className="geo"
@@ -57,7 +57,7 @@ export default function StoryPage() {
           </div>
         </div>
 
-        {/* Right — origin note */}
+        {/* Right, origin note */}
         <div className="story-right">
           <div className="story-right-inner reveal delay-2">
             <p className="story-arabic" lang="ar">
@@ -66,7 +66,7 @@ export default function StoryPage() {
             <h3 className="story-origin-h">The Beginning</h3>
             <p className="story-origin-p">
               Ashraf and Mardhiyya met through years of shared work in the halal digital
-              space — building, advising, and shipping campaigns for Muslim-led brands.
+              space, building, advising, and shipping campaigns for Muslim-led brands.
               What began as professional collaboration grew into a shared mission.
             </p>
           </div>
@@ -79,10 +79,10 @@ export default function StoryPage() {
         <div className="cnt" style={{ maxWidth: 760 }}>
           <span className="eyebrow-v2 reveal">The Founding Story</span>
           <h2 className="story-section-h reveal delay-1">
-            We Saw the Same Gap — Again and Again.
+            We Saw the Same Gap, Again and Again.
           </h2>
           <p className="story-p reveal delay-2">
-            Powerful halal businesses and Muslim organisations with big visions — but very
+            Powerful halal businesses and Muslim organisations with big visions, but very
             little strategic digital infrastructure to support them in a way that aligns
             with Islamic values.
           </p>
@@ -98,7 +98,7 @@ export default function StoryPage() {
           </p>
           <blockquote className="story-blockquote reveal delay-3">
             We deeply understand that you want a website that converts and content that
-            truly connects with your ideal audience — all without compromising your
+            truly connects with your ideal audience, all without compromising your
             principles, your modesty, or your peace of mind.
           </blockquote>
           <p className="story-p reveal delay-3">

@@ -41,7 +41,7 @@ export default function Footer() {
       <div className="cnt">
         <div className="footer-grid">
 
-          {/* Left — brand */}
+          {/* Left, brand */}
           <div>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
@@ -78,7 +78,7 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Right — nav column */}
+          {/* Right, nav column */}
           <div className="footer-right">
             <div className="footer-cols">
               <div className="footer-col">

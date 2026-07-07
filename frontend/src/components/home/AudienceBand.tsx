@@ -21,7 +21,7 @@ const ITEMS = [
   {
     num: '04',
     title: 'Muslim Coaches & Educators',
-    body: 'Coaches, consultants, and educators building personal brands grounded in Islamic wisdom — who need a digital presence that reflects their credibility and converts the right students and clients.',
+    body: 'Coaches, consultants, and educators building personal brands grounded in Islamic wisdom, who need a digital presence that reflects their credibility and converts the right students and clients.',
   },
 ];
 

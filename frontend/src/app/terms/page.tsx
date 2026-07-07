@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 
 export const metadata: Metadata = {
-  title: 'Terms of Service — WAHEED',
+  title: 'Terms of Service · WAHEED',
   description: 'Terms and conditions for working with Waheed Digital Studio.',
 };
 

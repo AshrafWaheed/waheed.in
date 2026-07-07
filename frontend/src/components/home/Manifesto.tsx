@@ -4,7 +4,7 @@ import { useEffect, useRef } from 'react';
 
 const LINES = [
   '“Growth is not the goal.',
-  'Growth with Barakah is —',
+  'Growth with Barakah is',
   'the one that never costs your integrity.”',
 ];
 
@@ -16,7 +16,7 @@ function QuoteLayer() {
           <span key={line} className="m-line">{line}</span>
         ))}
       </blockquote>
-      <p className="m-attr">— WAHEED</p>
+      <p className="m-attr">WAHEED</p>
     </>
   );
 }

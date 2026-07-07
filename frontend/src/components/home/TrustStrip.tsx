@@ -7,7 +7,7 @@ const ITEMS = [
   '100% Shariah-Compliant',
 ];
 
-// Repeat the base items so a single group is wider than any viewport —
+// Repeat the base items so a single group is wider than any viewport,
 // that's what makes the 2-group translateX(-50%) loop perfectly seamless.
 const GROUP = Array.from({ length: 3 }, () => ITEMS).flat();
 

@@ -20,7 +20,7 @@ function save(rows: Subscriber[]) {
 
 /**
  * Subscribe an email to the Beehiiv publication.
- * ok:true on success (or when Beehiiv isn't configured — falls back to local-only);
+ * ok:true on success (or when Beehiiv isn't configured, falls back to local-only);
  * ok:false with details when the API rejects the request.
  */
 async function subscribeToBeehiiv(email: string): Promise<{ ok: boolean; status: number; detail?: string }> {
@@ -81,7 +81,7 @@ export async function POST(req: Request) {
   if (alertTo && isNew) {
     await sendMail({
       to:      alertTo,
-      subject: 'New newsletter subscriber — Halal Brand Letters',
+      subject: 'New newsletter subscriber, Halal Brand Letters',
       text:    `New subscriber: ${email}\nTotal (local log): ${rows.length}`,
       html:    `<p><strong>New subscriber:</strong> ${email}</p><p>Total (local log): ${rows.length}</p>`,
     }).catch((err) => console.error('[newsletter] mail error:', err));

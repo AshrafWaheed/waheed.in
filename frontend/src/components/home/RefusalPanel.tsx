@@ -13,7 +13,7 @@ export default function RefusalPanel() {
       <div className="cnt">
         <div className="refusal-grid">
 
-          {/* Left — headline */}
+          {/* Left, headline */}
           <div>
             <span className="eyebrow-v2">A standard, not a disclaimer</span>
             <h2 className="refusal-h reveal">
@@ -24,7 +24,7 @@ export default function RefusalPanel() {
             </p>
           </div>
 
-          {/* Right — refusal list */}
+          {/* Right, refusal list */}
           <div className="refusal-list">
             {ITEMS.map((item, i) => (
               <div
