@@ -7,6 +7,14 @@ export const dynamic = 'force-dynamic';
 // Next 16: route context params are async.
 type Ctx = { params: Promise<{ id: string }> };
 
+export async function PUT(req: Request, ctx: Ctx) {
+  const { id } = await ctx.params;
+  const body = await req.text();
+  const res = await adminApi(`/admin/posts/${id}`, { method: 'PUT', body });
+  const data = await res.json().catch(() => ({}));
+  return NextResponse.json(data, { status: res.status });
+}
+
 export async function DELETE(_req: Request, ctx: Ctx) {
   const { id } = await ctx.params;
   const res = await adminApi(`/admin/posts/${id}`, { method: 'DELETE' });
