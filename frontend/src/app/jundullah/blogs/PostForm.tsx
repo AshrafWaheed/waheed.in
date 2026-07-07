@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import RichEditor from './RichEditor';
+import { uploadImage } from './uploadImage';
 
 export type PostData = {
   id: number;
@@ -46,6 +47,7 @@ export default function PostForm({ mode, post }: { mode: 'create' | 'edit'; post
   const [error, setError] = useState('');
   const [justSaved, setJustSaved] = useState(false);
   const [dirty, setDirty] = useState(false);
+  const [coverUploading, setCoverUploading] = useState(false);
 
   const effectiveSlug = slugTouched ? slug : slugify(title);
 
@@ -67,6 +69,22 @@ export default function PostForm({ mode, post }: { mode: 'create' | 'edit'; post
     window.addEventListener('beforeunload', handler);
     return () => window.removeEventListener('beforeunload', handler);
   }, [dirty]);
+
+  async function onCoverFile(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    e.target.value = '';
+    if (!file) return;
+    setCoverUploading(true);
+    setError('');
+    try {
+      const url = await uploadImage(file);
+      edit(setCover)(url);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Cover upload failed.');
+    } finally {
+      setCoverUploading(false);
+    }
+  }
 
   async function save(target: 'draft' | 'published') {
     if (!title.trim()) {
@@ -200,15 +218,29 @@ export default function PostForm({ mode, post }: { mode: 'create' | 'edit'; post
             />
           </label>
 
-          <label className="adm-field2">
-            <span>Cover image URL</span>
+          <div className="adm-field2">
+            <span>Cover image</span>
+            {cover && (
+              <div className="adm-cover-preview">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={cover} alt="Cover preview" />
+                <button type="button" className="adm-cover-remove" onClick={() => edit(setCover)('')}>
+                  Remove
+                </button>
+              </div>
+            )}
+            <label className="adm-upload-btn">
+              {coverUploading ? 'Uploading…' : cover ? 'Replace cover' : 'Upload cover'}
+              <input type="file" accept="image/png,image/jpeg,image/webp,image/gif" hidden onChange={onCoverFile} disabled={coverUploading} />
+            </label>
             <input
               type="text"
               value={cover}
               onChange={(e) => edit(setCover)(e.target.value)}
-              placeholder="/uploads/… (upload comes in B8)"
+              placeholder="or paste an image URL"
+              className="adm-cover-url"
             />
-          </label>
+          </div>
 
           <div className="adm-side-group">
             <p className="adm-side-title">SEO</p>

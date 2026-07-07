@@ -435,6 +435,24 @@
   content: attr(data-placeholder); color: #9aa7ab; float: left; height: 0; pointer-events: none;
 }
 
+/* Cover image uploader */
+.adm-cover-preview { position: relative; border-radius: 8px; overflow: hidden; border: 1px solid rgba(37,72,81,.12); }
+.adm-cover-preview img { display: block; width: 100%; height: auto; }
+.adm-cover-remove {
+  position: absolute; top: .5rem; right: .5rem;
+  background: rgba(26,54,61,.9); color: #F7F3ED; border: none; border-radius: 999px;
+  padding: .3rem .7rem; font-family: var(--font-sans); font-size: .72rem; cursor: pointer;
+}
+.adm-cover-remove:hover { background: #1a363d; }
+.adm-upload-btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  background: #FFFDF9; border: 1px dashed rgba(37,72,81,.3); border-radius: 6px;
+  padding: .6rem .9rem; font-family: var(--font-sans); font-size: .82rem; color: #335C67; cursor: pointer;
+  transition: border-color .18s, background .18s;
+}
+.adm-upload-btn:hover { border-color: #9c7d1c; background: #fff; }
+.adm-cover-url { font-size: .8rem !important; }
+
 /* ─── Scroll progress bar ────────────────────────────────────── */
 .scroll-progress {
   position:       fixed;

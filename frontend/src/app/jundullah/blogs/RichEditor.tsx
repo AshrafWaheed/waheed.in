@@ -4,7 +4,8 @@ import { useEditor, EditorContent, type Editor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Image from '@tiptap/extension-image';
 import Placeholder from '@tiptap/extension-placeholder';
-import { useCallback } from 'react';
+import { useCallback, useRef, useState } from 'react';
+import { uploadImage } from './uploadImage';
 
 function Toolbar({ editor }: { editor: Editor }) {
   const cls = (active: boolean) => `tiptap-btn${active ? ' is-active' : ''}`;
@@ -20,10 +21,26 @@ function Toolbar({ editor }: { editor: Editor }) {
     editor.chain().focus().extendMarkRange('link').setLink({ href: url }).run();
   }, [editor]);
 
-  const addImage = useCallback(() => {
-    const url = window.prompt('Image URL');
-    if (url) editor.chain().focus().setImage({ src: url }).run();
-  }, [editor]);
+  const fileRef = useRef<HTMLInputElement>(null);
+  const [uploading, setUploading] = useState(false);
+
+  const onPickImage = useCallback(
+    async (e: React.ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files?.[0];
+      e.target.value = '';
+      if (!file) return;
+      setUploading(true);
+      try {
+        const url = await uploadImage(file);
+        editor.chain().focus().setImage({ src: url }).run();
+      } catch (err) {
+        window.alert(err instanceof Error ? err.message : 'Upload failed.');
+      } finally {
+        setUploading(false);
+      }
+    },
+    [editor],
+  );
 
   return (
     <div className="tiptap-toolbar">
@@ -41,7 +58,8 @@ function Toolbar({ editor }: { editor: Editor }) {
       <button type="button" className={cls(editor.isActive('codeBlock'))} onClick={() => editor.chain().focus().toggleCodeBlock().run()} title="Code block">{'</>'}</button>
       <span className="tiptap-sep" />
       <button type="button" className={cls(editor.isActive('link'))} onClick={setLink} title="Link">Link</button>
-      <button type="button" className="tiptap-btn" onClick={addImage} title="Image">Image</button>
+      <button type="button" className="tiptap-btn" onClick={() => fileRef.current?.click()} title="Upload image" disabled={uploading}>{uploading ? '…' : 'Image'}</button>
+      <input ref={fileRef} type="file" accept="image/png,image/jpeg,image/webp,image/gif" hidden onChange={onPickImage} />
       <span className="tiptap-sep" />
       <button type="button" className="tiptap-btn" onClick={() => editor.chain().focus().undo().run()} title="Undo">↶</button>
       <button type="button" className="tiptap-btn" onClick={() => editor.chain().focus().redo().run()} title="Redo">↷</button>
