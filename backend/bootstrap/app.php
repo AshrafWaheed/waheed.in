@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\EnsureUserIsAdmin;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -21,6 +22,10 @@ return Application::configure(basePath: dirname(__DIR__))
         // redirect to it (doing so throws RouteNotFoundException). Returning null
         // lets an unauthenticated request surface a clean AuthenticationException.
         $middleware->redirectGuestsTo(fn (Request $request) => null);
+
+        $middleware->alias([
+            'admin' => EnsureUserIsAdmin::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         // API is JSON-only: render auth/validation/404 errors as JSON.
