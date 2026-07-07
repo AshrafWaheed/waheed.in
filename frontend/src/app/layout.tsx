@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
 import Script from "next/script";
+import { headers } from "next/headers";
 import { Cormorant_Garamond, DM_Sans, Amiri } from "next/font/google";
 import ScrollProgress  from "@/components/ScrollProgress";
 import ScrollReveal    from "@/components/ScrollReveal";
 import Nav             from "@/components/Nav";
 import Footer          from "@/components/Footer";
 import WhatsAppFloat   from "@/components/WhatsAppFloat";
-import { COMING_SOON } from "@/lib/site-config";
+import PreviewBanner   from "@/components/PreviewBanner";
 import "./globals.css";
 
 const cormorant = Cormorant_Garamond({
@@ -49,20 +50,25 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // The proxy stamps these headers: site chrome + (admin) preview banner.
+  // See src/proxy.ts. Reading headers keeps every page rendered at request time,
+  // so the same URL can be the coming-soon screen (public) or the real page (admin).
+  const h = await headers();
+  const showChrome = h.get("x-waheed-chrome") === "1";
+  const showPreview = h.get("x-waheed-preview") === "1";
+
   return (
     <html
       lang="en-GB"
       className={`${cormorant.variable} ${dmSans.variable} ${amiri.variable} h-full`}
     >
       <body className="min-h-full flex flex-col antialiased">
-        {COMING_SOON ? (
-          children
-        ) : (
+        {showChrome ? (
           <>
             <div className="scroll-progress" id="scrollProgress" />
             <ScrollProgress />
@@ -72,7 +78,11 @@ export default function RootLayout({
             <Footer />
             <WhatsAppFloat />
           </>
+        ) : (
+          children
         )}
+
+        {showPreview && <PreviewBanner />}
 
         {/* Google Analytics (gtag.js) — loads on all pages, incl. coming-soon */}
         <Script

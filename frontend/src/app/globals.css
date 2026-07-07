@@ -281,6 +281,37 @@
 }
 @media (max-width: 560px) { .adm-topbar-user { display: none; } }
 
+/* Admin preview banner (shown over the real site during coming-soon) */
+.adm-preview {
+  position: fixed; left: 50%; bottom: 18px; transform: translateX(-50%);
+  z-index: 9999;
+  display: flex; align-items: center; gap: .7rem;
+  background: rgba(26,54,61,.96); color: #F7F3ED;
+  border: 1px solid rgba(255,243,176,.35); border-radius: 999px;
+  padding: .45rem .5rem .45rem 1rem;
+  font-family: var(--font-sans); font-size: .78rem;
+  box-shadow: 0 12px 34px -8px rgba(0,0,0,.55);
+  -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+}
+.adm-preview-dot {
+  width: 8px; height: 8px; border-radius: 50%; background: #fff3b0;
+  box-shadow: 0 0 0 4px rgba(255,243,176,.18); flex: none;
+}
+.adm-preview a {
+  color: #fff3b0; text-decoration: none; font-weight: 500;
+  border: 1px solid rgba(255,243,176,.3); border-radius: 999px; padding: .3rem .8rem;
+  transition: background .18s;
+}
+.adm-preview a:hover { background: rgba(255,243,176,.12); }
+.adm-preview button {
+  color: #1a363d; background: #fff3b0; border: none; border-radius: 999px;
+  padding: .32rem .9rem; font-family: var(--font-sans); font-size: .78rem; font-weight: 600; cursor: pointer;
+  transition: background .18s;
+}
+.adm-preview button:hover { background: #ffe98a; }
+.adm-preview button:disabled { opacity: .6; cursor: default; }
+@media (max-width: 560px) { .adm-preview-txt { display: none; } }
+
 /* ─── Scroll progress bar ────────────────────────────────────── */
 .scroll-progress {
   position:       fixed;
