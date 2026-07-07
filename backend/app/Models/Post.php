@@ -29,11 +29,8 @@ class Post extends Model
         ];
     }
 
-    /** Route-model binding on the public site uses the slug. */
-    public function getRouteKeyName(): string
-    {
-        return 'slug';
-    }
+    // Admin routes bind by id (stable across slug edits). Public routes use an
+    // explicit {post:slug} binding, so no getRouteKeyName() override here.
 
     public function author(): BelongsTo
     {
