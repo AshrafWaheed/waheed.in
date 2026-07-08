@@ -49,7 +49,7 @@ const FAQS: FaqItem[] = [
   {
     cat: 'General',
     q: 'How do we get started?',
-    a: "Simply fill out our Project Application Form. We'll review your inquiry and schedule a discovery call if we're a good fit, in shā' Allāh.",
+    a: "Simply fill out our Project Application Form. We'll review your inquiry and schedule a clarity call if we're a good fit, in shā' Allāh.",
   },
 
   // ── Website & App ─────────────────────────────────────────────
@@ -181,7 +181,7 @@ export default function FaqContent() {
       <div className="page-hero">
         <div className="cnt" style={{ position: 'relative', zIndex: 1 }}>
           <span className="lbl">Frequently Asked Questions</span>
-          <h1>Questions, <em>answered.</em></h1>
+          <h1>Your questions, <em>honestly answered.</em></h1>
           <p>Everything you need to know about working with Waheed.</p>
         </div>
       </div>
@@ -210,7 +210,7 @@ export default function FaqContent() {
           {activeCats.map(cat => {
             const items = FAQS.filter(f => f.cat === cat);
             return (
-              <div key={cat} className="faq-section reveal">
+              <div key={cat} className="faq-section">
                 <div className="faq-cat-header">
                   <span className="faq-cat-bar" />
                   <span className="faq-cat-label">{CAT_LABELS[cat]}</span>
