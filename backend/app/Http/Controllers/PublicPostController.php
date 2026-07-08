@@ -24,11 +24,36 @@ class PublicPostController extends Controller
         return PublicPostListResource::collection($posts);
     }
 
-    /** A single published post by slug (drafts 404). */
+    /** A single published post by slug (drafts 404), with adjacent + related. */
     public function show(Post $post): PublicPostResource
     {
         abort_unless($post->isPublished(), 404);
 
-        return new PublicPostResource($post->load('author'));
+        $post->load('author');
+
+        // Older post (published just before this one) → "next" reading.
+        $next = Post::published()
+            ->where('published_at', '<', $post->published_at)
+            ->orderByDesc('published_at')
+            ->first(['slug', 'title']);
+
+        // Newer post (published just after this one) → "previous" reading.
+        $prev = Post::published()
+            ->where('published_at', '>', $post->published_at)
+            ->orderBy('published_at')
+            ->first(['slug', 'title']);
+
+        $related = Post::published()
+            ->whereKeyNot($post->getKey())
+            ->with('author')
+            ->orderByDesc('published_at')
+            ->limit(3)
+            ->get();
+
+        return (new PublicPostResource($post))->additional([
+            'prev' => $prev ? ['slug' => $prev->slug, 'title' => $prev->title] : null,
+            'next' => $next ? ['slug' => $next->slug, 'title' => $next->title] : null,
+            'related' => PublicPostListResource::collection($related),
+        ]);
     }
 }

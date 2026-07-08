@@ -20,6 +20,25 @@ type Post = {
   author: { name: string | null };
 };
 
+type AdjacentLink = { slug: string; title: string } | null;
+
+type RelatedPost = {
+  title: string;
+  slug: string;
+  excerpt: string | null;
+  cover_image: string | null;
+  reading_mins: number | null;
+  published_at: string | null;
+  author: { name: string | null };
+};
+
+type PostEnvelope = {
+  post: Post;
+  prev: AdjacentLink;
+  next: AdjacentLink;
+  related: RelatedPost[];
+};
+
 function absUrl(u: string | null): string | undefined {
   if (!u) return undefined;
   return u.startsWith('/') ? SITE + u : u;
@@ -30,17 +49,24 @@ function fmt(iso: string | null): string {
   return new Date(iso).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
 }
 
-async function getPost(slug: string): Promise<Post | null> {
+async function getPost(slug: string): Promise<PostEnvelope | null> {
   const res = await laravelFetch(`/posts/${encodeURIComponent(slug)}`);
   if (!res.ok) return null;
   const data = await res.json().catch(() => null);
-  return data?.data ?? null;
+  if (!data?.data) return null;
+  return {
+    post: data.data,
+    prev: data.prev ?? null,
+    next: data.next ?? null,
+    related: Array.isArray(data.related) ? data.related : (data.related?.data ?? []),
+  };
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
-  const post = await getPost(slug);
-  if (!post) return { title: 'Not found · WAHEED' };
+  const envelope = await getPost(slug);
+  if (!envelope) return { title: 'Not found · WAHEED' };
+  const { post } = envelope;
 
   const title = post.seo_title || post.title;
   const description = post.seo_desc || post.excerpt || undefined;
@@ -67,8 +93,9 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
 export default async function BlogPostPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const post = await getPost(slug);
-  if (!post) notFound();
+  const envelope = await getPost(slug);
+  if (!envelope) notFound();
+  const { post, prev, next, related } = envelope;
 
   const image = absUrl(post.cover_image);
   const jsonLd = {
@@ -113,6 +140,53 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
         {/* body_html is sanitised server-side (mews/purifier) on save. */}
         <div className="blog-content" dangerouslySetInnerHTML={{ __html: post.body_html }} />
       </article>
+
+      {(prev || next) && (
+        <nav className="blog-adjacent" aria-label="More insights">
+          {prev ? (
+            <Link href={`/blog/${prev.slug}`} className="blog-adjacent-link blog-adjacent-prev">
+              <span className="blog-adjacent-dir">← Previous</span>
+              <span className="blog-adjacent-title">{prev.title}</span>
+            </Link>
+          ) : (
+            <span />
+          )}
+          {next ? (
+            <Link href={`/blog/${next.slug}`} className="blog-adjacent-link blog-adjacent-next">
+              <span className="blog-adjacent-dir">Next →</span>
+              <span className="blog-adjacent-title">{next.title}</span>
+            </Link>
+          ) : (
+            <span />
+          )}
+        </nav>
+      )}
+
+      {related.length > 0 && (
+        <section className="blog-related" aria-labelledby="related-heading">
+          <h2 id="related-heading" className="blog-related-heading">More insights</h2>
+          <div className="blog-grid">
+            {related.map((p) => (
+              <Link key={p.slug} href={`/blog/${p.slug}`} className="blog-card">
+                {p.cover_image && (
+                  <div className="blog-card-cover">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={p.cover_image} alt={p.title} loading="lazy" />
+                  </div>
+                )}
+                <div className="blog-card-body">
+                  <h3>{p.title}</h3>
+                  {p.excerpt && <p className="blog-card-excerpt">{p.excerpt}</p>}
+                  <p className="blog-card-meta">
+                    {fmt(p.published_at)}
+                    {p.reading_mins ? ` · ${p.reading_mins} min read` : ''}
+                  </p>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
     </main>
   );
 }

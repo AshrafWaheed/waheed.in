@@ -1,9 +1,32 @@
 import type { MetadataRoute } from 'next';
+import { laravelFetch } from '@/lib/laravel';
+import { COMING_SOON } from '@/lib/site-config';
 
-export default function sitemap(): MetadataRoute.Sitemap {
-  const base = 'https://waheed.in';
+const base = 'https://waheed.in';
+
+type ListPost = { slug: string; published_at: string | null };
+
+async function blogEntries(): Promise<MetadataRoute.Sitemap> {
+  // Nothing is public while the site is behind the coming-soon screen.
+  if (COMING_SOON) return [];
+
+  const res = await laravelFetch('/posts?per_page=50');
+  const payload = res.ok ? await res.json().catch(() => null) : null;
+  const posts: ListPost[] = payload?.data ?? [];
 
   return [
+    { url: `${base}/blog`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.8 },
+    ...posts.map((p) => ({
+      url: `${base}/blog/${p.slug}`,
+      lastModified: p.published_at ? new Date(p.published_at) : new Date(),
+      changeFrequency: 'monthly' as const,
+      priority: 0.7,
+    })),
+  ];
+}
+
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const staticPages: MetadataRoute.Sitemap = [
     { url: base,                    lastModified: new Date(), changeFrequency: 'weekly',  priority: 1.0 },
     { url: `${base}/services`,      lastModified: new Date(), changeFrequency: 'monthly', priority: 0.9 },
     { url: `${base}/about`,         lastModified: new Date(), changeFrequency: 'monthly', priority: 0.8 },
@@ -13,4 +36,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${base}/privacy`,       lastModified: new Date(), changeFrequency: 'yearly',  priority: 0.3 },
     { url: `${base}/terms`,         lastModified: new Date(), changeFrequency: 'yearly',  priority: 0.3 },
   ];
+
+  return [...staticPages, ...(await blogEntries())];
 }

@@ -4,11 +4,14 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { AnimatePresence, motion } from 'framer-motion';
+import { COMING_SOON } from '@/lib/site-config';
 
 const LINKS = [
   { href: '/',         label: 'Home'     },
   { href: '/about',    label: 'About'    },
   { href: '/services', label: 'Services' },
+  // "Insights" only appears once the blog is public (post-launch).
+  ...(!COMING_SOON ? [{ href: '/blog', label: 'Insights' }] : []),
   { href: '/faq',      label: 'FAQs'     },
 ];
 

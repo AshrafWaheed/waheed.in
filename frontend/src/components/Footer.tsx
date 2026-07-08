@@ -1,8 +1,11 @@
 import Link from 'next/link';
+import { COMING_SOON } from '@/lib/site-config';
 
 const NAV = [
   { label: 'About',    href: '/about'    },
   { label: 'Services', href: '/services' },
+  // "Insights" only appears once the blog is public (post-launch).
+  ...(!COMING_SOON ? [{ label: 'Insights', href: '/blog' }] : []),
   { label: 'FAQs',     href: '/faq'      },
   { label: 'Apply',    href: '/contact'  },
 ];

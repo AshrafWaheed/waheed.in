@@ -7,6 +7,10 @@ export const dynamic = 'force-dynamic';
 export const metadata: Metadata = {
   title: 'Insights · WAHEED',
   description: 'Strategic notes on halal brand-building, growth, and digital craft — from the WAHEED studio.',
+  alternates: {
+    canonical: 'https://waheed.in/blog',
+    types: { 'application/rss+xml': [{ url: 'https://waheed.in/blog/rss.xml', title: 'WAHEED · Insights' }] },
+  },
 };
 
 type ListPost = {
