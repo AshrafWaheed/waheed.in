@@ -40,4 +40,13 @@ return [
         'publication_id' => env('BEEHIIV_PUBLICATION_ID'),
     ],
 
+    'hubspot' => [
+        // Private App access token. Scopes needed: crm.objects.contacts.write,
+        // crm.objects.companies.write, crm.objects.deals.write (+ .read).
+        'token' => env('HUBSPOT_ACCESS_TOKEN'),
+        // "WAHEED Client Pipeline" and its entry stage (from the live account).
+        'pipeline' => env('HUBSPOT_PIPELINE', 'default'),
+        'dealstage' => env('HUBSPOT_DEALSTAGE', 'appointmentscheduled'),
+    ],
+
 ];

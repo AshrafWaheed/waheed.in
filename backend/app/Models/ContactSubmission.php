@@ -18,6 +18,7 @@ class ContactSubmission extends Model
         'budget',
         'message',
         'timeline',
+        'hubspot_status',
     ];
 
     protected function casts(): array
