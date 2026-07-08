@@ -4,6 +4,7 @@ backend/ADMIN_CREDENTIALS.txt
 backend/vendor/
 backend/node_modules/
 backend/storage/logs/*
+backend/storage/backups/
 backend/.phpunit.result.cache
 
 # Next.js
