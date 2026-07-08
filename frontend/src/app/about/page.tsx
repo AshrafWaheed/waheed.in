@@ -10,7 +10,7 @@ const FOUNDER = {
   label:  'Founder',
   role:   'Tech Engineer & Strategist',
   topCls: '',
-  bio:    'The Founder had spent his early career at a tech company led by non-Muslims, where he was fired after facing homophobic discrimination. By the Mercy of Allah, he was granted another means to earn rizq at the same halal advertising agency, starting as a web developer. He climbed to technical lead and ad operations, and the work — building products and understanding how advertising actually functions — gave him a deep, practical understanding of user experience and Muslim consumer behavior.',
+  bio:    'The Founder had spent his early career at a tech company led by non-Muslims, where he was fired after facing islamophobic discrimination. By the Mercy of Allah, he was granted another means to earn rizq at the same halal advertising agency, starting as a web developer. He climbed to technical lead and ad operations, and the work — building products and understanding how advertising actually functions — gave him a deep, practical understanding of user experience and Muslim consumer behavior.',
 };
 
 const CO_FOUNDER = {
