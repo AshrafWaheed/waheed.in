@@ -31,6 +31,16 @@ class PostResource extends JsonResource
                 'id' => $this->author->id,
                 'name' => $this->author->name,
             ]),
+            'category' => $this->whenLoaded('category', fn () => $this->category ? [
+                'id' => $this->category->id,
+                'name' => $this->category->name,
+                'slug' => $this->category->slug,
+            ] : null),
+            'tags' => $this->whenLoaded('tags', fn () => $this->tags->map(fn ($t) => [
+                'id' => $t->id,
+                'name' => $t->name,
+                'slug' => $t->slug,
+            ])->values()),
         ];
     }
 }

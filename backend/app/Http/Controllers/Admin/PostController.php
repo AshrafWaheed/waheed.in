@@ -6,7 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdatePostRequest;
 use App\Http\Resources\PostResource;
+use App\Models\Category;
 use App\Models\Post;
+use App\Models\Tag;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
@@ -53,6 +55,7 @@ class PostController extends Controller
             'body_html' => $body,
             'cover_image' => $data['cover_image'] ?? null,
             'status' => $status,
+            'category_id' => $this->resolveCategoryId($data['category'] ?? null),
             'seo_title' => $data['seo_title'] ?? null,
             'seo_desc' => $data['seo_desc'] ?? null,
             'reading_mins' => $this->readingMinutes($body),
@@ -60,13 +63,17 @@ class PostController extends Controller
             'published_at' => $this->resolvePublishedAt($status, $data['published_at'] ?? null, null),
         ]);
 
-        return (new PostResource($post->load('author')))->response()->setStatusCode(201);
+        if (array_key_exists('tags', $data)) {
+            $post->tags()->sync(Tag::idsForNames($data['tags'] ?? []));
+        }
+
+        return (new PostResource($post->load(['author', 'category', 'tags'])))->response()->setStatusCode(201);
     }
 
     /** Show a single post. */
     public function show(Post $post): PostResource
     {
-        return new PostResource($post->load('author'));
+        return new PostResource($post->load(['author', 'category', 'tags']));
     }
 
     /** Update a post (partial). */
@@ -99,6 +106,9 @@ class PostController extends Controller
         if (array_key_exists('status', $data)) {
             $post->status = $data['status'];
         }
+        if (array_key_exists('category', $data)) {
+            $post->category_id = $this->resolveCategoryId($data['category']);
+        }
 
         $post->published_at = $this->resolvePublishedAt(
             $post->status,
@@ -108,7 +118,11 @@ class PostController extends Controller
 
         $post->save();
 
-        return new PostResource($post->load('author'));
+        if (array_key_exists('tags', $data)) {
+            $post->tags()->sync(Tag::idsForNames($data['tags'] ?? []));
+        }
+
+        return new PostResource($post->load(['author', 'category', 'tags']));
     }
 
     /** Delete a post. */
@@ -137,6 +151,17 @@ class PostController extends Controller
         }
 
         return $slug;
+    }
+
+    /** Resolve a category name to its id, creating it on the fly. Empty → null. */
+    private function resolveCategoryId(?string $name): ?int
+    {
+        $name = trim((string) $name);
+        if ($name === '') {
+            return null;
+        }
+
+        return Category::findOrCreateByName($name)->id;
     }
 
     /** Estimated reading time in minutes (~200 wpm, min 1). */

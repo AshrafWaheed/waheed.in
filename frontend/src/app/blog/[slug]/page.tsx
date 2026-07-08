@@ -18,6 +18,8 @@ type Post = {
   seo_desc: string | null;
   published_at: string | null;
   author: { name: string | null };
+  category: { name: string; slug: string } | null;
+  tags: { name: string; slug: string }[];
 };
 
 type AdjacentLink = { slug: string; title: string } | null;
@@ -30,6 +32,7 @@ type RelatedPost = {
   reading_mins: number | null;
   published_at: string | null;
   author: { name: string | null };
+  category: { name: string; slug: string } | null;
 };
 
 type PostEnvelope = {
@@ -122,6 +125,11 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
           <Link href="/blog">← All insights</Link>
         </p>
         <header className="blog-article-head">
+          {post.category && (
+            <Link href={`/blog?category=${post.category.slug}`} className="blog-chip blog-chip-link">
+              {post.category.name}
+            </Link>
+          )}
           <h1>{post.title}</h1>
           <p className="blog-article-meta">
             {post.author?.name ? `${post.author.name} · ` : ''}
@@ -139,6 +147,16 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
 
         {/* body_html is sanitised server-side (mews/purifier) on save. */}
         <div className="blog-content" dangerouslySetInnerHTML={{ __html: post.body_html }} />
+
+        {post.tags.length > 0 && (
+          <footer className="blog-tags" aria-label="Tags">
+            {post.tags.map((t) => (
+              <Link key={t.slug} href={`/blog?tag=${t.slug}`} className="blog-chip blog-chip-link">
+                #{t.name}
+              </Link>
+            ))}
+          </footer>
+        )}
       </article>
 
       {(prev || next) && (
@@ -175,6 +193,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                   </div>
                 )}
                 <div className="blog-card-body">
+                  {p.category && <span className="blog-chip">{p.category.name}</span>}
                   <h3>{p.title}</h3>
                   {p.excerpt && <p className="blog-card-excerpt">{p.excerpt}</p>}
                   <p className="blog-card-meta">

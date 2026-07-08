@@ -24,6 +24,14 @@ class PublicPostResource extends JsonResource
             'seo_desc' => $this->seo_desc,
             'published_at' => $this->published_at?->toIso8601String(),
             'author' => ['name' => $this->author?->name],
+            'category' => $this->whenLoaded('category', fn () => $this->category ? [
+                'name' => $this->category->name,
+                'slug' => $this->category->slug,
+            ] : null),
+            'tags' => $this->whenLoaded('tags', fn () => $this->tags->map(fn ($t) => [
+                'name' => $t->name,
+                'slug' => $t->slug,
+            ])->values()),
         ];
     }
 }

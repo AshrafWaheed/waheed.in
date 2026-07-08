@@ -1,11 +1,29 @@
 'use client';
 
 import { useEditor, EditorContent, type Editor } from '@tiptap/react';
+import type { EditorView } from '@tiptap/pm/view';
 import StarterKit from '@tiptap/starter-kit';
 import Image from '@tiptap/extension-image';
 import Placeholder from '@tiptap/extension-placeholder';
 import { useCallback, useRef, useState } from 'react';
 import { uploadImage } from './uploadImage';
+
+/** Upload an image file and insert it into the doc at `pos` (or the caret). */
+async function uploadAndInsert(view: EditorView, file: File, pos?: number): Promise<void> {
+  try {
+    const url = await uploadImage(file);
+    const { state } = view;
+    const node = state.schema.nodes.image.create({ src: url });
+    const at = Math.min(pos ?? state.selection.from, state.doc.content.size);
+    view.dispatch(state.tr.insert(at, node));
+  } catch (err) {
+    window.alert(err instanceof Error ? err.message : 'Image upload failed.');
+  }
+}
+
+function imageFilesFromList(list?: FileList | null): File[] {
+  return Array.from(list ?? []).filter((f) => f.type.startsWith('image/'));
+}
 
 function Toolbar({ editor }: { editor: Editor }) {
   const cls = (active: boolean) => `tiptap-btn${active ? ' is-active' : ''}`;
@@ -46,6 +64,7 @@ function Toolbar({ editor }: { editor: Editor }) {
     <div className="tiptap-toolbar">
       <button type="button" className={cls(editor.isActive('heading', { level: 2 }))} onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()} title="Heading 2">H2</button>
       <button type="button" className={cls(editor.isActive('heading', { level: 3 }))} onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()} title="Heading 3">H3</button>
+      <button type="button" className={cls(editor.isActive('heading', { level: 4 }))} onClick={() => editor.chain().focus().toggleHeading({ level: 4 }).run()} title="Heading 4">H4</button>
       <span className="tiptap-sep" />
       <button type="button" className={cls(editor.isActive('bold'))} onClick={() => editor.chain().focus().toggleBold().run()} title="Bold"><b>B</b></button>
       <button type="button" className={cls(editor.isActive('italic'))} onClick={() => editor.chain().focus().toggleItalic().run()} title="Italic"><i>I</i></button>
@@ -84,7 +103,29 @@ export default function RichEditor({ value, onChange }: { value: string; onChang
       Placeholder.configure({ placeholder: 'Write your post…' }),
     ],
     content: value,
-    editorProps: { attributes: { class: 'tiptap-body' } },
+    editorProps: {
+      attributes: { class: 'tiptap-body' },
+      // Paste an image from the clipboard → upload + insert.
+      handlePaste(view, event) {
+        const files = Array.from(event.clipboardData?.items ?? [])
+          .filter((i) => i.type.startsWith('image/'))
+          .map((i) => i.getAsFile())
+          .filter((f): f is File => f !== null);
+        if (files.length === 0) return false;
+        event.preventDefault();
+        files.forEach((file) => uploadAndInsert(view, file));
+        return true;
+      },
+      // Drag-and-drop image files → upload + insert at the drop point.
+      handleDrop(view, event) {
+        const files = imageFilesFromList((event as DragEvent).dataTransfer?.files);
+        if (files.length === 0) return false;
+        event.preventDefault();
+        const pos = view.posAtCoords({ left: (event as DragEvent).clientX, top: (event as DragEvent).clientY })?.pos;
+        files.forEach((file) => uploadAndInsert(view, file, pos));
+        return true;
+      },
+    },
     onUpdate: ({ editor }) => onChange(editor.getHTML()),
   });
 

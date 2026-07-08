@@ -374,6 +374,12 @@
 .adm-saved { font-family: var(--font-sans); font-size: .8rem; color: #2f7d55; }
 .adm-save-draft { background: #FFFDF9; border: 1px solid rgba(37,72,81,.2); color: #254851; }
 .adm-save-draft:hover { border-color: #9c7d1c; }
+.adm-preview-link { background: transparent; border: 1px solid rgba(37,72,81,.2); color: #335C67; text-decoration: none; }
+.adm-preview-link:hover { border-color: #9c7d1c; color: #9c7d1c; }
+
+/* Draft preview page */
+.adm-preview-page { padding-top: 1.5rem; }
+.adm-preview-bar { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 2rem; padding: .7rem 1.1rem; border: 1px dashed rgba(156,125,28,.5); border-radius: 10px; background: #fff9df; font-family: var(--font-sans); font-size: .85rem; color: #4a5a5e; }
 .adm-form-error {
   font-family: var(--font-sans); font-size: .85rem; color: #a3312a;
   background: rgba(163,49,42,.07); border: 1px solid rgba(163,49,42,.18);
@@ -510,6 +516,20 @@
 /* ─── Related posts ──────────────────────────────────────────── */
 .blog-related { margin-top: 4rem; }
 .blog-related-heading { font-family: var(--font-serif); font-size: 1.7rem; font-weight: 600; color: #254851; margin-bottom: 1.8rem; }
+
+/* ─── Taxonomy: chips, filter banner, tag row ────────────────── */
+.blog-chip { display: inline-block; font-family: var(--font-sans); font-size: .7rem; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: #9c7d1c; background: #fff3b0; padding: .28rem .6rem; border-radius: 999px; margin-bottom: .7rem; text-decoration: none; }
+a.blog-chip-link { transition: background .2s, color .2s; }
+a.blog-chip-link:hover { background: #9c7d1c; color: #FFFDF9; }
+.blog-article-head .blog-chip { margin-bottom: 1rem; }
+
+.blog-filter { display: flex; align-items: center; gap: 1rem; margin-bottom: 2.2rem; padding: .8rem 1.2rem; border: 1px solid rgba(37,72,81,.12); border-radius: 10px; background: #FFFDF9; font-family: var(--font-sans); font-size: .9rem; color: #4a5a5e; }
+.blog-filter strong { color: #254851; }
+.blog-filter-clear { margin-left: auto; color: #335C67; text-decoration: none; font-size: .85rem; }
+.blog-filter-clear:hover { color: #9c7d1c; }
+
+.blog-tags { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: 2.5rem; padding-top: 1.8rem; border-top: 1px solid rgba(37,72,81,.1); }
+.blog-tags .blog-chip { margin-bottom: 0; text-transform: none; letter-spacing: 0; }
 
 @media (max-width: 640px) {
   .blog-adjacent { grid-template-columns: 1fr; }

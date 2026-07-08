@@ -13,6 +13,7 @@ type FeedPost = {
   excerpt: string | null;
   published_at: string | null;
   author: { name: string | null };
+  category: { name: string; slug: string } | null;
 };
 
 function esc(s: string): string {
@@ -43,6 +44,7 @@ export async function GET(): Promise<Response> {
       <guid isPermaLink="true">${esc(url)}</guid>
       ${p.published_at ? `<pubDate>${pubDate}</pubDate>` : ''}
       ${p.author?.name ? `<dc:creator>${esc(p.author.name)}</dc:creator>` : ''}
+      ${p.category ? `<category>${esc(p.category.name)}</category>` : ''}
       ${p.excerpt ? `<description>${esc(p.excerpt)}</description>` : ''}
     </item>`;
     })

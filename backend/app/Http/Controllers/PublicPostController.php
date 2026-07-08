@@ -15,11 +15,21 @@ class PublicPostController extends Controller
     {
         $perPage = min(max((int) $request->query('per_page', 9), 1), 50);
 
-        $posts = Post::published()
-            ->with('author')
-            ->orderByDesc('published_at')
-            ->paginate($perPage)
-            ->withQueryString();
+        $query = Post::published()
+            ->with(['author', 'category'])
+            ->orderByDesc('published_at');
+
+        $category = trim((string) $request->query('category', ''));
+        if ($category !== '') {
+            $query->whereHas('category', fn ($q) => $q->where('slug', $category));
+        }
+
+        $tag = trim((string) $request->query('tag', ''));
+        if ($tag !== '') {
+            $query->whereHas('tags', fn ($q) => $q->where('slug', $tag));
+        }
+
+        $posts = $query->paginate($perPage)->withQueryString();
 
         return PublicPostListResource::collection($posts);
     }
@@ -29,7 +39,7 @@ class PublicPostController extends Controller
     {
         abort_unless($post->isPublished(), 404);
 
-        $post->load('author');
+        $post->load(['author', 'category', 'tags']);
 
         // Older post (published just before this one) → "next" reading.
         $next = Post::published()
@@ -45,7 +55,7 @@ class PublicPostController extends Controller
 
         $related = Post::published()
             ->whereKeyNot($post->getKey())
-            ->with('author')
+            ->with(['author', 'category'])
             ->orderByDesc('published_at')
             ->limit(3)
             ->get();

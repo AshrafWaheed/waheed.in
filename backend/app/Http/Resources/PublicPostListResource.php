@@ -23,6 +23,10 @@ class PublicPostListResource extends JsonResource
             'reading_mins' => $this->reading_mins,
             'published_at' => $this->published_at?->toIso8601String(),
             'author' => ['name' => $this->author?->name],
+            'category' => $this->whenLoaded('category', fn () => $this->category ? [
+                'name' => $this->category->name,
+                'slug' => $this->category->slug,
+            ] : null),
         ];
     }
 }

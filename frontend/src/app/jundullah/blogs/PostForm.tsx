@@ -6,6 +6,8 @@ import Link from 'next/link';
 import RichEditor from './RichEditor';
 import { uploadImage } from './uploadImage';
 
+export type Term = { id?: number; name: string; slug: string };
+
 export type PostData = {
   id: number;
   title: string;
@@ -14,11 +16,16 @@ export type PostData = {
   body_html: string;
   cover_image: string | null;
   status: 'draft' | 'published';
+  category: Term | null;
+  tags: Term[];
   seo_title: string | null;
   seo_desc: string | null;
   reading_mins: number | null;
   published_at: string | null;
+  author?: { id: number; name: string } | null;
 };
+
+export type TaxonomyOptions = { categories: string[]; tags: string[] };
 
 function slugify(s: string): string {
   return s
@@ -30,7 +37,29 @@ function slugify(s: string): string {
     .replace(/^-|-$/g, '');
 }
 
-export default function PostForm({ mode, post }: { mode: 'create' | 'edit'; post?: PostData }) {
+function parseTags(input: string): string[] {
+  const seen = new Set<string>();
+  const out: string[] = [];
+  for (const raw of input.split(',')) {
+    const t = raw.trim();
+    if (!t) continue;
+    const key = t.toLowerCase();
+    if (seen.has(key)) continue;
+    seen.add(key);
+    out.push(t);
+  }
+  return out;
+}
+
+export default function PostForm({
+  mode,
+  post,
+  options,
+}: {
+  mode: 'create' | 'edit';
+  post?: PostData;
+  options?: TaxonomyOptions;
+}) {
   const router = useRouter();
 
   const [title, setTitle] = useState(post?.title ?? '');
@@ -39,6 +68,8 @@ export default function PostForm({ mode, post }: { mode: 'create' | 'edit'; post
   const [excerpt, setExcerpt] = useState(post?.excerpt ?? '');
   const [cover, setCover] = useState(post?.cover_image ?? '');
   const [body, setBody] = useState(post?.body_html ?? '');
+  const [category, setCategory] = useState(post?.category?.name ?? '');
+  const [tagsInput, setTagsInput] = useState((post?.tags ?? []).map((t) => t.name).join(', '));
   const [seoTitle, setSeoTitle] = useState(post?.seo_title ?? '');
   const [seoDesc, setSeoDesc] = useState(post?.seo_desc ?? '');
   const [status, setStatus] = useState<'draft' | 'published'>(post?.status ?? 'draft');
@@ -105,6 +136,8 @@ export default function PostForm({ mode, post }: { mode: 'create' | 'edit'; post
       excerpt: excerpt.trim() || null,
       body_html: body,
       cover_image: cover.trim() || null,
+      category: category.trim() || null,
+      tags: parseTags(tagsInput),
       seo_title: seoTitle.trim() || null,
       seo_desc: seoDesc.trim() || null,
       status: target,
@@ -163,6 +196,16 @@ export default function PostForm({ mode, post }: { mode: 'create' | 'edit'; post
         <div className="adm-editor-actions">
           <span className={`adm-badge adm-badge-${status}`}>{status}</span>
           {justSaved && <span className="adm-saved">Saved ✓</span>}
+          {mode === 'edit' && post && (
+            <a
+              href={`/jundullah/blogs/${post.id}/preview`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn adm-preview-link"
+            >
+              Preview ↗
+            </a>
+          )}
           <button type="button" className="btn adm-save-draft" onClick={() => save('draft')} disabled={saving !== null}>
             {saving === 'draft' ? 'Saving…' : 'Save draft'}
           </button>
@@ -216,6 +259,40 @@ export default function PostForm({ mode, post }: { mode: 'create' | 'edit'; post
               rows={3}
               placeholder="One-line summary for cards and previews."
             />
+          </label>
+
+          <label className="adm-field2">
+            <span>Category</span>
+            <input
+              type="text"
+              list="adm-category-options"
+              value={category}
+              onChange={(e) => edit(setCategory)(e.target.value)}
+              placeholder="e.g. Brand strategy"
+            />
+            <datalist id="adm-category-options">
+              {(options?.categories ?? []).map((c) => (
+                <option key={c} value={c} />
+              ))}
+            </datalist>
+            <small className="adm-hint">One category per post. New names are created automatically.</small>
+          </label>
+
+          <label className="adm-field2">
+            <span>Tags</span>
+            <input
+              type="text"
+              list="adm-tag-options"
+              value={tagsInput}
+              onChange={(e) => edit(setTagsInput)(e.target.value)}
+              placeholder="comma, separated, tags"
+            />
+            <datalist id="adm-tag-options">
+              {(options?.tags ?? []).map((t) => (
+                <option key={t} value={t} />
+              ))}
+            </datalist>
+            <small className="adm-hint">Comma-separated. New tags are created automatically.</small>
           </label>
 
           <div className="adm-field2">
