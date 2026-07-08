@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
-export default function LoginForm() {
+export default function LoginForm({ expired = false }: { expired?: boolean }) {
   const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -44,6 +44,10 @@ export default function LoginForm() {
         <h1 className="adm-auth-h">
           Welcome <em>back.</em>
         </h1>
+
+        {expired && (
+          <p className="adm-auth-notice">Your session expired — please sign in again.</p>
+        )}
 
         <form className="adm-auth-form" onSubmit={handleSubmit} noValidate>
           <label className="adm-field">

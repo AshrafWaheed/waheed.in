@@ -10,9 +10,14 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
-export default async function JundullahLoginPage() {
+export default async function JundullahLoginPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ expired?: string }>;
+}) {
   const session = await getSession();
   if (session) redirect('/jundullah/dashboard');
 
-  return <LoginForm />;
+  const { expired } = await searchParams;
+  return <LoginForm expired={expired === '1'} />;
 }
