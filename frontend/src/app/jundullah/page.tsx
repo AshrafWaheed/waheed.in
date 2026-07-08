@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 
 export default async function JundullahLoginPage() {
   const session = await getSession();
-  if (session) redirect('/jundullah/blogs');
+  if (session) redirect('/jundullah/dashboard');
 
   return <LoginForm />;
 }

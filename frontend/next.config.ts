@@ -11,9 +11,9 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
-  // sharp is a native module used by the upload route handler — keep it external
-  // so Turbopack doesn't try to bundle it.
-  serverExternalPackages: ["sharp"],
+  // Native modules used server-side — keep them external so the bundler
+  // doesn't try to pack them: sharp (image uploads), better-sqlite3 (registrations).
+  serverExternalPackages: ["sharp", "better-sqlite3"],
 
   async headers() {
     return [{ source: "/:path*", headers: securityHeaders }];

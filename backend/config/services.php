@@ -35,4 +35,9 @@ return [
         ],
     ],
 
+    'beehiiv' => [
+        'key' => env('BEEHIIV_API_KEY'),
+        'publication_id' => env('BEEHIIV_PUBLICATION_ID'),
+    ],
+
 ];

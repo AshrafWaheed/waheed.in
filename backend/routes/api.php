@@ -1,8 +1,13 @@
 <?php
 
 use App\Http\Controllers\Admin\AuthController;
+use App\Http\Controllers\Admin\ContactController as AdminContactController;
 use App\Http\Controllers\Admin\PostController;
+use App\Http\Controllers\Admin\SubscriberController as AdminSubscriberController;
 use App\Http\Controllers\Admin\TaxonomyController;
+use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\ContactController;
+use App\Http\Controllers\NewsletterController;
 use App\Http\Controllers\PublicPostController;
 use Illuminate\Support\Facades\Route;
 
@@ -15,6 +20,11 @@ Route::prefix('admin')->group(function () {
         Route::post('logout', [AuthController::class, 'logout']);
 
         Route::get('taxonomy', [TaxonomyController::class, 'index']);
+        Route::get('users', [UserController::class, 'index']);
+
+        Route::get('contacts', [AdminContactController::class, 'index']);
+        Route::get('contacts/{contact}', [AdminContactController::class, 'show']);
+        Route::get('subscribers', [AdminSubscriberController::class, 'index']);
 
         // Posts CRUD: GET/POST /posts, GET/PUT/PATCH/DELETE /posts/{post}
         Route::apiResource('posts', PostController::class);
@@ -24,3 +34,7 @@ Route::prefix('admin')->group(function () {
 // ── Public blog API (read-only; consumed by Next.js SSR over loopback) ──
 Route::get('posts', [PublicPostController::class, 'index']);
 Route::get('posts/{post:slug}', [PublicPostController::class, 'show']);
+
+// ── Public form intake (called by the Next.js /api proxies) ──
+Route::post('contact', [ContactController::class, 'store'])->middleware('throttle:15,1');
+Route::post('newsletter', [NewsletterController::class, 'store'])->middleware('throttle:15,1');

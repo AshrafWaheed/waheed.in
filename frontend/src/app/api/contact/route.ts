@@ -1,101 +1,32 @@
-import { writeFileSync, readFileSync, existsSync, mkdirSync } from 'fs';
-import path from 'path';
-import { sendMail } from '@/lib/mailer';
+import { laravelFetch } from '@/lib/laravel';
 
-const DATA_DIR = path.join(process.cwd(), 'data');
-const FILE     = path.join(DATA_DIR, 'contact-submissions.json');
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
 
-interface Submission {
-  name:           string;
-  email:          string;
-  brand:          string;
-  whatsapp?:      string;
-  location?:      string;
-  service:        string;
-  customServices: string[];
-  stage?:         string;
-  budget?:        string;
-  message:        string;
-  timeline?:      string;
-  submittedAt:    string;
-}
-
-function load(): Submission[] {
-  if (!existsSync(FILE)) return [];
-  try { return JSON.parse(readFileSync(FILE, 'utf-8')); }
-  catch { return []; }
-}
-
-function save(rows: Submission[]) {
-  if (!existsSync(DATA_DIR)) mkdirSync(DATA_DIR, { recursive: true });
-  writeFileSync(FILE, JSON.stringify(rows, null, 2));
-}
-
+// Thin proxy → Laravel stores the enquiry in MySQL and pushes the email to the
+// Beehiiv newsletter list. The browser only ever talks to Next (nginx routes
+// /api → :3000); Laravel is reached over the loopback.
 export async function POST(req: Request) {
-  let body: Record<string, unknown>;
+  const body = await req.text();
+
+  let res: Response;
   try {
-    body = await req.json();
+    res = await laravelFetch('/contact', { method: 'POST', body });
   } catch {
-    return Response.json({ error: 'Invalid JSON' }, { status: 400 });
+    return Response.json({ error: 'Something went wrong. Please try again.' }, { status: 502 });
   }
 
-  const name    = typeof body.name    === 'string' ? body.name.trim()    : '';
-  const email   = typeof body.email   === 'string' ? body.email.trim()   : '';
-  const brand   = typeof body.brand   === 'string' ? body.brand.trim()   : '';
-  const service = typeof body.service === 'string' ? body.service.trim() : '';
-  const message = typeof body.message === 'string' ? body.message.trim() : '';
-
-  if (!name)    return Response.json({ error: 'name is required' },    { status: 400 });
-  if (!email)   return Response.json({ error: 'email is required' },   { status: 400 });
-  if (!brand)   return Response.json({ error: 'brand is required' },   { status: 400 });
-  if (!service) return Response.json({ error: 'service is required' }, { status: 400 });
-  if (!message) return Response.json({ error: 'message is required' }, { status: 400 });
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    return Response.json({ error: 'invalid email' }, { status: 400 });
-  }
-
-  const submission: Submission = {
-    name,
-    email:          email.toLowerCase(),
-    brand,
-    whatsapp:       typeof body.whatsapp === 'string' ? body.whatsapp.trim() : undefined,
-    location:       typeof body.location === 'string' ? body.location.trim() : undefined,
-    service,
-    customServices: Array.isArray(body.customServices) ? (body.customServices as string[]) : [],
-    stage:          typeof body.stage    === 'string' ? body.stage.trim()    : undefined,
-    budget:         typeof body.budget   === 'string' ? body.budget.trim()   : undefined,
-    message,
-    timeline:       typeof body.timeline === 'string' ? body.timeline.trim() : undefined,
-    submittedAt:    new Date().toISOString(),
+  const data = (await res.json().catch(() => ({}))) as {
+    error?: string;
+    message?: string;
+    errors?: Record<string, string[]>;
   };
 
-  const rows = load();
-  rows.push(submission);
-  save(rows);
+  if (res.ok) return Response.json({ ok: true }, { status: res.status });
 
-  // Alert email (no-op until SMTP creds are in .env.local)
-  const alertTo = process.env.ALERT_TO ?? process.env.SMTP_USER ?? '';
-  if (alertTo) {
-    const lines = [
-      `Name:     ${submission.name}`,
-      `Email:    ${submission.email}`,
-      `Brand:    ${submission.brand}`,
-      `Service:  ${submission.service}${submission.customServices.length ? ' → ' + submission.customServices.join(', ') : ''}`,
-      submission.stage    ? `Stage:    ${submission.stage}`    : '',
-      submission.budget   ? `Budget:   ${submission.budget}`   : '',
-      submission.timeline ? `Timeline: ${submission.timeline}` : '',
-      submission.whatsapp ? `WhatsApp: ${submission.whatsapp}` : '',
-      submission.location ? `Location: ${submission.location}` : '',
-      `\nMessage:\n${submission.message}`,
-    ].filter(Boolean).join('\n');
+  // Map Laravel's validation shape ({message, errors}) to the {error} the form expects.
+  const firstError = data.errors ? Object.values(data.errors)[0]?.[0] : undefined;
+  const message = firstError ?? data.error ?? data.message ?? 'submission_failed';
 
-    await sendMail({
-      to:      alertTo,
-      subject: `New project application, ${submission.name} (${submission.brand})`,
-      text:    lines,
-      html:    `<pre style="font-family:monospace;font-size:14px;line-height:1.6">${lines}</pre>`,
-    }).catch(err => console.error('[contact] mail error:', err));
-  }
-
-  return Response.json({ ok: true }, { status: 201 });
+  return Response.json({ error: message }, { status: res.status });
 }

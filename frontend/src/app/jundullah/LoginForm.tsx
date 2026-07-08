@@ -28,7 +28,7 @@ export default function LoginForm() {
         return;
       }
       // Full navigation so the proxy re-evaluates with the new session cookie.
-      window.location.assign('/jundullah/blogs');
+      window.location.assign('/jundullah/dashboard');
     } catch {
       setError('Network error. Please try again.');
       setStatus('idle');
