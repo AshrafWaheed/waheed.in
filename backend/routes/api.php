@@ -19,8 +19,15 @@ Route::prefix('admin')->group(function () {
         Route::get('me', [AuthController::class, 'me']);
         Route::post('logout', [AuthController::class, 'logout']);
 
+        // Current admin's own account.
+        Route::patch('profile', [AuthController::class, 'updateProfile']);
+        Route::post('profile/password', [AuthController::class, 'updatePassword']);
+
         Route::get('taxonomy', [TaxonomyController::class, 'index']);
-        Route::get('users', [UserController::class, 'index']);
+
+        // User management.
+        Route::post('users/{user}/password', [UserController::class, 'resetPassword']);
+        Route::apiResource('users', UserController::class)->only(['index', 'store', 'update', 'destroy']);
 
         Route::get('contacts', [AdminContactController::class, 'index']);
         Route::get('contacts/{contact}', [AdminContactController::class, 'show']);

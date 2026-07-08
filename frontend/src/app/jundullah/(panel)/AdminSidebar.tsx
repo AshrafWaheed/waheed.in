@@ -8,8 +8,8 @@ import {
   Newspaper,
   Inbox,
   Mail,
-  ClipboardList,
   Users,
+  UserCircle,
   Menu,
   X,
   LogOut,
@@ -20,8 +20,8 @@ const NAV = [
   { href: '/jundullah/blogs', label: 'Blog posts', icon: Newspaper },
   { href: '/jundullah/contacts', label: 'Contact submissions', icon: Inbox },
   { href: '/jundullah/subscribers', label: 'Subscribers', icon: Mail },
-  { href: '/jundullah/registrations', label: 'Registrations', icon: ClipboardList },
   { href: '/jundullah/users', label: 'Users', icon: Users },
+  { href: '/jundullah/profile', label: 'My profile', icon: UserCircle },
 ];
 
 export default function AdminSidebar({ name, email }: { name: string; email: string }) {

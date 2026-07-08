@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
@@ -76,6 +77,52 @@ class AuthController extends Controller
     public function me(Request $request): JsonResponse
     {
         return response()->json(['user' => $this->userPayload($request->user())]);
+    }
+
+    /** Update the current admin's own name / email. */
+    public function updateProfile(Request $request): JsonResponse
+    {
+        $user = $request->user();
+
+        $data = $request->validate([
+            'name' => ['sometimes', 'required', 'string', 'max:255'],
+            'email' => ['sometimes', 'required', 'email', 'max:255', Rule::unique('users', 'email')->ignore($user->id)],
+        ]);
+
+        if (array_key_exists('name', $data)) {
+            $user->name = $data['name'];
+        }
+        if (array_key_exists('email', $data)) {
+            $user->email = Str::lower($data['email']);
+        }
+        $user->save();
+
+        return response()->json(['user' => $this->userPayload($user)]);
+    }
+
+    /** Change the current admin's own password (verifies the current one). */
+    public function updatePassword(Request $request): JsonResponse
+    {
+        $user = $request->user();
+
+        $data = $request->validate([
+            'current_password' => ['required', 'string'],
+            'password' => ['required', 'string', 'min:12', 'max:255', 'confirmed'],
+        ]);
+
+        if (! Hash::check($data['current_password'], $user->password)) {
+            throw ValidationException::withMessages([
+                'current_password' => ['Your current password is incorrect.'],
+            ]);
+        }
+
+        $user->forceFill(['password' => Hash::make($data['password'])])->save();
+
+        // Revoke every OTHER session; keep the token making this request alive.
+        $currentId = $request->user()->currentAccessToken()->id;
+        $user->tokens()->where('id', '!=', $currentId)->delete();
+
+        return response()->json(['message' => 'Password updated.']);
     }
 
     /** Revoke the token used to make this request. */

@@ -1,8 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { Newspaper, Inbox, Mail, ClipboardList, Users, FileEdit } from 'lucide-react';
+import { Newspaper, Inbox, Mail, Users, FileEdit } from 'lucide-react';
 import { adminApi } from '@/lib/admin-api';
-import { getRegistrations } from '@/lib/admin-data';
 
 export const dynamic = 'force-dynamic';
 
@@ -31,8 +30,6 @@ type ContactRow = { id: number; name: string; brand: string; service: string; cr
 type PostRow = { id: number; title: string; status: string; published_at: string | null; updated_at: string | null };
 
 export default async function DashboardPage() {
-  const registrations = getRegistrations();
-
   const [published, drafts, contactsTotal, subscribers, users, recentContactsJson, recentPostsJson] =
     await Promise.all([
       totalFrom('/admin/posts?status=published&per_page=1'),
@@ -52,7 +49,6 @@ export default async function DashboardPage() {
     { label: 'Drafts', value: drafts, href: '/jundullah/blogs?status=draft', icon: FileEdit },
     { label: 'Contact submissions', value: contactsTotal, href: '/jundullah/contacts', icon: Inbox },
     { label: 'Subscribers', value: subscribers, href: '/jundullah/subscribers', icon: Mail },
-    { label: 'Registrations', value: registrations.length, href: '/jundullah/registrations', icon: ClipboardList },
     { label: 'Users', value: users, href: '/jundullah/users', icon: Users },
   ];
 

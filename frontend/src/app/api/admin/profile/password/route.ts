@@ -1,0 +1,13 @@
+import { NextResponse } from 'next/server';
+import { adminApi } from '@/lib/admin-api';
+
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
+
+// Change the current admin's own password (verifies the current one server-side).
+export async function POST(req: Request) {
+  const body = await req.text();
+  const res = await adminApi('/admin/profile/password', { method: 'POST', body });
+  const data = await res.json().catch(() => ({}));
+  return NextResponse.json(data, { status: res.status });
+}
