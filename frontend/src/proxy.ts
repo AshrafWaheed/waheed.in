@@ -1,12 +1,13 @@
 import { NextResponse, type NextRequest } from 'next/server';
-import { COMING_SOON } from '@/lib/site-config';
+import { getSiteMode } from '@/lib/site-config';
 import { ADMIN_COOKIE, verifySession } from '@/lib/session';
 
 // Next.js 16 proxy (formerly `middleware`). Runs on the Node.js runtime.
 //
 // Single source of truth for two things:
-//  1. Coming-soon gate — while COMING_SOON is on, the public is rewritten to
-//     /coming-soon, but a signed-in admin previews the ENTIRE real site.
+//  1. Site-mode gate — while maintenance or coming-soon is on, the public is
+//     rewritten to the matching screen, but a signed-in admin previews the
+//     ENTIRE real site. Maintenance takes precedence over coming-soon.
 //  2. Guard on the /jundullah admin portal.
 //
 // It also stamps internal request headers that the root layout reads to decide
@@ -32,25 +33,32 @@ export async function proxy(req: NextRequest) {
     return pass();
   }
 
-  const withChrome = (preview: boolean) => {
+  const withChrome = (preview: '' | 'coming-soon' | 'maintenance') => {
     headers.set('x-waheed-chrome', '1');
-    if (preview) headers.set('x-waheed-preview', '1');
+    if (preview) headers.set('x-waheed-preview', preview);
     return NextResponse.next({ request: { headers } });
   };
 
-  // ── Live site (coming-soon off) ──────────────────────────────────────────
-  if (!COMING_SOON) return withChrome(false);
+  const { comingSoon, maintenance } = await getSiteMode();
+  // Which gate is active for the public. Maintenance wins over coming-soon.
+  const gate: '' | 'coming-soon' | 'maintenance' =
+    maintenance ? 'maintenance' : comingSoon ? 'coming-soon' : '';
 
-  // ── Coming-soon on ───────────────────────────────────────────────────────
-  // Admins see the whole real site, with a preview banner.
+  // ── Live site (no gate) ──────────────────────────────────────────────────
+  if (!gate) return withChrome('');
+
+  // ── A gate is on ─────────────────────────────────────────────────────────
+  const screen = gate === 'maintenance' ? '/maintenance' : '/coming-soon';
+
+  // Admins see the whole real site, with a preview banner naming the mode.
   if (isAdmin) {
-    if (pathname === '/coming-soon') return pass();
-    return withChrome(true);
+    if (pathname === screen) return pass();
+    return withChrome(gate);
   }
 
-  // Everyone else → the coming-soon screen.
-  if (pathname === '/coming-soon') return pass();
-  return NextResponse.rewrite(new URL('/coming-soon', req.url), { request: { headers } });
+  // Everyone else → the active gate screen.
+  if (pathname === screen) return pass();
+  return NextResponse.rewrite(new URL(screen, req.url), { request: { headers } });
 }
 
 export const config = {

@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\NewsletterController;
 use App\Http\Controllers\PublicPostController;
+use App\Http\Controllers\SettingsController;
 use Illuminate\Support\Facades\Route;
 
 // ── Admin portal API (BFF: called by the Next.js server, Bearer-token auth) ──
@@ -33,10 +34,17 @@ Route::prefix('admin')->group(function () {
         Route::get('contacts/{contact}', [AdminContactController::class, 'show']);
         Route::get('subscribers', [AdminSubscriberController::class, 'index']);
 
+        // Site mode (coming-soon / maintenance toggles).
+        Route::get('settings', [SettingsController::class, 'show']);
+        Route::patch('settings', [SettingsController::class, 'update']);
+
         // Posts CRUD: GET/POST /posts, GET/PUT/PATCH/DELETE /posts/{post}
         Route::apiResource('posts', PostController::class);
     });
 });
+
+// ── Public site mode (read by the Next.js proxy on every request) ──
+Route::get('site/mode', [SettingsController::class, 'mode'])->middleware('throttle:120,1');
 
 // ── Public blog API (read-only; consumed by Next.js SSR over loopback) ──
 Route::get('posts', [PublicPostController::class, 'index']);

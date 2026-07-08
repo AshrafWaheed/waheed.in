@@ -10,6 +10,7 @@ import {
   Mail,
   Users,
   UserCircle,
+  Power,
   Menu,
   X,
   LogOut,
@@ -20,6 +21,7 @@ const NAV = [
   { href: '/jundullah/blogs', label: 'Blog posts', icon: Newspaper },
   { href: '/jundullah/contacts', label: 'Contact submissions', icon: Inbox },
   { href: '/jundullah/subscribers', label: 'Subscribers', icon: Mail },
+  { href: '/jundullah/settings', label: 'Site mode', icon: Power },
   { href: '/jundullah/users', label: 'Users', icon: Users },
   { href: '/jundullah/profile', label: 'My profile', icon: UserCircle },
 ];

@@ -1,9 +1,9 @@
 import { laravelFetch } from '@/lib/laravel';
-import { COMING_SOON } from '@/lib/site-config';
+import { getSiteMode } from '@/lib/site-config';
 
 // RSS 2.0 feed of published posts. Route Handlers are uncached by default, so
-// this always reflects the latest published set. Hidden while the site is in
-// coming-soon mode (nothing is public yet).
+// this always reflects the latest published set. Hidden while the site is gated
+// (coming-soon or maintenance — nothing is public yet).
 
 const SITE = 'https://waheed.in';
 
@@ -26,7 +26,8 @@ function esc(s: string): string {
 }
 
 export async function GET(): Promise<Response> {
-  if (COMING_SOON) {
+  const { comingSoon, maintenance } = await getSiteMode();
+  if (comingSoon || maintenance) {
     return new Response('Not found', { status: 404 });
   }
 

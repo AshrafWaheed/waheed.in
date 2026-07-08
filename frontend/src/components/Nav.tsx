@@ -4,20 +4,21 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { AnimatePresence, motion } from 'framer-motion';
-import { COMING_SOON } from '@/lib/site-config';
 
-const LINKS = [
+// "Insights" only appears once the blog is public (site fully live).
+const buildLinks = (blogPublic: boolean) => [
   { href: '/',         label: 'Home'     },
   { href: '/about',    label: 'About'    },
   { href: '/services', label: 'Services' },
-  // "Insights" only appears once the blog is public (post-launch).
-  ...(!COMING_SOON ? [{ href: '/blog', label: 'Insights' }] : []),
+  ...(blogPublic ? [{ href: '/blog', label: 'Insights' }] : []),
   { href: '/faq',      label: 'FAQs'     },
 ];
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 
-export default function Nav() {
+export default function Nav({ blogPublic = false }: { blogPublic?: boolean }) {
+  const LINKS = buildLinks(blogPublic);
+
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen]         = useState(false);
   const pathname                = usePathname();

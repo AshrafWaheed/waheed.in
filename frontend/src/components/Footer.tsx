@@ -1,11 +1,10 @@
 import Link from 'next/link';
-import { COMING_SOON } from '@/lib/site-config';
 
-const NAV = [
+// "Insights" only appears once the blog is public (site fully live).
+const buildNav = (blogPublic: boolean) => [
   { label: 'About',    href: '/about'    },
   { label: 'Services', href: '/services' },
-  // "Insights" only appears once the blog is public (post-launch).
-  ...(!COMING_SOON ? [{ label: 'Insights', href: '/blog' }] : []),
+  ...(blogPublic ? [{ label: 'Insights', href: '/blog' }] : []),
   { label: 'FAQs',     href: '/faq'      },
   { label: 'Apply',    href: '/contact'  },
 ];
@@ -38,7 +37,9 @@ const SOCIAL = [
   { label: 'WhatsApp',  href: 'https://wa.me/915424072195',                        icon: 'whatsapp'  as const },
 ];
 
-export default function Footer() {
+export default function Footer({ blogPublic = false }: { blogPublic?: boolean }) {
+  const NAV = buildNav(blogPublic);
+
   return (
     <footer className="footer">
       <div className="cnt">

@@ -60,7 +60,10 @@ export default async function RootLayout({
   // so the same URL can be the coming-soon screen (public) or the real page (admin).
   const h = await headers();
   const showChrome = h.get("x-waheed-chrome") === "1";
-  const showPreview = h.get("x-waheed-preview") === "1";
+  const previewMode = h.get("x-waheed-preview"); // '' | 'coming-soon' | 'maintenance'
+  const showPreview = previewMode === "coming-soon" || previewMode === "maintenance";
+  // The blog is only public once the site is fully live (chrome + not a preview).
+  const blogPublic = showChrome && !showPreview;
 
   return (
     <html
@@ -73,16 +76,16 @@ export default async function RootLayout({
             <div className="scroll-progress" id="scrollProgress" />
             <ScrollProgress />
             <ScrollReveal />
-            <Nav />
+            <Nav blogPublic={blogPublic} />
             {children}
-            <Footer />
+            <Footer blogPublic={blogPublic} />
             <WhatsAppFloat />
           </>
         ) : (
           children
         )}
 
-        {showPreview && <PreviewBanner />}
+        {showPreview && <PreviewBanner mode={previewMode as 'coming-soon' | 'maintenance'} />}
 
         {/* Google Analytics (gtag.js) — loads on all pages, incl. coming-soon */}
         <Script

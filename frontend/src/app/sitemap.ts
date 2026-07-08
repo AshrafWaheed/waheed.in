@@ -1,14 +1,15 @@
 import type { MetadataRoute } from 'next';
 import { laravelFetch } from '@/lib/laravel';
-import { COMING_SOON } from '@/lib/site-config';
+import { getSiteMode } from '@/lib/site-config';
 
 const base = 'https://waheed.in';
 
 type ListPost = { slug: string; published_at: string | null };
 
 async function blogEntries(): Promise<MetadataRoute.Sitemap> {
-  // Nothing is public while the site is behind the coming-soon screen.
-  if (COMING_SOON) return [];
+  // Nothing is public while the site is gated (coming-soon or maintenance).
+  const { comingSoon, maintenance } = await getSiteMode();
+  if (comingSoon || maintenance) return [];
 
   const res = await laravelFetch('/posts?per_page=50');
   const payload = res.ok ? await res.json().catch(() => null) : null;

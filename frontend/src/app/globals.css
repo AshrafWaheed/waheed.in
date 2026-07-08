@@ -2944,3 +2944,37 @@ a.blog-chip-link:hover { background: #9c7d1c; color: #FFFDF9; }
 .adm-profile-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; align-items: start; }
 .adm-profile-grid .adm-field2 { margin-bottom: 1rem; }
 @media (max-width: 760px) { .adm-profile-grid { grid-template-columns: 1fr; } }
+
+/* ── Site mode (coming-soon / maintenance toggles) ─────────────────────── */
+.adm-mode { max-width: 720px; }
+.adm-mode-status { display: flex; align-items: center; gap: .8rem; padding: .9rem 1.1rem; border-radius: 12px; margin-bottom: 1.6rem; border: 1px solid; }
+.adm-mode-status strong { display: block; font-family: var(--font-sans); font-size: .95rem; }
+.adm-mode-status span { display: block; font-family: var(--font-sans); font-size: .82rem; opacity: .8; }
+.adm-mode-status svg { flex-shrink: 0; }
+.adm-mode-status--live { background: #eaf6ef; border-color: rgba(47,125,85,.3); color: #2f7d55; }
+.adm-mode-status--soon { background: #fff3b0; border-color: rgba(156,125,28,.35); color: #7a6314; }
+.adm-mode-status--warn { background: #fdecec; border-color: rgba(197,74,74,.3); color: #b0413f; }
+
+.adm-mode-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; }
+@media (max-width: 680px) { .adm-mode-grid { grid-template-columns: 1fr; } }
+
+.adm-mode-card { background: #FFFDF9; border: 1px solid rgba(37,72,81,.12); border-radius: 14px; padding: 1.2rem 1.3rem; transition: border-color .2s, box-shadow .2s; }
+.adm-mode-card.is-on { border-color: rgba(156,125,28,.5); box-shadow: 0 4px 14px rgba(156,125,28,.12); }
+.adm-mode-card-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: .8rem; }
+.adm-mode-icon { display: inline-flex; width: 40px; height: 40px; align-items: center; justify-content: center; border-radius: 10px; background: rgba(51,92,103,.08); color: #335C67; }
+.adm-mode-card.is-on .adm-mode-icon { background: #fff3b0; color: #9c7d1c; }
+.adm-mode-card h3 { font-family: var(--font-serif); font-size: 1.15rem; color: #254851; font-weight: 600; margin-bottom: .3rem; }
+.adm-mode-card p { font-family: var(--font-sans); font-size: .84rem; color: #5a6b6f; line-height: 1.5; }
+.adm-mode-state { display: inline-block; margin-top: .8rem; font-family: var(--font-sans); font-size: .72rem; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: #8a999c; }
+.adm-mode-state.on { color: #9c7d1c; }
+
+/* Switch */
+.adm-switch { position: relative; width: 46px; height: 26px; border-radius: 999px; border: none; background: #cdd6d8; cursor: pointer; padding: 0; transition: background .2s; flex-shrink: 0; }
+.adm-switch.on { background: #335C67; }
+.adm-switch:disabled { opacity: .6; cursor: default; }
+.adm-switch-knob { position: absolute; top: 3px; left: 3px; width: 20px; height: 20px; border-radius: 50%; background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,.25); transition: transform .2s; }
+.adm-switch.on .adm-switch-knob { transform: translateX(20px); }
+
+.adm-mode-hint { margin-top: 1.4rem; font-family: var(--font-sans); font-size: .82rem; color: #5a6b6f; }
+.adm-mode-hint a { color: #9c7d1c; text-decoration: none; display: inline-flex; align-items: center; gap: .2rem; }
+.adm-mode-hint a:hover { text-decoration: underline; }
