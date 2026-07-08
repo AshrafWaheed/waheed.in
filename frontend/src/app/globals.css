@@ -571,6 +571,7 @@ a.blog-chip-link:hover { background: #9c7d1c; color: #FFFDF9; }
 .delay-2 { transition-delay: 0.18s; }
 .delay-3 { transition-delay: 0.28s; }
 .delay-4 { transition-delay: 0.38s; }
+.delay-5 { transition-delay: 0.48s; }
 
 /* ─── Reusable component classes ─────────────────────────────── */
 @layer components {
@@ -1212,6 +1213,14 @@ a.blog-chip-link:hover { background: #9c7d1c; color: #FFFDF9; }
   margin-top:            3rem;
   align-items:           start;
 }
+/* Ladder variant (Services page): flex-wraps so an odd count (5) centres its
+   final row instead of leaving a left-aligned gap. */
+.svc-grid--wrap {
+  display:         flex;
+  flex-wrap:       wrap;
+  justify-content: center;
+}
+.svc-grid--wrap .svc-card { flex: 1 1 300px; max-width: 360px; }
 .svc-card {
   background:    #FFFDF9;
   border:        1px solid #E6DED3;
@@ -1342,6 +1351,7 @@ a.blog-chip-link:hover { background: #9c7d1c; color: #FFFDF9; }
 
 @media (max-width: 768px) {
   .svc-grid           { grid-template-columns: 1fr; }
+  .svc-grid--wrap .svc-card { flex-basis: 100%; max-width: 100%; }
   .svc-custom-banner  { flex-direction: column; align-items: flex-start; padding: 2rem 2.2rem; }
 }
 
