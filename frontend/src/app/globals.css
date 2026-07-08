@@ -2951,6 +2951,7 @@ a.blog-chip-link:hover { background: #9c7d1c; color: #FFFDF9; }
 .adm-mode-status strong { display: block; font-family: var(--font-sans); font-size: .95rem; }
 .adm-mode-status span { display: block; font-family: var(--font-sans); font-size: .82rem; opacity: .8; }
 .adm-mode-status svg { flex-shrink: 0; }
+.adm-mode-status--idle { background: #f0f3f4; border-color: rgba(37,72,81,.15); color: #5a6b6f; }
 .adm-mode-status--live { background: #eaf6ef; border-color: rgba(47,125,85,.3); color: #2f7d55; }
 .adm-mode-status--soon { background: #fff3b0; border-color: rgba(156,125,28,.35); color: #7a6314; }
 .adm-mode-status--warn { background: #fdecec; border-color: rgba(197,74,74,.3); color: #b0413f; }

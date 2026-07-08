@@ -27,6 +27,7 @@ export default async function SettingsPage() {
       <SiteModeToggles
         initialComingSoon={data?.coming_soon ?? false}
         initialMaintenance={data?.maintenance ?? false}
+        initialLoaded={data !== null}
       />
     </div>
   );

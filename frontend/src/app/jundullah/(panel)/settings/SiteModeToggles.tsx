@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Rocket, Wrench, Globe, ExternalLink } from 'lucide-react';
 
 type Flags = { coming_soon: boolean; maintenance: boolean };
@@ -8,14 +8,41 @@ type Flags = { coming_soon: boolean; maintenance: boolean };
 export default function SiteModeToggles({
   initialComingSoon,
   initialMaintenance,
+  initialLoaded,
 }: {
   initialComingSoon: boolean;
   initialMaintenance: boolean;
+  initialLoaded: boolean;
 }) {
   const [comingSoon, setComingSoon] = useState(initialComingSoon);
   const [maintenance, setMaintenance] = useState(initialMaintenance);
   const [busy, setBusy] = useState<null | keyof Flags>(null);
   const [error, setError] = useState('');
+  // Whether we're showing a real, freshly-confirmed state (vs. a possibly-stale
+  // server render). Re-confirmed on mount so a cached navigation self-corrects.
+  const [loaded, setLoaded] = useState(initialLoaded);
+
+  // Always reconcile with the authoritative DB value when the page mounts.
+  // This defeats any stale client-router/browser cache: the toggles can never
+  // sit on an out-of-date value once the fresh fetch lands.
+  useEffect(() => {
+    let alive = true;
+    (async () => {
+      try {
+        const res = await fetch('/api/admin/settings', { cache: 'no-store' });
+        if (!res.ok) throw new Error('failed');
+        const data = (await res.json()) as Flags;
+        if (!alive) return;
+        setComingSoon(!!data.coming_soon);
+        setMaintenance(!!data.maintenance);
+        setLoaded(true);
+        setError('');
+      } catch {
+        if (alive && !initialLoaded) setError('Could not load the current site mode — try refreshing.');
+      }
+    })();
+    return () => { alive = false; };
+  }, [initialLoaded]);
 
   async function toggle(key: keyof Flags, next: boolean) {
     setBusy(key); setError('');
@@ -42,11 +69,13 @@ export default function SiteModeToggles({
   }
 
   // Maintenance takes precedence over coming-soon, mirroring the proxy.
-  const visitorState = maintenance
-    ? { label: 'Maintenance page', tone: 'warn' as const, note: 'Visitors see the maintenance screen.' }
-    : comingSoon
-      ? { label: 'Coming-soon page', tone: 'soon' as const, note: 'Visitors see the coming-soon screen.' }
-      : { label: 'Live', tone: 'live' as const, note: 'The full site is public.' };
+  const visitorState = !loaded
+    ? { label: 'Checking…', tone: 'idle' as const, note: 'Reading the current site mode.' }
+    : maintenance
+      ? { label: 'Maintenance page', tone: 'warn' as const, note: 'Visitors see the maintenance screen.' }
+      : comingSoon
+        ? { label: 'Coming-soon page', tone: 'soon' as const, note: 'Visitors see the coming-soon screen.' }
+        : { label: 'Live', tone: 'live' as const, note: 'The full site is public.' };
 
   return (
     <div className="adm-mode">
