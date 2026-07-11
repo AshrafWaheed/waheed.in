@@ -44,7 +44,7 @@ export default async function ContactsPage({
     { key: 'name', label: 'Name' },
     { key: 'email', label: 'Email' },
     { key: 'brand', label: 'Brand' },
-    { key: 'whatsapp', label: 'WhatsApp' },
+    { key: 'phone', label: 'Phone' },
     { key: 'location', label: 'Location' },
     { key: 'service', label: 'Service' },
     { key: 'custom_services', label: 'Custom services' },

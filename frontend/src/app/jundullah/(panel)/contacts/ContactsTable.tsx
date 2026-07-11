@@ -8,7 +8,7 @@ export type Contact = {
   name: string;
   email: string;
   brand: string;
-  whatsapp: string | null;
+  phone: string | null;
   location: string | null;
   service: string;
   custom_services: string[] | null;
@@ -79,7 +79,7 @@ export default function ContactsTable({ rows }: { rows: Contact[] }) {
             </div>
             <div className="adm-drawer-body">
               <Field label="Email" value={open.email} />
-              <Field label="WhatsApp" value={open.whatsapp} />
+              <Field label="Phone" value={open.phone} />
               <Field label="Location" value={open.location} />
               <Field label="Service" value={open.service} />
               <Field

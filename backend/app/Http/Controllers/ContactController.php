@@ -8,6 +8,7 @@ use App\Services\BeehiivService;
 use App\Services\HubSpotService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class ContactController extends Controller
 {
@@ -19,18 +20,27 @@ class ContactController extends Controller
     public function store(Request $request, BeehiivService $beehiiv, HubSpotService $hubspot): JsonResponse
     {
         $data = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'email', 'max:255'],
-            'brand' => ['required', 'string', 'max:255'],
-            'whatsapp' => ['nullable', 'string', 'max:100'],
+            'name' => ['required', 'string', 'min:2', 'max:255'],
+            'email' => ['required', 'email:rfc', 'max:255'],
+            'brand' => ['required', 'string', 'min:2', 'max:255'],
+            // Optional, but if given must be a real phone number (≥7 digits,
+            // only + and common separators) — rejects "abc".
+            'phone' => ['nullable', 'string', 'max:30', 'regex:/^\+?(?:\d[\s().-]*){7,}$/'],
             'location' => ['nullable', 'string', 'max:255'],
             'service' => ['required', 'string', 'max:255'],
-            'customServices' => ['nullable', 'array', 'max:50'],
+            // Required (≥1) only when the "Custom" package is chosen.
+            'customServices' => ['array', 'max:50', Rule::requiredIf(fn () => $request->input('service') === 'Custom')],
             'customServices.*' => ['string', 'max:255'],
             'stage' => ['nullable', 'string', 'max:255'],
             'budget' => ['nullable', 'string', 'max:255'],
-            'message' => ['required', 'string', 'max:5000'],
+            'message' => ['required', 'string', 'min:10', 'max:5000'],
             'timeline' => ['nullable', 'string', 'max:255'],
+            'consent' => ['accepted'],
+        ], [
+            'phone.regex' => 'Please enter a valid phone number.',
+            'consent.accepted' => 'Please confirm you agree to our values-based working guidelines.',
+            'customServices.required' => 'Please choose at least one service.',
+            'message.min' => 'Please tell us a little more about your project (at least 10 characters).',
         ]);
 
         $email = strtolower(trim($data['email']));
@@ -39,7 +49,7 @@ class ContactController extends Controller
             'name' => $data['name'],
             'email' => $email,
             'brand' => $data['brand'],
-            'whatsapp' => $data['whatsapp'] ?? null,
+            'phone' => $data['phone'] ?? null,
             'location' => $data['location'] ?? null,
             'service' => $data['service'],
             'custom_services' => $data['customServices'] ?? [],

@@ -10,7 +10,7 @@ class ContactSubmission extends Model
         'name',
         'email',
         'brand',
-        'whatsapp',
+        'phone',
         'location',
         'service',
         'custom_services',

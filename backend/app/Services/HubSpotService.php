@@ -69,7 +69,7 @@ class HubSpotService
             'email' => $lead->email,
             'firstname' => $first,
             'lastname' => $last,
-            'phone' => $lead->whatsapp,
+            'phone' => $lead->phone,
             'company' => $lead->brand,
             'hs_lead_status' => 'NEW',
         ], fn ($v) => $v !== null && $v !== '');
@@ -113,7 +113,7 @@ class HubSpotService
 
         $props = array_filter([
             'name' => $name,
-            'phone' => $lead->whatsapp,
+            'phone' => $lead->phone,
             'city' => $lead->location,
         ], fn ($v) => $v !== null && $v !== '');
 

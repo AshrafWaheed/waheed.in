@@ -27,7 +27,7 @@ interface FormData {
   name:      string;
   brand:     string;
   email:     string;
-  whatsapp:  string;
+  phone:     string;
   location:  string;
   service:   string;
   stage:     string;
@@ -38,9 +38,14 @@ interface FormData {
 }
 
 const EMPTY: FormData = {
-  name: '', brand: '', email: '', whatsapp: '', location: '',
+  name: '', brand: '', email: '', phone: '', location: '',
   service: '', stage: '', budget: '', message: '', timeline: '', consent: false,
 };
+
+type FieldErrors = Partial<Record<keyof FormData | 'customServices', string>>;
+
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const PHONE_RE = /^[+\d\s().-]+$/;
 
 export default function ContactPage() {
   const [form,           setForm]           = useState<FormData>(EMPTY);
@@ -49,12 +54,23 @@ export default function ContactPage() {
   const [submitting,     setSubmitting]     = useState(false);
   const [submitted,      setSubmitted]      = useState(false);
   const [error,          setError]          = useState('');
+  const [fieldErrors,    setFieldErrors]    = useState<FieldErrors>({});
+
+  function clearError(key: keyof FieldErrors) {
+    setFieldErrors(prev => {
+      if (!prev[key]) return prev;
+      const next = { ...prev };
+      delete next[key];
+      return next;
+    });
+  }
 
   function field(e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) {
     const { name, type } = e.target;
     const value = type === 'checkbox' ? (e.target as HTMLInputElement).checked : e.target.value;
     setForm(prev => ({ ...prev, [name]: value }));
-    if (name === 'service') { setCustomSaved(false); setCustomServices([]); }
+    clearError(name as keyof FieldErrors);
+    if (name === 'service') { setCustomSaved(false); setCustomServices([]); clearError('customServices'); }
   }
 
   function toggleCustom(opt: string) {
@@ -62,14 +78,36 @@ export default function ContactPage() {
       prev.includes(opt) ? prev.filter(o => o !== opt) : [...prev, opt]
     );
     setCustomSaved(false);
+    clearError('customServices');
+  }
+
+  function validate(): FieldErrors {
+    const e: FieldErrors = {};
+    if (form.name.trim().length < 2) e.name = 'Please enter your name.';
+    if (form.brand.trim().length < 2) e.brand = 'Please enter your organisation or brand.';
+    if (!EMAIL_RE.test(form.email.trim())) e.email = 'Please enter a valid email address.';
+    if (form.phone.trim()) {
+      const digits = (form.phone.match(/\d/g) ?? []).length;
+      if (!PHONE_RE.test(form.phone.trim()) || digits < 7) e.phone = 'Please enter a valid phone number.';
+    }
+    if (!form.service) e.service = 'Please select a service.';
+    if (form.service === 'Custom' && customServices.length === 0) {
+      e.customServices = 'Please choose at least one service.';
+    }
+    if (form.message.trim().length < 10) e.message = 'Please tell us a little more about your project.';
+    if (!form.consent) e.consent = 'Please confirm you agree to our values-based working guidelines.';
+    return e;
   }
 
   async function submit(e: FormEvent) {
     e.preventDefault();
     setError('');
 
-    if (!form.consent) {
-      setError('Please confirm you have read and agree to our values-based working guidelines.');
+    const errs = validate();
+    setFieldErrors(errs);
+    if (Object.keys(errs).length > 0) {
+      const first = Object.keys(errs)[0];
+      document.getElementById(first)?.focus();
       return;
     }
 
@@ -200,12 +238,16 @@ export default function ContactPage() {
                     <div className="form-group">
                       <label className="form-label" htmlFor="name">Name *</label>
                       <input id="name" name="name" type="text" className="form-input"
-                        placeholder="Your name" value={form.name} onChange={field} required />
+                        placeholder="Your name" value={form.name} onChange={field}
+                        aria-invalid={fieldErrors.name ? true : undefined} required />
+                      {fieldErrors.name && <span className="form-error">{fieldErrors.name}</span>}
                     </div>
                     <div className="form-group">
                       <label className="form-label" htmlFor="brand">Organisation / Brand *</label>
                       <input id="brand" name="brand" type="text" className="form-input"
-                        placeholder="Brand name" value={form.brand} onChange={field} required />
+                        placeholder="Brand name" value={form.brand} onChange={field}
+                        aria-invalid={fieldErrors.brand ? true : undefined} required />
+                      {fieldErrors.brand && <span className="form-error">{fieldErrors.brand}</span>}
                     </div>
                   </div>
 
@@ -213,12 +255,16 @@ export default function ContactPage() {
                     <div className="form-group">
                       <label className="form-label" htmlFor="email">Email Address *</label>
                       <input id="email" name="email" type="email" className="form-input"
-                        placeholder="your@email.com" value={form.email} onChange={field} required />
+                        placeholder="your@email.com" value={form.email} onChange={field}
+                        aria-invalid={fieldErrors.email ? true : undefined} required />
+                      {fieldErrors.email && <span className="form-error">{fieldErrors.email}</span>}
                     </div>
                     <div className="form-group">
-                      <label className="form-label" htmlFor="whatsapp">WhatsApp (optional)</label>
-                      <input id="whatsapp" name="whatsapp" type="tel" className="form-input"
-                        placeholder="+91..." value={form.whatsapp} onChange={field} />
+                      <label className="form-label" htmlFor="phone">Phone Number (optional)</label>
+                      <input id="phone" name="phone" type="tel" inputMode="tel" className="form-input"
+                        placeholder="+91 98765 43210" value={form.phone} onChange={field}
+                        aria-invalid={fieldErrors.phone ? true : undefined} />
+                      {fieldErrors.phone && <span className="form-error">{fieldErrors.phone}</span>}
                     </div>
                   </div>
 
@@ -231,10 +277,12 @@ export default function ContactPage() {
                   <div className="form-group">
                     <label className="form-label" htmlFor="service">Service Interested In *</label>
                     <select id="service" name="service" className="form-select"
-                      value={form.service} onChange={field} required>
+                      value={form.service} onChange={field}
+                      aria-invalid={fieldErrors.service ? true : undefined} required>
                       <option value="">Select a package...</option>
                       {SERVICES.map(s => <option key={s} value={s}>{s}</option>)}
                     </select>
+                    {fieldErrors.service && <span className="form-error">{fieldErrors.service}</span>}
                   </div>
 
                   {/* Custom services expander */}
@@ -264,6 +312,9 @@ export default function ContactPage() {
                       {customSaved && (
                         <span className="custom-saved">✓ Saved</span>
                       )}
+                      {fieldErrors.customServices && (
+                        <span className="form-error" style={{ marginTop: '.6rem' }}>{fieldErrors.customServices}</span>
+                      )}
                     </div>
                   )}
 
@@ -289,7 +340,9 @@ export default function ContactPage() {
                     <label className="form-label" htmlFor="message">Tell us about your project *</label>
                     <textarea id="message" name="message" className="form-textarea"
                       placeholder="Describe your brand, goals, and what challenges you're facing online..."
-                      value={form.message} onChange={field} required />
+                      value={form.message} onChange={field}
+                      aria-invalid={fieldErrors.message ? true : undefined} required />
+                    {fieldErrors.message && <span className="form-error">{fieldErrors.message}</span>}
                   </div>
 
                   <div className="form-group">
@@ -310,6 +363,7 @@ export default function ContactPage() {
                         projects that do not meet its ethical guidelines.
                       </label>
                     </div>
+                    {fieldErrors.consent && <span className="form-error">{fieldErrors.consent}</span>}
                   </div>
 
                   {error && (

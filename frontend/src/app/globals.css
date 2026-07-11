@@ -2371,6 +2371,21 @@ a.blog-chip-link:hover { background: #9c7d1c; color: #FFFDF9; }
 .form-textarea { resize: vertical; min-height: 110px; }
 .form-select { appearance: none; cursor: pointer; }
 
+/* Inline validation */
+.form-input[aria-invalid='true'],
+.form-select[aria-invalid='true'],
+.form-textarea[aria-invalid='true'] {
+  border-color: #c0392b;
+  background:   #fdf6f5;
+}
+.form-input[aria-invalid='true']:focus,
+.form-select[aria-invalid='true']:focus,
+.form-textarea[aria-invalid='true']:focus {
+  border-color: #c0392b;
+  box-shadow:   0 0 0 3px rgba(192,57,43,.12);
+}
+.form-error { display: block; color: #c0392b; font-size: .78rem; line-height: 1.45; margin-top: .35rem; }
+
 .form-check {
   display:     flex;
   align-items: flex-start;
