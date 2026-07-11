@@ -3,8 +3,10 @@
 import { useState, type FormEvent, type ChangeEvent } from 'react';
 
 const SERVICES = [
+  'Halal Brand Audit',
   'Foundations Engagement',
   'The Authority System',
+  'Halal Brand OS',
   'Halal Brand Partnership',
   'Not Sure Yet, Need Guidance',
   'Custom',
