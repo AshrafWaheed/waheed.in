@@ -262,7 +262,7 @@ export default function ContactPage() {
                       {fieldErrors.email && <span className="form-error">{fieldErrors.email}</span>}
                     </div>
                     <div className="form-group">
-                      <label className="form-label" htmlFor="phone">Phone Number (optional)</label>
+                      <label className="form-label" htmlFor="phone">Phone Number</label>
                       <input id="phone" name="phone" type="tel" inputMode="tel" className="form-input"
                         placeholder="+91 98765 43210" value={form.phone} onChange={field}
                         aria-invalid={fieldErrors.phone ? true : undefined} />
