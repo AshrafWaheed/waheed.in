@@ -1,10 +1,12 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { pageMeta } from '@/lib/seo';
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMeta({
   title: 'Privacy Policy · WAHEED',
   description: 'How Waheed Digital Studio collects, uses, and protects your personal information.',
-};
+  path: '/privacy',
+});
 
 const LAST_UPDATED = 'June 2026';
 

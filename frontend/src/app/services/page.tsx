@@ -1,10 +1,13 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { pageMeta } from '@/lib/seo';
 
-export const metadata: Metadata = {
-  title:       'Services · WAHEED',
-  description: 'Five packages built for halal brands: Halal Brand Audit, Foundations Engagement, The Authority System, Halal Brand OS, and Halal Brand Partnership.',
-};
+export const metadata: Metadata = pageMeta({
+  title: 'Services · WAHEED',
+  description:
+    'Five packages built for halal brands: Halal Brand Audit, Foundations Engagement, The Authority System, Halal Brand OS, and Halal Brand Partnership.',
+  path: '/services',
+});
 
 const CARDS = [
   {

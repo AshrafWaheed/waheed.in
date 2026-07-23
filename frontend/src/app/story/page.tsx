@@ -1,10 +1,13 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { pageMeta } from '@/lib/seo';
 
-export const metadata: Metadata = {
-  title:       'Our Story · WAHEED',
-  description: 'Where conviction meets craft. The story behind Waheed Digital Studio and what we believe about halal business in the digital age.',
-};
+export const metadata: Metadata = pageMeta({
+  title: 'Our Story · WAHEED',
+  description:
+    'Where conviction meets craft. The story behind Waheed Digital Studio and what we believe about halal business in the digital age.',
+  path: '/story',
+});
 
 const MANIFESTO_BLOCKS = [
   {

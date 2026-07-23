@@ -1,10 +1,12 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { pageMeta } from '@/lib/seo';
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMeta({
   title: 'Terms of Service · WAHEED',
   description: 'Terms and conditions for working with Waheed Digital Studio.',
-};
+  path: '/terms',
+});
 
 const LAST_UPDATED = 'June 2026';
 

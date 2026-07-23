@@ -39,6 +39,7 @@ export const metadata: Metadata = {
   description:
     "We help Muslim-led brands grow with integrity. Strategy, design, and digital products built on Shariah-aligned values. No shortcuts. No compromise.",
   metadataBase: new URL("https://waheed.in"),
+  alternates: { canonical: "https://waheed.in" },
   openGraph: {
     title: "WAHEED · Halal Digital Studio",
     description:

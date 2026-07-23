@@ -1,10 +1,13 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { pageMeta } from '@/lib/seo';
 
-export const metadata: Metadata = {
-  title:       'About · WAHEED',
-  description: 'Built for brands that refuse to compromise. The founding story and team behind Waheed Digital Studio.',
-};
+export const metadata: Metadata = pageMeta({
+  title: 'About · WAHEED',
+  description:
+    'Built for brands that refuse to compromise. Meet the founders behind Waheed Digital Studio — our story, our values, and the halal-first standard behind every build.',
+  path: '/about',
+});
 
 const FOUNDER = {
   label:  'Founder',

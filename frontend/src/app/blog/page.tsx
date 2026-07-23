@@ -4,12 +4,23 @@ import { laravelFetch } from '@/lib/laravel';
 
 export const dynamic = 'force-dynamic';
 
+const BLOG_DESC =
+  'Strategic notes on halal brand-building, growth, and digital craft from the WAHEED studio — practical ideas to help Muslim-led brands grow with integrity.';
+
 export const metadata: Metadata = {
   title: 'Insights · WAHEED',
-  description: 'Strategic notes on halal brand-building, growth, and digital craft — from the WAHEED studio.',
+  description: BLOG_DESC,
   alternates: {
     canonical: 'https://waheed.in/blog',
     types: { 'application/rss+xml': [{ url: 'https://waheed.in/blog/rss.xml', title: 'WAHEED · Insights' }] },
+  },
+  openGraph: {
+    title: 'Insights · WAHEED',
+    description: BLOG_DESC,
+    url: 'https://waheed.in/blog',
+    siteName: 'WAHEED',
+    locale: 'en_GB',
+    type: 'website',
   },
 };
 
