@@ -5,19 +5,18 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { AnimatePresence, motion } from 'framer-motion';
 
-// "Insights" only appears once the blog is public (site fully live).
-const buildLinks = (blogPublic: boolean) => [
+const buildLinks = () => [
   { href: '/',         label: 'Home'     },
   { href: '/about',    label: 'About'    },
   { href: '/services', label: 'Services' },
-  ...(blogPublic ? [{ href: '/blog', label: 'Insights' }] : []),
+  { href: '/blog',     label: 'Blog'     },
   { href: '/faq',      label: 'FAQs'     },
 ];
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 
-export default function Nav({ blogPublic = false }: { blogPublic?: boolean }) {
-  const LINKS = buildLinks(blogPublic);
+export default function Nav({}: { blogPublic?: boolean }) {
+  const LINKS = buildLinks();
 
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen]         = useState(false);
