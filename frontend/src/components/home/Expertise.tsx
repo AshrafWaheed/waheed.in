@@ -77,6 +77,15 @@ function DoorArt({ i }: { i: number }) {
     case 0: // Web & App Development — responsive layout system
       return (
         <svg {...s}>
+          {/* soft luminous ground — gives the diagram depth without a hard panel */}
+          <defs>
+            <radialGradient id={`daGlow${i}`} cx="50%" cy="42%" r="66%">
+              <stop offset="0%" stopColor="#fff3b0" stopOpacity="0.13" />
+              <stop offset="42%" stopColor="#39616d" stopOpacity="0.12" />
+              <stop offset="100%" stopColor="#11272e" stopOpacity="0" />
+            </radialGradient>
+          </defs>
+          <rect x="0" y="0" width="260" height="210" fill={`url(#daGlow${i})`} stroke="none" />
           {/* blueprint anchor dots */}
           <g fill="currentColor" stroke="none" opacity="0.32">
             <circle cx="8" cy="20" r="2" /><circle cx="158" cy="20" r="2" />
@@ -120,6 +129,15 @@ function DoorArt({ i }: { i: number }) {
     case 1: // Custom Software Development — system architecture
       return (
         <svg {...s}>
+          {/* soft luminous ground — gives the diagram depth without a hard panel */}
+          <defs>
+            <radialGradient id={`daGlow${i}`} cx="50%" cy="42%" r="66%">
+              <stop offset="0%" stopColor="#fff3b0" stopOpacity="0.13" />
+              <stop offset="42%" stopColor="#39616d" stopOpacity="0.12" />
+              <stop offset="100%" stopColor="#11272e" stopOpacity="0" />
+            </radialGradient>
+          </defs>
+          <rect x="0" y="0" width="260" height="210" fill={`url(#daGlow${i})`} stroke="none" />
           <g strokeWidth="1" opacity="0.16">
             <line x1="46" y1="36" x2="228" y2="34" />
             <line x1="228" y1="34" x2="208" y2="166" />
@@ -164,6 +182,15 @@ function DoorArt({ i }: { i: number }) {
     case 2: // Brand Strategy — positioning radar
       return (
         <svg {...s}>
+          {/* soft luminous ground — gives the diagram depth without a hard panel */}
+          <defs>
+            <radialGradient id={`daGlow${i}`} cx="50%" cy="42%" r="66%">
+              <stop offset="0%" stopColor="#fff3b0" stopOpacity="0.13" />
+              <stop offset="42%" stopColor="#39616d" stopOpacity="0.12" />
+              <stop offset="100%" stopColor="#11272e" stopOpacity="0" />
+            </radialGradient>
+          </defs>
+          <rect x="0" y="0" width="260" height="210" fill={`url(#daGlow${i})`} stroke="none" />
           <g strokeWidth="1.2">
             <circle cx="130" cy="104" r="90" opacity="0.13" />
             <circle cx="130" cy="104" r="64" opacity="0.2" />
@@ -197,6 +224,15 @@ function DoorArt({ i }: { i: number }) {
     case 3: // SEO — search ranking + growth
       return (
         <svg {...s}>
+          {/* soft luminous ground — gives the diagram depth without a hard panel */}
+          <defs>
+            <radialGradient id={`daGlow${i}`} cx="50%" cy="42%" r="66%">
+              <stop offset="0%" stopColor="#fff3b0" stopOpacity="0.13" />
+              <stop offset="42%" stopColor="#39616d" stopOpacity="0.12" />
+              <stop offset="100%" stopColor="#11272e" stopOpacity="0" />
+            </radialGradient>
+          </defs>
+          <rect x="0" y="0" width="260" height="210" fill={`url(#daGlow${i})`} stroke="none" />
           <g strokeWidth="1.5" opacity="0.85">
             <rect x="18" y="14" width="188" height="28" rx="14" />
             <circle cx="188" cy="28" r="7" />
@@ -243,6 +279,15 @@ function DoorArt({ i }: { i: number }) {
     case 4: // Social Media Marketing — content engine network
       return (
         <svg {...s}>
+          {/* soft luminous ground — gives the diagram depth without a hard panel */}
+          <defs>
+            <radialGradient id={`daGlow${i}`} cx="50%" cy="42%" r="66%">
+              <stop offset="0%" stopColor="#fff3b0" stopOpacity="0.13" />
+              <stop offset="42%" stopColor="#39616d" stopOpacity="0.12" />
+              <stop offset="100%" stopColor="#11272e" stopOpacity="0" />
+            </radialGradient>
+          </defs>
+          <rect x="0" y="0" width="260" height="210" fill={`url(#daGlow${i})`} stroke="none" />
           <g className="da-flow" strokeWidth="1.2" opacity="0.32" strokeDasharray="2 6">
             <line x1="130" y1="104" x2="40" y2="40" /><line x1="130" y1="104" x2="126" y2="24" />
             <line x1="130" y1="104" x2="216" y2="42" /><line x1="130" y1="104" x2="30" y2="108" />
@@ -271,6 +316,15 @@ function DoorArt({ i }: { i: number }) {
     case 5: // Conversion Copywriting — words into a funnel
       return (
         <svg {...s}>
+          {/* soft luminous ground — gives the diagram depth without a hard panel */}
+          <defs>
+            <radialGradient id={`daGlow${i}`} cx="50%" cy="42%" r="66%">
+              <stop offset="0%" stopColor="#fff3b0" stopOpacity="0.13" />
+              <stop offset="42%" stopColor="#39616d" stopOpacity="0.12" />
+              <stop offset="100%" stopColor="#11272e" stopOpacity="0" />
+            </radialGradient>
+          </defs>
+          <rect x="0" y="0" width="260" height="210" fill={`url(#daGlow${i})`} stroke="none" />
           <g strokeWidth="1.3" opacity="0.4">
             <line x1="64" y1="24" x2="212" y2="24" />
             <line x1="64" y1="34" x2="190" y2="34" />
@@ -300,6 +354,15 @@ function DoorArt({ i }: { i: number }) {
     default: // Ad Creatives — layered creative canvas
       return (
         <svg {...s}>
+          {/* soft luminous ground — gives the diagram depth without a hard panel */}
+          <defs>
+            <radialGradient id={`daGlow${i}`} cx="50%" cy="42%" r="66%">
+              <stop offset="0%" stopColor="#fff3b0" stopOpacity="0.13" />
+              <stop offset="42%" stopColor="#39616d" stopOpacity="0.12" />
+              <stop offset="100%" stopColor="#11272e" stopOpacity="0" />
+            </radialGradient>
+          </defs>
+          <rect x="0" y="0" width="260" height="210" fill={`url(#daGlow${i})`} stroke="none" />
           <g className="da-flow" strokeWidth="1.2" opacity="0.3" strokeDasharray="2 6">
             <path d="M196 150 q 30 -6 40 -40" />
             <path d="M188 162 q 40 -6 54 -52" />

@@ -976,6 +976,8 @@ a.blog-chip-link:hover { background: #9c7d1c; color: #FFFDF9; }
   padding:    0.6rem 1.7rem 0.5rem;
   box-sizing: border-box;
   display:    block;
+  /* Faint gold halo so the linework reads as luminous, lifted off the surface. */
+  filter:     drop-shadow(0 0 2px rgba(255, 243, 176, 0.22));
 }
 .door:hover .door-art { filter: brightness(1.16); }
 
