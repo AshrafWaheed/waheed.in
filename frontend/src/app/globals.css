@@ -941,6 +941,68 @@ a.blog-chip-link:hover { background: #9c7d1c; color: #FFFDF9; }
   pointer-events: none;
 }
 
+.door-art {
+  position:       absolute;
+  top:            0;
+  left:           0;
+  right:          0;
+  height:         50%;
+  color:          #fff3b0;
+  /* Visible while the cards are still merged (p≈0) so the block reads as one
+     blueprint sheet, then splits into cards as p→1 (gaining a touch more
+     presence). Never fully empty. */
+  opacity:        calc(0.8 + 0.2 * var(--p));
+  pointer-events: none;
+  overflow:       hidden;
+  transition:     filter 0.4s ease;
+}
+/* Faint blueprint grid, masked so it dissolves toward the card's text. */
+.door-art::before {
+  content:  '';
+  position: absolute;
+  inset:    0;
+  background-image:
+    linear-gradient(rgba(255, 243, 176, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 243, 176, 0.05) 1px, transparent 1px);
+  background-size:    26px 26px;
+  -webkit-mask-image: radial-gradient(125% 100% at 50% 22%, #000 42%, transparent 80%);
+          mask-image: radial-gradient(125% 100% at 50% 22%, #000 42%, transparent 80%);
+}
+.door-art svg {
+  position:   absolute;
+  inset:      0;
+  width:      100%;
+  height:     100%;
+  padding:    0.6rem 1.7rem 0.5rem;
+  box-sizing: border-box;
+  display:    block;
+}
+.door:hover .door-art { filter: brightness(1.16); }
+
+/* Ambient motion inside the door diagrams — a "living blueprint" feel.
+   Cheap transform/opacity/dashoffset only; fully stilled for reduced-motion. */
+@media (prefers-reduced-motion: no-preference) {
+  .da-flow  { animation: daFlow 1.4s linear infinite; }
+  .da-ping  {
+    transform-box:    fill-box;
+    transform-origin: center;
+    animation:        daPing 3.2s ease-out infinite;
+  }
+  .da-sweep {
+    transform-box:    view-box;
+    transform-origin: 130px 104px;
+    animation:        daSpin 7s linear infinite;
+  }
+  .da-twinkle { animation: daTwinkle 2.6s ease-in-out infinite; }
+}
+@keyframes daFlow    { to { stroke-dashoffset: -16; } }
+@keyframes daSpin    { to { transform: rotate(360deg); } }
+@keyframes daTwinkle { 0%, 100% { opacity: 0.9; } 50% { opacity: 0.3; } }
+@keyframes daPing {
+  0%        { transform: scale(0.5);  opacity: 0.55; }
+  70%, 100% { transform: scale(1.85); opacity: 0; }
+}
+
 .door-inner {
   display:        flex;
   flex-direction: column;
@@ -1068,6 +1130,11 @@ a.blog-chip-link:hover { background: #9c7d1c; color: #FFFDF9; }
   .doors-h { font-size: clamp(1.5rem, 2.5vw, 2.1rem); }
   .door-title { font-size: clamp(0.95rem, 1.2vw, 1.2rem); }
   .door-desc  { font-size: 0.8rem; }
+  /* Content is top-aligned on mobile — give the diagram its own band at the
+     top and push the text below it so the two never overlap. */
+  .door         { padding-top: 146px; }
+  .door-art     { height: 132px; }
+  .door-art svg { padding: 0.6rem 1.1rem 0.4rem; }
 }
 
 /* ─── Audience Band ──────────────────────────────────────────── */
