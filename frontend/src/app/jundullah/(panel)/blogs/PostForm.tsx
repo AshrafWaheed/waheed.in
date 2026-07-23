@@ -230,10 +230,13 @@ export default function PostForm({
             />
           </label>
 
-          <label className="adm-field2">
+          {/* NOT a <label>: it wraps the toolbar buttons, and a label would
+              delegate every click inside it to its first control (the H2
+              button), silently toggling the caret's block to a heading. */}
+          <div className="adm-field2">
             <span>Body</span>
             <RichEditor value={post?.body_html ?? ''} onChange={edit(setBody)} />
-          </label>
+          </div>
         </div>
 
         <aside className="adm-editor-side">
