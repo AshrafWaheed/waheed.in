@@ -2707,11 +2707,23 @@ a.blog-chip-link:hover { background: var(--accent); color: var(--on-teal); }
   align-items:   flex-end;
   justify-content: center;
 }
+/* Soft gold spotlight behind the portraits so they read as lit, lifted off
+   the gradient rather than pasted flat onto it. */
+.hh-portrait::before {
+  content:       '';
+  position:      absolute;
+  inset:         4% 2% 0;
+  z-index:       -1;
+  background:    radial-gradient(58% 52% at 50% 32%, rgba(255,243,176,.14) 0%, rgba(255,243,176,0) 68%);
+  filter:        blur(28px);
+  pointer-events: none;
+}
 .hh-portrait-img {
   width:         100%;
   height:        100%;
   object-fit:    contain;
   object-position: bottom center;
+  filter:        drop-shadow(0 22px 46px rgba(0,0,0,.34));
 }
 /* Interim placeholder until founder portrait PNG is supplied */
 .hh-portrait-ph {
