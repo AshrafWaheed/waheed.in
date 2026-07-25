@@ -57,7 +57,7 @@ export default function Services() {
   const inView     = useInView(sectionRef, { once: true, margin: '-10% 0px' });
 
   return (
-    <section className="sec" ref={sectionRef} style={{ background: 'var(--surface)' }}>
+    <section className="sec" ref={sectionRef} style={{ background: '#FFFDF9' }}>
       <div className="cnt">
 
         {/* Header */}
@@ -88,7 +88,7 @@ export default function Services() {
 
               <div
                 className="svc-eyebrow-label"
-                style={{ color: card.featured ? undefined : 'var(--heading)' }}
+                style={{ color: card.featured ? undefined : '#254851' }}
               >
                 {card.eyebrow}
               </div>

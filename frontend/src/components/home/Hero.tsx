@@ -41,7 +41,7 @@ export default function Hero() {
             initial="hidden"
             animate="visible"
           >
-            Ihsan-Led Tech &amp; Marketing
+            Ihsan-Led Tech &amp; Marketing for Halal, Impact-Driven Initiatives
           </motion.p>
 
           {/* Headline */}

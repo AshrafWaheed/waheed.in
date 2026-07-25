@@ -89,7 +89,7 @@ export default function AudienceBand() {
             <span className="eyebrow-v2">Who we work with</span>
             <h2 className="reveal">
               We transform brands that{' '}
-              <em style={{ color: 'var(--heading)' }}>refuse to compromise their values.</em>
+              <em style={{ color: '#254851' }}>refuse to compromise their values.</em>
             </h2>
           </div>
         </div>

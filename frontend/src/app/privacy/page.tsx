@@ -21,7 +21,7 @@ export default function PrivacyPage() {
         </div>
       </div>
 
-      <section className="sec" style={{ background: 'var(--surface)' }}>
+      <section className="sec" style={{ background: '#FFFDF9' }}>
         <div className="cnt" style={{ maxWidth: 720 }}>
           <div className="legal-body">
 

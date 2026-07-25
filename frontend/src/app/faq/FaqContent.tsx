@@ -30,7 +30,7 @@ export default function FaqContent() {
       </div>
 
       {/* ── FAQ body ── */}
-      <section className="sec" style={{ background: 'var(--surface)' }}>
+      <section className="sec" style={{ background: '#FFFDF9' }}>
         <div className="cnt faq-wrap">
 
           {/* Filter tabs */}
@@ -92,20 +92,20 @@ export default function FaqContent() {
       </section>
 
       {/* ── CTA ── */}
-      <section className="sec" style={{ background: 'var(--surface-2)', textAlign: 'center' }}>
+      <section className="sec" style={{ background: '#F7F3ED', textAlign: 'center' }}>
         <div className="cnt">
           <span className="eyebrow-v2 center reveal">Still have questions?</span>
           <h2 className="reveal delay-1" style={{
             fontFamily: 'var(--font-serif)',
             fontSize: 'clamp(1.7rem,2.4vw,2.1rem)',
-            color: 'var(--heading)',
+            color: '#254851',
             fontWeight: 400,
             marginBottom: '1rem',
             lineHeight: 1.15,
           }}>
             Ask us directly.
           </h2>
-          <p className="reveal delay-2" style={{ fontSize: '.9rem', color: 'var(--text-muted)', marginBottom: '1.5rem', maxWidth: 480, margin: '0 auto 1.5rem' }}>
+          <p className="reveal delay-2" style={{ fontSize: '.9rem', color: '#6B6B6B', marginBottom: '1.5rem', maxWidth: 480, margin: '0 auto 1.5rem' }}>
             Fill out our project application form and we&apos;ll answer any questions during your
             discovery call, in shā&apos; Allāh.
           </p>

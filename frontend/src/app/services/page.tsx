@@ -74,7 +74,7 @@ export default function ServicesPage() {
       </div>
 
       {/* ── Offer Ladder ── */}
-      <section className="sec" style={{ background: 'var(--surface-2)' }}>
+      <section className="sec" style={{ background: '#F7F3ED' }}>
         <div className="cnt">
           <div className="svc-grid svc-grid--wrap" style={{ marginTop: 0 }}>
             {CARDS.map((card) => (
@@ -87,7 +87,7 @@ export default function ServicesPage() {
                 )}
                 <div
                   className="svc-eyebrow-label"
-                  style={{ color: card.featured ? undefined : 'var(--heading)' }}
+                  style={{ color: card.featured ? undefined : '#254851' }}
                 >
                   {card.eyebrow}
                 </div>
