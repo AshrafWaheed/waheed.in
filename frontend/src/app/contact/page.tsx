@@ -162,7 +162,7 @@ export default function ContactPage() {
       </div>
 
       {/* ── Form Section ── */}
-      <section className="sec" style={{ background: '#F7F3ED' }}>
+      <section className="sec" style={{ background: 'var(--surface-2)' }}>
         <div className="cnt">
           <div className="contact-grid">
 
@@ -210,7 +210,7 @@ export default function ContactPage() {
 
               {/* Values note */}
               <div style={{ marginTop: '2.5rem', padding: '1.3rem 1.5rem', background: 'rgba(51,92,103,.06)', borderRadius: 10, borderLeft: '3px solid #335C67' }}>
-                <p style={{ fontSize: '.82rem', color: '#254851', lineHeight: 1.7, margin: 0 }}>
+                <p style={{ fontSize: '.82rem', color: 'var(--heading)', lineHeight: 1.7, margin: 0 }}>
                   <strong>We only work with values-aligned brands.</strong> Every application is reviewed personally.
                   We may respectfully decline projects that do not align with our ethical guidelines.
                 </p>

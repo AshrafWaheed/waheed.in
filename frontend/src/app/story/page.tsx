@@ -78,7 +78,7 @@ export default function StoryPage() {
       </div>
 
       {/* ── Founding Narrative ── */}
-      <section className="sec" style={{ background: '#FFFDF9' }}>
+      <section className="sec" style={{ background: 'var(--surface)' }}>
         <div className="cnt" style={{ maxWidth: 760 }}>
           <span className="eyebrow-v2 reveal">The Founding Story</span>
           <h2 className="story-section-h reveal delay-1">
@@ -112,7 +112,7 @@ export default function StoryPage() {
       </section>
 
       {/* ── Manifesto Blocks ── */}
-      <section className="sec" style={{ background: '#F7F3ED' }}>
+      <section className="sec" style={{ background: 'var(--surface-2)' }}>
         <div className="cnt">
           <div style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
             <span className="lbl reveal">The Manifesto</span>

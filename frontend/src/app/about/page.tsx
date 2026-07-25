@@ -68,7 +68,7 @@ export default function AboutPage() {
       </div>
 
       {/* ── Founding Narrative ── */}
-      <section className="sec" style={{ background: '#FFFDF9' }}>
+      <section className="sec" style={{ background: 'var(--surface)' }}>
         <div className="cnt">
           <div className="about-narrative">
             <div>
@@ -105,7 +105,7 @@ export default function AboutPage() {
       </section>
 
       {/* ── The People & the Journey ── */}
-      <section className="sec" style={{ background: '#F7F3ED' }}>
+      <section className="sec" style={{ background: 'var(--surface-2)' }}>
         <div className="cnt">
           <div style={{ maxWidth: 620, margin: '0 auto 2.5rem', textAlign: 'center' }}>
             <span className="lbl reveal">The People &amp; the Journey</span>
@@ -114,14 +114,14 @@ export default function AboutPage() {
               style={{
                 fontFamily:    'var(--font-serif)',
                 fontSize:      'clamp(1.7rem,2.5vw,2.2rem)',
-                color:         '#254851',
+                color:         'var(--heading)',
                 fontWeight:    500,
                 marginBottom:  '.5rem',
               }}
             >
               The People &amp; the Journey Behind Waheed
             </h2>
-            <p className="reveal delay-2" style={{ fontSize: '.9rem', color: '#6B6B6B' }}>
+            <p className="reveal delay-2" style={{ fontSize: '.9rem', color: 'var(--text-muted)' }}>
               Committed to craft, clarity, &amp; excellence.
             </p>
           </div>
@@ -167,7 +167,7 @@ export default function AboutPage() {
       </section>
 
       {/* ── CTA ── */}
-      <section className="sec" style={{ background: '#FFFDF9', textAlign: 'center' }}>
+      <section className="sec" style={{ background: 'var(--surface)', textAlign: 'center' }}>
         <div className="cnt">
           <span className="eyebrow-v2 center reveal">Work with us</span>
           <h2
@@ -175,13 +175,13 @@ export default function AboutPage() {
             style={{
               fontFamily:    'var(--font-serif)',
               fontSize:      'clamp(1.8rem,2.8vw,2.5rem)',
-              color:         '#254851',
+              color:         'var(--heading)',
               fontWeight:    400,
               marginBottom:  '1.2rem',
               lineHeight:    1.1,
             }}
           >
-            Ready to build something with <em style={{ fontStyle: 'italic', color: '#9c7d1c' }}>Barakah?</em>
+            Ready to build something with <em style={{ fontStyle: 'italic', color: 'var(--accent)' }}>Barakah?</em>
           </h2>
           <Link href="/contact" className="btn btn-teal reveal delay-2">
             Apply for a Discovery Call →
