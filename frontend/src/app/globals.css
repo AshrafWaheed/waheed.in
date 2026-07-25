@@ -55,6 +55,7 @@
   --gold-wash:      #fff3b0;   /* pale gold fill on light */
   --gold-on-teal:   #fff3b0;   /* gold text on teal (fixed) */
   --on-teal:        #FFFDF9;   /* light text on teal (fixed) */
+  --on-gold:        #1a363d;   /* dark ink on a gold surface (fixed) */
 
   /* Lines (flip) */
   --border:         #E6DED3;
@@ -739,7 +740,7 @@ a.blog-chip-link:hover { background: var(--accent); color: var(--on-teal); }
     /* Gold gradient is fixed-bright in both modes, so the label must be
        fixed-dark — never var(--text), which would flip to light-on-gold. */
     background:  linear-gradient(135deg, #fff8cc 0%, #fff3b0 50%, #f0d97a 100%);
-    color: var(--heading);
+    color:       var(--on-gold);
     box-shadow:  0 2px 8px rgba(240, 217, 122, 0.3);
   }
   .btn-gold:hover {
@@ -931,7 +932,7 @@ a.blog-chip-link:hover { background: var(--accent); color: var(--on-teal); }
 .trust-item {
   display:        flex;
   align-items:    center;
-  color: var(--text);
+  color: var(--on-gold);
   font-size:      0.82rem;
   letter-spacing: 0.02em;
   padding:        0 2.4rem;
@@ -939,7 +940,7 @@ a.blog-chip-link:hover { background: var(--accent); color: var(--on-teal); }
 }
 .trust-star {
   flex-shrink: 0;
-  color: var(--text);
+  color: var(--on-gold);
   line-height: 1;
 }
 @keyframes trustScroll {
