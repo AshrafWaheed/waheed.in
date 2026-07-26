@@ -42,3 +42,6 @@ next-env.d.ts
 
 # contact submissions (local data)
 /data/
+
+# isolated dev build dir (see next.config distDir)
+.next-dev

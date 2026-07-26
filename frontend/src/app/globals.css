@@ -3172,6 +3172,15 @@ html[data-nav="dark"] .nav-links a.active     { color: #fff; }
 html[data-nav="dark"] .nav-logo-img           { filter: brightness(0) invert(1); }
 html[data-nav="dark"] .burger span            { background: var(--rd-ivory); }
 
+/* ─── Live-dashboard hooks (CraftDash + GirihEngine) ────────────── */
+.da-flow    { animation: rd-flow 1.1s linear infinite; }
+.da-ping    { transform-box: fill-box; transform-origin: center; animation: rd-ping 2.6s ease-out infinite; }
+.da-sweep   { animation: rd-spin 4.5s linear infinite; }
+.da-twinkle { transform-box: fill-box; transform-origin: center; animation: rd-twinkle 3s ease-in-out infinite; }
+@keyframes rd-flow    { to { stroke-dashoffset: -8; } }
+@keyframes rd-ping    { 0% { transform: scale(.35); opacity: .85; } 70% { opacity: 0; } 100% { transform: scale(1.7); opacity: 0; } }
+@keyframes rd-twinkle { 0%, 100% { opacity: .25; } 50% { opacity: .95; } }
+
 /* ─── Reduced-motion safety net ─────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
   .khatam-cursor-star { animation: none; }
@@ -3183,4 +3192,145 @@ html[data-nav="dark"] .burger span            { background: var(--rd-ivory); }
     filter: none !important;
     transform: none !important;
   }
+  /* Still the dashboards + engine (engine spins are inline styles). */
+  .da-flow, .da-ping, .da-sweep, .da-twinkle,
+  [style*="rd-spin"] { animation: none !important; }
+  /* Force self-drawing strokes fully drawn + visible (beats Framer's inline
+     pathLength styles) so the geometry isn't left half-undrawn. */
+  .rd-draw { stroke-dasharray: none !important; stroke-dashoffset: 0 !important; opacity: 1 !important; }
+}
+
+
+/* ══════════════════════════════════════════════════════════════════════════
+   HYBRID VARIANT (/) — homepage §1–4
+   ══════════════════════════════════════════════════════════════════════════ */
+
+/* ── §1 Hero ─────────────────────────────────────────────────────── */
+.hy-hero {
+  position: relative;
+  min-height: 100vh; min-height: 100dvh;
+  display: grid; place-items: center;
+  padding: 7rem 1.5rem 5rem;
+  overflow: hidden;
+  background: radial-gradient(125% 90% at 50% 0%, #1c3d47 0%, var(--rd-night) 62%);
+  color: var(--rd-on-night);
+}
+.hy-hero-engine {
+  position: absolute; top: 48%; left: 50%;
+  width: min(94vh, 860px); height: min(94vh, 860px);
+  transform: translate(-50%, -50%);
+  opacity: .5; pointer-events: none; z-index: 0;
+}
+.hy-hero-inner { position: relative; z-index: 1; text-align: center; max-width: 940px; margin: 0 auto; }
+.hy-bismillah {
+  font-family: var(--font-arabic); direction: rtl;
+  font-size: 1.15rem; color: rgba(255,243,176,.82); letter-spacing: .02em; margin-bottom: 1.1rem;
+}
+.hy-eyebrow {
+  font-family: var(--font-sans); font-size: .72rem; font-weight: 500;
+  letter-spacing: .24em; text-transform: uppercase; color: var(--rd-gold-line); margin-bottom: 1.4rem;
+}
+.hy-hero-h1 {
+  font-family: var(--font-serif); font-weight: 500;
+  font-size: clamp(2.6rem, 6vw, 5rem); line-height: 1.04;
+  color: var(--rd-white); margin: 0 auto 1.6rem; max-width: 16ch;
+}
+.hy-hero-h1 em { font-style: italic; color: var(--rd-gold-bloom); font-weight: 400; }
+.hy-hero-sub {
+  font-family: var(--font-sans); font-size: clamp(1rem, 1.4vw, 1.12rem); line-height: 1.6;
+  color: var(--rd-on-night-dim); max-width: 46rem; margin: 0 auto 2.4rem;
+}
+.hy-hero-ctas { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+.hy-scroll-cue { position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%); z-index: 1; }
+.hy-scroll-line {
+  display: block; width: 1px; height: 46px; transform-origin: top;
+  background: linear-gradient(to bottom, transparent, var(--rd-gold-line));
+  animation: hy-scroll 2s ease-in-out infinite;
+}
+@keyframes hy-scroll { 0%,100% { transform: scaleY(.4); opacity: .4; } 50% { transform: scaleY(1); opacity: 1; } }
+@media (max-width: 768px) {
+  .hy-hero-engine { width: 128vw; height: 128vw; opacity: .3; }
+  .hy-hero-h1 { max-width: 100%; }
+}
+@media (prefers-reduced-motion: reduce) { .hy-scroll-line { animation: none; } }
+
+/* ── §2 Trust strip ──────────────────────────────────────────────── */
+.hy-trust {
+  background: var(--rd-night-2);
+  border-top: 1px solid var(--rd-hairline);
+  border-bottom: 1px solid var(--rd-hairline);
+  padding: 1.15rem 0; overflow: hidden;
+}
+.hy-trust-item {
+  display: inline-flex; align-items: center; gap: 1.5rem; padding: 0 1.5rem;
+  font-family: var(--font-serif); font-style: italic; font-size: clamp(1.1rem, 1.6vw, 1.5rem);
+  color: var(--rd-gold-bloom); white-space: nowrap;
+}
+
+/* ── §3 Manifesto (pinned scrub) ─────────────────────────────────── */
+.hy-manifesto { position: relative; background: var(--rd-night); color: var(--rd-on-night); }
+.hy-manifesto-stage {
+  position: relative; min-height: 100vh; min-height: 100dvh;
+  display: grid; place-items: center; padding: 6rem 1.5rem; overflow: hidden; text-align: center;
+}
+.hy-manifesto-engine {
+  position: absolute; top: 50%; left: 50%;
+  width: min(82vh, 700px); height: min(82vh, 700px);
+  transform: translate(-50%, -50%); opacity: .26; pointer-events: none; z-index: 0;
+}
+.hy-manifesto-glow {
+  position: absolute; inset: 0; z-index: 0; pointer-events: none; transition: opacity .4s ease;
+  background: radial-gradient(360px circle at var(--mx, 50%) var(--my, 50%), rgba(201,162,39,.16), transparent 60%);
+}
+.hy-quote {
+  position: relative; z-index: 1; max-width: 22ch; margin: 0 auto;
+  font-family: var(--font-serif); font-size: clamp(2rem, 5vw, 4.2rem); line-height: 1.14; font-weight: 500;
+  color: var(--rd-white); display: flex; flex-direction: column; gap: .08em;
+}
+.hy-quote-line { display: block; }
+.hy-quote-attr {
+  position: relative; z-index: 1; margin-top: 2.2rem;
+  font-family: var(--font-sans); font-size: .78rem; letter-spacing: .34em; text-transform: uppercase; color: var(--rd-gold-line);
+}
+
+/* ── §4 Expertise (pinned horizontal scroll) ─────────────────────── */
+.hy-expertise { position: relative; background: var(--rd-night); color: var(--rd-on-night); }
+.hy-exp-stage { min-height: 100vh; min-height: 100dvh; display: flex; flex-direction: column; padding: 5.5rem 0 3rem; overflow: hidden; }
+.hy-exp-head { flex-shrink: 0; }
+.hy-exp-eyebrow { display: block; font-family: var(--font-sans); font-size: .72rem; letter-spacing: .24em; text-transform: uppercase; color: var(--rd-gold-line); margin-bottom: .7rem; }
+.hy-exp-h { font-family: var(--font-serif); font-size: clamp(1.9rem, 4.5vw, 3.4rem); font-weight: 500; color: var(--rd-white); line-height: 1.08; }
+.hy-exp-h em { font-style: italic; color: var(--rd-gold-bloom); }
+.hy-exp-progress { margin-top: 1.6rem; height: 2px; background: rgba(201,162,39,.18); border-radius: 2px; overflow: hidden; }
+.hy-exp-progress-fill { display: block; height: 100%; width: 100%; transform: scaleX(0); transform-origin: left; background: linear-gradient(90deg, var(--rd-gold-line), var(--rd-gold-bloom)); }
+.hy-exp-row {
+  display: flex; gap: 1.5rem; width: max-content; margin-top: 2.5rem; align-items: stretch; will-change: transform;
+  padding: 0 max(1.5rem, calc((100vw - 1200px) / 2));
+}
+.hy-exp-card-wrap { flex: 0 0 clamp(300px, 30vw, 380px); border-radius: 16px; }
+.hy-exp-card {
+  height: 100%; display: flex; flex-direction: column;
+  border: 1px solid var(--rd-hairline); border-radius: 16px;
+  background: linear-gradient(180deg, #16323a, #11272e);
+  color: var(--rd-gold-line); overflow: hidden;
+  transition: border-color .3s ease, transform .3s ease, box-shadow .3s ease;
+}
+.hy-exp-card-wrap:hover .hy-exp-card { border-color: rgba(201,162,39,.5); transform: translateY(-6px); box-shadow: 0 20px 50px rgba(0,0,0,.35); }
+.hy-exp-card-art { height: 188px; padding: 1rem 1.2rem 0; }
+.hy-exp-card-art svg { width: 100%; height: 100%; }
+.hy-exp-card-body { padding: 0 1.6rem 1.8rem; display: flex; flex-direction: column; flex: 1; color: var(--rd-on-night); }
+.hy-exp-card-num { font-family: var(--font-serif); font-style: italic; font-size: 1rem; color: var(--rd-gold-line); opacity: .8; }
+.hy-exp-soon {
+  align-self: flex-start; margin: .35rem 0; font-family: var(--font-sans); font-size: .62rem;
+  letter-spacing: .12em; text-transform: uppercase; color: var(--rd-night);
+  background: var(--rd-gold-line); padding: .15rem .5rem; border-radius: 999px;
+}
+.hy-exp-card-title { font-family: var(--font-serif); font-size: 1.5rem; font-weight: 500; color: var(--rd-white); margin: .4rem 0 .7rem; line-height: 1.15; }
+.hy-exp-card-desc { font-family: var(--font-sans); font-size: .86rem; line-height: 1.6; color: var(--rd-on-night-dim); flex: 1; }
+.hy-exp-card-promise { display: inline-flex; align-items: center; gap: .5rem; margin-top: 1.2rem; font-family: var(--font-serif); font-style: italic; font-size: 1rem; color: var(--rd-gold-bloom); }
+.hy-exp-card.is-soon { opacity: .82; }
+@media (max-width: 768px) {
+  .hy-exp-stage { min-height: 0; padding: 4rem 0; }
+  .hy-exp-row { width: auto; overflow-x: auto; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; padding: 0 1.5rem; margin-top: 2rem; }
+  .hy-exp-card-wrap { flex: 0 0 80vw; scroll-snap-align: center; }
+  .hy-exp-progress { display: none; }
 }

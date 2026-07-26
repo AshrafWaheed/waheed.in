@@ -3,9 +3,12 @@
 /**
  * Self-drawing SVG stroke (the Wahda signature). Drop <DrawPath> inside any <svg>
  * and its path draws itself via pathLength when scrolled into view (or on mount).
- * Under reduced-motion it renders fully drawn, no animation.
+ *
+ * Reduced-motion is handled in CSS (`.rd-draw` in globals.css): a stylesheet
+ * !important forces the stroke fully drawn + visible, which beats Framer's inline
+ * pathLength styles. We render ONE structure so SSR/client never mismatch.
  */
-import { motion, useReducedMotion } from 'framer-motion';
+import { motion } from 'framer-motion';
 import type { ComponentProps } from 'react';
 
 const EASE = [0.22, 1, 0.36, 1] as const;
@@ -29,11 +32,9 @@ export function DrawPath({
   once = true,
   amount = 0.4,
   trigger = 'inView',
+  className,
   ...rest
 }: DrawPathProps) {
-  const reduce = useReducedMotion();
-  if (reduce) return <motion.path d={d} {...rest} />;
-
   const anim =
     trigger === 'mount'
       ? { initial: { pathLength: 0, opacity: 0 }, animate: { pathLength: 1, opacity: 1 } }
@@ -45,6 +46,7 @@ export function DrawPath({
 
   return (
     <motion.path
+      className={`rd-draw${className ? ` ${className}` : ''}`}
       d={d}
       {...anim}
       transition={{

@@ -11,6 +11,11 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
+  // Build output dir. Overridable via env so a throwaway `next dev` can use an
+  // isolated dir (NEXT_DIST_DIR=.next-dev) and never clobber the live PM2 `.next`.
+  // Prod build/start leave the env unset → default `.next`.
+  distDir: process.env.NEXT_DIST_DIR || ".next",
+
   // Native modules used server-side — keep them external so the bundler
   // doesn't try to pack them: sharp (image uploads), better-sqlite3 (registrations).
   serverExternalPackages: ["sharp", "better-sqlite3"],
