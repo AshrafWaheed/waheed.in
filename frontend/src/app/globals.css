@@ -3086,3 +3086,101 @@ a.blog-chip-link:hover { background: #9c7d1c; color: #FFFDF9; }
 .adm-mode-hint { margin-top: 1.4rem; font-family: var(--font-sans); font-size: .82rem; color: #5a6b6f; }
 .adm-mode-hint a { color: #9c7d1c; text-decoration: none; display: inline-flex; align-items: center; gap: .2rem; }
 .adm-mode-hint a:hover { text-decoration: underline; }
+
+
+/* ══════════════════════════════════════════════════════════════════════════
+   REDESIGN TOKEN LAYER — "The Barakah Engine"
+   Additive only. Powers the 3 homepage variants (/, /home2, /home3).
+   Namespaced with `rd-` + primitive class names; touches nothing above.
+   ══════════════════════════════════════════════════════════════════════════ */
+:root {
+  --rd-night:        #11272e;
+  --rd-night-2:      #1a363d;
+  --rd-teal:         #254851;
+  --rd-teal-lt:      #335C67;
+  --rd-ivory:        #F7F3ED;
+  --rd-white:        #FFFDF9;
+  --rd-gold:         #9c7d1c;
+  --rd-gold-line:    #c9a227;
+  --rd-gold-bloom:   #fff3b0;
+  --rd-on-night:     #F7F3ED;
+  --rd-on-night-dim: rgba(247, 243, 237, .62);
+  --rd-hairline:     rgba(201, 162, 39, .18);
+}
+
+/* ─── Khatam custom cursor (desktop / fine-pointer only) ─────────── */
+.khatam-cursor {
+  position: fixed; top: 0; left: 0; z-index: 9999;
+  width: 30px; height: 30px; margin: -15px 0 0 -15px;
+  pointer-events: none; will-change: transform; transition: opacity .25s ease;
+}
+.khatam-cursor-star {
+  display: block; transform-origin: center;
+  animation: rd-spin 9s linear infinite;
+  transition: transform .25s ease, opacity .2s ease;
+}
+.khatam-cursor.is-hover .khatam-cursor-star { transform: scale(1.7); }
+.khatam-cursor.is-text  .khatam-cursor-star { opacity: 0; }
+.khatam-cursor-dot {
+  position: absolute; top: 50%; left: 50%;
+  width: 4px; height: 4px; margin: -2px 0 0 -2px; border-radius: 50%;
+  background: var(--rd-gold-line); transition: opacity .2s ease, height .2s ease;
+}
+.khatam-cursor.is-hover .khatam-cursor-dot { opacity: 0; }
+.khatam-cursor.is-text  .khatam-cursor-dot {
+  opacity: 1; width: 2px; height: 22px; margin: -11px 0 0 -1px; border-radius: 1px;
+}
+@keyframes rd-spin { to { transform: rotate(360deg); } }
+body.khatam-active,
+body.khatam-active a,
+body.khatam-active button { cursor: none; }
+
+/* ─── Spotlight card (cursor-follow gold glow) ──────────────────── */
+.spotlight { position: relative; }
+.spotlight::after {
+  content: ''; position: absolute; inset: 0; border-radius: inherit;
+  pointer-events: none; z-index: 0;
+  background: radial-gradient(220px circle at var(--mouse-x, -999px) var(--mouse-y, -999px),
+              rgba(201, 162, 39, .16), transparent 60%);
+  opacity: 0; transition: opacity .3s ease;
+}
+.spotlight:hover::after { opacity: 1; }
+.spotlight > * { position: relative; z-index: 1; }
+
+/* ─── Marquee (seamless, edge-faded) ────────────────────────────── */
+.rd-marquee {
+  overflow: hidden; width: 100%;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+          mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+}
+.rd-marquee-track { display: flex; width: max-content; }
+.rd-marquee-group { display: flex; align-items: center; flex-shrink: 0; }
+
+/* ─── Section-colour-aware nav (only active on variant pages) ─────
+   When the section under the nav is dark, the whole bar goes
+   transparent with light links + a whitened logo, so it floats over
+   the dark hero the way Wahda/Outcrowd navs do. `.nav`'s own
+   transition animates the flip. Scoped to [data-nav] → variant pages only. */
+html[data-nav="dark"] .nav {
+  background:          transparent;
+  border-bottom-color: transparent;
+  box-shadow:          none;
+}
+html[data-nav="dark"] .nav-links a            { color: rgba(247, 243, 237, .85); }
+html[data-nav="dark"] .nav-links a:hover,
+html[data-nav="dark"] .nav-links a.active     { color: #fff; }
+html[data-nav="dark"] .nav-logo-img           { filter: brightness(0) invert(1); }
+html[data-nav="dark"] .burger span            { background: var(--rd-ivory); }
+
+/* ─── Reduced-motion safety net ─────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .khatam-cursor-star { animation: none; }
+  .rd-marquee-track   { transform: none !important; }
+  /* Force every SplitReveal unit fully visible — !important beats Framer's
+     inline styles, so text can never be left stuck at opacity:0. */
+  .split-reveal, .split-reveal * {
+    opacity: 1 !important;
+    filter: none !important;
+    transform: none !important;
+  }
+}

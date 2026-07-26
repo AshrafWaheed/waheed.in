@@ -25,6 +25,7 @@
 
 ## Active Build
 - Full site implementation in progress — see SESSION_PLAN.md for per-session scope
+- Homepage redesign (3 variants: Hybrid `/`, Wahda-cinematic `/home2`, Outcrowd-tactile `/home3`) — see SESSION_PLAN_REDESIGN.md. Copy is verbatim from `src/content/home.ts`.
 
 ## Git
 - Repo: git@github.com:AshrafWaheed/waheed.in.git, branch: main
