@@ -3497,3 +3497,19 @@ html[data-nav="dark"] .burger span            { background: var(--rd-ivory); }
 .cn-exp-card-wrap { flex: 0 0 clamp(300px, 30vw, 380px); border-radius: 16px; }
 .cn-exp-card { transition: none; }
 @media (max-width: 768px) { .cn-exp-card-wrap { flex: 0 0 80vw; scroll-snap-align: center; } }
+
+/* Audience — static/open rows, not clickable */
+.cn-aud-row { cursor: default; }
+
+/* Services — static featured lift via margin (won't fight Framer's y), no hover */
+.cn-svc-card-wrap { border-radius: 18px; }
+.cn-svc-card-wrap.featured { margin-top: -22px; }
+@media (max-width: 900px) {
+  .cn-svc-card-wrap { flex: 0 0 82vw; scroll-snap-align: center; }
+  .cn-svc-card-wrap.featured { margin-top: 0; }
+}
+
+/* Process — grounded principle along a faint textPath arc (Wahda flourish) */
+.cn-proc-arc { display: block; width: 100%; max-width: 460px; height: auto; margin-bottom: .5rem; overflow: visible; }
+.cn-proc-arc path { fill: none; stroke: var(--rd-gold-line); stroke-width: 1; opacity: .22; }
+.cn-proc-arc-text { font-family: var(--font-sans); font-size: 34px; letter-spacing: 2px; fill: var(--rd-gold-line); opacity: .9; }

@@ -6,8 +6,15 @@ import HeroCinematic from '@/components/home/cinematic/HeroCinematic';
 import TrustStripCinematic from '@/components/home/cinematic/TrustStripCinematic';
 import ManifestoCinematic from '@/components/home/cinematic/ManifestoCinematic';
 import ExpertiseCinematic from '@/components/home/cinematic/ExpertiseCinematic';
+import AudienceCinematic from '@/components/home/cinematic/AudienceCinematic';
+import ServicesCinematic from '@/components/home/cinematic/ServicesCinematic';
+import IhsanProcessCinematic from '@/components/home/cinematic/IhsanProcessCinematic';
+import RefusalHybrid from '@/components/home/hybrid/RefusalHybrid';
+import NewsletterCinematic from '@/components/home/cinematic/NewsletterCinematic';
+import FinalCtaCinematic from '@/components/home/cinematic/FinalCtaCinematic';
 
-// Wahda-cinematic variant. Top half (§1–4) built in S3; bottom half in S4.
+// Wahda-cinematic variant — full page. Refusal is hover-free, so it reuses the
+// Hybrid component directly.
 export const metadata: Metadata = { robots: { index: false, follow: false } };
 
 export default function Home2Page() {
@@ -20,6 +27,12 @@ export default function Home2Page() {
         <TrustStripCinematic />
         <ManifestoCinematic />
         <ExpertiseCinematic />
+        <AudienceCinematic />
+        <ServicesCinematic />
+        <IhsanProcessCinematic />
+        <RefusalHybrid />
+        <NewsletterCinematic />
+        <FinalCtaCinematic />
       </main>
     </SmoothScroll>
   );
