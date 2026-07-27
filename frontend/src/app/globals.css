@@ -3513,3 +3513,52 @@ html[data-nav="dark"] .burger span            { background: var(--rd-ivory); }
 .cn-proc-arc { display: block; width: 100%; max-width: 460px; height: auto; margin-bottom: .5rem; overflow: visible; }
 .cn-proc-arc path { fill: none; stroke: var(--rd-gold-line); stroke-width: 1; opacity: .22; }
 .cn-proc-arc-text { font-family: var(--font-sans); font-size: 34px; letter-spacing: 2px; fill: var(--rd-gold-line); opacity: .9; }
+
+
+/* ══════════════════════════════════════════════════════════════════════════
+   TACTILE VARIANT (/home3) — reuses .hy-* visuals; only new/override bits here
+   ══════════════════════════════════════════════════════════════════════════ */
+
+/* Trust — hover brighten */
+.tc-trust-item { transition: color .3s ease; }
+.tc-trust-item:hover { color: var(--rd-white); }
+
+/* Manifesto — cursor-spotlight dim/bright reveal */
+.tc-quote-dim, .tc-quote-bright {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  text-align: center; padding: 6rem 1.5rem;
+}
+.tc-quote-dim { z-index: 1; }
+.tc-quote-dim .hy-quote { color: rgba(247, 243, 237, .13); }
+.tc-quote-dim .hy-quote-attr { color: rgba(201, 162, 39, .28); }
+.tc-quote-bright {
+  z-index: 2;
+  -webkit-mask-image: radial-gradient(circle 210px at var(--mx, 50%) var(--my, 50%), #000 0%, #000 34%, transparent 72%);
+          mask-image: radial-gradient(circle 210px at var(--mx, 50%) var(--my, 50%), #000 0%, #000 34%, transparent 72%);
+}
+.tc-manifesto-hint {
+  position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%); z-index: 3;
+  font-family: var(--font-sans); font-size: .68rem; letter-spacing: .26em; text-transform: uppercase; color: rgba(201, 162, 39, .42);
+}
+@media (pointer: coarse), (prefers-reduced-motion: reduce) {
+  .tc-quote-bright { -webkit-mask-image: none; mask-image: none; }
+  .tc-quote-dim { opacity: 0; }
+  .tc-manifesto-hint { display: none; }
+}
+
+/* Expertise — drag/swipe row + invert-on-hover */
+.tc-exp-inner { padding: 5.5rem 0 4rem; overflow: hidden; }
+.tc-exp-row {
+  display: flex; gap: 1.5rem; overflow-x: auto; scroll-snap-type: x proximity; cursor: grab; scrollbar-width: none;
+  padding: 2.5rem max(1.5rem, calc((100vw - 1200px) / 2)) 1rem;
+}
+.tc-exp-row::-webkit-scrollbar { display: none; }
+.tc-exp-row.dragging { cursor: grabbing; scroll-snap-type: none; user-select: none; }
+.tc-exp-card-wrap { flex: 0 0 clamp(300px, 30vw, 380px); border-radius: 16px; scroll-snap-align: center; }
+.tc-exp-card { transition: border-color .3s ease, transform .3s ease, background .3s ease, box-shadow .3s ease; }
+.tc-exp-card-wrap:hover .tc-exp-card {
+  border-color: rgba(201, 162, 39, .6); transform: translateY(-6px);
+  background: linear-gradient(180deg, #1d3f49, #14313a); box-shadow: 0 20px 50px rgba(0, 0, 0, .4);
+}
+@media (max-width: 768px) { .tc-exp-card-wrap { flex: 0 0 80vw; } }
