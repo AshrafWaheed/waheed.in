@@ -4,16 +4,18 @@ import SectionNav from '@/components/motion/useSectionNav';
 import HeroHybrid from '@/components/home/hybrid/HeroHybrid';
 import TrustStripHybrid from '@/components/home/hybrid/TrustStripHybrid';
 import ManifestoHybrid from '@/components/home/hybrid/ManifestoHybrid';
-import ExpertiseHybrid from '@/components/home/hybrid/ExpertiseHybrid';
+// "Our craft" uses the cinematic Expertise; "Our methodology" uses the tactile
+// Ihsan Process — per the chosen mix for the live homepage.
+import ExpertiseCinematic from '@/components/home/cinematic/ExpertiseCinematic';
 import AudienceHybrid from '@/components/home/hybrid/AudienceHybrid';
 import ServicesHybrid from '@/components/home/hybrid/ServicesHybrid';
-import IhsanProcessHybrid from '@/components/home/hybrid/IhsanProcessHybrid';
+import IhsanProcessTactile from '@/components/home/tactile/IhsanProcessTactile';
 import RefusalHybrid from '@/components/home/hybrid/RefusalHybrid';
 import NewsletterHybrid from '@/components/home/hybrid/NewsletterHybrid';
 import FinalCtaHybrid from '@/components/home/hybrid/FinalCtaHybrid';
 
-// The homepage — Hybrid variant (Wahda pinned-scrub storytelling + Outcrowd
-// tactile micro-interactions). Indexable (canonical/OG metadata live in layout).
+// The homepage — Hybrid variant, with the cinematic "Our craft" and tactile
+// "Our methodology" sections swapped in. Indexable (metadata lives in layout).
 export default function HomePage() {
   return (
     <SmoothScroll>
@@ -23,10 +25,10 @@ export default function HomePage() {
         <HeroHybrid />
         <TrustStripHybrid />
         <ManifestoHybrid />
-        <ExpertiseHybrid />
+        <ExpertiseCinematic />
         <AudienceHybrid />
         <ServicesHybrid />
-        <IhsanProcessHybrid />
+        <IhsanProcessTactile />
         <RefusalHybrid />
         <NewsletterHybrid />
         <FinalCtaHybrid />
