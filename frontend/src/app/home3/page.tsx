@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import SmoothScroll from '@/components/motion/SmoothScroll';
 import KhatamCursor from '@/components/motion/KhatamCursor';
 import SectionNav from '@/components/motion/useSectionNav';
-import HeroTactile from '@/components/home/tactile/HeroTactile';
+import HeroBarakahCore from '@/components/home/tactile/HeroBarakahCore';
 import TrustStripTactile from '@/components/home/tactile/TrustStripTactile';
 import ManifestoTactile from '@/components/home/tactile/ManifestoTactile';
 import ExpertiseTactile from '@/components/home/tactile/ExpertiseTactile';
@@ -24,7 +24,7 @@ export default function Home3Page() {
       <KhatamCursor />
       <SectionNav />
       <main>
-        <HeroTactile />
+        <HeroBarakahCore />
         <TrustStripTactile />
         <ManifestoTactile />
         <ExpertiseTactile />
