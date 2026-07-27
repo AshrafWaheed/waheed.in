@@ -3478,3 +3478,22 @@ html[data-nav="dark"] .burger span            { background: var(--rd-ivory); }
 .hy-cta-h em { font-style: italic; color: var(--rd-gold-bloom); }
 .hy-cta-body { margin: 1.2rem auto 2.2rem; color: var(--rd-on-night-dim); font-size: 1.05rem; max-width: 44rem; }
 @media (prefers-reduced-motion: reduce) { .hy-cta { animation: none; } }
+
+
+/* ══════════════════════════════════════════════════════════════════════════
+   CINEMATIC VARIANT (/home2) — reuses .hy-* visuals; only new/override bits here
+   ══════════════════════════════════════════════════════════════════════════ */
+
+/* Hero engine — centered via grid (no translate) so GSAP scale/rotate stay clean */
+.cn-hero-engine { position: absolute; inset: 0; display: grid; place-items: center; z-index: 0; pointer-events: none; }
+.cn-hero-engine-inner { width: min(94vh, 860px); height: min(94vh, 860px); opacity: .5; transform-origin: center; }
+@media (max-width: 768px) { .cn-hero-engine-inner { width: 128vw; height: 128vw; opacity: .3; } }
+
+/* Trust strip — scroll-linked sweep (items reuse .hy-trust-item) */
+.cn-trust { overflow: hidden; background: var(--rd-night-2); border-top: 1px solid var(--rd-hairline); border-bottom: 1px solid var(--rd-hairline); padding: 1.15rem 0; }
+.cn-trust-track { display: flex; width: max-content; will-change: transform; }
+
+/* Expertise — reuse .hy-exp-card look, no hover; GSAP reveals cards per-centre */
+.cn-exp-card-wrap { flex: 0 0 clamp(300px, 30vw, 380px); border-radius: 16px; }
+.cn-exp-card { transition: none; }
+@media (max-width: 768px) { .cn-exp-card-wrap { flex: 0 0 80vw; scroll-snap-align: center; } }
