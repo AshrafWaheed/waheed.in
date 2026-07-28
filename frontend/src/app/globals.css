@@ -3721,6 +3721,28 @@ html[data-nav="dark"] .burger span            { background: var(--rd-ivory); }
 
 .xp-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 1.1rem; }
 .xp-cell { border-radius: 20px; }
+
+/* Directional entrance — each card flies in from the side it occupies, so the
+   two halves of a row converge on the centre. The right-hand card trails
+   slightly so the pair doesn't move in lockstep. Driven by `is-in`, which the
+   section's IntersectionObserver adds as the card enters. */
+.xp-cell.d-l, .xp-cell.d-r, .xp-cell.d-u { opacity: 0; }
+.xp-cell.d-l { transform: translate3d(-64px, 0, 0); }
+.xp-cell.d-r { transform: translate3d(64px, 0, 0); }
+.xp-cell.d-u { transform: translate3d(0, 52px, 0); }
+.xp-cell.d-r.is-in { transition-delay: .09s; }
+.xp-cell.is-in {
+  opacity: 1; transform: none;
+  transition: opacity .75s cubic-bezier(.22, 1, .36, 1), transform .95s cubic-bezier(.22, 1, .36, 1);
+}
+/* The off-screen start positions would widen the page mid-flight. `clip` (not
+   `hidden`) contains them on X while leaving Y visible for hover lift/shadows. */
+.xp { overflow-x: clip; }
+@media (prefers-reduced-motion: reduce) {
+  .xp-cell.d-l, .xp-cell.d-r, .xp-cell.d-u {
+    opacity: 1 !important; transform: none !important; transition: none !important;
+  }
+}
 .xp-cell.s2 { grid-column: span 2; }
 .xp-cell.s3 { grid-column: span 3; }
 .xp-cell.s4 { grid-column: span 4; }

@@ -19,15 +19,20 @@ import SplitReveal from '@/components/motion/SplitReveal';
 import Khatam from '@/components/graphics/Khatam';
 import { expertise } from '@/content/home';
 
-/** Per-craft grid span + inner layout. Index matches `expertise.doors`. */
+/**
+ * Per-craft grid span + inner layout + entrance direction. Index matches
+ * `expertise.doors`. `dir` makes each card fly in from the side it sits on, so
+ * the two halves of a row converge; the full-width card (05) has no side to come
+ * from, so it rises instead.
+ */
 const CELLS = [
-  { span: 4, layout: 'split' },  // 01 Web & App Development
-  { span: 2, layout: 'stack' },  // 02 Custom Software Development
-  { span: 2, layout: 'stack' },  // 03 Brand Strategy
-  { span: 4, layout: 'split' },  // 04 SEO
-  { span: 6, layout: 'split' },  // 05 Social Media Marketing
-  { span: 3, layout: 'stack' },  // 06 Conversion Copywriting
-  { span: 3, layout: 'stack' },  // 07 Ad Creatives
+  { span: 4, layout: 'split', dir: 'l' },  // 01 Web & App Development
+  { span: 2, layout: 'stack', dir: 'r' },  // 02 Custom Software Development
+  { span: 2, layout: 'stack', dir: 'l' },  // 03 Brand Strategy
+  { span: 4, layout: 'split', dir: 'r' },  // 04 SEO
+  { span: 6, layout: 'split', dir: 'u' },  // 05 Social Media Marketing
+  { span: 3, layout: 'stack', dir: 'l' },  // 06 Conversion Copywriting
+  { span: 3, layout: 'stack', dir: 'r' },  // 07 Ad Creatives
 ] as const;
 
 export default function ExpertiseBento() {
@@ -44,7 +49,9 @@ export default function ExpertiseBento() {
           obs.unobserve(e.target);
         });
       },
-      { rootMargin: '0px 0px -12% 0px', threshold: 0.25 },
+      // Fires as the card starts entering, so the fly-in reads as an arrival
+      // rather than a correction to something already sitting on screen.
+      { rootMargin: '0px 0px -8% 0px', threshold: 0.12 },
     );
     cardRefs.current.forEach((el) => el && obs.observe(el));
     return () => obs.disconnect();
@@ -71,7 +78,7 @@ export default function ExpertiseBento() {
             return (
               <Spotlight
                 key={d.num}
-                className={`xp-cell s${cell.span} l-${cell.layout}${d.soon ? ' is-soon' : ''}`}
+                className={`xp-cell s${cell.span} l-${cell.layout} d-${cell.dir}${live[i] ? ' is-in' : ''}${d.soon ? ' is-soon' : ''}`}
               >
                 <article
                   ref={(el) => { cardRefs.current[i] = el; }}
