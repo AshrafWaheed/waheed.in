@@ -177,30 +177,34 @@ function BrandStrategy({ live }: { live: boolean }) {
 function Seo() {
   return (
     <div className="xa xa-seo">
-      <div className="xa-serp">
+      {/* Stage sizes to the SERP so the growth callout can anchor to its
+          corner instead of drifting somewhere in the card. */}
+      <div className="xa-seo-stage">
+        <div className="xa-serp">
         <div className="xa-search">
           <i className="xa-mag" />
           <span>halal brand studio</span>
         </div>
-        <div className="xa-results">
-          <div className="xa-res r0"><i /><b /><em /></div>
-          <div className="xa-res r1"><i /><b /><em /></div>
-          <div className="xa-res is-target">
-            <span className="xa-rank">1</span>
-            <div className="xa-res-txt">
-              <b />
-              <em />
+          <div className="xa-results">
+            <div className="xa-res r0"><i /><b /><em /></div>
+            <div className="xa-res r1"><i /><b /><em /></div>
+            <div className="xa-res is-target">
+              <span className="xa-rank">1</span>
+              <div className="xa-res-txt">
+                <b />
+                <em />
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <div className="xa-growth">
-        <span className="xa-growth-lbl">Organic</span>
-        <svg viewBox="0 0 120 52" fill="none" aria-hidden="true">
-          <polyline className="xa-spark" points="4,46 26,38 48,40 70,24 92,18 116,6" />
-          <circle className="xa-spark-dot" cx="116" cy="6" r="3" />
-        </svg>
+        <div className="xa-growth">
+          <span className="xa-growth-lbl">Organic</span>
+          <svg viewBox="0 0 120 52" fill="none" aria-hidden="true">
+            <polyline className="xa-spark" points="4,46 26,38 48,40 70,24 92,18 116,6" />
+            <circle className="xa-spark-dot" cx="116" cy="6" r="3" />
+          </svg>
+        </div>
       </div>
     </div>
   );
@@ -287,8 +291,10 @@ function AdCreatives() {
           <span className="xa-ad-bar" />
           <span className="xa-ad-bar w44" />
         </div>
+        {/* Inside the deck so it rides with it, rather than pinning itself to
+            the corner of the card and reading as a stray label. */}
+        <span className="xa-chip is-float">CTR 4.8%</span>
       </div>
-      <span className="xa-chip is-float">CTR 4.8%</span>
     </div>
   );
 }

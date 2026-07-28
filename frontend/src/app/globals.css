@@ -3812,6 +3812,7 @@ html[data-nav="dark"] .burger span            { background: var(--rd-ivory); }
 }
 .xa-chip.is-quiet { background: transparent; color: rgba(247, 243, 237, .5); border-color: rgba(247, 243, 237, .16); }
 .xa-chip.is-float { position: absolute; right: 7%; top: 9%; background: #11272e; box-shadow: 0 10px 24px rgba(0, 0, 0, .5); z-index: 4; }
+.xa-deck .xa-chip.is-float { top: -14px; right: -54px; }
 
 /* 01 · Web & App Development — light browser assembling + dark phone */
 .xa-web { display: flex; align-items: flex-end; justify-content: center; padding: .5rem 0 0; }
@@ -3918,8 +3919,9 @@ html[data-nav="dark"] .burger span            { background: var(--rd-ivory); }
 
 /* 04 · SEO — light SERP where result #3 climbs to #1, + dark growth card */
 .xa-seo { display: flex; align-items: flex-end; justify-content: center; padding: .5rem 0 0; }
+.xa-seo-stage { position: relative; width: 80%; }
 .xa-serp {
-  width: 80%; background: var(--rd-ivory); border-radius: 10px 10px 0 0; padding: 11px;
+  width: 100%; background: var(--rd-ivory); border-radius: 10px 10px 0 0; padding: 11px;
   box-shadow: 0 18px 40px rgba(0, 0, 0, .45); overflow: hidden;
 }
 .xa-search {
@@ -3951,7 +3953,7 @@ html[data-nav="dark"] .burger span            { background: var(--rd-ivory); }
 @keyframes xa-up   { 0%, 20% { transform: translateY(0); } 44%, 88% { transform: translateY(-90px); } 100% { transform: translateY(0); } }
 @keyframes xa-down { 0%, 20% { transform: translateY(0); } 44%, 88% { transform: translateY(45px); }  100% { transform: translateY(0); } }
 .xa-growth {
-  position: absolute; left: 0; top: 7%; width: 134px; background: #0d1f26;
+  position: absolute; left: -13%; top: -18px; width: 134px; background: #0d1f26;
   border: 1px solid rgba(201, 162, 39, .22); border-radius: 10px; padding: 8px 9px;
   box-shadow: 0 14px 30px rgba(0, 0, 0, .5); z-index: 3;
 }
@@ -4033,6 +4035,8 @@ html[data-nav="dark"] .burger span            { background: var(--rd-ivory); }
 }
 
 /* ── Artifact reduced-motion safety net ──────────────────────────────────── */
+@media (max-width: 720px) { .xa-growth { display: none; } }
+
 @media (prefers-reduced-motion: reduce) {
   .xa, .xa * { animation: none !important; transition: none !important; }
   .xa-blk, .xa-ln, .xa-cta, .xa-pblk, .xa-pln, .xa-pcta, .xa-post, .xa-ad, .xa-spark-dot {
