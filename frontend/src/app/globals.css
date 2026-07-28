@@ -4052,3 +4052,521 @@ html[data-nav="dark"] .burger span            { background: var(--rd-ivory); }
   .xa-ad.a1 { transform: translate(-3px, 9px) rotate(-3deg) scale(.93) !important; opacity: .85 !important; }
   .xa-ad.a2 { transform: translate(-6px, 17px) rotate(-6deg) scale(.87) !important; opacity: .7 !important; }
 }
+
+
+/* ══════════════════════════════════════════════════════════════════════════
+   STUDIO-WINDOW HERO (/home3) — founders as the anchor, crafts as satellites
+   Mechanism is Outcrowd's hero: one anchor object + UI fragments at varying
+   depth, all parallaxing at different rates. See reference/outcrowd.io.md §7.
+   `.sw-lay` is the depth primitive — every layer reads the stage's --px/--py
+   and multiplies by its own --k.
+   ══════════════════════════════════════════════════════════════════════════ */
+.sw-hero {
+  position: relative; min-height: 100vh; min-height: 100dvh;
+  display: grid; grid-template-columns: 52% 48%; align-items: center; gap: 1rem;
+  padding: 7rem 1.5rem 4rem; overflow: hidden;
+  background: radial-gradient(120% 110% at 78% 34%, #123039 0%, #081019 64%);
+  color: var(--rd-on-night);
+}
+.sw-hero-text {
+  max-width: 640px; padding-left: max(1.5rem, calc((100vw - 1180px) / 2));
+  text-align: left; position: relative; z-index: 3;
+}
+.sw-hero .hy-bismillah { margin-bottom: 1rem; }
+.sw-hero .hy-eyebrow { margin-bottom: 1.2rem; }
+/* Tighter than .hy-hero-h1: at 5rem/1.04 the headline wrapped to four lines and
+   pushed the primary CTA to y=869 in a 900px viewport — below the fold on a
+   standard laptop. 4.35rem/0.98 pulls the whole block back up. */
+.sw-hero-h1 {
+  text-align: left; margin: 0 0 1.3rem; max-width: 14ch;
+  font-size: clamp(2.5rem, 5.1vw, 4.35rem); line-height: .98; letter-spacing: -.012em;
+}
+.sw-hero-sub { margin: 0 0 1.9rem; max-width: 34rem; }
+.sw-hero-ctas { justify-content: flex-start; }
+
+/* ── stage ─────────────────────────────────────────────────────────────── */
+.sw-stage {
+  position: relative; z-index: 1;
+  width: 100%; max-width: 620px; margin: 0 auto; aspect-ratio: 1 / 1;
+}
+.sw-lay {
+  transform: translate3d(calc(var(--px, 0px) * var(--k, 1)), calc(var(--py, 0px) * var(--k, 1)), 0);
+  will-change: transform;
+}
+
+/* Layer 1 — geometry as texture. Demoted hard: this used to be the subject. */
+/* Blown up and masked to its middle so only the concentric ring structure and
+   the core glow survive. At 1:1 the six node gems fell inside the mask and read
+   as random specks/gears floating behind the cards. */
+.sw-glyph {
+  position: absolute; inset: -38%; z-index: 0;
+  opacity: .3; pointer-events: none;
+  -webkit-mask-image: radial-gradient(33% 33% at 50% 50%, #000 40%, transparent 100%);
+          mask-image: radial-gradient(33% 33% at 50% 50%, #000 40%, transparent 100%);
+}
+.bc--quiet { max-width: none; }
+.bc--quiet .bc-core-heart, .bc--quiet .bc-core-glow { opacity: .5; }
+
+/* ── founder cards ─────────────────────────────────────────────────────── */
+.sw-card {
+  position: absolute; margin: 0; border-radius: 30px;
+  aspect-ratio: 4 / 4.4;
+  /* The figure breaks out of the top of the panel — that overflow is the point,
+     so nothing here may clip it. The rounded panel is painted by ::before. */
+  overflow: visible;
+  opacity: 0;
+}
+.sw-card::before {
+  content: ''; position: absolute; inset: 0; border-radius: inherit;
+  background: var(--panel); box-shadow: 0 28px 60px -22px rgba(0, 0, 0, .72);
+}
+/**
+ * Per-figure geometry — the two files are NOT interchangeable. Measured ink
+ * boxes inside the shared 150-unit viewBox:
+ *   man    x 15.85 y 3.66  w 114.05 h 146.41  (ink 76% wide, sits inside the box)
+ *   woman  x  6.85 y 13.07 w 143.15 h 197.34  (ink 95% wide, 132% TALL — it
+ *                                              overflows its own viewBox and
+ *                                              hangs 40% below the bottom edge)
+ * So --fig-w and --fig-b are solved per card to land both inks at ~0.86–0.92 of
+ * the panel width, bottom-aligned to the panel, breaking ~7% out of the top.
+ * Changing the artwork means re-measuring with getBBox().
+ */
+.sw-card-fig {
+  /* The global `img { max-width: 100% }` reset (top of this file) clamps any
+     --fig-w over 100% back to the card width. Opt out or the values below are
+     decorative. */
+  max-width: none;
+  position: absolute; left: 50%; bottom: var(--fig-b); width: var(--fig-w); height: auto;
+  transform: translateX(-50%); display: block;
+  /* Unifies a crisp flat vector (man) with a soft airbrushed raster (woman):
+     same temperature, slightly hardened gradients. Without this they read as
+     two illustrations from different packs. */
+  filter: saturate(.84) contrast(1.06) sepia(.1) hue-rotate(-6deg);
+}
+.sw-card--back {
+  left: 40%; top: 7%; width: 54%; z-index: 1; rotate: -2.2deg;
+  --panel: var(--rd-ivory); --fig-w: 108%; --fig-b: 18%;
+}
+.sw-card--front {
+  left: 2%; top: 34%; width: 50%; z-index: 2; rotate: 2.6deg;
+  --panel: #ece0bb; --fig-w: 121%; --fig-b: 0%;
+}
+
+/* ── satellites ────────────────────────────────────────────────────────── */
+/* Chips live in the two dark zones the cards leave free (top-left: x 0–44%
+   y 0–33%; bottom-right: x 53–100% y 61–100%), staggered diagonally so they
+   scatter rather than line up. Keep light chips OFF the ivory/cream panels —
+   white-on-ivory has no separation. */
+.sw-satwrap { position: absolute; z-index: 4; opacity: 0; }
+.sw-sat-growth { left: -3%; top: 3%; }
+.sw-sat-rank   { left: 16%; top: 21%; }
+.sw-sat-reach  { left: 58%; top: 68%; }
+.sw-sat-build  { left: 66%; top: 82%; }
+.sw-sat-seal   { left: 40%; top: 92%; }
+
+.sw-sat {
+  display: flex; align-items: center; gap: .5rem;
+  border-radius: 14px; padding: .55rem .7rem;
+  font-family: var(--font-sans); white-space: nowrap;
+  box-shadow: 0 18px 38px -16px rgba(0, 0, 0, .8);
+}
+.sw-sat-lbl { font-size: .62rem; letter-spacing: .13em; text-transform: uppercase; }
+
+.sw-sat--growth {
+  flex-direction: column; align-items: flex-start; gap: .3rem; width: 132px;
+  background: #0d2028; border: 1px solid var(--rd-hairline); color: var(--rd-gold-line);
+}
+.sw-sat--growth svg { width: 100%; height: auto; }
+.sw-spark {
+  fill: none; stroke: var(--rd-gold-line); stroke-width: 2;
+  stroke-linecap: round; stroke-linejoin: round;
+  stroke-dasharray: 190; stroke-dashoffset: 190;
+}
+.sw-spark-dot { fill: var(--rd-gold-bloom); opacity: 0; }
+.sw-stage.is-in .sw-spark { stroke-dashoffset: 0; transition: stroke-dashoffset 1.3s cubic-bezier(.22,1,.36,1) 1.7s; }
+.sw-stage.is-in .sw-spark-dot { opacity: 1; transition: opacity .4s ease 2.9s; }
+
+.sw-sat--rank { background: var(--rd-white); color: var(--rd-teal); padding: .5rem .8rem .5rem .55rem; }
+.sw-rank-badge {
+  display: grid; place-items: center; width: 22px; height: 22px; border-radius: 50%;
+  background: var(--rd-gold-line); color: var(--rd-night);
+  font-size: .68rem; font-weight: 600; line-height: 1;
+}
+.sw-rank-txt { display: flex; flex-direction: column; gap: 4px; }
+.sw-rank-txt b { display: block; width: 62px; height: 5px; border-radius: 3px; background: rgba(37, 72, 81, .82); }
+.sw-rank-txt em { display: block; width: 40px; height: 4px; border-radius: 3px; background: rgba(37, 72, 81, .34); }
+
+.sw-sat--reach { background: #0d2028; border: 1px solid var(--rd-hairline); color: var(--rd-on-night-dim); }
+.sw-avatars { display: inline-flex; }
+.sw-avatars i {
+  width: 17px; height: 17px; border-radius: 50%; display: block;
+  border: 1.5px solid #0d2028; margin-left: -6px; background: var(--rd-gold-line);
+}
+.sw-avatars i:first-child { margin-left: 0; }
+.sw-avatars i:nth-child(2) { background: var(--rd-teal-lt); }
+.sw-avatars i:nth-child(3) { background: var(--rd-gold-bloom); }
+.sw-avatars i:nth-child(4) { background: var(--rd-ivory); }
+
+.sw-sat--seal { background: var(--rd-gold-bloom); color: var(--rd-night); border-radius: 999px; padding: .45rem .8rem; }
+
+/* The "dev" fragment — a browser reduced to its two recognisable signals: the
+   traffic-light dots and a hero block over two text runs. */
+.sw-sat--build { flex-direction: column; align-items: stretch; gap: .4rem; width: 148px; background: var(--rd-white); padding: .5rem; }
+.sw-chrome { display: flex; gap: 4px; padding: 0 .1rem .1rem; }
+.sw-chrome i { width: 6px; height: 6px; border-radius: 50%; background: rgba(37, 72, 81, .26); }
+.sw-chrome-body { display: flex; flex-direction: column; gap: 4px; }
+.sw-chrome-body b { display: block; height: 5px; border-radius: 3px; background: rgba(37, 72, 81, .28); }
+.sw-chrome-body b.w80 { width: 80%; }
+.sw-chrome-body b.w55 { width: 55%; }
+.sw-chrome-hero { height: 22px !important; border-radius: 6px !important; background: linear-gradient(120deg, var(--rd-teal), var(--rd-teal-lt)) !important; }
+
+/* ── caption ───────────────────────────────────────────────────────────── */
+.sw-caption {
+  position: absolute; left: 2%; top: 94%; z-index: 4;
+  display: inline-flex; align-items: center; gap: .5rem;
+  font-family: var(--font-serif); font-style: italic; font-size: .92rem;
+  color: rgba(247, 243, 237, .72);
+  opacity: 0; transition: opacity .8s ease 1.95s;
+}
+.sw-stage.is-in .sw-caption { opacity: 1; }
+
+/* ── entrance ──────────────────────────────────────────────────────────── */
+.sw-card    { translate: 0 46px; transition: opacity .95s cubic-bezier(.22,1,.36,1) var(--d), translate 1.15s cubic-bezier(.22,1,.36,1) var(--d); }
+.sw-satwrap { translate: 0 22px; transition: opacity .7s cubic-bezier(.22,1,.36,1) var(--d), translate .8s cubic-bezier(.22,1,.36,1) var(--d); }
+.sw-stage.is-in .sw-card,
+.sw-stage.is-in .sw-satwrap { opacity: 1; translate: 0 0; }
+.sw-glyph { opacity: 0; transition: opacity 1.6s ease .3s; }
+.sw-stage.is-in .sw-glyph { opacity: .3; }
+
+@media (max-width: 1100px) {
+  .sw-hero { grid-template-columns: 54% 46%; }
+  .sw-sat--growth { width: 112px; }
+  .sw-sat-lbl { font-size: .56rem; }
+}
+@media (max-width: 900px) {
+  .sw-hero { grid-template-columns: 1fr; padding-top: 6rem; }
+  .sw-hero-text { padding-left: 0; max-width: 100%; text-align: center; margin: 0 auto; }
+  .sw-hero-text .hy-bismillah, .sw-hero-text .hy-eyebrow { text-align: center; }
+  .sw-hero-h1 { max-width: 100%; text-align: center; }
+  .sw-hero-sub { margin-left: auto; margin-right: auto; }
+  .sw-hero-ctas { justify-content: center; }
+  .sw-stage { max-width: 420px; margin-top: 3rem; }
+  /* Two chips only — five on a 420px stage is soup, and the wide ones (rank,
+     build) run past the stage edge where `overflow: hidden` slices them
+     mid-word. The two survivors are pulled inside the box and shrunk. */
+  .sw-sat-rank, .sw-sat-seal, .sw-sat-build { display: none; }
+  .sw-sat-growth { left: -2%; top: 0; }
+  .sw-sat-reach  { left: auto; right: -2%; top: 76%; }
+  .sw-sat--growth { width: 106px; }
+  .sw-sat--reach { padding: .45rem .55rem; }
+  .sw-sat-lbl { font-size: .54rem; }
+  .sw-avatars i { width: 14px; height: 14px; margin-left: -5px; }
+  /* Base sets `top`; leaving it set here would stretch the caption between
+     top and bottom instead of moving it. */
+  .sw-caption { left: 50%; top: auto; bottom: -6%; transform: translateX(-50%); }
+}
+
+/* Reduced motion: CSS-only guard (never a JS branch — that desyncs SSR).
+   Everything lands in its end state; the parallax vars are neutralised. */
+@media (prefers-reduced-motion: reduce) {
+  .sw-lay { transform: none !important; }
+  .sw-card, .sw-satwrap { opacity: 1 !important; translate: none !important; transition: none !important; }
+  .sw-glyph { opacity: .3 !important; transition: none !important; }
+  .sw-caption { opacity: 1 !important; transition: none !important; }
+  .sw-spark { stroke-dashoffset: 0 !important; transition: none !important; }
+  .sw-spark-dot { opacity: 1 !important; transition: none !important; }
+}
+
+
+/* ══════════════════════════════════════════════════════════════════════════
+   SIGNAL-BOARD HERO (/) — Direction B: the literal Outcrowd read
+   Centred text over a collage of UI fragments orbiting ONE tilted anchor.
+   Shares the depth primitive with .sw-* (/home3) but nothing else: there the
+   founders are the anchor, here they are a pill in the caption row.
+   ══════════════════════════════════════════════════════════════════════════ */
+.sb-hero {
+  position: relative; overflow: hidden;
+  padding: 8.5rem 1.5rem 4rem;
+  background: radial-gradient(130% 90% at 50% 0%, #1b3d47 0%, var(--rd-night) 58%, #081019 100%);
+  color: var(--rd-on-night);
+}
+.sb-inner { position: relative; z-index: 2; text-align: center; max-width: 940px; margin: 0 auto; }
+.sb-inner .hy-bismillah { margin-bottom: 1.1rem; }
+
+/* Outcrowd's eyebrow is a bordered pill. Ours is a long line of copy, so it
+   wraps to a soft rectangle rather than a true pill on narrow viewports. */
+.sb-pill {
+  display: inline-block; margin: 0 auto 1.6rem;
+  font-family: var(--font-sans); font-size: .7rem; font-weight: 500;
+  letter-spacing: .2em; text-transform: uppercase; color: var(--rd-gold-line);
+  border: 1px solid rgba(201, 162, 39, .34); border-radius: 999px;
+  padding: .5rem 1.15rem; max-width: 100%;
+}
+.sb-h1 { max-width: 17ch; line-height: 1.02; margin-bottom: 1.5rem; }
+.sb-sub { margin-bottom: 2.2rem; max-width: 40rem; }
+
+/* ── collage stage ─────────────────────────────────────────────────────── */
+.sb-stage {
+  position: relative; z-index: 1;
+  width: 100%; max-width: 1040px; margin: 3rem auto 0;
+  aspect-ratio: 1040 / 620;
+}
+.sb-lay {
+  transform: translate3d(calc(var(--px, 0px) * var(--k, 1)), calc(var(--py, 0px) * var(--k, 1)), 0);
+  will-change: transform;
+}
+
+/* ── anchor: the tilted console ────────────────────────────────────────── */
+.sb-anchor { position: absolute; left: 50%; top: 6%; width: 56%; margin-left: -28%; z-index: 2; opacity: 0; }
+/* Perspective on the wrapper, tilt on the child — the parallax translate lives
+   on .sb-anchor and must not be flattened by the 3D transform. */
+.sb-tilt { perspective: 1500px; }
+.sb-console {
+  transform: rotateX(6deg) rotateZ(-1.2deg); transform-origin: 50% 90%;
+  border-radius: 16px; overflow: hidden;
+  background: #0c1f27; border: 1px solid var(--rd-hairline);
+  box-shadow: 0 46px 90px -30px rgba(0, 0, 0, .85);
+}
+.sb-console-bar {
+  display: flex; align-items: center; gap: .7rem;
+  padding: .6rem .85rem; border-bottom: 1px solid var(--rd-hairline); background: #0a1a21;
+}
+.sb-dots { display: flex; gap: 5px; }
+.sb-dots i { width: 7px; height: 7px; border-radius: 50%; background: rgba(201, 162, 39, .32); }
+.sb-console-title {
+  font-family: var(--font-sans); font-size: .6rem; letter-spacing: .16em;
+  text-transform: uppercase; color: var(--rd-on-night-dim);
+}
+.sb-console-body { display: flex; min-height: 188px; }
+.sb-rail {
+  width: 44px; flex: none; padding: .7rem .55rem; display: flex; flex-direction: column; gap: .45rem;
+  border-right: 1px solid var(--rd-hairline); background: rgba(255, 255, 255, .012);
+}
+.sb-rail b { display: block; height: 9px; border-radius: 3px; background: var(--rd-gold-line); }
+.sb-rail span { display: block; height: 7px; border-radius: 3px; background: rgba(247, 243, 237, .13); }
+.sb-console-main { flex: 1; padding: .7rem .8rem .8rem; display: flex; flex-direction: column; gap: .6rem; }
+.sb-panel { background: var(--rd-ivory); border-radius: 10px; padding: .55rem .65rem .3rem; display: flex; flex-direction: column; gap: .4rem; flex: 1; }
+
+.sb-legend { display: flex; gap: .9rem; }
+.sb-key {
+  position: relative; padding-left: .8rem;
+  font-family: var(--font-sans); font-size: .56rem; letter-spacing: .13em;
+  text-transform: uppercase; color: rgba(37, 72, 81, .62);
+}
+.sb-key::before { content: ''; position: absolute; left: 0; top: 50%; margin-top: -3px; width: 6px; height: 6px; border-radius: 50%; }
+.sb-key.is-gold::before { background: var(--rd-gold); }
+.sb-key.is-teal::before { background: var(--rd-teal-lt); }
+.sb-key.is-gold { color: var(--rd-gold); }
+.sb-key.is-dim::before  { background: rgba(37, 72, 81, .3); }
+
+.sb-area { flex: 1; min-height: 88px; }
+.sb-area svg { width: 100%; height: 100%; display: block; }
+.sb-area-line { fill: none; stroke: var(--rd-teal); stroke-width: 2.4; stroke-linejoin: round; stroke-linecap: round;
+  vector-effect: non-scaling-stroke; stroke-dasharray: 460; stroke-dashoffset: 460; }
+.sb-area-fill { opacity: 0; }
+.sb-stage.is-in .sb-area-line { stroke-dashoffset: 0; transition: stroke-dashoffset 1.6s cubic-bezier(.22,1,.36,1) .8s; }
+.sb-stage.is-in .sb-area-fill { opacity: 1; transition: opacity .9s ease 1.6s; }
+
+.sb-bars { display: flex; align-items: flex-end; gap: 5px; height: 34px; padding: 0 .1rem; }
+.sb-bars span {
+  flex: 1; border-radius: 3px 3px 0 0; height: 0;
+  background: linear-gradient(to top, rgba(201, 162, 39, .22), rgba(201, 162, 39, .62));
+}
+.sb-stage.is-in .sb-bars span { height: var(--h); transition: height .8s cubic-bezier(.22,1,.36,1) var(--d); }
+
+/* ── floating fragments ────────────────────────────────────────────────── */
+.sb-fragwrap { position: absolute; z-index: 3; opacity: 0; }
+.sb-at-traffic   { left: 5%;  top: 3%; }
+.sb-at-organic   { left: 8%;  top: 42%; }
+.sb-at-copydoc   { left: 3%;  top: 64%; }
+.sb-at-serp      { left: 69%; top: 7%; }
+.sb-at-creative  { left: 79%; top: 44%; }
+.sb-at-community { left: 67%; top: 68%; }
+
+.sb-frag {
+  display: flex; align-items: center; gap: .55rem;
+  border-radius: 14px; padding: .6rem .75rem;
+  font-family: var(--font-sans); white-space: nowrap;
+  box-shadow: 0 22px 44px -18px rgba(0, 0, 0, .82);
+}
+.sb-frag-lbl { font-size: .6rem; letter-spacing: .14em; text-transform: uppercase; }
+
+.sb-frag--traffic {
+  flex-direction: column; align-items: stretch; gap: .45rem; width: 146px;
+  background: var(--rd-white); color: var(--rd-teal);
+}
+.sb-minibars { display: flex; align-items: flex-end; gap: 4px; height: 42px; }
+.sb-minibars span { flex: 1; height: 0; border-radius: 3px 3px 0 0; background: linear-gradient(to top, var(--rd-teal-lt), var(--rd-teal)); }
+.sb-stage.is-in .sb-minibars span { height: var(--h); transition: height .75s cubic-bezier(.22,1,.36,1) var(--d); }
+
+.sb-frag--organic {
+  flex-direction: column; align-items: flex-start; gap: .3rem; width: 138px;
+  background: #0d2028; border: 1px solid var(--rd-hairline); color: var(--rd-gold-line);
+}
+.sb-frag--organic svg { width: 100%; height: auto; }
+.sb-spark { fill: none; stroke: var(--rd-gold-line); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+  stroke-dasharray: 180; stroke-dashoffset: 180; }
+.sb-spark-dot { fill: var(--rd-gold-bloom); opacity: 0; }
+.sb-stage.is-in .sb-spark { stroke-dashoffset: 0; transition: stroke-dashoffset 1.2s cubic-bezier(.22,1,.36,1) 1.1s; }
+.sb-stage.is-in .sb-spark-dot { opacity: 1; transition: opacity .4s ease 2.2s; }
+
+.sb-frag--copydoc {
+  flex-direction: column; align-items: stretch; gap: .38rem; width: 156px;
+  background: var(--rd-ivory); color: var(--rd-teal); padding: .7rem .75rem .75rem;
+}
+.sb-doc-eyebrow { font-family: var(--font-sans); font-size: .48rem; letter-spacing: .18em; text-transform: uppercase; color: rgba(37, 72, 81, .5); }
+.sb-frag--copydoc b { display: block; height: 5px; border-radius: 3px; background: rgba(37, 72, 81, .26); }
+.sb-frag--copydoc b.w88 { width: 88%; }
+.sb-frag--copydoc b.w66 { width: 66%; }
+.sb-doc-h { height: 11px !important; border-radius: 4px !important; background: rgba(37, 72, 81, .62) !important; margin-bottom: .12rem; }
+.sb-doc-cta {
+  align-self: flex-start; margin-top: .35rem; border-radius: 6px;
+  background: var(--rd-gold-line); color: var(--rd-night);
+  font-size: .5rem; letter-spacing: .1em; text-transform: uppercase; padding: .26rem .5rem;
+}
+
+.sb-frag--serp { background: var(--rd-white); color: var(--rd-teal); padding: .55rem .85rem .55rem .6rem; }
+.sb-rank {
+  display: grid; place-items: center; width: 23px; height: 23px; border-radius: 50%;
+  background: var(--rd-gold-line); color: var(--rd-night); font-size: .7rem; font-weight: 600; line-height: 1;
+}
+.sb-rank-txt { display: flex; flex-direction: column; gap: 4px; }
+.sb-rank-txt b { display: block; width: 66px; height: 5px; border-radius: 3px; background: rgba(37, 72, 81, .8); }
+.sb-rank-txt em { display: block; width: 42px; height: 4px; border-radius: 3px; background: rgba(37, 72, 81, .32); }
+
+.sb-frag--creative {
+  flex-direction: column; align-items: stretch; gap: .35rem; width: 118px;
+  background: var(--rd-gold-bloom); color: var(--rd-night); padding: .6rem .7rem .7rem;
+}
+.sb-ad-tag { font-size: .5rem; letter-spacing: .16em; text-transform: uppercase; opacity: .72; }
+.sb-ad-bar { display: block; height: 6px; border-radius: 3px; background: rgba(26, 54, 61, .3); }
+.sb-ad-bar.w58 { width: 58%; }
+
+.sb-frag--community { background: #0d2028; border: 1px solid var(--rd-hairline); color: var(--rd-on-night-dim); }
+.sb-avatars { display: inline-flex; }
+.sb-avatars i {
+  width: 17px; height: 17px; border-radius: 50%; display: block;
+  border: 1.5px solid #0d2028; margin-left: -6px; background: var(--rd-gold-line);
+}
+.sb-avatars i:first-child { margin-left: 0; }
+.sb-avatars i:nth-child(2) { background: var(--rd-teal-lt); }
+.sb-avatars i:nth-child(3) { background: var(--rd-gold-bloom); }
+.sb-avatars i:nth-child(4) { background: var(--rd-ivory); }
+
+/* ── caption row: the founders, demoted ────────────────────────────────── */
+.sb-footrow {
+  position: absolute; left: 50%; top: 88%; transform: translateX(-50%); z-index: 4;
+  display: flex; align-items: center; gap: .6rem; white-space: nowrap;
+  opacity: 0; transition: opacity .8s ease 1.2s;
+}
+.sb-stage.is-in .sb-footrow { opacity: 1; }
+.sb-founders {
+  display: inline-flex; align-items: center; gap: .55rem;
+  background: rgba(247, 243, 237, .07); border: 1px solid var(--rd-hairline); border-radius: 999px;
+  padding: .35rem .95rem .35rem .4rem; text-decoration: none;
+  font-family: var(--font-sans); font-size: .72rem; letter-spacing: .06em; color: var(--rd-on-night);
+  transition: background .3s ease, border-color .3s ease;
+}
+.sb-founders:hover { background: rgba(247, 243, 237, .13); border-color: rgba(201, 162, 39, .45); }
+/* Head crops. The two artworks frame differently, so each face gets its own
+   scale/offset — see the ink-box note in the .sw-card-fig block. */
+.sb-face {
+  width: 30px; height: 30px; border-radius: 50%; overflow: hidden; display: block; flex: none;
+  position: relative; border: 1.5px solid rgba(247, 243, 237, .22);
+}
+.sb-face + .sb-face { margin-left: -14px; }
+/* max-width:none — the global `img { max-width: 100% }` reset would clamp the
+   300% back to the circle width and show a blank crop. */
+.sb-face img { position: absolute; width: 240%; height: auto; display: block; max-width: none; }
+.sb-face--man   img { left: -75%; top: -3%; }
+.sb-face--woman img { left: -80%; top: -1%; }
+.sb-face--woman { background: var(--rd-ivory); }
+.sb-face--man   { background: #ece0bb; }
+.sb-seal {
+  display: inline-flex; align-items: center; gap: .4rem;
+  background: var(--rd-gold-bloom); color: var(--rd-night); border-radius: 999px;
+  padding: .42rem .85rem; font-family: var(--font-sans);
+  font-size: .62rem; letter-spacing: .13em; text-transform: uppercase;
+}
+
+/* ── entrance ──────────────────────────────────────────────────────────── */
+.sb-anchor   { translate: 0 54px; transition: opacity 1s cubic-bezier(.22,1,.36,1) var(--d), translate 1.2s cubic-bezier(.22,1,.36,1) var(--d); }
+.sb-fragwrap { translate: 0 26px; transition: opacity .75s cubic-bezier(.22,1,.36,1) var(--d), translate .9s cubic-bezier(.22,1,.36,1) var(--d); }
+.sb-stage.is-in .sb-anchor,
+.sb-stage.is-in .sb-fragwrap { opacity: 1; translate: 0 0; }
+
+@media (max-width: 1100px) {
+  .sb-stage { max-width: 900px; }
+  .sb-anchor { width: 54%; margin-left: -27%; }
+  .sb-frag--traffic { width: 124px; }
+  .sb-frag--copydoc { width: 132px; }
+  .sb-frag--organic { width: 120px; }
+}
+@media (max-width: 860px) {
+  .sb-hero { padding-top: 7rem; }
+  /* The collage does not shrink gracefully: at 342px the console needs almost
+     the full width, which leaves no room beside it. So only two fragments
+     survive, and they sit ABOVE and BELOW the console rather than beside it —
+     the earlier side placement had them overlapping the title bar and running
+     off-edge, where the section's `overflow: hidden` sliced them. */
+  .sb-stage { aspect-ratio: 1 / 1.26; max-width: 440px; margin-top: 3rem; }
+  .sb-anchor { width: 92%; margin-left: -46%; top: 10%; }
+  .sb-at-copydoc, .sb-at-creative, .sb-at-traffic, .sb-at-community { display: none; }
+  .sb-at-serp    { left: auto; right: -1%; top: 1%; }
+  .sb-at-organic { left: -1%; top: auto; bottom: 14%; }
+  .sb-console-body { min-height: 150px; }
+  .sb-legend { flex-wrap: wrap; gap: .35rem .7rem; }
+  .sb-footrow { top: auto; bottom: -3%; flex-wrap: nowrap; justify-content: center; }
+}
+@media (max-width: 520px) {
+  .sb-footrow { gap: .4rem; }
+  .sb-founders { font-size: .64rem; padding-right: .75rem; }
+  .sb-face { width: 26px; height: 26px; }
+  .sb-face + .sb-face { margin-left: -12px; }
+  .sb-seal { font-size: .56rem; padding: .38rem .7rem; }
+  .sb-frag--serp { padding: .45rem .6rem .45rem .5rem; }
+  .sb-rank-txt b { width: 48px; }
+  .sb-rank-txt em { width: 30px; }
+  .sb-frag--organic { width: 118px; }
+  .sb-key { font-size: .5rem; padding-left: .68rem; }
+}
+
+/* Reduced motion: CSS-only guard. Everything lands in its end state. */
+@media (prefers-reduced-motion: reduce) {
+  .sb-lay { transform: none !important; }
+  .sb-anchor, .sb-fragwrap { opacity: 1 !important; translate: none !important; transition: none !important; }
+  .sb-footrow { opacity: 1 !important; transition: none !important; }
+  .sb-area-line { stroke-dashoffset: 0 !important; transition: none !important; }
+  .sb-area-fill, .sb-spark-dot { opacity: 1 !important; transition: none !important; }
+  .sb-spark { stroke-dashoffset: 0 !important; transition: none !important; }
+  .sb-bars span, .sb-minibars span { height: var(--h) !important; transition: none !important; }
+}
+
+
+/* ══════════════════════════════════════════════════════════════════════════
+   SHORT-VIEWPORT RECOVERY (both new heroes)
+   At 1024×768 the two-column grid narrows the text column enough that the
+   headline gains a line and the CTA row wraps to two stacked buttons, pushing
+   the secondary ~36–47px under the fold. Tightening the vertical rhythm when
+   the viewport is short recovers it without touching the tall-viewport design.
+   ══════════════════════════════════════════════════════════════════════════ */
+@media (min-width: 861px) and (max-height: 820px) {
+  .sw-hero { padding-top: 5.5rem; padding-bottom: 3rem; }
+  .sw-hero-h1 { font-size: clamp(2.3rem, 4.4vw, 3.7rem); margin-bottom: 1rem; }
+  .sw-hero-sub { margin-bottom: 1.4rem; }
+  .sw-hero .hy-bismillah { margin-bottom: .6rem; }
+  .sw-hero .hy-eyebrow { margin-bottom: .9rem; }
+
+  .sb-hero { padding-top: 6rem; }
+  .sb-h1 { font-size: clamp(2.3rem, 4.6vw, 3.9rem); margin-bottom: 1.1rem; }
+  .sb-sub { margin-bottom: 1.5rem; }
+  .sb-inner .hy-bismillah { margin-bottom: .7rem; }
+  .sb-pill { margin-bottom: 1.1rem; }
+}
+/* Mobile `/`: same wrap, same cure — the collage is a scroll reward anyway. */
+@media (max-width: 520px) {
+  .sb-hero { padding-top: 6.5rem; }
+  .sb-h1 { margin-bottom: 1.1rem; }
+  .sb-sub { margin-bottom: 1.5rem; }
+  .sb-pill { margin-bottom: 1.1rem; font-size: .64rem; padding: .45rem .95rem; }
+}

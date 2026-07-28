@@ -1,7 +1,7 @@
 import SmoothScroll from '@/components/motion/SmoothScroll';
 import KhatamCursor from '@/components/motion/KhatamCursor';
 import SectionNav from '@/components/motion/useSectionNav';
-import HeroHybrid from '@/components/home/hybrid/HeroHybrid';
+import HeroSignalBoard from '@/components/home/hybrid/HeroSignalBoard';
 import TrustStripHybrid from '@/components/home/hybrid/TrustStripHybrid';
 import ManifestoHybrid from '@/components/home/hybrid/ManifestoHybrid';
 // "Our craft" uses the cinematic Expertise; "Our methodology" uses the tactile
@@ -22,7 +22,7 @@ export default function HomePage() {
       <KhatamCursor />
       <SectionNav />
       <main>
-        <HeroHybrid />
+        <HeroSignalBoard />
         <TrustStripHybrid />
         <ManifestoHybrid />
         <ExpertiseCinematic />

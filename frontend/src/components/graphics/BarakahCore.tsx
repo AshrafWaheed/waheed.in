@@ -26,6 +26,10 @@ const OUTPUTS = ['Compounding growth', 'Loyal community', 'Lasting impact'];
 
 const ANGLES = [-90, -30, 30, 90, 150, 210];
 const R_NODE = 230;
+// Labels ride OUTBOARD of their node. They used to share R_NODE, which printed
+// every one of the six on top of its own gem — all six unreadable. The node's
+// glow reaches r=26, so clear it.
+const R_LABEL = 278;
 const R_INNER = 86;
 const xy = (i: number, r: number) => {
   const a = rad(ANGLES[i]);
@@ -55,11 +59,24 @@ const DUST = [
   { x: 172, y: 520, d: '0.3s', s: 1.9 }, { x: 470, y: 80, d: '1.9s', s: 1.6 }, { x: 44, y: 150, d: '2.8s', s: 1.5 },
 ];
 
-export default function BarakahCore() {
+export interface BarakahCoreProps {
+  /**
+   * Texture mode: drops the labels and the outputs row and lets CSS dim the
+   * whole thing. Used behind the /home3 hero cluster, where the geometry is
+   * meant to read as a faint guilloche rather than as the subject.
+   */
+  quiet?: boolean;
+}
+
+export default function BarakahCore({ quiet = false }: BarakahCoreProps) {
   const [active, setActive] = useState<number | null>(null);
 
   return (
-    <div className={`bc${active !== null ? ' is-focused' : ''}`} onMouseLeave={() => setActive(null)}>
+    <div
+      className={`bc${quiet ? ' bc--quiet' : ''}${active !== null ? ' is-focused' : ''}`}
+      onMouseLeave={() => setActive(null)}
+      aria-hidden={quiet || undefined}
+    >
       <svg className="bc-svg" viewBox="0 0 640 640" aria-hidden="true">
         <defs>
           <radialGradient id="bcCoreGlow" cx="50%" cy="50%" r="50%">
@@ -150,8 +167,8 @@ export default function BarakahCore() {
       </svg>
 
       {/* input labels (interactive) */}
-      {INPUTS.map((n, i) => {
-        const o = xy(i, R_NODE);
+      {!quiet && INPUTS.map((n, i) => {
+        const o = xy(i, R_LABEL);
         return (
           <div
             key={i}
@@ -166,10 +183,12 @@ export default function BarakahCore() {
       })}
 
       {/* outputs */}
-      <div className="bc-outputs">
-        <span className="bc-outputs-lead">Barakah in</span>
-        {OUTPUTS.map((o) => <span key={o} className="bc-output">{o}</span>)}
-      </div>
+      {!quiet && (
+        <div className="bc-outputs">
+          <span className="bc-outputs-lead">Barakah in</span>
+          {OUTPUTS.map((o) => <span key={o} className="bc-output">{o}</span>)}
+        </div>
+      )}
     </div>
   );
 }
