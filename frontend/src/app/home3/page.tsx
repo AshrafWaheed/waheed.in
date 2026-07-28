@@ -5,7 +5,7 @@ import SectionNav from '@/components/motion/useSectionNav';
 import HeroBarakahCore from '@/components/home/tactile/HeroBarakahCore';
 import TrustStripTactile from '@/components/home/tactile/TrustStripTactile';
 import ManifestoTactile from '@/components/home/tactile/ManifestoTactile';
-import ExpertiseTactile from '@/components/home/tactile/ExpertiseTactile';
+import ExpertiseBento from '@/components/home/tactile/ExpertiseBento';
 import IhsanProcessTactile from '@/components/home/tactile/IhsanProcessTactile';
 import RefusalTactile from '@/components/home/tactile/RefusalTactile';
 // Audience (hover-expand), Services (spotlight/magnetic), Newsletter & FinalCTA
@@ -23,11 +23,11 @@ export default function Home3Page() {
     <SmoothScroll>
       <KhatamCursor />
       <SectionNav />
-      <main>
+      <main className="geo-type">
         <HeroBarakahCore />
         <TrustStripTactile />
         <ManifestoTactile />
-        <ExpertiseTactile />
+        <ExpertiseBento />
         <AudienceHybrid />
         <ServicesHybrid />
         <IhsanProcessTactile />

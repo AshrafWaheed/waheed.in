@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Script from "next/script";
 import { headers } from "next/headers";
-import { Cormorant_Garamond, DM_Sans, Amiri } from "next/font/google";
+import { Cormorant_Garamond, DM_Sans, Amiri, Jost } from "next/font/google";
 import ScrollProgress  from "@/components/ScrollProgress";
 import ScrollReveal    from "@/components/ScrollReveal";
 import Nav             from "@/components/Nav";
@@ -20,6 +20,15 @@ const cormorant = Cormorant_Garamond({
 
 const dmSans = DM_Sans({
   variable: "--font-dm-sans",
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600"],
+  display: "swap",
+});
+
+// Geometric sans, loaded for the /home3 typography experiment only. Pages opt in
+// via the `.geo` wrapper class, which remaps --font-sans to it. See globals.css.
+const jost = Jost({
+  variable: "--font-jost",
   subsets: ["latin"],
   weight: ["300", "400", "500", "600"],
   display: "swap",
@@ -69,7 +78,7 @@ export default async function RootLayout({
   return (
     <html
       lang="en-GB"
-      className={`${cormorant.variable} ${dmSans.variable} ${amiri.variable} h-full`}
+      className={`${cormorant.variable} ${dmSans.variable} ${jost.variable} ${amiri.variable} h-full`}
     >
       <body className="min-h-full flex flex-col antialiased">
         {showChrome ? (
