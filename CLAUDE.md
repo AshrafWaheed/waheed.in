@@ -27,6 +27,11 @@
 - Full site implementation in progress — see SESSION_PLAN.md for per-session scope
 - Homepage redesign (3 variants: Hybrid `/`, Wahda-cinematic `/home2`, Outcrowd-tactile `/home3`) — see SESSION_PLAN_REDESIGN.md. Copy is verbatim from `src/content/home.ts`.
 
+## Reference
+- `reference/outcrowd.io.md` — first-hand teardown of outcrowd.io (the design bar for the
+  Outcrowd-tactile variant): measured type scale, colour tokens, spacing, section map, and the
+  motion mechanisms it actually uses. Read this before building anything "Outcrowd-like".
+
 ## Git
 - Repo: git@github.com:AshrafWaheed/waheed.in.git, branch: main
 - Commit and push from /var/www/waheed.in as dev
