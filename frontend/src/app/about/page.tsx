@@ -176,12 +176,13 @@ export default function AboutPage() {
               fontFamily:    'var(--font-serif)',
               fontSize:      'clamp(1.8rem,2.8vw,2.5rem)',
               color:         '#254851',
-              fontWeight:    400,
+              fontWeight:    500,
               marginBottom:  '1.2rem',
               lineHeight:    1.1,
             }}
           >
-            Ready to build something with <em style={{ fontStyle: 'italic', color: '#9c7d1c' }}>Barakah?</em>
+            {/* Gold only — the site runs one face at one weight with no italic. */}
+            Ready to build something with <em style={{ fontStyle: 'normal', color: '#9c7d1c' }}>Barakah?</em>
           </h2>
           <Link href="/contact" className="btn btn-teal reveal delay-2">
             Apply for a Discovery Call →

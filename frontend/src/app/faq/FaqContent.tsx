@@ -99,7 +99,7 @@ export default function FaqContent() {
             fontFamily: 'var(--font-serif)',
             fontSize: 'clamp(1.7rem,2.4vw,2.1rem)',
             color: '#254851',
-            fontWeight: 400,
+            fontWeight: 500,
             marginBottom: '1rem',
             lineHeight: 1.15,
           }}>
