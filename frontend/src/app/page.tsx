@@ -1,7 +1,9 @@
 import SmoothScroll from '@/components/motion/SmoothScroll';
 import KhatamCursor from '@/components/motion/KhatamCursor';
 import SectionNav from '@/components/motion/useSectionNav';
-import HeroSignalBoard from '@/components/home/hybrid/HeroSignalBoard';
+// Direction C — the founders flank the copy instead of the collage stacking
+// under it. HeroSignalBoard (B) is kept unmounted for comparison.
+import HeroFoundersFlank from '@/components/home/hybrid/HeroFoundersFlank';
 import TrustStripHybrid from '@/components/home/hybrid/TrustStripHybrid';
 import ManifestoHybrid from '@/components/home/hybrid/ManifestoHybrid';
 // "Our craft" uses the tactile Expertise bento (promoted from /home3, where it
@@ -22,7 +24,7 @@ export default function HomePage() {
       <KhatamCursor />
       <SectionNav />
       <main>
-        <HeroSignalBoard />
+        <HeroFoundersFlank />
         <TrustStripHybrid />
         <ManifestoHybrid />
         <ExpertiseBento />

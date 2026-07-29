@@ -4570,3 +4570,297 @@ html[data-nav="dark"] .burger span            { background: var(--rd-ivory); }
   .sb-sub { margin-bottom: 1.5rem; }
   .sb-pill { margin-bottom: 1.1rem; font-size: .64rem; padding: .45rem .95rem; }
 }
+
+
+/* ══════════════════════════════════════════════════════════════════════════
+   FOUNDERS-FLANK HERO (/) — Direction C
+   A and B reconciled. B's collage was correct but stacked BELOW the copy, so
+   the hero ran 1593px / 1.77 viewports at 1440×900 (/home3 ran 1.01). Same
+   elements, rotated onto the horizontal axis: founder | copy | founder, chart
+   fragments tucked into the flanks against the cards.
+
+   Deliberately asymmetric. The two founder SVGs cannot mirror — measured ink
+   in the shared 150-unit viewBox is 114×146 (man) vs 143×197 (woman, who
+   overflows her own box). So the cards differ in vertical offset, tilt and
+   figure geometry, and the chips funnel INWARD at the headline rather than
+   balancing out to the outer edges.
+   ══════════════════════════════════════════════════════════════════════════ */
+.ff-hero {
+  position: relative; overflow: hidden;
+  /* Proportional, not `1fr minmax(0,620px) 1fr` — a fixed centre track keeps
+     its full width as the viewport narrows and starves the flanks to ~190px
+     before the stacking breakpoint ever fires. Fractions shrink together. */
+  display: grid;
+  grid-template-columns: 0.6fr minmax(0, 1.15fr) 0.6fr;
+  align-items: center;
+  gap: 0 clamp(1.5rem, 3vw, 3rem);
+  padding: 7rem clamp(1.25rem, 3vw, 2.5rem) 4rem;
+  min-height: 640px;
+  background: radial-gradient(120% 96% at 50% 6%, #1b3d47 0%, var(--rd-night) 56%, #081019 100%);
+  color: var(--rd-on-night);
+}
+/* One --px/--py written on the section; each layer scales it by its own --k. */
+.ff-lay {
+  transform: translate3d(calc(var(--px, 0px) * var(--k, 1)), calc(var(--py, 0px) * var(--k, 1)), 0);
+  will-change: transform;
+}
+
+/* ── centre column ─────────────────────────────────────────────────────── */
+.ff-text { position: relative; z-index: 5; text-align: center; }
+.ff-text .hy-bismillah { margin-bottom: .9rem; }
+/* Outcrowd's eyebrow is a bordered pill. Ours is a full line of copy, so it
+   wraps to a soft rectangle rather than a true pill on narrow viewports. */
+.ff-pill {
+  display: inline-block; margin: 0 auto 1.4rem;
+  font-family: var(--font-sans); font-size: .68rem; font-weight: 500;
+  letter-spacing: .18em; text-transform: uppercase; color: var(--rd-gold-line);
+  border: 1px solid rgba(201, 162, 39, .34); border-radius: 999px;
+  padding: .45rem 1.05rem; max-width: 100%;
+}
+/* Smaller than .hy-hero-h1's 6vw/5rem: the centre track is ~620px here, not the
+   940px B had, so the old scale wrapped to five lines. */
+.ff-h1 {
+  max-width: 100%; margin: 0 0 1.15rem;
+  font-size: clamp(2.1rem, 3.6vw, 3.6rem); line-height: 1; letter-spacing: -.01em;
+}
+.ff-sub {
+  margin: 0 auto 1.8rem; max-width: 32rem;
+  font-size: clamp(.94rem, 1.1vw, 1.02rem); line-height: 1.62;
+}
+
+/* ── flanks ────────────────────────────────────────────────────────────── */
+/* The flank is a fixed-ratio box; everything inside is positioned against it in
+   percentages, so the whole composition scales with the column. */
+.ff-flank { position: relative; z-index: 2; aspect-ratio: 320 / 520; }
+
+.ff-card {
+  position: absolute; display: block; text-decoration: none;
+  border-radius: 22px;
+  /* The figure breaks out of the top of the panel — that overflow is the point,
+     so nothing here may clip it. The rounded panel is painted by ::before. */
+  overflow: visible;
+  opacity: 0;
+}
+.ff-card::before {
+  content: ''; position: absolute; inset: 0; border-radius: inherit;
+  background: var(--panel); box-shadow: 0 34px 70px -26px rgba(0, 0, 0, .78);
+  transition: box-shadow .45s ease;
+}
+.ff-card:hover::before { box-shadow: 0 40px 84px -24px rgba(0, 0, 0, .9); }
+
+/**
+ * Per-figure geometry — the two files are NOT interchangeable, and the numbers
+ * below are the reason the two cards have different aspect ratios.
+ *
+ * VISIBLE ink inside the shared 150-unit viewBox, from a canvas alpha scan at
+ * 600px — NOT getBBox(). getBBox reports the woman's <image> placement rect
+ * (143×197, apparently overflowing her own viewBox); the pixels tell the truth:
+ *
+ *   man    ink 114.25 × 146.50  aspect 0.78 (portrait)
+ *          pads — top 2.3%  left 10.5%  right 13.3%  bottom 0%
+ *   woman  ink 136.75 × 137.00  aspect 1.00 (SQUARE)
+ *          pads — top 8.7%  left  8.8%  right  0.0%  bottom 0%
+ *
+ * Both are flush to the bottom of the viewBox, so --fig-b: 0 bottom-aligns
+ * them. He is near-centred horizontally; she is flush RIGHT, so her ink centre
+ * sits 4.4% of the image width right of the element centre — hence --fig-x.
+ * And because her ink is square while his is portrait, dropping both into the
+ * same 3/4 card leaves her small and floating in a sea of ivory. Her card is
+ * landscape instead. Re-measure by alpha-scanning if the artwork changes.
+ */
+.ff-fig {
+  /* The global `img { max-width: 100% }` reset (top of this file) clamps any
+     --fig-w over 100% back to the card width. Opt out or the values below are
+     decorative. */
+  max-width: none;
+  position: absolute; left: 50%; bottom: var(--fig-b); width: var(--fig-w); height: auto;
+  /* --fig-x re-centres the ink; the % resolves against the image's own width. */
+  transform: translateX(calc(-50% + var(--fig-x, 0%))); display: block;
+  /* Unifies a crisp flat vector (man) with a soft airbrushed raster (woman). */
+  filter: saturate(.84) contrast(1.06) sepia(.1) hue-rotate(-6deg);
+}
+
+/* Cards sit OUTBOARD, low on the left and high on the right — the offset, the
+   opposed tilts and the different formats are what stop the pair reading as a
+   coat of arms. Each is sized so its ink lands at ~0.9 of the panel width and
+   breaks a few percent out of the panel top. */
+.ff-card--woman {
+  left: 0; top: 27%; width: 92%; aspect-ratio: 1 / .86; rotate: -2.4deg; z-index: 2;
+  --panel: var(--rd-ivory); --fig-w: 98%; --fig-b: 0%; --fig-x: -4.4%;
+}
+.ff-card--man {
+  right: 0; top: 8%; width: 84%; aspect-ratio: 4 / 4.4; rotate: 2.6deg; z-index: 2;
+  --panel: #ece0bb; --fig-w: 121%; --fig-b: 0%; --fig-x: 1.4%;
+}
+
+/* ── chips ─────────────────────────────────────────────────────────────── */
+/* Positioned INBOARD, overlapping their card's inner edge. The overlap is what
+   sells the depth; the inward bias funnels the eye at the headline. */
+.ff-chip-at { position: absolute; z-index: 4; opacity: 0; }
+.ff-at--traffic { right: -3%; top: 14%; }
+.ff-at--copydoc { left: 6%;  bottom: 2%; }
+.ff-at--growth  { left: -5%; bottom: 4%; }
+.ff-at--serp    { left: -3%; top: 6%; }
+
+.ff-chip {
+  display: flex; align-items: center; gap: .55rem;
+  border-radius: 14px; padding: .6rem .75rem;
+  font-family: var(--font-sans); white-space: nowrap;
+  box-shadow: 0 22px 44px -18px rgba(0, 0, 0, .82);
+}
+.ff-chip-lbl { font-size: .58rem; letter-spacing: .14em; text-transform: uppercase; }
+
+.ff-chip--traffic {
+  flex-direction: column; align-items: stretch; gap: .45rem; width: 132px;
+  background: var(--rd-white); color: var(--rd-teal);
+}
+.ff-minibars { display: flex; align-items: flex-end; gap: 4px; height: 38px; }
+.ff-minibars span { flex: 1; height: 0; border-radius: 3px 3px 0 0; background: linear-gradient(to top, var(--rd-teal-lt), var(--rd-teal)); }
+.ff-hero.is-in .ff-minibars span { height: var(--h); transition: height .75s cubic-bezier(.22,1,.36,1) var(--d); }
+
+.ff-chip--copydoc {
+  flex-direction: column; align-items: stretch; gap: .36rem; width: 142px;
+  background: var(--rd-ivory); color: var(--rd-teal); padding: .7rem .75rem .75rem;
+}
+.ff-doc-eyebrow { font-family: var(--font-sans); font-size: .46rem; letter-spacing: .18em; text-transform: uppercase; color: rgba(37, 72, 81, .5); }
+.ff-chip--copydoc b { display: block; height: 5px; border-radius: 3px; background: rgba(37, 72, 81, .26); }
+.ff-chip--copydoc b.w88 { width: 88%; }
+.ff-chip--copydoc b.w66 { width: 66%; }
+.ff-doc-h { height: 11px !important; border-radius: 4px !important; background: rgba(37, 72, 81, .62) !important; margin-bottom: .12rem; }
+.ff-doc-cta {
+  align-self: flex-start; margin-top: .3rem; border-radius: 6px;
+  background: var(--rd-gold-line); color: var(--rd-night);
+  font-size: .48rem; letter-spacing: .1em; text-transform: uppercase; padding: .26rem .5rem;
+}
+
+/* The old <Console>'s ivory panel, cut loose. It is the biggest chip and the
+   only one carrying a drawn curve, so it anchors the right flank. */
+.ff-chip--growth {
+  flex-direction: column; align-items: stretch; gap: .45rem; width: 226px;
+  background: var(--rd-ivory); color: var(--rd-teal); padding: .65rem .7rem .45rem;
+}
+/* .ff-chip sets white-space: nowrap, so the three keys have to fit the fixed
+   width or "Referral" is sliced. Measured: the row needs ~197px of content box
+   at .48rem/.6rem gap, so the chip cannot go below 226px without shrinking the
+   type further. */
+.ff-legend { display: flex; gap: .6rem; }
+.ff-key {
+  position: relative; padding-left: .78rem;
+  font-size: .48rem; letter-spacing: .1em; text-transform: uppercase; color: rgba(37, 72, 81, .62);
+}
+.ff-key::before { content: ''; position: absolute; left: 0; top: 50%; margin-top: -3px; width: 6px; height: 6px; border-radius: 50%; }
+.ff-key.is-gold::before { background: var(--rd-gold); }
+.ff-key.is-gold { color: var(--rd-gold); }
+.ff-key.is-teal::before { background: var(--rd-teal-lt); }
+.ff-key.is-dim::before  { background: rgba(37, 72, 81, .3); }
+.ff-area { height: 62px; }
+.ff-area svg { width: 100%; height: 100%; display: block; }
+.ff-area-line {
+  fill: none; stroke: var(--rd-teal); stroke-width: 2.4; stroke-linejoin: round; stroke-linecap: round;
+  vector-effect: non-scaling-stroke; stroke-dasharray: 460; stroke-dashoffset: 460;
+}
+.ff-area-fill { opacity: 0; }
+.ff-hero.is-in .ff-area-line { stroke-dashoffset: 0; transition: stroke-dashoffset 1.6s cubic-bezier(.22,1,.36,1) 1.3s; }
+.ff-hero.is-in .ff-area-fill { opacity: 1; transition: opacity .9s ease 2.1s; }
+
+.ff-chip--serp { background: var(--rd-white); color: var(--rd-teal); padding: .5rem .8rem .5rem .55rem; }
+.ff-rank {
+  display: grid; place-items: center; width: 22px; height: 22px; border-radius: 50%;
+  background: var(--rd-gold-line); color: var(--rd-night); font-size: .68rem; font-weight: 600; line-height: 1;
+}
+.ff-rank-txt { display: flex; flex-direction: column; gap: 4px; }
+.ff-rank-txt b { display: block; width: 60px; height: 5px; border-radius: 3px; background: rgba(37, 72, 81, .8); }
+.ff-rank-txt em { display: block; width: 38px; height: 4px; border-radius: 3px; background: rgba(37, 72, 81, .32); }
+
+/* ── entrance ──────────────────────────────────────────────────────────── */
+/* `translate` rather than `transform`, so the parallax transform on .ff-lay can
+   run on the same element without the two clobbering each other. */
+.ff-card    { translate: 0 46px; transition: opacity 1s cubic-bezier(.22,1,.36,1) var(--d), translate 1.2s cubic-bezier(.22,1,.36,1) var(--d); }
+.ff-chip-at { translate: 0 30px; transition: opacity .8s cubic-bezier(.22,1,.36,1) var(--d), translate 1s cubic-bezier(.22,1,.36,1) var(--d); }
+.ff-hero.is-in .ff-card,
+.ff-hero.is-in .ff-chip-at { opacity: 1; translate: 0 0; }
+
+/* ── responsive ────────────────────────────────────────────────────────── */
+@media (max-width: 1240px) {
+  /* The chip has to shrink faster than the legend can, so the third key goes.
+     Two categories still read as a legend; a sliced "Referral" reads as a bug. */
+  .ff-key.is-dim { display: none; }
+  .ff-chip--growth { width: 172px; }
+  .ff-chip--traffic { width: 118px; }
+  .ff-chip--copydoc { width: 126px; }
+  .ff-rank-txt b { width: 48px; }
+  .ff-rank-txt em { width: 30px; }
+}
+/* The flank columns are now too narrow to hold four chips without them piling
+   on each other, so drop the two that carry the least — the wireframe and the
+   rank badge. The bar chart and the growth curve are the ones asked for. */
+@media (max-width: 1180px) {
+  .ff-at--copydoc, .ff-at--serp { display: none; }
+  .ff-chip--growth { width: 158px; }
+  /* Keep it off the paragraph — at 1024 the flank is only 230px wide, so a
+     negative inset puts the chip within 20px of the sub copy. */
+  .ff-at--growth { left: 2%; }
+}
+/* Stacking is a LAST resort, not a courtesy: it moves the flanks below the copy
+   and so re-introduces exactly the vertical stacking this direction exists to
+   remove. Measured at 1100px wide, stacked ran 1346px (1.50vh) against 646px
+   for the three-column layout at the same width — so hold the columns as long
+   as the centre track stays readable, and only break at 960.
+   Below it: copy first (grid `order`, so the DOM keeps founder-copy-founder for
+   reading order), then the two flanks side by side underneath, capped so they
+   cannot balloon to half the viewport each. */
+@media (max-width: 960px) {
+  .ff-hero {
+    grid-template-columns: 1fr 1fr;
+    gap: 2.4rem clamp(1rem, 3vw, 2rem);
+    padding-top: 7.5rem; padding-bottom: 3rem;
+  }
+  .ff-text { order: -1; grid-column: 1 / -1; max-width: 44rem; margin: 0 auto; }
+  .ff-h1 { font-size: clamp(2.1rem, 5.6vw, 3.4rem); }
+  .ff-flank { aspect-ratio: 320 / 400; width: 100%; max-width: 320px; }
+  .ff-flank--l { justify-self: end; }
+  .ff-flank--r { justify-self: start; }
+  .ff-card--woman { top: 24%; }
+  .ff-card--man { top: 2%; }
+  .ff-at--traffic { right: -2%; top: 8%; }
+  .ff-at--growth  { left: -2%; bottom: 4%; }
+}
+@media (max-width: 620px) {
+  .ff-hero { padding: 6.5rem 1.1rem 2.5rem; gap: 2rem .8rem; min-height: 0; }
+  .ff-pill { font-size: .6rem; letter-spacing: .14em; padding: .42rem .85rem; margin-bottom: 1.1rem; }
+  .ff-sub { margin-bottom: 1.5rem; }
+  .ff-flank { aspect-ratio: 320 / 400; }
+  .ff-card { border-radius: 16px; }
+  /* Chips must stay inside the section's `overflow: hidden` at this width or
+     they get sliced mid-word — so no negative offsets down here. */
+  .ff-at--traffic { right: 0; top: 0; }
+  .ff-at--growth  { left: 0; bottom: 0; }
+  .ff-chip { padding: .5rem .6rem; border-radius: 11px; }
+  .ff-chip--traffic { width: 92px; }
+  .ff-chip--growth { width: 122px; gap: .3rem; padding: .5rem .55rem .35rem; }
+  .ff-area { height: 40px; }
+  .ff-legend { gap: .45rem; }
+  .ff-key { font-size: .44rem; padding-left: .6rem; letter-spacing: .08em; }
+  .ff-minibars { height: 28px; gap: 3px; }
+  .ff-chip-lbl { font-size: .5rem; }
+}
+/* Short laptops: the centre track is narrow, so the headline runs three lines
+   and the CTA row can wrap. Tighten the vertical rhythm rather than the design. */
+@media (min-width: 961px) and (max-height: 800px) {
+  .ff-hero { padding-top: 5.5rem; padding-bottom: 3rem; min-height: 0; }
+  .ff-text .hy-bismillah { margin-bottom: .6rem; }
+  .ff-pill { margin-bottom: 1rem; }
+  .ff-h1 { font-size: clamp(2rem, 3.2vw, 3.1rem); margin-bottom: .9rem; }
+  .ff-sub { margin-bottom: 1.4rem; }
+  .ff-flank { aspect-ratio: 320 / 470; }
+}
+
+/* Reduced motion: CSS-only guard, never a JS branch — a JS branch would diverge
+   the server and client renders. Everything lands in its end state. */
+@media (prefers-reduced-motion: reduce) {
+  .ff-lay { transform: none !important; }
+  .ff-card, .ff-chip-at { opacity: 1 !important; translate: none !important; transition: none !important; }
+  .ff-area-line { stroke-dashoffset: 0 !important; transition: none !important; }
+  .ff-area-fill { opacity: 1 !important; transition: none !important; }
+  .ff-minibars span { height: var(--h) !important; transition: none !important; }
+}
