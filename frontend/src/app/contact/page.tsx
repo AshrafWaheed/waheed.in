@@ -1,6 +1,26 @@
 'use client';
 
+/**
+ * /contact — rebuilt to homepage standard.
+ *
+ * IMPORTANT: this redesign is PRESENTATIONAL ONLY. Every piece of behaviour below
+ * — field names, the validator, the /api/contact payload shape, the custom-service
+ * expander, the success state — is unchanged, because this form is live and wired
+ * through to HubSpot. What changed is the shell: a real hero, a sticky aside, and
+ * `.ct-*` classes for the form chrome.
+ *
+ * The form's labels, options, placeholders and error strings stay inline here
+ * rather than moving to content/contact.ts, since they are welded to the field
+ * names and the validation rules and belong next to them. Only the hero and aside
+ * copy was extracted.
+ */
 import { useState, type FormEvent, type ChangeEvent } from 'react';
+import SmoothScroll from '@/components/motion/SmoothScroll';
+import KhatamCursor from '@/components/motion/KhatamCursor';
+import SectionNav from '@/components/motion/useSectionNav';
+import ContactHero from '@/components/contact/ContactHero';
+import Khatam from '@/components/graphics/Khatam';
+import { contactAside } from '@/content/contact';
 
 const SERVICES = [
   'Halal Brand Audit',
@@ -135,90 +155,85 @@ export default function ContactPage() {
     }
   }
 
+  const SOCIAL_ICON: Record<string, React.ReactNode> = {
+    Facebook: <path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z" />,
+    Instagram: (
+      <>
+        <rect x="2" y="2" width="20" height="20" rx="5" fill="none" stroke="currentColor" strokeWidth="2" />
+        <path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z" fill="none" stroke="currentColor" strokeWidth="2" />
+        <circle cx="17.5" cy="6.5" r="1" />
+      </>
+    ),
+    LinkedIn: (
+      <>
+        <path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z" />
+        <circle cx="4" cy="4" r="2" />
+      </>
+    ),
+  };
+
   return (
-    <main>
+    <SmoothScroll>
+      <KhatamCursor />
+      <SectionNav />
+      <main>
 
-      {/* ── Hero ── */}
-      <div className="page-hero">
-        {/* Geometric accent */}
-        <svg
-          style={{ position: 'absolute', bottom: -40, left: -40, width: 260, opacity: .12, pointerEvents: 'none' }}
-          viewBox="0 0 200 200"
-          aria-hidden="true"
-        >
-          <g stroke="white" strokeWidth=".5" fill="none">
-            <polygon points="100,10 190,55 190,145 100,190 10,145 10,55" />
-            <circle cx="100" cy="100" r="30" />
-          </g>
-        </svg>
-        <div className="cnt" style={{ position: 'relative', zIndex: 1 }}>
-          <span className="lbl">Apply for a Discovery Call</span>
-          <h1>
-            Tell us about your{' '}
-            <em>brand.</em>
-          </h1>
-          <p>A 30-minute fit call. We review every application personally and respond within 24 hours, in sha Allah.</p>
-        </div>
-      </div>
+        <ContactHero />
 
-      {/* ── Form Section ── */}
-      <section className="sec" style={{ background: '#F7F3ED' }}>
-        <div className="cnt">
-          <div className="contact-grid">
+        {/* ── Form Section ── */}
+        <section className="ct-body" data-section-color="light">
+          <div className="cnt ct-grid">
 
-            {/* ── Left: Info ── */}
-            <div className="reveal">
-              <h2 className="contact-info-h">Start a Conversation</h2>
-              <p className="contact-intro">
-                Whether you&apos;re exploring your options or ready to start immediately, we&apos;d
-                love to hear about your brand. Fill out the form and we&apos;ll be in touch,
-                in&nbsp;shā&apos;&nbsp;Allāh.
-              </p>
+            {/* ── Left: sticky aside. Sticky because the form is ~1,000px taller
+                   than this column, which previously left it stranded at the top
+                   beside a long run of empty ivory. ── */}
+            <aside className="ct-aside">
+              <div className="ct-aside-in">
+                <h2 className="ct-aside-h">{contactAside.heading}</h2>
+                <p className="ct-aside-intro">{contactAside.intro}</p>
 
-              <div className="contact-details">
-                <div className="cd-item">
-                  <div className="cd-icon">
-                    <svg width="15" height="15" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24" aria-hidden="true">
-                      <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
-                      <polyline points="22,6 12,13 2,6"/>
+                <a className="ct-mail" href={`mailto:${contactAside.email}`} data-cursor>
+                  <span className="ct-mail-icon" aria-hidden="true">
+                    <svg width="15" height="15" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
+                      <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                      <polyline points="22,6 12,13 2,6" />
                     </svg>
-                  </div>
-                  info@waheed.in
+                  </span>
+                  {contactAside.email}
+                </a>
+
+                <div className="ct-socials">
+                  {contactAside.socials.map((s) => (
+                    <a
+                      key={s.label}
+                      href={s.href}
+                      target={s.href === '#' ? undefined : '_blank'}
+                      rel={s.href === '#' ? undefined : 'noopener noreferrer'}
+                      className="ct-soc"
+                      aria-label={s.label}
+                      data-cursor
+                    >
+                      <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                        {SOCIAL_ICON[s.label]}
+                      </svg>
+                    </a>
+                  ))}
+                </div>
+
+                <div className="ct-note">
+                  <span className="ct-note-mark" aria-hidden="true">
+                    <Khatam size={13} inner={0.5} stroke="var(--rd-gold)" strokeWidth={1.6} />
+                  </span>
+                  <p>
+                    <strong>{contactAside.note.lead}</strong>
+                    {contactAside.note.rest}
+                  </p>
                 </div>
               </div>
-
-              <div className="contact-socials">
-                <a href="https://www.facebook.com/profile.php?id=61556593554803" target="_blank" rel="noopener noreferrer" className="soc" title="Facebook" aria-label="Facebook">
-                  <svg width="13" height="13" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                    <path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/>
-                  </svg>
-                </a>
-                <a href="https://www.instagram.com/waheeddigitalsolutions/" target="_blank" rel="noopener noreferrer" className="soc" title="Instagram" aria-label="Instagram">
-                  <svg width="13" height="13" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" aria-hidden="true">
-                    <rect x="2" y="2" width="20" height="20" rx="5"/>
-                    <path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/>
-                    <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/>
-                  </svg>
-                </a>
-                <a href="#" className="soc" title="LinkedIn" aria-label="LinkedIn">
-                  <svg width="13" height="13" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                    <path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"/>
-                    <circle cx="4" cy="4" r="2"/>
-                  </svg>
-                </a>
-              </div>
-
-              {/* Values note */}
-              <div style={{ marginTop: '2.5rem', padding: '1.3rem 1.5rem', background: 'rgba(51,92,103,.06)', borderRadius: 10, borderLeft: '3px solid #335C67' }}>
-                <p style={{ fontSize: '.82rem', color: '#254851', lineHeight: 1.7, margin: 0 }}>
-                  <strong>We only work with values-aligned brands.</strong> Every application is reviewed personally.
-                  We may respectfully decline projects that do not align with our ethical guidelines.
-                </p>
-              </div>
-            </div>
+            </aside>
 
             {/* ── Right: Form ── */}
-            <div className="contact-form-wrap reveal delay-2">
+            <div className="ct-form-wrap reveal">
               {submitted ? (
                 <div className="contact-success">
                   <div className="contact-success-icon">
@@ -305,7 +320,7 @@ export default function ContactPage() {
                       </div>
                       <button
                         type="button"
-                        className="btn btn-teal"
+                        className="btn btn-gold"
                         style={{ padding: '.5rem 1.3rem', fontSize: '.82rem' }}
                         onClick={() => setCustomSaved(true)}
                       >
@@ -376,7 +391,7 @@ export default function ContactPage() {
 
                   <button
                     type="submit"
-                    className="btn btn-teal"
+                    className="btn btn-gold ct-submit"
                     disabled={submitting}
                     style={{ width: '100%', justifyContent: 'center', opacity: submitting ? .7 : 1 }}
                   >
@@ -389,9 +404,9 @@ export default function ContactPage() {
             </div>
 
           </div>
-        </div>
-      </section>
+        </section>
 
-    </main>
+      </main>
+    </SmoothScroll>
   );
 }

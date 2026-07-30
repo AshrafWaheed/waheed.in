@@ -1,7 +1,12 @@
 import type { Metadata } from 'next';
-import FaqContent from './FaqContent';
 import { FAQS } from './faqData';
 import { pageMeta } from '@/lib/seo';
+import SmoothScroll from '@/components/motion/SmoothScroll';
+import KhatamCursor from '@/components/motion/KhatamCursor';
+import SectionNav from '@/components/motion/useSectionNav';
+import FaqHero from '@/components/faq/FaqHero';
+import FaqBody from '@/components/faq/FaqBody';
+import FaqCta from '@/components/faq/FaqCta';
 
 export const metadata: Metadata = pageMeta({
   title: 'FAQs · WAHEED',
@@ -10,7 +15,8 @@ export const metadata: Metadata = pageMeta({
   path: '/faq',
 });
 
-// FAQPage structured data → eligible for rich results in search.
+// FAQPage structured data → eligible for rich results in search. Built from the
+// same FAQS array the page renders, so the two can never drift.
 const faqJsonLd = {
   '@context': 'https://schema.org',
   '@type': 'FAQPage',
@@ -21,6 +27,11 @@ const faqJsonLd = {
   })),
 };
 
+/**
+ * /faq — rebuilt to homepage standard. The old single FaqContent client component
+ * is now three components, with the page-level primitives (Lenis, khatam cursor,
+ * colour-aware nav) mounted here as on / , /about and /services.
+ */
 export default function FAQPage() {
   return (
     <>
@@ -28,7 +39,15 @@ export default function FAQPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
       />
-      <FaqContent />
+      <SmoothScroll>
+        <KhatamCursor />
+        <SectionNav />
+        <main>
+          <FaqHero />
+          <FaqBody />
+          <FaqCta />
+        </main>
+      </SmoothScroll>
     </>
   );
 }
