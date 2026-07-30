@@ -4919,3 +4919,311 @@ html[data-nav="dark"] .burger span            { background: var(--rd-ivory); }
   .ff-area-fill { opacity: 1 !important; transition: none !important; }
   .ff-minibars span { height: var(--h) !important; transition: none !important; }
 }
+
+
+/* ══════════════════════════════════════════════════════════════════════════
+   /ABOUT — rebuilt to homepage standard
+   ─────────────────────────────────────────────────────────────────────────
+   The old page ran on `.page-hero` + `.sec` + `.team-card` + `.about-*`: flat
+   bands, one 760px column, 0.87–0.92rem grey body copy, and no motion beyond
+   the global `.reveal` fade. Those classes are all still present above for the
+   other inner pages; nothing here touches them.
+
+   Conventions follow the redesign layer: `ab-` prefix, one effect per element,
+   reduced-motion handled by a CSS !important guard at the bottom (never a JS
+   branch — that would desync SSR from the client render).
+
+   Two rules carry over from building the homepage hero and must not be
+   "simplified":
+     · Entrances animate `translate`, never `transform`, because `.ab-lay`
+       already owns `transform` for the pointer parallax on the same element.
+       The individual transform properties (translate/rotate/scale) resolve
+       before `transform`, so the two compose instead of clobbering.
+     · `.ab-fig` needs `max-width: none` — the global `img { max-width: 100% }`
+       reset at the top of this file would otherwise clamp `--fig-w` and shrink
+       every portrait back to its card width.
+   ══════════════════════════════════════════════════════════════════════════ */
+
+/* ── shared ────────────────────────────────────────────────────────────── */
+.ab-lay {
+  transform: translate3d(calc(var(--px, 0px) * var(--k, 1)), calc(var(--py, 0px) * var(--k, 1)), 0);
+  will-change: transform;
+}
+.ab-eyebrow {
+  display: block; font-family: var(--font-sans); font-size: .72rem; font-weight: 500;
+  letter-spacing: .24em; text-transform: uppercase; color: var(--rd-gold); margin-bottom: .9rem;
+}
+.ab-rule {
+  display: block; width: 84px; height: 1px; margin-top: 1.8rem; transform-origin: left;
+  background: linear-gradient(90deg, var(--rd-gold-line), rgba(201, 162, 39, 0));
+}
+/* The two body tiers for light sections, shared by §2 and §4. The old page set
+   everything at .92rem/#6B6B6B, which is why lead, detail and conclusion were
+   indistinguishable. */
+.ab-lead {
+  font-family: var(--font-serif); font-weight: 500;
+  font-size: clamp(1.2rem, 1.9vw, 1.55rem); line-height: 1.5;
+  color: #2c545e; letter-spacing: -.005em; text-wrap: pretty;
+}
+.ab-body {
+  font-family: var(--font-sans); font-size: 1rem; line-height: 1.8; color: #4a5a5e;
+  text-wrap: pretty;
+}
+
+/* ── §1 Hero ───────────────────────────────────────────────────────────── */
+/* Left-aligned and ~58vh on purpose: centred + 100vh is the homepage hero's
+   gesture, and an inner page that repeats it reads as a second homepage. */
+.ab-hero {
+  position: relative; overflow: hidden;
+  min-height: 58vh;
+  display: flex; align-items: center;
+  padding: 9.5rem 0 6rem;
+  background: radial-gradient(115% 125% at 14% 6%, #1e424d 0%, var(--rd-night) 56%, #081019 100%);
+  color: var(--rd-on-night);
+}
+.ab-hero-engine {
+  position: absolute; top: 50%; right: -13%;
+  width: min(80vh, 680px); height: min(80vh, 680px);
+  translate: 0 -50%;            /* vertical centring; `transform` is .ab-lay's */
+  opacity: .4; pointer-events: none; z-index: 0;
+}
+.ab-hero-spark { position: absolute; left: 4.5%; top: 66%; z-index: 1; opacity: .75; }
+/* No max-width here. `.cnt` is `width: 92%; max-width: 1160px; margin-inline: auto`,
+   so capping this wrapper narrower would re-centre it and the headline would no
+   longer line up with the nav or with §2/§3 below. The measure is capped on the
+   h1 instead. */
+.ab-hero-inner { position: relative; z-index: 2; }
+/* Same bordered pill as the Signal-Board hero's eyebrow. */
+.ab-pill {
+  display: inline-block; margin-bottom: 1.5rem;
+  font-family: var(--font-sans); font-size: .7rem; font-weight: 500;
+  letter-spacing: .2em; text-transform: uppercase; color: var(--rd-gold-line);
+  border: 1px solid rgba(201, 162, 39, .34); border-radius: 999px;
+  padding: .5rem 1.15rem; max-width: 100%;
+}
+.ab-hero-h1 {
+  font-family: var(--font-serif); font-weight: 500;
+  font-size: clamp(2.4rem, 5.6vw, 4.4rem); line-height: 1.04;
+  color: var(--rd-white); max-width: 21ch; margin: 0;
+}
+.ab-hero-h1 em { color: var(--rd-gold-bloom); }
+.ab-hero-rule {
+  display: block; width: 150px; height: 1px; margin-top: 2.2rem; transform-origin: left;
+  background: linear-gradient(90deg, var(--rd-gold-line), rgba(201, 162, 39, 0));
+}
+.ab-scroll-cue { position: absolute; bottom: 1.8rem; left: 50%; translate: -50% 0; z-index: 2; }
+
+/* ── §2 Founding story (sticky claim / travelling narrative) ───────────── */
+.ab-gap { background: var(--rd-ivory); color: var(--rd-teal); padding: 7rem 0 7.5rem; }
+/* align-items: start is load-bearing — a stretched grid item fills the row and
+   has nowhere to travel, so sticky would never engage. */
+.ab-gap-grid {
+  display: grid; grid-template-columns: .84fr 1.16fr;
+  gap: clamp(2.5rem, 6vw, 6rem); align-items: start;
+}
+.ab-gap-aside { position: sticky; top: 15vh; }
+.ab-gap-h {
+  font-family: var(--font-serif); font-size: clamp(1.85rem, 3.3vw, 2.85rem); font-weight: 500;
+  color: #254851; line-height: 1.12; max-width: 19ch;
+}
+.ab-gap-mark { display: block; margin-top: 2rem; color: var(--rd-gold); opacity: .5; }
+.ab-gap-body > * + * { margin-top: 1.5rem; }
+
+/* Later than `.ab-gap-body > * + *` and equal specificity, so it wins the
+   sibling margin without needing !important. */
+.ab-ask-wrap { border-radius: 18px; margin-top: 2.5rem; }
+.ab-ask {
+  position: relative; margin: 0;
+  padding: 1.9rem 2.1rem 1.7rem 2.4rem;
+  background: var(--rd-white); border: 1px solid #e6ded3; border-radius: 18px;
+}
+.ab-ask-rule {
+  position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
+  border-radius: 3px 0 0 3px; transform-origin: top;
+  background: linear-gradient(180deg, var(--rd-gold-line), rgba(201, 162, 39, .12));
+}
+.ab-ask-q {
+  font-family: var(--font-serif); font-size: clamp(1.08rem, 1.55vw, 1.3rem);
+  line-height: 1.55; color: #335C67; margin: 0;
+}
+.ab-ask-a {
+  display: inline-flex; align-items: center; gap: .55rem; margin-top: 1.35rem;
+  font-family: var(--font-sans); font-size: .78rem; font-weight: 500;
+  letter-spacing: .16em; text-transform: uppercase; color: var(--rd-gold);
+}
+.ab-body-close { color: #5b6b6f; }
+
+/* ── §3 The founders (dark, real portraits) ────────────────────────────── */
+.ab-people {
+  position: relative; overflow: hidden;
+  background: radial-gradient(120% 92% at 50% 0%, #1b3d47 0%, var(--rd-night) 54%, #0b1a20 100%);
+  color: var(--rd-on-night); padding: 7rem 0 7.5rem;
+}
+.ab-people-head {
+  display: grid; grid-template-columns: 1.05fr .95fr;
+  gap: clamp(2rem, 5vw, 4.5rem); align-items: end;
+  margin-bottom: clamp(3rem, 6vw, 5rem);
+}
+.ab-people-h {
+  font-family: var(--font-serif); font-size: clamp(1.85rem, 3.8vw, 3.1rem); font-weight: 500;
+  color: var(--rd-white); line-height: 1.1; max-width: 18ch;
+}
+.ab-people-h em { color: var(--rd-gold-bloom); }
+.ab-people-sub {
+  margin-top: 1rem; font-family: var(--font-sans); font-size: .95rem;
+  letter-spacing: .04em; color: var(--rd-gold-line);
+}
+.ab-people-intro {
+  font-family: var(--font-sans); font-size: 1rem; line-height: 1.8; color: var(--rd-on-night-dim);
+}
+
+.ab-fnd-list { display: flex; flex-direction: column; gap: clamp(3.5rem, 8vw, 6.5rem); }
+.ab-fnd {
+  display: grid; grid-template-columns: .82fr 1.18fr;
+  gap: clamp(2rem, 5vw, 4.5rem); align-items: center;
+}
+.ab-fnd--r { grid-template-columns: 1.18fr .82fr; }
+.ab-fnd--r .ab-fnd-art  { order: 2; }
+.ab-fnd--r .ab-fnd-copy { order: 1; }
+
+/* padding-top reserves the room the portrait needs to break the top of its own
+   panel (the homepage hero's signature framing) without pushing into §3's head. */
+.ab-fnd-art { border-radius: 24px; padding-top: 2.6rem; }
+.ab-card {
+  position: relative; display: block; border-radius: 24px; overflow: visible;
+  opacity: 0; translate: var(--tx, 0) 26px;
+  transition: opacity 1s cubic-bezier(.22, 1, .36, 1),
+              translate 1.15s cubic-bezier(.22, 1, .36, 1);
+}
+.ab-fnd--l .ab-card { --tx: -42px; }
+.ab-fnd--r .ab-card { --tx:  42px; }
+.ab-fnd.is-in .ab-card { opacity: 1; translate: 0 0; }
+.ab-card::before {
+  content: ''; position: absolute; inset: 0; border-radius: inherit;
+  background: var(--panel);
+  box-shadow: 0 40px 80px -28px rgba(0, 0, 0, .8);
+  transition: box-shadow .45s ease;
+}
+.ab-fnd-art:hover .ab-card::before { box-shadow: 0 54px 98px -26px rgba(0, 0, 0, .9); }
+.ab-fig {
+  max-width: none;               /* see the header note on the global img reset */
+  position: absolute; left: 50%; bottom: var(--fig-b); width: var(--fig-w); height: auto;
+  transform: translateX(calc(-50% + var(--fig-x, 0%)));
+  display: block;
+  filter: saturate(.84) contrast(1.06) sepia(.1) hue-rotate(-6deg);
+}
+/* Geometry lifted from the homepage hero, where it came from a canvas alpha scan
+   of the real ink (getBBox lies for the woman — she is a masked raster, so it
+   reports her <image> placement rect, not her artwork). Measured ink inside the
+   shared 150-unit viewBox: man 114.25x146.50 (aspect .78, portrait, flush
+   bottom); woman 136.75x137.00 (aspect 1.00, SQUARE, flush bottom-RIGHT). That
+   is why the two cards cannot share an aspect ratio, and why she carries an
+   --fig-x nudge of half her left pad to re-centre. */
+.ab-card--man {
+  aspect-ratio: 4 / 4.4; rotate: 2.2deg;
+  --panel: #ece0bb; --fig-w: 121%; --fig-b: 0%; --fig-x: 1.4%;
+}
+.ab-card--woman {
+  aspect-ratio: 1 / .86; rotate: -2.2deg;
+  --panel: var(--rd-ivory); --fig-w: 98%; --fig-b: 0%; --fig-x: -4.4%;
+}
+
+.ab-fnd-badge {
+  display: inline-block; font-family: var(--font-sans); font-size: .62rem; font-weight: 500;
+  letter-spacing: .18em; text-transform: uppercase; color: var(--rd-night);
+  background: var(--rd-gold-bloom); padding: .3rem .8rem; border-radius: 999px;
+}
+.ab-fnd-role {
+  font-family: var(--font-serif); font-size: clamp(1.45rem, 2.5vw, 2.05rem); font-weight: 500;
+  color: var(--rd-white); line-height: 1.15; margin: 1rem 0 1.1rem;
+}
+.ab-fnd-bio {
+  font-family: var(--font-sans); font-size: 1rem; line-height: 1.8;
+  color: var(--rd-on-night-dim); max-width: 62ch;
+}
+.ab-fnd-mark { display: block; margin-top: 1.5rem; opacity: .85; }
+
+/* ── §4 The realisation (no heading exists in the copy) ────────────────── */
+.ab-outro {
+  position: relative; overflow: hidden;
+  background: var(--rd-white); color: var(--rd-teal); padding: 7rem 0 7.5rem;
+}
+.ab-outro-rosette {
+  position: absolute; top: 50%; right: -7%;
+  width: min(62vh, 470px); height: min(62vh, 470px);
+  translate: 0 -50%; opacity: .11; pointer-events: none; z-index: 0;
+}
+/* Nested INSIDE .cnt rather than sharing the class with it: capping .cnt itself
+   would keep its `margin-inline: auto` and centre the block, breaking the left
+   edge every other section on the page lines up on. */
+.ab-outro-inner { position: relative; z-index: 1; max-width: 730px; padding-left: 2.3rem; }
+.ab-outro-thread {
+  position: absolute; left: 0; top: .35rem; bottom: .35rem; width: 2px;
+  border-radius: 2px; transform-origin: top;
+  background: linear-gradient(180deg, var(--rd-gold-line), rgba(201, 162, 39, .06));
+}
+.ab-outro-inner > p + p { margin-top: 1.6rem; }
+
+/* ── §5 CTA — reuses .hy-cta*; only the missing body needs a delta ─────── */
+.ab-cta-acts { margin-top: 2.4rem; }
+
+/* ── responsive ────────────────────────────────────────────────────────── */
+@media (max-width: 1100px) {
+  .ab-hero-engine { right: -22%; opacity: .3; }
+  /* The reversed row needs the MIRRORED tracks, not the same ones: its art sits
+     in column 2 via `order`, so giving both rows `.9fr 1.1fr` put the second
+     portrait in the wide column — measured 506px against the first one's 418px. */
+  .ab-fnd    { grid-template-columns: .9fr 1.1fr; }
+  .ab-fnd--r { grid-template-columns: 1.1fr .9fr; }
+}
+@media (max-width: 900px) {
+  /* Sticky needs a tall neighbour to travel against; once the columns stack
+     there is no neighbour, so it has to be switched off explicitly. */
+  .ab-gap-grid, .ab-people-head { grid-template-columns: 1fr; }
+  .ab-gap-aside { position: static; top: auto; }
+  .ab-gap-mark { display: none; }
+  .ab-people-head { gap: 1.6rem; align-items: start; }
+
+  /* Portrait above copy in BOTH rows: alternating sides is a wide-viewport
+     idea, and keeping it here would put one bio above its own portrait. */
+  .ab-fnd, .ab-fnd--r { grid-template-columns: 1fr; gap: 2rem; }
+  .ab-fnd--r .ab-fnd-art  { order: 0; }
+  .ab-fnd--r .ab-fnd-copy { order: 0; }
+  /* Centred, and capped well below the container width: the figure is 121% of
+     its card, so a card that fills .cnt pushes the portrait past the section and
+     `overflow: hidden` shears the shoulders off (measured 23px left / 37px right
+     at 390 before this cap). Card × 1.21 must stay inside the viewport. */
+  .ab-fnd-art { max-width: 340px; margin-inline: auto; }
+  .ab-fnd--l .ab-card, .ab-fnd--r .ab-card { --tx: 0; }
+}
+@media (max-width: 768px) {
+  .ab-hero { min-height: 46vh; padding: 8rem 0 4.5rem; }
+  .ab-hero-engine { right: -34%; width: 118vw; height: 118vw; opacity: .24; }
+  .ab-hero-spark { display: none; }
+  .ab-hero-h1 { max-width: 100%; }
+  .ab-gap, .ab-people, .ab-outro { padding: 4.5rem 0 5rem; }
+  .ab-ask { padding: 1.5rem 1.4rem 1.4rem 1.7rem; }
+  .ab-outro-inner { padding-left: 1.5rem; }
+  .ab-outro-rosette { right: -30%; opacity: .08; }
+}
+@media (max-width: 520px) {
+  .ab-fnd-art { max-width: 290px; }   /* 290 × 1.21 = 351 < 390 viewport */
+  .ab-lead { font-size: 1.15rem; }
+}
+/* Short-viewport recovery: at 1024x768 the hero's 58vh + 9.5rem of padding
+   pushes the h1 baseline low enough that §2 loses its foothold on screen. */
+@media (min-width: 901px) and (max-height: 800px) {
+  .ab-hero { min-height: 0; padding: 8rem 0 4.5rem; }
+  .ab-gap-aside { top: 9vh; }
+}
+
+/* ── reduced motion: CSS-only guard, everything lands in its end state ──── */
+@media (prefers-reduced-motion: reduce) {
+  .ab-lay { transform: none !important; }
+  .ab-card {
+    opacity: 1 !important; translate: none !important; transition: none !important;
+  }
+  .ab-hero-rule, .ab-rule, .ab-ask-rule, .ab-outro-thread {
+    transform: none !important; scale: none !important; opacity: 1 !important;
+  }
+}
