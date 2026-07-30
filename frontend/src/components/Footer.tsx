@@ -104,6 +104,20 @@ export default function Footer({ blogPublic = false }: { blogPublic?: boolean })
             {' · '}
             <Link href="/terms">Terms</Link>
           </p>
+          {/* Ownership + title disclaimer. Sits under the copyright line rather than
+              on its own page, so it travels with every route that renders the chrome —
+              including /about and /story, where "Co-Founder" is actually used.
+
+              The nowrap on the term: its hyphen is a legitimate break point, but
+              splitting the very title being disclaimed across two lines reads like a
+              typo. Note no JSX comment may sit inside this <p> — a comment between two
+              text lines eats the newline that would otherwise render as a space. */}
+          <p className="footer-legal">
+            Waheed is a professional service brand owned and operated by Ashraf Waheed Ansari.
+            The title of <span className="whitespace-nowrap">‘Co-Founder’</span> used on this site
+            denotes a strategic partnership and foundational contribution; it does not constitute
+            a legal partnership or equity ownership.
+          </p>
         </div>
       </div>
     </footer>
