@@ -125,7 +125,7 @@
   justify-content: center;
   text-align:      center;
   padding:         3rem 1.5rem;
-  background:      linear-gradient(120deg, #2c5663 0%, #1c3d47 50%, #11272e 100%);
+  background:      linear-gradient(120deg, var(--rd-night-hi) 0%, var(--rd-night-mid) 50%, var(--rd-night) 100%);
   background-size: 220% 220%;
   animation:       heroGradientShift 8s ease-in-out infinite alternate;
   position:        relative;
@@ -245,7 +245,7 @@
   min-height: 100vh; min-height: 100dvh;
   display: flex; align-items: center; justify-content: center;
   padding: 2rem 1.25rem;
-  background: linear-gradient(120deg, #2c5663 0%, #1c3d47 50%, #11272e 100%);
+  background: linear-gradient(120deg, var(--rd-night-hi) 0%, var(--rd-night-mid) 50%, var(--rd-night) 100%);
 }
 .adm-auth-card {
   width: 100%; max-width: 420px;
@@ -2006,7 +2006,7 @@ a.blog-chip-link:hover { background: var(--rd-gold); color: var(--rd-white); }
 }
 
 .manifesto-band {
-  background:    linear-gradient(170deg, #1c3d47 0%, #11272e 100%);
+  background:    linear-gradient(170deg, var(--rd-night-mid) 0%, var(--rd-night) 100%);
   padding:       8rem 0;
   position:      relative;
   overflow:      hidden;
@@ -2610,7 +2610,7 @@ a.blog-chip-link:hover { background: var(--rd-gold); color: var(--rd-white); }
 .home-hero {
   min-height: auto;
   display:    block;
-  background:      linear-gradient(120deg, #2c5663 0%, #1c3d47 50%, #11272e 100%);
+  background:      linear-gradient(120deg, var(--rd-night-hi) 0%, var(--rd-night-mid) 50%, var(--rd-night) 100%);
   background-size: 220% 220%;
   animation:       heroGradientShift 8s ease-in-out infinite alternate;
   position:        relative;
@@ -3161,7 +3161,21 @@ a.blog-chip-link:hover { background: var(--rd-gold); color: var(--rd-white); }
    Namespaced with `rd-` + primitive class names; touches nothing above.
    ══════════════════════════════════════════════════════════════════════════ */
 :root {
+  /* The dark ramp. --rd-night is the floor and does not move: below it the
+     brand stops reading as teal and starts reading as near-black.
+
+     What moved is the CEILING. Every large dark surface runs a three-stop
+     gradient, and its first stop used to be #2c5663 — the lightest dark on the
+     site, and the one the eyebrows sit on. Gold could afford that, being warm
+     enough to separate from teal by hue alone. A blue accent cannot: at
+     #2c5663 the accent line managed 2.4:1, against 4.3:1 down at the floor,
+     which is why the hero eyebrow read dim while the same colour looked fine
+     lower on the page. Pulling the top two stops down restores the value gap
+     the hue change cost. The three stops keep even spacing so the gradient is
+     still legible as a gradient rather than a flat panel. */
   --rd-night:        #11272e;
+  --rd-night-mid:    #18353f;
+  --rd-night-hi:     #1f4450;
   --rd-night-2:      #1a363d;
   --rd-teal:         #254851;
   --rd-teal-lt:      #335C67;
@@ -3364,7 +3378,7 @@ html[data-nav="dark"] .burger span            { background: var(--rd-ivory); }
   display: grid; place-items: center;
   padding: 7rem 1.5rem 5rem;
   overflow: hidden;
-  background: radial-gradient(125% 90% at 50% 0%, #1c3d47 0%, var(--rd-night) 62%);
+  background: radial-gradient(125% 90% at 50% 0%, var(--rd-night-mid) 0%, var(--rd-night) 62%);
   color: var(--rd-on-night);
 }
 .hy-hero-engine {
@@ -3627,7 +3641,7 @@ html[data-nav="dark"] .burger span            { background: var(--rd-ivory); }
      the button is the same defect as one passing behind the heading. The three
      per-page closes all override this padding; they have no rosette. */
   position: relative; overflow: hidden; padding: 7rem 1.5rem 12rem; text-align: center; color: var(--rd-on-night);
-  background: linear-gradient(120deg, #2c5663 0%, #1c3d47 50%, #11272e 100%); background-size: 220% 220%;
+  background: linear-gradient(120deg, var(--rd-night-hi) 0%, var(--rd-night-mid) 50%, var(--rd-night) 100%); background-size: 220% 220%;
   animation: heroGradientShift 10s ease-in-out infinite alternate;
 }
 .hy-cta-rosette { position: absolute; top: 50%; left: 50%; width: min(70vh, 520px); height: min(70vh, 520px); transform: translate(-50%, -50%); opacity: .38; pointer-events: none; z-index: 0; }
@@ -4169,7 +4183,7 @@ html[data-nav="dark"] .burger span            { background: var(--rd-ivory); }
   position: absolute; inset: 0; border-radius: 11px; padding: 10px; display: flex;
   flex-direction: column; justify-content: flex-end; gap: 5px; box-shadow: 0 14px 30px rgba(0, 0, 0, .45);
 }
-.xa-ad.a0 { background: linear-gradient(150deg, #2c5663, #16323a); border: 1px solid rgb(var(--gx-line-rgb) / .3); }
+.xa-ad.a0 { background: linear-gradient(150deg, var(--rd-night-hi), #16323a); border: 1px solid rgb(var(--gx-line-rgb) / .3); }
 .xa-ad.a1 { background: var(--rd-ivory); }
 .xa-ad.a2 { background: linear-gradient(150deg, var(--gx-line), var(--gx-gold)); }
 .xa-ad-tag {
