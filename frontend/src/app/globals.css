@@ -5102,12 +5102,24 @@ html[data-nav="dark"] .burger span            { background: var(--rd-ivory); }
    h1 instead. */
 .ab-hero-inner { position: relative; z-index: 2; }
 /* Same bordered pill as the Signal-Board hero's eyebrow. */
+/* The inner-page hero eyebrow — shared by /about, /services, /faq and
+   /contact. Was a bordered pill; the border is gone and the text carries a rule
+   under it, matching .ff-pill on the homepage. Both names now lie: neither is a
+   pill. They stay because renaming would touch four components for no gain.
+
+   `border-bottom` on the shrink-wrapped inline-block rather than
+   `text-decoration: underline`: letter-spacing adds its share AFTER the final
+   glyph, so a rule drawn across the box overshoots on the right by one tracking
+   unit. margin-right pulls that back. /services is text-align:right and /faq is
+   centred, so the correction has to sit on the box rather than on the text —
+   it works the same at every alignment, and the ~1.4px it shifts a centred
+   eyebrow is below the threshold of noticing. */
 .ab-pill {
-  display: inline-block; margin-bottom: 1.5rem;
+  display: inline-block; margin-bottom: 1.5rem; margin-right: -.2em;
   font-family: var(--font-mono); font-size: .7rem; font-weight: 500;
   letter-spacing: .2em; text-transform: uppercase; color: var(--rd-gold-line);
-  border: 1px solid rgb(var(--rd-gold-line-rgb) / .34); border-radius: 999px;
-  padding: .5rem 1.15rem; max-width: 100%;
+  border-bottom: 1px solid rgb(var(--rd-gold-line-rgb) / .55);
+  padding: 0 0 .5rem; max-width: 100%;
 }
 .ab-hero-h1 {
   font-family: var(--font-serif); font-weight: 500;
