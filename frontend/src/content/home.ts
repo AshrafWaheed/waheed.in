@@ -20,7 +20,14 @@ export interface Heading {
 /* ─── Hero ─────────────────────────────────────────────────────── */
 export const hero = {
   bismillah: 'بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ',
-  eyebrow: 'Ihsan-Led Tech & Marketing for Halal, Impact-Driven Initiatives',
+  /* Shortened from 'Ihsan-Led Tech & Marketing for Halal, Impact-Driven
+     Initiatives'. At 63 characters it needed 676px on one line against a 620px
+     centre column, so it wrapped to three lines inside its own pill. Trimming
+     the qualifier was chosen over tightening the tracking or shrinking the
+     type — an eyebrow that has to be set smaller to fit is an eyebrow that is
+     too long. The dropped clause is not lost: "halal" and "impact-driven" both
+     carry in the sub directly beneath it. */
+  eyebrow: 'Ihsan-Led Tech & Marketing',
   headline: {
     lead: 'Scale your brand online',
     em: 'without compromising your values.',

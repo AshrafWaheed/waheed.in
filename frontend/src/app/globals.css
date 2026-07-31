@@ -3659,42 +3659,12 @@ html[data-nav="dark"] .burger span            { background: var(--rd-ivory); }
 
 
 /* ══════════════════════════════════════════════════════════════════════════
-   CINEMATIC VARIANT (/home2) — reuses .hy-* visuals; only new/override bits here
-   ══════════════════════════════════════════════════════════════════════════ */
-
-/* Hero engine — centered via grid (no translate) so GSAP scale/rotate stay clean */
-.cn-hero-engine { position: absolute; inset: 0; display: grid; place-items: center; z-index: 0; pointer-events: none; }
-.cn-hero-engine-inner { width: min(94vh, 860px); height: min(94vh, 860px); opacity: .5; transform-origin: center; }
-@media (max-width: 768px) { .cn-hero-engine-inner { width: 128vw; height: 128vw; opacity: .3; } }
-
-/* Trust strip — scroll-linked sweep (items reuse .hy-trust-item) */
-.cn-trust { overflow: hidden; background: var(--rd-night-2); border-top: 1px solid var(--rd-hairline); border-bottom: 1px solid var(--rd-hairline); padding: 1.15rem 0; }
-.cn-trust-track { display: flex; width: max-content; will-change: transform; }
-
-/* Expertise — reuse .hy-exp-card look, no hover; GSAP reveals cards per-centre */
-.cn-exp-card-wrap { flex: 0 0 clamp(300px, 30vw, 380px); border-radius: 16px; }
-.cn-exp-card { transition: none; }
-@media (max-width: 768px) { .cn-exp-card-wrap { flex: 0 0 80vw; scroll-snap-align: center; } }
-
-/* Audience — static/open rows, not clickable */
-.cn-aud-row { cursor: default; }
-
-/* Services — static featured lift via margin (won't fight Framer's y), no hover */
-.cn-svc-card-wrap { border-radius: 18px; }
-.cn-svc-card-wrap.featured { margin-top: -22px; }
-@media (max-width: 900px) {
-  .cn-svc-card-wrap { flex: 0 0 82vw; scroll-snap-align: center; }
-  .cn-svc-card-wrap.featured { margin-top: 0; }
-}
-
-/* Process — grounded principle along a faint textPath arc (Wahda flourish) */
-.cn-proc-arc { display: block; width: 100%; max-width: 460px; height: auto; margin-bottom: .5rem; overflow: visible; }
-.cn-proc-arc path { fill: none; stroke: var(--rd-gold-line); stroke-width: 1; opacity: .22; }
-.cn-proc-arc-text { font-family: var(--font-sans); font-size: 34px; letter-spacing: 2px; fill: var(--rd-gold-line); opacity: .9; }
-
-
-/* ══════════════════════════════════════════════════════════════════════════
-   TACTILE VARIANT (/home3) — reuses .hy-* visuals; only new/override bits here
+   TACTILE LAYER — reuses .hy-* visuals; only new/override bits here.
+   Named for the retired /home3 variant it was built for. What survives is
+   what the homepage promoted out of it: ExpertiseBento (.xp-/.xa-) and
+   IhsanProcessTactile (.tc-proc-*). Anything else here is a candidate for
+   removal, but needs checking rule by rule — unlike .cn-, this layer is
+   only PARTLY dead.
    ══════════════════════════════════════════════════════════════════════════ */
 
 /* Trust — hover brighten */
@@ -4790,12 +4760,25 @@ html[data-nav="dark"] .burger span            { background: var(--rd-ivory); }
 .ff-text .hy-bismillah { margin-bottom: .9rem; }
 /* Outcrowd's eyebrow is a bordered pill. Ours is a full line of copy, so it
    wraps to a soft rectangle rather than a true pill on narrow viewports. */
+/* The hero eyebrow. Was a bordered pill; the border is gone and the text
+   carries a rule under it instead.
+
+   The name is now a misnomer — it is not a pill any more — but it stays because
+   renaming would touch the component plus two responsive overrides for no gain.
+
+   `border-bottom` on the inline-block rather than `text-decoration: underline`,
+   because the box shrink-wraps the text and the rule can then be inset by the
+   trailing letter-space. Letter-spacing adds its 2.3px AFTER the final glyph,
+   so an underline drawn across the box would visibly overshoot on the right;
+   pulling the right edge in by one tracking unit and pushing the whole element
+   half that far right keeps the text optically centred and the rule flush. */
 .ff-pill {
   display: inline-block; margin: 0 auto 1.4rem;
+  margin-right: -.18em; transform: translateX(.09em);
   font-family: var(--font-mono); font-size: .68rem; font-weight: 500;
   letter-spacing: .18em; text-transform: uppercase; color: var(--rd-gold-line);
-  border: 1px solid rgb(var(--rd-gold-line-rgb) / .34); border-radius: 999px;
-  padding: .45rem 1.05rem; max-width: 100%;
+  border-bottom: 1px solid rgb(var(--rd-gold-line-rgb) / .55);
+  padding: 0 0 .5rem; max-width: 100%;
 }
 /* Smaller than .hy-hero-h1's 6vw/5rem: the centre track is ~620px here, not the
    940px B had, so the old scale wrapped to five lines. */
@@ -5007,7 +4990,7 @@ html[data-nav="dark"] .burger span            { background: var(--rd-ivory); }
 }
 @media (max-width: 620px) {
   .ff-hero { padding: 6.5rem 1.1rem 2.5rem; gap: 2rem .8rem; min-height: 0; }
-  .ff-pill { font-size: .6rem; letter-spacing: .14em; padding: .42rem .85rem; margin-bottom: 1.1rem; }
+  .ff-pill { font-size: .6rem; letter-spacing: .14em; margin-right: -.14em; transform: translateX(.07em); padding: 0 0 .45rem; margin-bottom: 1.1rem; }
   .ff-sub { margin-bottom: 1.5rem; }
   .ff-flank { aspect-ratio: 320 / 400; }
   .ff-card { border-radius: 16px; }

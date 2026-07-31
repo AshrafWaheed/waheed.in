@@ -1,10 +1,14 @@
 'use client';
 
 /**
- * HeroFoundersFlank — Direction C for `/`.
+ * HeroFoundersFlank — the hero for `/`, and now the only one.
  *
- * The reconciliation of A (/home3's HeroStudioWindow: the founders ARE the
- * anchor) and B (HeroSignalBoard: centred copy over a collage).
+ * It was Direction C: the reconciliation of A (HeroStudioWindow — the founders
+ * ARE the anchor) and B (HeroSignalBoard — centred copy over a collage). Both
+ * of those are gone, deleted with the /home2 and /home3 variant routes, so the
+ * comparison below is history rather than a pointer to live code. It is kept
+ * because it records WHY this hero is shaped the way it is; git has the two
+ * alternatives if anyone needs to see them.
  *
  * B's problem was purely one of axis. It stacked the collage BELOW the copy, so
  * the hero measured 1593px — 1.77 viewports at 1440x900, against /home3's 1.01.
