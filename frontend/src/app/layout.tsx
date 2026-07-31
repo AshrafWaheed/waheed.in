@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Script from "next/script";
 import { headers } from "next/headers";
-import { Amiri, Jost } from "next/font/google";
+import { Amiri, JetBrains_Mono, Space_Grotesk } from "next/font/google";
 import ScrollProgress  from "@/components/ScrollProgress";
 import ScrollReveal    from "@/components/ScrollReveal";
 import Nav             from "@/components/Nav";
@@ -11,37 +11,50 @@ import PreviewBanner   from "@/components/PreviewBanner";
 import "./globals.css";
 
 /**
- * Jost is now the ONLY Latin face on the site.
+ * Space Grotesk is the ONLY Latin TEXT face — display and body both.
  *
- * Outcrowd runs one typeface at one weight for everything — h1 through h4, body,
- * links, buttons — with hierarchy carried by size alone (reference/outcrowd.io.md
- * §1.1, §3). Their face is ITC Avant Garde Gothic Std Md, a commercial Monotype
- * licence whose self-hosted files are not ours to lift; Jost is the Futura
- * revival the teardown picks as the closest free stand-in.
+ * That keeps the one-typeface / one-weight rule the design was built on
+ * (reference/outcrowd.io.md §1.1, §3): hierarchy from SIZE alone, never from
+ * face or weight. Jost held the slot originally, then Fredoka; Space Grotesk
+ * has enough character to carry a 3.6rem hero — the single-storey `g`, the wide
+ * apertures — while staying clean at the .85rem body size, which is the
+ * requirement that rules out most faces with real personality.
  *
- * No `weight` array: Jost is a variable font, so one file covers the whole range
- * (Next recommends this — see node_modules/next/dist/docs/.../font.md). Italic is
- * loaded not for our own design, which uses none, but so author `<em>` inside
- * `.blog-content` renders as a real italic rather than a synthesised oblique.
- *
- * Cormorant Garamond and DM Sans were removed here, not merely unhooked, so they
- * stop being downloaded. Restoring them is a re-add of two loaders plus the two
- * token lines in globals.css.
+ * No `weight` array: variable font, one file covers the range.
  */
-const jost = Jost({
-  variable: "--font-jost",
+const grotesk = Space_Grotesk({
+  variable: "--font-grotesk",
   subsets: ["latin"],
-  style: ["normal", "italic"],
   display: "swap",
 });
 
 /**
- * Arabic has no Jost coverage, so Amiri stays — the only survivor of the old
+ * JetBrains Mono is the LABEL TIER, and nothing else.
+ *
+ * What reads as "technical" on a page is not the headline face, it is the small
+ * letterspaced uppercase: eyebrows, badges, the tier HUDs, the craft artifacts'
+ * chrome, ORGANIC · DIRECT · REFERRAL, form labels. There are ~47 such rules
+ * here and none runs longer than four words, so a monospace costs nothing in
+ * reading speed and buys the whole signal.
+ *
+ * It is deliberately a second TIER, not a second VOICE — it never touches a
+ * sentence, a heading or a button. That is what keeps the one-face rule above
+ * honest rather than quietly broken. Applied through --font-mono in
+ * globals.css; new labels should reference that token, not the family.
+ */
+const mono = JetBrains_Mono({
+  variable: "--font-mono-jb",
+  subsets: ["latin"],
+  display: "swap",
+});
+
+/**
+ * Arabic has no Space Grotesk coverage, so Amiri stays — the only survivor of the old
  * stack, scoped to [lang="ar"] / .arabic in globals.css.
  *
  * Trimmed to arabic/400/normal as a direct consequence of the one-face rule.
  * It used to carry the latin subset, a 700 cut and italics because it sat in a
- * mixed stack; now Jost covers every latin glyph, nothing on the site is bold
+ * mixed stack; now Space Grotesk covers every latin glyph, nothing on the site is bold
  * and nothing is italic, so those seven extra files were pure dead weight —
  * they were most of a 563 KB font payload for a handful of Arabic words.
  * Note the 700 cut was already unreachable: body sets weight 500, and CSS font
@@ -90,7 +103,7 @@ export default async function RootLayout({
   return (
     <html
       lang="en-GB"
-      className={`${jost.variable} ${amiri.variable} h-full`}
+      className={`${grotesk.variable} ${mono.variable} ${amiri.variable} h-full`}
     >
       <body className="min-h-full flex flex-col antialiased">
         {showChrome ? (
