@@ -3622,7 +3622,11 @@ html[data-nav="dark"] .burger span            { background: var(--rd-ivory); }
 
 /* ── §10 Final CTA (dark, animated gradient) ─────────────────────── */
 .hy-cta {
-  position: relative; overflow: hidden; padding: 7rem 1.5rem; text-align: center; color: var(--rd-on-night);
+  /* The extra bottom padding is the rosette's room. It bleeds up from the
+     bottom edge, and the copy has to clear it entirely — a petal passing behind
+     the button is the same defect as one passing behind the heading. The three
+     per-page closes all override this padding; they have no rosette. */
+  position: relative; overflow: hidden; padding: 7rem 1.5rem 12rem; text-align: center; color: var(--rd-on-night);
   background: linear-gradient(120deg, #2c5663 0%, #1c3d47 50%, #11272e 100%); background-size: 220% 220%;
   animation: heroGradientShift 10s ease-in-out infinite alternate;
 }
@@ -5872,4 +5876,82 @@ html[data-nav="dark"] .burger span            { background: var(--rd-ivory); }
      middle of the field survives — which is where the filaments are already
      holed out. Trim the rest so the top/bottom pair can't crowd the copy. */
   .bcur-svg { opacity: .7; }
+}
+
+
+/* ══════════════════════════════════════════════════════════════════════════
+   CLOSING CTAs — one per page, deliberately not one shape
+
+   All four pages used to end on the identical block: eyebrow → heading → body
+   → button, centred, with a ConvergenceRosette at .38 opacity dead-centre
+   behind the copy. That was the same error the girih engine made behind the
+   manifesto quote — eight straight petal edges crossing a 3.6rem heading and
+   a 1.05rem paragraph, so the type sat ON the geometry rather than in front
+   of it. Worse, meeting the same gesture at the bottom of four different
+   pages made the close read as chrome rather than as an ask.
+
+   The rosette is now the HOMEPAGE's alone and bleeds off the bottom edge.
+   The other three closes carry a composition that answers what precedes them:
+   /about a split (it follows the outro's own rosette, so a second one would
+   be repetition), /services an inset panel (it is the escape hatch after five
+   ladder rungs and should read like a slip you fill in), /faq a compact bar
+   (nobody reaching the end of an FAQ wants another full-height hero).
+   ══════════════════════════════════════════════════════════════════════════ */
+
+/* Homepage only. Bleeds up from the bottom edge and fades toward the copy, so
+   the mark still closes the page without a petal crossing a word. */
+.hy-cta-rosette {
+  top: auto; bottom: -62%; left: 50%;
+  width: min(96vh, 780px); height: min(96vh, 780px);
+  transform: translateX(-50%); opacity: .15;
+  -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 52%);
+          mask-image: linear-gradient(180deg, transparent 0%, #000 52%);
+}
+
+/* ── /about — split: the ask on the left, the action on the right ────────── */
+.ab-cta { text-align: left; padding: 6rem 1.5rem 6.5rem; }
+.ab-cta-grid {
+  position: relative; z-index: 1;
+  display: grid; grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end; gap: 3rem;
+  max-width: 1180px; margin: 0 auto;
+  padding-top: 2.8rem; border-top: 1px solid var(--rd-hairline);
+}
+.ab-cta .hy-cta-h { max-width: 17ch; }
+.ab-cta .hy-cta-acts, .ab-cta-acts { margin-top: 0; }
+
+/* ── /services — an inset panel: the escape hatch, shaped like a request ─── */
+.sv-cta { padding: 6rem 1.5rem; }
+.sv-cta-panel {
+  position: relative; z-index: 1; text-align: left;
+  display: grid; grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center; gap: 2.6rem;
+  max-width: 960px; margin: 0 auto; padding: 2.9rem 3rem;
+  border: 1px solid var(--rd-hairline); border-radius: 22px;
+  background: rgb(var(--rd-ivory-rgb) / .04);
+}
+.sv-cta .hy-cta-h { font-size: clamp(1.7rem, 3vw, 2.4rem); }
+.sv-cta .hy-cta-body { margin: .9rem 0 0; max-width: 46ch; }
+.sv-cta .hy-cta-acts { margin: 0; }
+
+/* ── /faq — a bar, not a hero. It follows a long list of questions. ──────── */
+.fq-cta { padding: 4.2rem 1.5rem 4.6rem; }
+.fq-cta-row {
+  position: relative; z-index: 1; text-align: left;
+  display: grid; grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center; gap: 2.8rem;
+  max-width: 1180px; margin: 0 auto;
+}
+.fq-cta .hy-cta-h { font-size: clamp(1.55rem, 2.8vw, 2.25rem); }
+.fq-cta .hy-cta-body { margin: .7rem 0 0; max-width: 52ch; font-size: .98rem; }
+.fq-cta .hy-cta-acts { margin: 0; }
+
+/* Two columns need a real second column. Below this the button would be
+   squeezed against the copy, so all three stack and go back to reading
+   top-to-bottom — which is the one thing every close still shares. */
+@media (max-width: 880px) {
+  .ab-cta-grid, .sv-cta-panel, .fq-cta-row { grid-template-columns: 1fr; align-items: start; }
+  .ab-cta-grid { gap: 2.2rem; }
+  .sv-cta-panel { gap: 1.8rem; padding: 2.2rem 1.7rem; }
+  .fq-cta-row { gap: 1.9rem; }
 }

@@ -7,34 +7,36 @@
  * with a small teal button — easy to scroll straight past, despite being the
  * escape hatch for everyone who did not see themselves in the five rungs.
  *
- * Its copy happens to map exactly onto the shape of the homepage's closing CTA
- * (tag → heading → paragraph → button), so it reuses `.hy-cta*` outright: same
- * converging rosette, same animated gradient, same cursor-fill button. All three
- * top-level pages now end on the identical gesture.
+ * It is now an INSET PANEL rather than a centred stack. This section is the
+ * escape hatch for everyone who did not see themselves in the five rungs above,
+ * so it should read like a slip you fill in — bordered, left-aligned, its button
+ * on the same baseline as the ask — and not like a second hero. It briefly WAS
+ * a clone of the homepage close, rosette and all, which made four different
+ * pages end on one gesture and put petal edges behind the heading.
  *
  * Copy is verbatim from content/services.ts.
  */
 import SplitReveal from '@/components/motion/SplitReveal';
 import ExplodeButton from '@/components/motion/ExplodeButton';
-import ConvergenceRosette from '@/components/graphics/ConvergenceRosette';
 import { customPlan } from '@/content/services';
 
 export default function CustomPlanCta() {
   return (
-    <section className="hy-cta" data-section-color="dark">
-      <div className="hy-cta-rosette" aria-hidden="true">
-        <ConvergenceRosette />
-      </div>
-      <div className="cnt hy-cta-inner">
-        <span className="hy-cta-eyebrow">{customPlan.eyebrow}</span>
-        <h2 className="hy-cta-h">
-          <SplitReveal text={customPlan.heading} by="word" />
-        </h2>
-        <p className="hy-cta-body">{customPlan.body}</p>
-        <div className="hy-cta-acts">
-          <ExplodeButton href={customPlan.cta.href} className="btn btn-gold">
-            {customPlan.cta.label}
-          </ExplodeButton>
+    <section className="hy-cta sv-cta" data-section-color="dark">
+      <div className="cnt">
+        <div className="sv-cta-panel">
+          <div>
+            <span className="hy-cta-eyebrow">{customPlan.eyebrow}</span>
+            <h2 className="hy-cta-h">
+              <SplitReveal text={customPlan.heading} by="word" />
+            </h2>
+            <p className="hy-cta-body">{customPlan.body}</p>
+          </div>
+          <div className="hy-cta-acts">
+            <ExplodeButton href={customPlan.cta.href} className="btn btn-gold">
+              {customPlan.cta.label}
+            </ExplodeButton>
+          </div>
         </div>
       </div>
     </section>
