@@ -110,7 +110,7 @@ export default function Footer({ blogPublic = false }: { blogPublic?: boolean })
           </p>
           {/* Ownership + title disclaimer. Sits under the copyright line rather than
               on its own page, so it travels with every route that renders the chrome —
-              including /about and /story, where "Co-Founder" is actually used.
+              including /about, where "Co-Founder" is actually used.
 
               The nowrap on the term: its hyphen is a legitimate break point, but
               splitting the very title being disclaimed across two lines reads like a

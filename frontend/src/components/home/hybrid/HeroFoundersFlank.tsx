@@ -173,7 +173,7 @@ export default function HeroFoundersFlank() {
       {/* ── left flank: the woman, sitting low on ivory ───────────────────── */}
       <div className="ff-flank ff-flank--l">
         <Link
-          href="/story"
+          href="/about"
           className="ff-card ff-card--woman ff-lay"
           style={v({ '--k': 1, '--d': '.5s' })}
           aria-label="Meet the founders"
@@ -223,7 +223,7 @@ export default function HeroFoundersFlank() {
       {/* ── right flank: the man, riding high on gold-soft ────────────────── */}
       <div className="ff-flank ff-flank--r">
         <Link
-          href="/story"
+          href="/about"
           className="ff-card ff-card--man ff-lay"
           style={v({ '--k': 1.3, '--d': '.66s' })}
           aria-label="Our story"
