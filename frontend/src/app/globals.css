@@ -5870,3 +5870,273 @@ html[data-nav="dark"] .burger span            { background: var(--rd-ivory); }
   .sv-cta-panel { gap: 1.8rem; padding: 2.2rem 1.7rem; }
   .fq-cta-row { gap: 1.9rem; }
 }
+
+
+/* ══════════════════════════════════════════════════════════════════════════
+   BLOG — /blog and /blog/[slug]
+
+   The last surfaces still on the pre-redesign vocabulary: a centred serif
+   heading on flat white, cards that were a bordered box with the image butted
+   against the copy. This brings them onto the same system as every other page
+   — dark hero over cool off-white body, mono label tier, the accent for
+   structure — and gives the metadata somewhere to live now that posts actually
+   carry an author, a category and tags.
+
+   `.blog-content` is deliberately NOT renamed. It styles author HTML coming out
+   of the editor, so its class names are part of a contract with stored content,
+   not with this layout.
+   ══════════════════════════════════════════════════════════════════════════ */
+
+/* ── hero (shared by the index and the post page) ────────────────────────── */
+.bl-hero, .bl-post-hero {
+  position: relative; overflow: hidden;
+  background: linear-gradient(120deg, var(--rd-night-hi) 0%, var(--rd-night-mid) 50%, var(--rd-night) 100%);
+  color: var(--rd-on-night);
+}
+.bl-hero { padding: 7rem 0 5.5rem; text-align: center; }
+.bl-post-hero { padding: 6rem 0 4rem; }
+
+/* Edge-anchored and masked on its text-facing side, same as every other hero
+   on the site — the engine is a margin ornament, never a backdrop for words. */
+.bl-hero-engine {
+  position: absolute; top: 50%; right: -18%;
+  width: min(84vh, 680px); height: min(84vh, 680px);
+  translate: 0 -50%; opacity: .22; pointer-events: none; z-index: 0;
+  -webkit-mask-image: linear-gradient(90deg, transparent 2%, rgba(0,0,0,.3) 30%, #000 66%);
+          mask-image: linear-gradient(90deg, transparent 2%, rgba(0,0,0,.3) 30%, #000 66%);
+}
+.bl-hero-inner, .bl-post-hero-inner { position: relative; z-index: 1; }
+.bl-hero-inner { max-width: 720px; }
+.bl-post-hero-inner { max-width: 860px; }
+
+.bl-hero-h1 {
+  font-family: var(--font-serif); font-weight: 500; line-height: 1.04;
+  font-size: clamp(2.8rem, 7vw, 5rem); color: var(--rd-white); margin: 0;
+}
+.bl-hero-sub {
+  margin: 1.2rem auto 0; max-width: 44ch;
+  color: var(--rd-on-night-dim); font-size: 1.05rem; line-height: 1.7;
+}
+
+/* ── post hero ───────────────────────────────────────────────────────────── */
+/* `block`, not `inline-block`: the category chip follows it in the markup and
+   the two were sharing a line, the chip overlapping the link's tail. */
+.bl-back {
+  display: block; width: fit-content; margin-bottom: 1.6rem;
+  font-family: var(--font-mono); font-size: .68rem; letter-spacing: .16em;
+  text-transform: uppercase; color: var(--rd-on-night-dim); text-decoration: none;
+  transition: color .25s ease;
+}
+.bl-back:hover { color: var(--rd-gold-line); }
+.bl-post-h1 {
+  font-family: var(--font-serif); font-weight: 500; line-height: 1.08;
+  font-size: clamp(2.1rem, 4.6vw, 3.5rem); color: var(--rd-white);
+  margin: 1.1rem 0 0; max-width: 20ch;
+}
+.bl-post-standfirst {
+  margin: 1.1rem 0 0; max-width: 52ch;
+  color: var(--rd-on-night-dim); font-size: 1.1rem; line-height: 1.65;
+}
+
+/* ── byline: avatar · name · date · read time ────────────────────────────── */
+.bl-byline {
+  display: flex; align-items: center; flex-wrap: wrap; gap: .55rem;
+  margin: 1.1rem 0 0;
+  font-family: var(--font-mono); font-size: .68rem; letter-spacing: .08em;
+  text-transform: uppercase; color: #7d8f93;
+}
+.bl-byline--hero { margin-top: 1.8rem; color: var(--rd-on-night-dim); }
+.bl-byline-name { color: inherit; }
+.bl-byline-sep { width: 3px; height: 3px; border-radius: 50%; background: currentColor; opacity: .5; }
+.bl-avatar {
+  display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%;
+  background: rgb(var(--rd-gold-line-rgb) / .16); color: var(--rd-gold-line);
+  font-size: .62rem; letter-spacing: .04em; flex: none;
+}
+.bl-byline--hero .bl-avatar { background: rgb(var(--rd-gold-line-rgb) / .22); }
+
+/* ── chips ───────────────────────────────────────────────────────────────── */
+.bl-chip {
+  display: inline-block; padding: .3rem .7rem; border-radius: 999px;
+  font-family: var(--font-mono); font-size: .6rem; letter-spacing: .14em;
+  text-transform: uppercase; text-decoration: none;
+  background: var(--rd-gold-bloom); color: var(--rd-gold-ink);
+}
+/* On a cover the chip floats; give it room from the corner radius. */
+.bl-card-cover .bl-chip, .bl-lead-cover .bl-chip { position: absolute; left: .9rem; bottom: .9rem; z-index: 2; }
+.bl-chip--flat { background: rgb(var(--rd-gold-rgb) / .12); color: var(--rd-gold); }
+.bl-chip--link { transition: background .25s ease; }
+.bl-chip--link:hover { background: var(--rd-white); }
+
+/* ── index body ──────────────────────────────────────────────────────────── */
+.bl-body { background: var(--rd-ivory); padding: 4.5rem 0 6.5rem; }
+.bl-empty { color: #5b6b6f; font-size: 1.05rem; }
+
+.bl-filter {
+  display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+  margin-bottom: 2.6rem; padding-bottom: 1.1rem;
+  border-bottom: 1px solid var(--rd-border);
+}
+.bl-filter-label {
+  font-family: var(--font-mono); font-size: .68rem; letter-spacing: .16em;
+  text-transform: uppercase; color: #7d8f93;
+}
+.bl-filter-label b { color: var(--rd-gold); font-weight: 500; margin-left: .6rem; }
+.bl-filter-clear {
+  font-family: var(--font-mono); font-size: .68rem; letter-spacing: .12em;
+  text-transform: uppercase; color: #7d8f93; text-decoration: none;
+  transition: color .25s ease;
+}
+.bl-filter-clear:hover { color: var(--rd-gold); }
+
+/* ── lead article ────────────────────────────────────────────────────────── */
+/* Two columns at a deliberate 1.15/1 — the image is the hook, but a 50/50 split
+   makes the pair read as two cards rather than one article. */
+.bl-lead {
+  display: grid; grid-template-columns: 1.15fr 1fr; align-items: stretch;
+  gap: 0; margin-bottom: 3.5rem; text-decoration: none;
+  background: var(--rd-white); border: 1px solid var(--rd-border);
+  border-radius: 22px; overflow: hidden;
+  transition: transform .35s ease, box-shadow .35s ease, border-color .35s ease;
+}
+.bl-lead:hover {
+  transform: translateY(-4px); border-color: rgb(var(--rd-gold-line-rgb) / .4);
+  box-shadow: 0 22px 48px rgba(17, 39, 46, .1);
+}
+.bl-lead-cover { position: relative; min-height: 320px; overflow: hidden; background: var(--rd-night); }
+.bl-lead-cover img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .6s ease; }
+.bl-lead:hover .bl-lead-cover img { transform: scale(1.04); }
+.bl-lead-body { padding: 2.6rem 2.8rem; display: flex; flex-direction: column; justify-content: center; }
+.bl-lead-flag {
+  display: flex; align-items: center; gap: .7rem; margin: 0 0 1rem;
+  font-family: var(--font-mono); font-size: .6rem; letter-spacing: .18em;
+  text-transform: uppercase; color: var(--rd-gold-line);
+}
+.bl-lead-title {
+  font-family: var(--font-serif); font-size: clamp(1.6rem, 2.6vw, 2.2rem);
+  font-weight: 500; line-height: 1.16; color: #254851; margin: 0;
+}
+.bl-lead-excerpt { margin: .9rem 0 0; color: #5b6b6f; font-size: 1.02rem; line-height: 1.7; max-width: 42ch; }
+.bl-lead-cue {
+  margin-top: 1.6rem; font-family: var(--font-mono); font-size: .68rem;
+  letter-spacing: .14em; text-transform: uppercase; color: var(--rd-gold);
+}
+
+/* ── card grid ───────────────────────────────────────────────────────────── */
+.bl-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(310px, 1fr)); gap: 2rem; }
+.bl-card {
+  display: flex; flex-direction: column; text-decoration: none;
+  background: var(--rd-white); border: 1px solid var(--rd-border);
+  border-radius: 18px; overflow: hidden;
+  transition: transform .35s ease, box-shadow .35s ease, border-color .35s ease;
+}
+.bl-card:hover {
+  transform: translateY(-4px); border-color: rgb(var(--rd-gold-line-rgb) / .4);
+  box-shadow: 0 18px 40px rgba(17, 39, 46, .1);
+}
+.bl-card-cover { position: relative; aspect-ratio: 16 / 10; overflow: hidden; background: var(--rd-night); }
+.bl-card-cover img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .6s ease; }
+.bl-card:hover .bl-card-cover img { transform: scale(1.05); }
+/* Fallback for a post with no cover: the mark, not an empty grey box. */
+.bl-card-nocover {
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(60% 60% at 50% 45%, rgb(var(--rd-gold-line-rgb) / .18), transparent 70%),
+    linear-gradient(140deg, var(--rd-night-hi), var(--rd-night));
+}
+.bl-card-body { padding: 1.5rem 1.6rem 1.7rem; display: flex; flex-direction: column; flex: 1; }
+.bl-card-title {
+  font-family: var(--font-serif); font-size: 1.32rem; font-weight: 500;
+  line-height: 1.22; color: #254851; margin: 0;
+}
+.bl-card-excerpt { margin: .7rem 0 0; color: #5b6b6f; font-size: .95rem; line-height: 1.65; flex: 1; }
+
+/* ── pager ───────────────────────────────────────────────────────────────── */
+.bl-pager {
+  display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+  margin-top: 3.5rem; padding-top: 1.6rem; border-top: 1px solid var(--rd-border);
+  font-family: var(--font-mono); font-size: .7rem; letter-spacing: .14em; text-transform: uppercase;
+}
+.bl-pager a { color: var(--rd-gold); text-decoration: none; transition: color .25s ease; }
+.bl-pager a:hover { color: var(--rd-gold-ink); }
+.bl-pager .is-off { color: #b3bfc2; }
+.bl-pager-count { color: #7d8f93; }
+
+/* ── post body ───────────────────────────────────────────────────────────── */
+.bl-post { background: var(--rd-ivory); padding: 0 0 5rem; }
+/* The negative margin is the stitch: the cover is pulled up into the dark hero
+   so the two sections are joined by the image instead of meeting at a hard
+   edge. It is the only element allowed to cross that boundary. */
+/* Capped rather than free-height. At the column's full width a 16:9 cover is
+   ~650px tall, which pushed the first paragraph off the fold entirely — the
+   image stopped being a header and became the page. 21:9 crops it back to a
+   banner; object-fit keeps any aspect ratio an author uploads from distorting. */
+.bl-post-cover {
+  margin: -3.5rem 0 0; border-radius: 20px; overflow: hidden;
+  box-shadow: 0 26px 60px rgba(17, 39, 46, .28);
+  position: relative; z-index: 2; aspect-ratio: 21 / 9;
+}
+.bl-post-cover img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.bl-post-col { max-width: 720px; padding-top: 3.5rem; }
+.blog-content { max-width: 68ch; }
+
+.bl-tags {
+  display: flex; align-items: center; flex-wrap: wrap; gap: .6rem;
+  margin-top: 3rem; padding-top: 1.6rem; border-top: 1px solid var(--rd-border);
+}
+.bl-tags-lbl {
+  font-family: var(--font-mono); font-size: .62rem; letter-spacing: .16em;
+  text-transform: uppercase; color: #7d8f93; margin-right: .4rem;
+}
+.bl-tag {
+  padding: .32rem .75rem; border-radius: 999px; text-decoration: none;
+  border: 1px solid var(--rd-border); background: var(--rd-white);
+  font-family: var(--font-mono); font-size: .64rem; letter-spacing: .1em;
+  text-transform: uppercase; color: #5b6b6f;
+  transition: border-color .25s ease, color .25s ease;
+}
+.bl-tag:hover { border-color: rgb(var(--rd-gold-line-rgb) / .5); color: var(--rd-gold); }
+
+/* ── adjacent ────────────────────────────────────────────────────────────── */
+.bl-adjacent { display: grid; grid-template-columns: 1fr 1fr; gap: 1.4rem; margin-top: 4rem; }
+.bl-adj {
+  display: flex; flex-direction: column; gap: .5rem; padding: 1.5rem 1.7rem;
+  background: var(--rd-white); border: 1px solid var(--rd-border);
+  border-radius: 16px; text-decoration: none;
+  transition: border-color .3s ease, transform .3s ease;
+}
+.bl-adj:hover { border-color: rgb(var(--rd-gold-line-rgb) / .45); transform: translateY(-3px); }
+.bl-adj--next { text-align: right; }
+.bl-adj-dir {
+  font-family: var(--font-mono); font-size: .62rem; letter-spacing: .16em;
+  text-transform: uppercase; color: var(--rd-gold-line);
+}
+.bl-adj-title { font-family: var(--font-serif); font-size: 1.1rem; font-weight: 500; color: #254851; line-height: 1.3; }
+
+/* ── related ─────────────────────────────────────────────────────────────── */
+.bl-related { background: var(--rd-ivory-dk); padding: 4.5rem 0 5.5rem; }
+.bl-related-h {
+  font-family: var(--font-serif); font-size: 1.8rem; font-weight: 500;
+  color: #254851; margin: 0 0 2rem;
+}
+
+/* ── responsive ──────────────────────────────────────────────────────────── */
+@media (max-width: 900px) {
+  /* The lead's two columns stop being a lead below this — the image would be a
+     letterbox strip. Stack it and it simply becomes the first, larger card. */
+  .bl-lead { grid-template-columns: 1fr; }
+  .bl-lead-cover { min-height: 0; aspect-ratio: 16 / 9; }
+  .bl-lead-body { padding: 1.9rem 1.8rem 2.1rem; }
+  .bl-hero-engine { right: -34%; opacity: .16; }
+  .bl-adjacent { grid-template-columns: 1fr; }
+  .bl-adj--next { text-align: left; }
+}
+@media (max-width: 640px) {
+  .bl-hero { padding: 5rem 0 4rem; }
+  .bl-post-hero { padding: 4.5rem 0 3.5rem; }
+  .bl-body { padding: 3rem 0 4.5rem; }
+  .bl-post-cover { margin-top: -2rem; border-radius: 14px; aspect-ratio: 16 / 10; }
+  .bl-post-col { padding-top: 2.5rem; }
+  .bl-grid { grid-template-columns: 1fr; gap: 1.5rem; }
+  .bl-hero-engine { width: 120vw; height: 120vw; right: -46%; opacity: .12; }
+}

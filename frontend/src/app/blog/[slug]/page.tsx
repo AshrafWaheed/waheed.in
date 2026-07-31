@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
+import GirihEngine from '@/components/graphics/GirihEngine';
 import { laravelFetch } from '@/lib/laravel';
 
 export const dynamic = 'force-dynamic';
@@ -45,6 +46,12 @@ type PostEnvelope = {
 function absUrl(u: string | null): string | undefined {
   if (!u) return undefined;
   return u.startsWith('/') ? SITE + u : u;
+}
+
+/** Two letters at most — the avatar is 30px and a third initial turns to mush. */
+function initials(name: string | null): string {
+  if (!name) return '·';
+  return name.trim().split(/\s+/).slice(0, 2).map((w) => w[0]!.toUpperCase()).join('');
 }
 
 function fmt(iso: string | null): string {
@@ -118,91 +125,132 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
   };
 
   return (
-    <main className="blog-wrap">
+    <main>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
-      <article className="blog-article">
-        <p className="blog-back">
-          <Link href="/blog">← All insights</Link>
-        </p>
-        <header className="blog-article-head">
+
+      <header className="bl-post-hero" data-section-color="dark">
+        <div className="bl-hero-engine" aria-hidden="true">
+          <GirihEngine draw="mount" spin />
+        </div>
+        <div className="cnt bl-post-hero-inner">
+          <Link href="/blog" className="bl-back">← All insights</Link>
+
           {post.category && (
-            <Link href={`/blog?category=${post.category.slug}`} className="blog-chip blog-chip-link">
+            <Link href={`/blog?category=${post.category.slug}`} className="bl-chip bl-chip--link">
               {post.category.name}
             </Link>
           )}
-          <h1>{post.title}</h1>
-          <p className="blog-article-meta">
-            {post.author?.name ? `${post.author.name} · ` : ''}
-            {fmt(post.published_at)}
-            {post.reading_mins ? ` · ${post.reading_mins} min read` : ''}
-          </p>
-        </header>
 
+          <h1 className="bl-post-h1">{post.title}</h1>
+          {post.excerpt && <p className="bl-post-standfirst">{post.excerpt}</p>}
+
+          <p className="bl-byline bl-byline--hero">
+            {post.author?.name && (
+              <>
+                <span className="bl-avatar" aria-hidden="true">{initials(post.author.name)}</span>
+                <span className="bl-byline-name">{post.author.name}</span>
+                <span className="bl-byline-sep" aria-hidden="true" />
+              </>
+            )}
+            <time dateTime={post.published_at ?? undefined}>{fmt(post.published_at)}</time>
+            {post.reading_mins ? (
+              <>
+                <span className="bl-byline-sep" aria-hidden="true" />
+                <span>{post.reading_mins} min read</span>
+              </>
+            ) : null}
+          </p>
+        </div>
+      </header>
+
+      <article className="bl-post" data-section-color="light">
+        {/* The cover straddles the hero/body boundary — it is pulled up into the
+            dark section so the two halves of the page are stitched by the image
+            rather than butted against each other. */}
         {post.cover_image && (
-          <div className="blog-article-cover">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={post.cover_image} alt={post.title} />
+          <div className="cnt">
+            <figure className="bl-post-cover">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={post.cover_image} alt="" />
+            </figure>
           </div>
         )}
 
-        {/* body_html is sanitised server-side (mews/purifier) on save. */}
-        <div className="blog-content" dangerouslySetInnerHTML={{ __html: post.body_html }} />
+        <div className="cnt bl-post-col">
+          {/* body_html is sanitised server-side (mews/purifier) on save. */}
+          <div className="blog-content" dangerouslySetInnerHTML={{ __html: post.body_html }} />
 
-        {post.tags.length > 0 && (
-          <footer className="blog-tags" aria-label="Tags">
-            {post.tags.map((t) => (
-              <Link key={t.slug} href={`/blog?tag=${t.slug}`} className="blog-chip blog-chip-link">
-                #{t.name}
-              </Link>
-            ))}
-          </footer>
+          {post.tags.length > 0 && (
+            <footer className="bl-tags" aria-label="Tags">
+              <span className="bl-tags-lbl">Filed under</span>
+              {post.tags.map((t) => (
+                <Link key={t.slug} href={`/blog?tag=${t.slug}`} className="bl-tag">
+                  {t.name}
+                </Link>
+              ))}
+            </footer>
+          )}
+        </div>
+
+        {(prev || next) && (
+          <div className="cnt">
+            <nav className="bl-adjacent" aria-label="More insights">
+              {prev ? (
+                <Link href={`/blog/${prev.slug}`} className="bl-adj bl-adj--prev">
+                  <span className="bl-adj-dir">← Previous</span>
+                  <span className="bl-adj-title">{prev.title}</span>
+                </Link>
+              ) : <span />}
+              {next ? (
+                <Link href={`/blog/${next.slug}`} className="bl-adj bl-adj--next">
+                  <span className="bl-adj-dir">Next →</span>
+                  <span className="bl-adj-title">{next.title}</span>
+                </Link>
+              ) : <span />}
+            </nav>
+          </div>
         )}
       </article>
 
-      {(prev || next) && (
-        <nav className="blog-adjacent" aria-label="More insights">
-          {prev ? (
-            <Link href={`/blog/${prev.slug}`} className="blog-adjacent-link blog-adjacent-prev">
-              <span className="blog-adjacent-dir">← Previous</span>
-              <span className="blog-adjacent-title">{prev.title}</span>
-            </Link>
-          ) : (
-            <span />
-          )}
-          {next ? (
-            <Link href={`/blog/${next.slug}`} className="blog-adjacent-link blog-adjacent-next">
-              <span className="blog-adjacent-dir">Next →</span>
-              <span className="blog-adjacent-title">{next.title}</span>
-            </Link>
-          ) : (
-            <span />
-          )}
-        </nav>
-      )}
-
       {related.length > 0 && (
-        <section className="blog-related" aria-labelledby="related-heading">
-          <h2 id="related-heading" className="blog-related-heading">More insights</h2>
-          <div className="blog-grid">
-            {related.map((p) => (
-              <Link key={p.slug} href={`/blog/${p.slug}`} className="blog-card">
-                {p.cover_image && (
-                  <div className="blog-card-cover">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={p.cover_image} alt={p.title} loading="lazy" />
+        <section className="bl-related" data-section-color="light" aria-labelledby="related-heading">
+          <div className="cnt">
+            <h2 id="related-heading" className="bl-related-h">More insights</h2>
+            <div className="bl-grid">
+              {related.map((p) => (
+                <Link key={p.slug} href={`/blog/${p.slug}`} className="bl-card">
+                  <div className="bl-card-cover">
+                    {p.cover_image ? (
+                      /* eslint-disable-next-line @next/next/no-img-element */
+                      <img src={p.cover_image} alt="" loading="lazy" />
+                    ) : (
+                      <span className="bl-card-nocover" aria-hidden="true" />
+                    )}
+                    {p.category && <span className="bl-chip">{p.category.name}</span>}
                   </div>
-                )}
-                <div className="blog-card-body">
-                  {p.category && <span className="blog-chip">{p.category.name}</span>}
-                  <h3>{p.title}</h3>
-                  {p.excerpt && <p className="blog-card-excerpt">{p.excerpt}</p>}
-                  <p className="blog-card-meta">
-                    {fmt(p.published_at)}
-                    {p.reading_mins ? ` · ${p.reading_mins} min read` : ''}
-                  </p>
-                </div>
-              </Link>
-            ))}
+                  <div className="bl-card-body">
+                    <h3 className="bl-card-title">{p.title}</h3>
+                    {p.excerpt && <p className="bl-card-excerpt">{p.excerpt}</p>}
+                    <p className="bl-byline">
+                      {p.author?.name && (
+                        <>
+                          <span className="bl-avatar" aria-hidden="true">{initials(p.author.name)}</span>
+                          <span className="bl-byline-name">{p.author.name}</span>
+                          <span className="bl-byline-sep" aria-hidden="true" />
+                        </>
+                      )}
+                      <time dateTime={p.published_at ?? undefined}>{fmt(p.published_at)}</time>
+                      {p.reading_mins ? (
+                        <>
+                          <span className="bl-byline-sep" aria-hidden="true" />
+                          <span>{p.reading_mins} min read</span>
+                        </>
+                      ) : null}
+                    </p>
+                  </div>
+                </Link>
+              ))}
+            </div>
           </div>
         </section>
       )}
