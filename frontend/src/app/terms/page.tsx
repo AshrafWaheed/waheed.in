@@ -21,7 +21,7 @@ export default function TermsPage() {
         </div>
       </div>
 
-      <section className="sec" style={{ background: '#FFFDF9' }}>
+      <section className="sec" style={{ background: 'var(--rd-white)' }}>
         <div className="cnt" style={{ maxWidth: 720 }}>
           <div className="legal-body">
 
@@ -54,7 +54,7 @@ export default function TermsPage() {
 
           </div>
 
-          <div style={{ marginTop: '3rem', paddingTop: '2rem', borderTop: '1px solid #E6DED3' }}>
+          <div style={{ marginTop: '3rem', paddingTop: '2rem', borderTop: '1px solid var(--rd-border)' }}>
             <Link href="/" className="btn btn-teal">← Back to Home</Link>
           </div>
         </div>

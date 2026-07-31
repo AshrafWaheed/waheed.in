@@ -82,7 +82,7 @@ export interface BarakahCurrentProps {
 export default function BarakahCurrent({ className }: BarakahCurrentProps) {
   return (
     <svg
-      className={`bc-svg${className ? ` ${className}` : ''}`}
+      className={`bcur-svg${className ? ` ${className}` : ''}`}
       viewBox="0 0 1440 900"
       preserveAspectRatio="xMidYMid slice"
       fill="none"
@@ -114,7 +114,7 @@ export default function BarakahCurrent({ className }: BarakahCurrentProps) {
       </defs>
 
       {FILAMENTS.map((f, i) => (
-        <g key={i} className={`bc-drift bc-flow${f.flow}`} style={{ animationDuration: `${f.dur}s` }}>
+        <g key={i} className={`bcur-drift bcur-flow${f.flow}`} style={{ animationDuration: `${f.dur}s` }}>
           <path
             d={f.d}
             stroke={`url(#bc-${f.band})`}
@@ -127,8 +127,8 @@ export default function BarakahCurrent({ className }: BarakahCurrentProps) {
 
       <g fill={GOLD} stroke="none">
         {MOTES.map((m, i) => (
-          <g key={i} className={`bc-drift bc-flow${m.flow}`} style={{ animationDuration: `${m.dur}s` }}>
-            <circle cx={m.cx} cy={m.cy} r={m.r} className="bc-mote" style={{ animationDelay: `${i * 1.7}s` }} />
+          <g key={i} className={`bcur-drift bcur-flow${m.flow}`} style={{ animationDuration: `${m.dur}s` }}>
+            <circle cx={m.cx} cy={m.cy} r={m.r} className="bcur-mote" style={{ animationDelay: `${i * 1.7}s` }} />
           </g>
         ))}
       </g>

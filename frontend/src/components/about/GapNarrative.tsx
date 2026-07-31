@@ -63,8 +63,8 @@ export default function GapNarrative() {
               <motion.span
                 className="ab-ask-rule"
                 aria-hidden="true"
-                initial={{ scaleY: 0 }}
-                whileInView={{ scaleY: 1 }}
+                initial={{ scaleX: 0 }}
+                whileInView={{ scaleX: 1 }}
                 viewport={{ once: true, amount: 0.35 }}
                 transition={{ duration: 1, ease: EASE }}
               />

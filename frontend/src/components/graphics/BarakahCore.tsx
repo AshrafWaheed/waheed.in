@@ -80,7 +80,7 @@ export default function BarakahCore({ quiet = false }: BarakahCoreProps) {
       <svg className="bc-svg" viewBox="0 0 640 640" aria-hidden="true">
         <defs>
           <radialGradient id="bcCoreGlow" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="#F8F5EF" stopOpacity="0.95" />
+            <stop offset="0%" stopColor="var(--rd-ivory)" stopOpacity="0.95" />
             <stop offset="28%" stopColor="#C8A14A" stopOpacity="0.8" />
             <stop offset="70%" stopColor="#C8A14A" stopOpacity="0.14" />
             <stop offset="100%" stopColor="#C8A14A" stopOpacity="0" />
@@ -124,7 +124,7 @@ export default function BarakahCore({ quiet = false }: BarakahCoreProps) {
             <g key={`c${i}`} className={`bc-flow${on ? ' is-active' : ''}`}>
               <line className="bc-line" x1={o.x} y1={o.y} x2={inn.x} y2={inn.y} stroke="#C8A14A" strokeWidth={on ? 2 : 1.2} strokeDasharray="1 9" strokeLinecap="round" />
               {[0, 1, 2].map((k) => (
-                <circle key={k} cx={o.x} cy={o.y} r={on ? 3.4 : 2.4} fill="#F8F5EF" className="bc-particle">
+                <circle key={k} cx={o.x} cy={o.y} r={on ? 3.4 : 2.4} fill="var(--rd-ivory)" className="bc-particle">
                   <animateMotion dur="3.4s" begin={`${(i * 0.5 + k * 1.13).toFixed(2)}s`} repeatCount="indefinite" path={`M0 0 L${dx} ${dy}`} />
                 </circle>
               ))}
@@ -140,7 +140,7 @@ export default function BarakahCore({ quiet = false }: BarakahCoreProps) {
             <g key={`n${i}`} className={`bc-node${on ? ' is-active' : ''}`}>
               <circle cx={o.x} cy={o.y} r="26" fill="#C8A14A" opacity={on ? 0.22 : 0.08} filter="url(#bcSoft)" />
               <circle cx={o.x} cy={o.y} r="15" fill="#0a171d" stroke="#C8A14A" strokeWidth={on ? 1.8 : 1.2} />
-              <path d={starPath(o.x, o.y, 8, 0.5)} fill="none" stroke={on ? '#F8F5EF' : '#C8A14A'} strokeWidth="1.2" strokeLinejoin="round" />
+              <path d={starPath(o.x, o.y, 8, 0.5)} fill="none" stroke={on ? 'var(--rd-ivory)' : '#C8A14A'} strokeWidth="1.2" strokeLinejoin="round" />
             </g>
           );
         })}
@@ -153,9 +153,9 @@ export default function BarakahCore({ quiet = false }: BarakahCoreProps) {
           <circle cx={C} cy={C} r="52" fill="none" stroke="#C8A14A" strokeWidth="0.8" opacity="0.5" />
           <g className="bc-core-star" style={{ transformOrigin: '320px 320px' }}>
             <path d={starPath(C, C, 44, 0.46)} fill="none" stroke="#C8A14A" strokeWidth="1.3" strokeLinejoin="round" />
-            <path d={starPath(C, C, 26, 0.5)} fill="none" stroke="#F8F5EF" strokeWidth="1.1" strokeLinejoin="round" opacity="0.9" />
+            <path d={starPath(C, C, 26, 0.5)} fill="none" stroke="var(--rd-ivory)" strokeWidth="1.1" strokeLinejoin="round" opacity="0.9" />
           </g>
-          <circle className="bc-core-heart" cx={C} cy={C} r="8" fill="#F8F5EF" />
+          <circle className="bc-core-heart" cx={C} cy={C} r="8" fill="var(--rd-ivory)" />
         </g>
 
         {/* floating dust */}

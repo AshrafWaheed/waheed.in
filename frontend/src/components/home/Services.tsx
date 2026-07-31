@@ -57,7 +57,7 @@ export default function Services() {
   const inView     = useInView(sectionRef, { once: true, margin: '-10% 0px' });
 
   return (
-    <section className="sec" ref={sectionRef} style={{ background: '#FFFDF9' }}>
+    <section className="sec" ref={sectionRef} style={{ background: 'var(--rd-white)' }}>
       <div className="cnt">
 
         {/* Header */}
