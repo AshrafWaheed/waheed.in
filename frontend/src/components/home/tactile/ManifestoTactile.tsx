@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from 'react';
 import GirihEngine from '@/components/graphics/GirihEngine';
+import BarakahCurrent from '@/components/graphics/BarakahCurrent';
 import { manifesto } from '@/content/home';
 
 function QuoteLayer() {
@@ -51,6 +52,7 @@ export default function ManifestoTactile() {
   return (
     <section ref={sectionRef} className="hy-manifesto tc-manifesto" data-section-color="dark">
       <div className="hy-manifesto-stage">
+        <BarakahCurrent />
         <div className="hy-manifesto-engine">
           <GirihEngine draw="inView" spin />
         </div>

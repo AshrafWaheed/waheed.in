@@ -1,6 +1,5 @@
 import type { Metadata } from 'next';
 import SmoothScroll from '@/components/motion/SmoothScroll';
-import KhatamCursor from '@/components/motion/KhatamCursor';
 import SectionNav from '@/components/motion/useSectionNav';
 import HeroStudioWindow from '@/components/home/tactile/HeroStudioWindow';
 import TrustStripTactile from '@/components/home/tactile/TrustStripTactile';
@@ -21,7 +20,6 @@ export const metadata: Metadata = { robots: { index: false, follow: false } };
 export default function Home3Page() {
   return (
     <SmoothScroll>
-      <KhatamCursor />
       <SectionNav />
       <main className="geo-type">
         <HeroStudioWindow />

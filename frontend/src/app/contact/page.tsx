@@ -16,7 +16,6 @@
  */
 import { useState, type FormEvent, type ChangeEvent } from 'react';
 import SmoothScroll from '@/components/motion/SmoothScroll';
-import KhatamCursor from '@/components/motion/KhatamCursor';
 import SectionNav from '@/components/motion/useSectionNav';
 import ContactHero from '@/components/contact/ContactHero';
 import Khatam from '@/components/graphics/Khatam';
@@ -174,7 +173,6 @@ export default function ContactPage() {
 
   return (
     <SmoothScroll>
-      <KhatamCursor />
       <SectionNav />
       <main>
 
@@ -207,8 +205,14 @@ export default function ContactPage() {
                     <a
                       key={s.label}
                       href={s.href}
-                      target={s.href === '#' ? undefined : '_blank'}
-                      rel={s.href === '#' ? undefined : 'noopener noreferrer'}
+                      // Every entry in contactAside.socials is now a real external
+                      // profile. This used to be guarded against a '#' placeholder
+                      // (LinkedIn had no URL yet); `as const` on the content module
+                      // makes that comparison a type error once the placeholder goes,
+                      // which is the intended tripwire — reinstate the guard only if
+                      // a placeholder ever comes back.
+                      target="_blank"
+                      rel="noopener noreferrer"
                       className="ct-soc"
                       aria-label={s.label}
                       data-cursor

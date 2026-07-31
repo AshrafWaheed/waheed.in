@@ -1,7 +1,6 @@
 import type { Metadata } from 'next';
 import { pageMeta } from '@/lib/seo';
 import SmoothScroll from '@/components/motion/SmoothScroll';
-import KhatamCursor from '@/components/motion/KhatamCursor';
 import SectionNav from '@/components/motion/useSectionNav';
 import ServicesHero from '@/components/services/ServicesHero';
 import OfferLadder from '@/components/services/OfferLadder';
@@ -28,7 +27,6 @@ export const metadata: Metadata = pageMeta({
 export default function ServicesPage() {
   return (
     <SmoothScroll>
-      <KhatamCursor />
       <SectionNav />
       <main>
         <ServicesHero />

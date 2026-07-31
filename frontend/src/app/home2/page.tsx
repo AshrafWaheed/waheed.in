@@ -1,6 +1,5 @@
 import type { Metadata } from 'next';
 import SmoothScroll from '@/components/motion/SmoothScroll';
-import KhatamCursor from '@/components/motion/KhatamCursor';
 import SectionNav from '@/components/motion/useSectionNav';
 import HeroCinematic from '@/components/home/cinematic/HeroCinematic';
 import TrustStripCinematic from '@/components/home/cinematic/TrustStripCinematic';
@@ -20,7 +19,6 @@ export const metadata: Metadata = { robots: { index: false, follow: false } };
 export default function Home2Page() {
   return (
     <SmoothScroll>
-      <KhatamCursor />
       <SectionNav />
       <main>
         <HeroCinematic />

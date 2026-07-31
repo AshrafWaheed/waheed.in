@@ -65,7 +65,7 @@ export default function KhatamCursor() {
   return (
     <div ref={ref} className="khatam-cursor" aria-hidden="true" style={{ opacity: 0 }}>
       <span className="khatam-cursor-star">
-        <Khatam size={30} inner={0.55} stroke="var(--rd-gold-line, #c9a227)" strokeWidth={1.4} />
+        <Khatam size={30} inner={0.55} stroke="var(--rd-gold-line, #4f93d6)" strokeWidth={1.4} />
       </span>
       <span className="khatam-cursor-dot" />
     </div>

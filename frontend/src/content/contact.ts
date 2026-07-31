@@ -34,8 +34,8 @@ export const contactAside = {
     rest: ' Every application is reviewed personally. We may respectfully decline projects that do not align with our ethical guidelines.',
   },
   socials: [
-    { label: 'Facebook',  href: 'https://www.facebook.com/profile.php?id=61556593554803' },
-    { label: 'Instagram', href: 'https://www.instagram.com/waheeddigitalsolutions/' },
-    { label: 'LinkedIn',  href: '#' },
+    { label: 'Facebook',  href: 'https://www.facebook.com/waheedhq.fb/' },
+    { label: 'Instagram', href: 'https://www.instagram.com/waheedhq/' },
+    { label: 'LinkedIn',  href: 'https://www.linkedin.com/company/waheedhq/' },
   ],
 } as const;

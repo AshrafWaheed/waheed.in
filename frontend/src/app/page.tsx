@@ -1,5 +1,4 @@
 import SmoothScroll from '@/components/motion/SmoothScroll';
-import KhatamCursor from '@/components/motion/KhatamCursor';
 import SectionNav from '@/components/motion/useSectionNav';
 // Direction C — the founders flank the copy instead of the collage stacking
 // under it. HeroSignalBoard (B) is kept unmounted for comparison.
@@ -21,7 +20,6 @@ import FinalCtaHybrid from '@/components/home/hybrid/FinalCtaHybrid';
 export default function HomePage() {
   return (
     <SmoothScroll>
-      <KhatamCursor />
       <SectionNav />
       <main>
         <HeroFoundersFlank />

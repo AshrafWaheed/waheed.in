@@ -60,7 +60,7 @@ export default function GirihEngine({
   size = '100%',
   className,
   style,
-  stroke = 'var(--rd-gold-line, #c9a227)',
+  stroke = 'var(--rd-gold-line, #4f93d6)',
   draw = 'mount',
   spin = true,
 }: GirihEngineProps) {

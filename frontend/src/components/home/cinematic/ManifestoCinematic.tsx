@@ -3,6 +3,7 @@
 import { useEffect, useRef } from 'react';
 import { gsap } from '@/components/motion/gsap';
 import GirihEngine from '@/components/graphics/GirihEngine';
+import BarakahCurrent from '@/components/graphics/BarakahCurrent';
 import { manifesto } from '@/content/home';
 
 // Cinematic manifesto — a long pinned scrub reveals the three quote lines one by
@@ -36,6 +37,7 @@ export default function ManifestoCinematic() {
   return (
     <section ref={sectionRef} className="hy-manifesto" data-section-color="dark">
       <div className="hy-manifesto-stage">
+        <BarakahCurrent />
         <div className="hy-manifesto-engine">
           <GirihEngine draw="inView" spin />
         </div>

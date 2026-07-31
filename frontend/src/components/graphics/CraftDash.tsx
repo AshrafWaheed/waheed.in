@@ -27,7 +27,7 @@ export default function CraftDash({ i, className }: CraftDashProps) {
   const glow = (
     <defs>
       <radialGradient id={`daGlow${i}`} cx="50%" cy="42%" r="66%">
-        <stop offset="0%" stopColor="#fff3b0" stopOpacity="0.13" />
+        <stop offset="0%" stopColor="var(--rd-gold-bloom)" stopOpacity="0.13" />
         <stop offset="42%" stopColor="#39616d" stopOpacity="0.12" />
         <stop offset="100%" stopColor="#11272e" stopOpacity="0" />
       </radialGradient>

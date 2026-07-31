@@ -3,6 +3,7 @@
 import { useEffect, useRef } from 'react';
 import { gsap } from '@/components/motion/gsap';
 import GirihEngine from '@/components/graphics/GirihEngine';
+import BarakahCurrent from '@/components/graphics/BarakahCurrent';
 import { manifesto } from '@/content/home';
 
 export default function ManifestoHybrid() {
@@ -72,6 +73,9 @@ export default function ManifestoHybrid() {
   return (
     <section ref={sectionRef} className="hy-manifesto" data-section-color="dark">
       <div className="hy-manifesto-stage">
+        {/* Order matters: the current is the field, the engine is the margin
+            ornament on top of it, the glow rides above both. */}
+        <BarakahCurrent />
         <div className="hy-manifesto-engine">
           <GirihEngine draw="inView" spin />
         </div>

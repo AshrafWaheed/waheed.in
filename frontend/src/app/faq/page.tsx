@@ -2,7 +2,6 @@ import type { Metadata } from 'next';
 import { FAQS } from './faqData';
 import { pageMeta } from '@/lib/seo';
 import SmoothScroll from '@/components/motion/SmoothScroll';
-import KhatamCursor from '@/components/motion/KhatamCursor';
 import SectionNav from '@/components/motion/useSectionNav';
 import FaqHero from '@/components/faq/FaqHero';
 import FaqBody from '@/components/faq/FaqBody';
@@ -40,7 +39,6 @@ export default function FAQPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
       />
       <SmoothScroll>
-        <KhatamCursor />
         <SectionNav />
         <main>
           <FaqHero />

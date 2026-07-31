@@ -116,7 +116,7 @@ export default function Manifesto() {
         viewBox="0 0 200 200"
         aria-hidden="true"
       >
-        <g stroke="#c9a227" strokeWidth=".5" fill="none">
+        <g stroke="var(--rd-gold-line)" strokeWidth=".5" fill="none">
           <polygon points="100,10 190,55 190,145 100,190 10,145 10,55" />
           <polygon points="100,30 170,65 170,135 100,170 30,135 30,65" />
           <circle cx="100" cy="100" r="68" />

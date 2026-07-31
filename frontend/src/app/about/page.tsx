@@ -1,7 +1,6 @@
 import type { Metadata } from 'next';
 import { pageMeta } from '@/lib/seo';
 import SmoothScroll from '@/components/motion/SmoothScroll';
-import KhatamCursor from '@/components/motion/KhatamCursor';
 import SectionNav from '@/components/motion/useSectionNav';
 import AboutHero from '@/components/about/AboutHero';
 import GapNarrative from '@/components/about/GapNarrative';
@@ -34,7 +33,6 @@ export const metadata: Metadata = pageMeta({
 export default function AboutPage() {
   return (
     <SmoothScroll>
-      <KhatamCursor />
       <SectionNav />
       <main>
         <AboutHero />

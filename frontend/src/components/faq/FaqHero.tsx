@@ -3,12 +3,15 @@
 /**
  * FaqHero — §1 of the rebuilt /faq.
  *
- * Third variant of the inner-page hero, kept distinct from the other two on
- * purpose: /about puts the engine right of left-aligned copy, /services mirrors
- * that, and this one centres the engine directly behind centred copy. A page of
- * questions reads better symmetrical, and it is also the shortest of the three
- * (~46vh) because nobody arrives at an FAQ to admire the header — the first
+ * Third variant of the inner-page hero. The copy is centred — a page of
+ * questions reads better symmetrical — and it is the shortest of the three
+ * (~46vh) because nobody arrives at an FAQ to admire the header; the first
  * question should be visible almost immediately.
+ *
+ * The engine originally sat centred *behind* that centred copy, which put its
+ * dial ticks and straight star edges through the h1. It now hugs the right
+ * margin with its text-facing edge masked off, and BarakahCurrent — which has
+ * no straight edge anywhere in it — carries the field behind the words.
  *
  * Copy is verbatim from content/faq.ts.
  */
@@ -18,6 +21,7 @@ import type { Variants } from 'framer-motion';
 import SplitReveal from '@/components/motion/SplitReveal';
 import useParallaxOrigin from '@/components/motion/useParallaxOrigin';
 import GirihEngine from '@/components/graphics/GirihEngine';
+import BarakahCurrent from '@/components/graphics/BarakahCurrent';
 import { faqHero } from '@/content/faq';
 
 const EASE = [0.22, 1, 0.36, 1] as const;
@@ -42,6 +46,7 @@ export default function FaqHero() {
 
   return (
     <section ref={secRef} className={`fq-hero${inView ? ' is-in' : ''}`} data-section-color="dark">
+      <BarakahCurrent />
       <div className="fq-hero-engine ab-lay" style={v({ '--k': 1 })} aria-hidden="true">
         <GirihEngine draw="mount" spin />
       </div>
