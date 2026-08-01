@@ -5,6 +5,7 @@ import SmoothScroll from '@/components/motion/SmoothScroll';
 import SectionNav from '@/components/motion/useSectionNav';
 import DefaultServiceLayout from '@/components/service/layouts/DefaultServiceLayout';
 import BrandStrategyLayout from '@/components/service/layouts/BrandStrategyLayout';
+import SeoLayout from '@/components/service/layouts/SeoLayout';
 import type { ServiceLayoutProps } from '@/components/service/layouts/types';
 import { services, pages, servicePage } from '@/content/services';
 
@@ -19,6 +20,7 @@ import { services, pages, servicePage } from '@/content/services';
  */
 const LAYOUTS: Record<string, React.ComponentType<ServiceLayoutProps>> = {
   'brand-strategy': BrandStrategyLayout,
+  seo: SeoLayout,
 };
 
 /**

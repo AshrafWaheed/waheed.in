@@ -3,7 +3,7 @@ import Link from 'next/link';
 // "Insights" only appears once the blog is public (site fully live).
 const buildNav = (blogPublic: boolean) => [
   { label: 'About',    href: '/about'    },
-  { label: 'Services', href: '/packages' },
+  { label: 'Packages', href: '/packages' },
   ...(blogPublic ? [{ label: 'Insights', href: '/blog' }] : []),
   { label: 'FAQs',     href: '/faq'      },
   { label: 'Apply',    href: '/contact'  },
