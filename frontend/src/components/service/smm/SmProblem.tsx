@@ -3,10 +3,14 @@
 /**
  * SmProblem — §2. Three symptoms as full-width rows behind oversized numerals.
  *
- * The numeral is set at ~11rem in outline only and bleeds off the left edge, so
- * it reads as a page mark rather than as a list bullet. Each row wipes in with
+ * The numeral is set at ~6rem in outline only and sits in a gutter of its own,
+ * so it reads as a page mark rather than as a list bullet. Each row wipes in with
  * a `clip-path` inset from the left — a wipe rather than a fade, because a fade
  * is what the other four pages already use for a row entering.
+ *
+ * The clip goes on an INNER wrapper, and that is load-bearing: an element
+ * clipped to zero width has zero intersection area, so an IntersectionObserver
+ * watching it never fires. Observe the row, clip its contents.
  *
  * Deliberately NOT the stacking deck from page 04 and not the sticky plate from
  * page 03: this section is short and the reader should be able to scan all
@@ -60,9 +64,15 @@ export default function SmProblem({ page }: { page: ServicePage }) {
               className="sm-sym"
               style={v({ '--k': i })}
             >
-              <span className="sm-sym-n" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
-              <h3 className="sm-sym-t">{s.title}</h3>
-              <p className="sm-sym-b">{s.body}</p>
+              {/* The wipe lives on THIS wrapper, never on the observed <li>.
+                  An element clipped to zero width has zero intersection area, so
+                  the IntersectionObserver above would never fire and the row
+                  would stay invisible forever — which is exactly what it did. */}
+              <div className="sm-sym-in">
+                <span className="sm-sym-n" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+                <h3 className="sm-sym-t">{s.title}</h3>
+                <p className="sm-sym-b">{s.body}</p>
+              </div>
             </li>
           ))}
         </ol>

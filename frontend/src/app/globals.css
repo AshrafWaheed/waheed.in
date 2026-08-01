@@ -7691,20 +7691,36 @@ html[data-nav="dark"] .burger span            { background: var(--rd-ivory); }
 
 /* ── §2 Problem — rows behind oversized numerals ───────────────────────── */
 .sm-problem { background: var(--rd-ivory); color: var(--rd-teal); padding: 7rem 0 7rem; }
+.sm-problem .sm-head { margin-bottom: 2.6rem; }
 .sm-syms { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--rd-border); }
 .sm-sym {
   position: relative; overflow: hidden;
-  padding: 2.6rem 0 2.8rem 8.5rem;
   border-bottom: 1px solid var(--rd-border);
-  /* A wipe, not a fade — every other page enters its rows on opacity. */
+}
+/* A wipe, not a fade — every other page enters its rows on opacity.
+   Two things are load-bearing here:
+   · the clip is on the INNER wrapper, never on the <li>. The <li> is what the
+     IntersectionObserver watches, and an element clipped to zero width reports
+     zero intersection area — put the clip on the observed node and `is-in`
+     never fires, so the row stays invisible for good.
+   · ALL the row padding lives on this wrapper, so the wrapper's box covers the
+     whole row including the left gutter. `inset(0 0 0 0)` still clips to that
+     box, so anything positioned outside it — the numeral — would be wiped away
+     by the "finished" state of the animation. */
+.sm-sym-in {
+  position: relative;
+  padding: 2.6rem 0 2.8rem 8.5rem;
   clip-path: inset(0 100% 0 0);
   transition: clip-path .85s cubic-bezier(.22, 1, .36, 1);
   transition-delay: calc(var(--k) * .1s);
 }
-.sm-sym.is-in { clip-path: inset(0 0 0 0); }
+.sm-sym.is-in .sm-sym-in { clip-path: inset(0 0 0 0); }
 /* Outline only, bleeding off the left edge — a page mark, not a bullet. */
 .sm-sym-n {
-  position: absolute; left: -.6rem; top: 1.4rem;
+  /* Inside the wrapper's padding box, in the left gutter the 8.5rem padding
+     opens up. Not negative: the wrapper is clipped to its own box, so a
+     numeral hanging outside it is a numeral that never renders. */
+  position: absolute; left: .3rem; top: 1.4rem;
   font-family: var(--font-serif); font-weight: 500;
   font-size: clamp(4.5rem, 8vw, 7rem); line-height: 1;
   color: transparent;
@@ -7990,8 +8006,9 @@ html[data-nav="dark"] .burger span            { background: var(--rd-ivory); }
   /* The feed becomes a band under the copy rather than a column beside it. */
   .sm-hero-feed { height: 320px; }
   .fc-col--2    { margin-top: -1.4rem; }
-  .sm-sym       { padding-left: 0; padding-top: 4.6rem; }
-  .sm-sym-n     { top: .6rem; left: -.3rem; font-size: 4rem; }
+  /* No gutter on mobile — the numeral sits above the title instead of beside it. */
+  .sm-sym-in    { padding: 4.6rem 0 2.4rem; }
+  .sm-sym-n     { top: .4rem; left: 0; font-size: 4rem; }
   /* Six vertical titles in 5.4rem columns is not a component on a phone. */
   .sm-panels    { flex-direction: column; min-height: 0; }
   .sm-panel     { flex: none !important; }
@@ -8015,7 +8032,7 @@ html[data-nav="dark"] .burger span            { background: var(--rd-ivory); }
      legible; a blank one is not. */
   .fc-track--up, .fc-track--down,
   .sm-band--l .sm-band-track, .sm-band--r .sm-band-track { animation: none !important; }
-  .sm-sym       { clip-path: none !important; transition: none !important; }
+  .sm-sym-in    { clip-path: none !important; transition: none !important; }
   .sm-cell      { opacity: 1 !important; }
   .sm-bar-fill  { transform: scaleX(1) !important; transition: none !important; }
   .sm-pack-wash { transition: none !important; }
