@@ -7586,3 +7586,439 @@ html[data-nav="dark"] .burger span            { background: var(--rd-ivory); }
   }
   .so-deck-card { position: static !important; margin: 0 0 1rem !important; }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   SOCIAL MEDIA MARKETING — /services/social-media-marketing            `sm-`
+   ═══════════════════════════════════════════════════════════════════════════
+   Fourth and last service layer, sibling to `sd-`, `bs-` and `so-`. The subject
+   is a thing that never stops, so this is the only page whose hero is still
+   moving after it has arrived, and the only close that keeps moving while you
+   read it.
+
+   Custom properties set from React, same contract as the `so-` layer:
+     --p  0→1 scroll progress on the cadence grid
+     --i  cell / item index      --n  total      --k  row index
+     --a --b  a phase's start and end week, used as grid-column
+   ═════════════════════════════════════════════════════════════════════════ */
+
+/* ── Shared type ───────────────────────────────────────────────────────── */
+.sm-eyebrow {
+  display: inline-block; margin: 0 0 1.5rem; margin-right: -.2em;
+  font-family: var(--font-mono); font-size: .68rem; font-weight: 500;
+  letter-spacing: .2em; text-transform: uppercase; color: var(--rd-gold-line);
+  border-bottom: 1px solid rgb(var(--rd-gold-line-rgb) / .55); padding: 0 0 .5rem;
+}
+.sm-h2 {
+  font-family: var(--font-serif); font-weight: 500;
+  font-size: clamp(1.8rem, 3.6vw, 2.8rem); line-height: 1.1;
+  color: var(--rd-teal); margin: 0; max-width: 21ch;
+}
+.sm-h2 em { color: var(--rd-gold); font-style: normal; }
+.sm-h2--tight { max-width: 16ch; }
+.sm-h2--on-night    { color: var(--rd-white); }
+.sm-h2--on-night em { color: var(--rd-gold-bloom); }
+.sm-lede {
+  font-family: var(--font-sans); font-size: clamp(.92rem, 1.15vw, 1rem);
+  line-height: 1.72; color: rgb(37 72 81 / .74); max-width: 54ch; margin: 1.4rem 0 0;
+}
+.sm-lede--on-night { color: var(--rd-on-night-dim); }
+.sm-head { max-width: 62ch; margin: 0 0 3.6rem; }
+
+/* ── §1 Hero — copy left, a feed running past it ───────────────────────── */
+.sm-hero {
+  position: relative; overflow: hidden;
+  min-height: 88vh; display: flex; align-items: center;
+  padding: 9.5rem 0 5rem;
+  background: radial-gradient(110% 120% at 88% 10%, #1d414c 0%, var(--rd-night) 56%, #060e14 100%);
+  color: var(--rd-on-night);
+}
+.sm-hero-grid {
+  display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, .78fr);
+  gap: clamp(2rem, 5vw, 4.5rem); align-items: center;
+}
+.sm-hero-h1 {
+  font-family: var(--font-serif); font-weight: 500;
+  font-size: clamp(2.4rem, 5.4vw, 4.2rem); line-height: 1.02; letter-spacing: -.012em;
+  color: var(--rd-white); margin: 0; max-width: 13ch;
+}
+.sm-hero-h1 em { color: var(--rd-gold-bloom); font-style: normal; }
+.sm-hero-sub {
+  margin: 1.5rem 0 0; max-width: 46ch;
+  font-family: var(--font-sans); font-size: clamp(.95rem, 1.2vw, 1.04rem);
+  line-height: 1.7; color: var(--rd-on-night-dim);
+}
+.sm-hero-promise {
+  margin: 1.6rem 0 0; padding-left: 1rem;
+  border-left: 2px solid rgb(var(--rd-gold-line-rgb) / .55);
+  font-family: var(--font-mono); font-size: .68rem; font-weight: 500;
+  letter-spacing: .16em; text-transform: uppercase; color: var(--rd-gold-bloom);
+}
+.sm-hero-acts { display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 2.3rem; }
+
+/* The feed. Masked top and bottom so the columns arrive from nowhere. */
+.sm-hero-feed {
+  height: min(74vh, 620px);
+  -webkit-mask-image: linear-gradient(180deg, transparent, #000 16%, #000 84%, transparent);
+          mask-image: linear-gradient(180deg, transparent, #000 16%, #000 84%, transparent);
+}
+.fc { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; height: 100%; overflow: hidden; }
+.fc-col { overflow: hidden; }
+.fc-col--2 { margin-top: -2.6rem; }
+.fc-track { display: flex; flex-direction: column; gap: 1rem; will-change: transform; }
+/* Two identical groups, translated by exactly -50% — that is the seam-free loop. */
+.fc-track--up   { animation: fc-up 42s linear infinite; }
+.fc-track--down { animation: fc-up 38s linear infinite reverse; }
+@keyframes fc-up { to { transform: translateY(-50%); } }
+.fc-group { display: flex; flex-direction: column; gap: 1rem; }
+.fc-card {
+  border: 1px solid rgb(var(--rd-ivory-rgb) / .12); border-radius: 14px;
+  background: rgb(var(--rd-ivory-rgb) / .04);
+  padding: .7rem .7rem .8rem;
+}
+.fc-media {
+  position: relative; height: 92px; border-radius: 9px;
+  background: linear-gradient(150deg, rgb(var(--rd-gold-line-rgb) / .3), rgb(var(--rd-ivory-rgb) / .05));
+}
+.fc-card.is-tall .fc-media { height: 148px; }
+.fc-chip {
+  position: absolute; right: .5rem; top: .5rem; width: 26px; height: 8px; border-radius: 999px;
+  background: rgb(var(--rd-ivory-rgb) / .35);
+}
+.fc-lines { display: flex; flex-direction: column; gap: .34rem; margin: .7rem 0 .6rem; }
+.fc-line { display: block; height: 5px; width: var(--w, 70%); border-radius: 3px; background: rgb(var(--rd-ivory-rgb) / .17); }
+.fc-meta { display: flex; align-items: center; gap: .45rem; }
+.fc-dot { width: 13px; height: 13px; border-radius: 50%; background: rgb(var(--rd-gold-line-rgb) / .45); flex: none; }
+
+/* ── §2 Problem — rows behind oversized numerals ───────────────────────── */
+.sm-problem { background: var(--rd-ivory); color: var(--rd-teal); padding: 7rem 0 7rem; }
+.sm-syms { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--rd-border); }
+.sm-sym {
+  position: relative; overflow: hidden;
+  padding: 2.6rem 0 2.8rem 8.5rem;
+  border-bottom: 1px solid var(--rd-border);
+  /* A wipe, not a fade — every other page enters its rows on opacity. */
+  clip-path: inset(0 100% 0 0);
+  transition: clip-path .85s cubic-bezier(.22, 1, .36, 1);
+  transition-delay: calc(var(--k) * .1s);
+}
+.sm-sym.is-in { clip-path: inset(0 0 0 0); }
+/* Outline only, bleeding off the left edge — a page mark, not a bullet. */
+.sm-sym-n {
+  position: absolute; left: -.6rem; top: 1.4rem;
+  font-family: var(--font-serif); font-weight: 500;
+  font-size: clamp(4.5rem, 8vw, 7rem); line-height: 1;
+  color: transparent;
+  -webkit-text-stroke: 1px rgb(var(--rd-gold-line-rgb) / .38);
+  pointer-events: none; user-select: none;
+}
+.sm-sym-t {
+  font-family: var(--font-serif); font-weight: 500;
+  font-size: clamp(1.2rem, 2.2vw, 1.65rem); line-height: 1.22;
+  color: var(--rd-teal); margin: 0 0 .8rem; max-width: 22ch;
+}
+.sm-sym-b {
+  font-family: var(--font-sans); font-size: .92rem; line-height: 1.72;
+  color: rgb(37 72 81 / .74); margin: 0; max-width: 62ch;
+}
+
+/* ── §3 Engine — horizontal accordion ──────────────────────────────────── */
+.sm-engine { background: var(--rd-night); color: var(--rd-on-night); padding: 7rem 0 7rem; }
+.sm-panels {
+  display: flex; gap: 6px; min-height: 24rem;
+  border: 1px solid rgb(var(--rd-ivory-rgb) / .12); border-radius: 22px;
+  padding: 6px; overflow: hidden;
+}
+.sm-panel {
+  position: relative; display: flex; flex: 0 0 5.4rem;
+  border-radius: 16px;
+  background: rgb(var(--rd-ivory-rgb) / .04);
+  transition: flex-grow .55s cubic-bezier(.22, 1, .36, 1),
+              flex-basis .55s cubic-bezier(.22, 1, .36, 1),
+              background .4s ease;
+  overflow: hidden;
+}
+.sm-panel.is-open { flex: 1 1 auto; background: rgb(var(--rd-ivory-rgb) / .07); }
+
+.sm-panel-tab {
+  display: flex; flex-direction: column; align-items: center; gap: 1.6rem;
+  flex: none; width: 5.4rem; padding: 1.5rem 0;
+  background: none; border: 0; cursor: pointer; color: inherit;
+  font-family: inherit;
+}
+.sm-panel-n {
+  font-family: var(--font-mono); font-size: .6rem; font-weight: 500;
+  letter-spacing: .14em; color: var(--rd-gold-line);
+}
+/* Vertical, bottom-to-top — the collapsed panel is 5.4rem wide and nothing
+   else fits. Titles in content/services are ≤ 3 words for this reason. */
+.sm-panel-t {
+  writing-mode: vertical-rl; transform: rotate(180deg);
+  font-family: var(--font-serif); font-weight: 500; font-size: .95rem;
+  letter-spacing: .01em; white-space: nowrap;
+  color: rgb(var(--rd-ivory-rgb) / .72); transition: color .35s ease;
+}
+.sm-panel.is-open .sm-panel-t { color: transparent; }
+.sm-panel-body {
+  align-self: center; padding: 2rem 2.2rem 2rem 0; max-width: 46ch;
+  animation: sm-panel-in .5s .12s cubic-bezier(.22, 1, .36, 1) backwards;
+}
+@keyframes sm-panel-in { from { opacity: 0; transform: translateX(-14px); } }
+.sm-panel-h {
+  font-family: var(--font-serif); font-weight: 500;
+  font-size: clamp(1.2rem, 2vw, 1.55rem); line-height: 1.2;
+  color: var(--rd-white); margin: 0 0 .9rem;
+}
+.sm-panel-body p {
+  font-family: var(--font-sans); font-size: .9rem; line-height: 1.72;
+  color: var(--rd-on-night-dim); margin: 0;
+}
+
+/* ── §4 Cadence — 13 weeks × 5 days, filling as you scroll ─────────────── */
+.sm-cadence { background: var(--rd-ivory); color: var(--rd-teal); padding: 7rem 0 7rem; }
+.sm-cal-grid {
+  --p: 0;
+  display: grid; grid-template-columns: repeat(var(--w), minmax(0, 1fr));
+  gap: 5px; margin-bottom: 2.4rem;
+}
+.sm-cell {
+  /* NOT square. The grid is 13 columns of full measure, so a square cell is
+     84px and the section turns into a wall of blue. A short cell reads as a
+     publishing calendar, which is what it is. */
+  height: 20px; border-radius: 3px;
+  background: var(--rd-gold-line);
+  /* Each cell resolves its own state from the grid's progress — one style
+     write per frame for 65 cells instead of 65 class toggles. */
+  opacity: clamp(.1, calc(var(--p) * var(--n) - var(--i)), .88);
+}
+
+/* The marker row stays locked to the week grid. */
+.sm-marks {
+  display: grid; grid-template-columns: repeat(13, minmax(0, 1fr));
+  gap: 0 4px; margin-bottom: 2.6rem;
+}
+.sm-mark {
+  grid-column: var(--a) / var(--b);
+  padding-top: .55rem; border-top: 2px solid var(--rd-gold-line);
+  font-family: var(--font-mono); font-size: .54rem; font-weight: 500;
+  letter-spacing: .12em; text-transform: uppercase; color: var(--rd-gold);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.sm-phases {
+  list-style: none; margin: 0; padding: 0;
+  display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0 2rem;
+}
+.sm-phase { padding-top: 0; }
+.sm-phase-span {
+  display: block; font-family: var(--font-mono); font-size: .58rem; font-weight: 500;
+  letter-spacing: .14em; text-transform: uppercase; color: var(--rd-gold);
+  margin-bottom: .7rem;
+}
+.sm-phase-t {
+  font-family: var(--font-serif); font-weight: 500; font-size: 1.02rem;
+  line-height: 1.26; color: var(--rd-teal); margin: 0 0 .6rem;
+}
+.sm-phase-b {
+  font-family: var(--font-sans); font-size: .8rem; line-height: 1.66;
+  color: rgb(37 72 81 / .72); margin: 0;
+}
+
+/* ── §5 Lift — bars that grow ──────────────────────────────────────────── */
+.sm-lift { background: var(--rd-night-2); color: var(--rd-on-night); padding: 7rem 0 6.5rem; }
+.sm-bars {
+  list-style: none; margin: 0 0 4rem; padding: 0;
+  display: grid; gap: 1px; background: rgb(var(--rd-ivory-rgb) / .1);
+}
+.sm-bar-row {
+  display: grid; grid-template-columns: 7.5rem minmax(0, 1fr); gap: 1.6rem;
+  align-items: center; padding: 1.3rem 0; background: var(--rd-night-2);
+}
+/* Ascending LENGTHS are a rhythm, not a measurement — hence no axis, no
+   numbers, nothing that invites this being read as data. Horizontal, because a
+   30px-tall standing bar beside a line of text is a tick, not a bar. */
+.sm-bar { display: block; height: 6px; border-radius: 4px; background: rgb(var(--rd-ivory-rgb) / .1); }
+.sm-bar-fill {
+  display: block; height: 100%; border-radius: 4px;
+  width: calc(30% + (var(--k) / var(--of)) * 70%);
+  background: linear-gradient(90deg, var(--rd-gold-line), var(--rd-gold-bloom));
+  transform: scaleX(0); transform-origin: left;
+  transition: transform .75s cubic-bezier(.22, 1, .36, 1);
+  transition-delay: calc(var(--k) * .08s);
+}
+.sm-bar-row.is-in .sm-bar-fill { transform: scaleX(1); }
+.sm-bar-t {
+  font-family: var(--font-sans); font-size: .95rem; line-height: 1.6;
+  color: var(--rd-on-night);
+}
+
+.sm-fit { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0; }
+.sm-fit-col { padding: 2rem 2.4rem 2.2rem 0; }
+.sm-fit-col.is-not { padding: 2rem 0 2.2rem 2.4rem; border-left: 2px solid rgb(var(--rd-ivory-rgb) / .14); }
+.sm-fit-h {
+  font-family: var(--font-mono); font-size: .64rem; font-weight: 500;
+  letter-spacing: .16em; text-transform: uppercase;
+  color: var(--rd-gold-line); margin: 0 0 1.3rem;
+}
+.sm-fit-col.is-not .sm-fit-h { color: rgb(var(--rd-ivory-rgb) / .5); }
+.sm-fit-col ul { list-style: none; margin: 0; padding: 0; display: grid; gap: .9rem; }
+.sm-fit-col li {
+  position: relative; padding-left: 1.2rem;
+  font-family: var(--font-sans); font-size: .88rem; line-height: 1.62;
+  color: var(--rd-on-night-dim);
+}
+.sm-fit-col li::before {
+  content: ''; position: absolute; left: 0; top: .62em;
+  width: 5px; height: 5px; border-radius: 50%; background: rgb(var(--rd-gold-line-rgb) / .7);
+}
+.sm-fit-col.is-not li::before {
+  border-radius: 0; width: 9px; height: 1.6px; top: .78em; background: rgb(var(--rd-ivory-rgb) / .38);
+}
+
+/* ── §6 Packages — bars that wash in ───────────────────────────────────── */
+.sm-pack { background: var(--rd-ivory); color: var(--rd-teal); padding: 6.5rem 0 3rem; }
+.sm-pack-head { max-width: 60ch; margin: 0 0 2.2rem; }
+.sm-pack-bars { list-style: none; margin: 0; padding: 0; display: grid; gap: 1rem; }
+.sm-pack-bar {
+  position: relative; overflow: hidden;
+  display: grid; grid-template-columns: minmax(0, 1fr) 2.5rem; align-items: center;
+  padding: 2rem 2rem 2.1rem; border-radius: 18px;
+  border: 1px solid var(--rd-border); background: var(--rd-white);
+  transition: border-color .3s ease;
+}
+.sm-pack-bar:hover { border-color: rgb(var(--rd-gold-line-rgb) / .5); }
+/* Wipes across from the left rather than fading — matches §2's entrance. */
+.sm-pack-wash {
+  position: absolute; inset: 0; z-index: 0;
+  background: linear-gradient(90deg, rgb(var(--rd-gold-line-rgb) / .1), transparent 72%);
+  transform: scaleX(0); transform-origin: left;
+  transition: transform .55s cubic-bezier(.22, 1, .36, 1);
+}
+.sm-pack-bar:hover .sm-pack-wash { transform: scaleX(1); }
+.sm-pack-in { position: relative; z-index: 1; display: flex; flex-direction: column; gap: .45rem; }
+.sm-pack-eyebrow {
+  font-family: var(--font-mono); font-size: .58rem; font-weight: 500;
+  letter-spacing: .16em; text-transform: uppercase; color: var(--rd-gold-line);
+}
+.sm-pack-t {
+  font-family: var(--font-serif); font-weight: 500;
+  font-size: clamp(1.3rem, 2.4vw, 1.85rem); line-height: 1.16; color: var(--rd-teal);
+}
+.sm-pack-b {
+  font-family: var(--font-sans); font-size: .85rem; line-height: 1.62;
+  color: rgb(37 72 81 / .7); max-width: 60ch;
+}
+.sm-pack-cue {
+  position: relative; z-index: 1; justify-self: end;
+  color: var(--rd-gold); font-size: 1.1rem;
+  transition: transform .3s cubic-bezier(.22, 1, .36, 1);
+}
+.sm-pack-bar:hover .sm-pack-cue { transform: translateX(6px); }
+
+/* ── §7 FAQ — everything open ──────────────────────────────────────────── */
+.sm-faq { background: var(--rd-ivory); color: var(--rd-teal); padding: 3rem 0 7rem; }
+.sm-faq-head { max-width: 60ch; margin: 0 0 2.4rem; padding-top: 3.5rem; border-top: 1px solid var(--rd-border); }
+.sm-qa { margin: 0; }
+.sm-qa-row {
+  display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr);
+  gap: 1rem 3rem; padding: 2rem 0; border-top: 1px solid var(--rd-border);
+}
+.sm-qa dt {
+  font-family: var(--font-mono); font-size: .68rem; font-weight: 500;
+  letter-spacing: .1em; line-height: 1.7; text-transform: uppercase;
+  color: var(--rd-gold); max-width: 26ch;
+}
+.sm-qa dd {
+  margin: 0;
+  font-family: var(--font-sans); font-size: clamp(.9rem, 1.15vw, .98rem);
+  line-height: 1.76; color: rgb(37 72 81 / .8);
+}
+
+/* ── §8 Close — between two marquees ───────────────────────────────────── */
+.sm-close {
+  position: relative; overflow: hidden;
+  background: linear-gradient(180deg, var(--rd-night) 0%, #060e14 100%);
+  color: var(--rd-on-night); padding: 4rem 0 4.5rem;
+}
+.sm-band { overflow: hidden; width: 100%; padding: .9rem 0; }
+.sm-band-track { display: flex; width: max-content; }
+.sm-band--l .sm-band-track { animation: sm-band 46s linear infinite; }
+.sm-band--r .sm-band-track { animation: sm-band 52s linear infinite reverse; }
+@keyframes sm-band { to { transform: translateX(-50%); } }
+.sm-band-group { display: flex; flex-shrink: 0; }
+.sm-band-item {
+  display: inline-flex; align-items: center; gap: 1.4rem; padding-right: 1.4rem;
+  font-family: var(--font-mono); font-size: .68rem; font-weight: 500;
+  letter-spacing: .2em; text-transform: uppercase;
+  color: rgb(var(--rd-ivory-rgb) / .22); white-space: nowrap;
+}
+.sm-close-in { position: relative; z-index: 2; text-align: center; padding: 4rem 0 4.5rem; }
+.sm-close-eyebrow {
+  margin: 0 0 1.4rem;
+  font-family: var(--font-mono); font-size: .64rem; font-weight: 500;
+  letter-spacing: .2em; text-transform: uppercase; color: var(--rd-gold-line);
+}
+.sm-close-h {
+  font-family: var(--font-serif); font-weight: 500;
+  font-size: clamp(1.9rem, 4.2vw, 3.1rem); line-height: 1.08;
+  color: var(--rd-white); margin: 0 auto; max-width: 18ch;
+}
+.sm-close-h em { color: var(--rd-gold-bloom); font-style: normal; }
+.sm-close-b {
+  margin: 1.4rem auto 0; max-width: 48ch;
+  font-family: var(--font-sans); font-size: .93rem; line-height: 1.72;
+  color: var(--rd-on-night-dim);
+}
+.sm-close-acts {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: center;
+  gap: 1.6rem; margin-top: 2.4rem;
+}
+.sm-close-alt {
+  font-family: var(--font-mono); font-size: .62rem; font-weight: 500;
+  letter-spacing: .14em; text-transform: uppercase;
+  color: rgb(var(--rd-ivory-rgb) / .66); transition: color .2s ease;
+}
+.sm-close-alt:hover { color: var(--rd-gold-bloom); }
+
+/* ── Responsive ────────────────────────────────────────────────────────── */
+@media (max-width: 1024px) {
+  .sm-hero-grid { grid-template-columns: minmax(0, 1fr) minmax(0, .6fr); }
+  .sm-qa-row    { grid-template-columns: 1fr; gap: .8rem; }
+  .sm-qa dt     { max-width: none; }
+}
+@media (max-width: 900px) {
+  .sm-hero      { min-height: 0; padding: 8rem 0 4rem; }
+  .sm-hero-grid { grid-template-columns: 1fr; }
+  /* The feed becomes a band under the copy rather than a column beside it. */
+  .sm-hero-feed { height: 320px; }
+  .fc-col--2    { margin-top: -1.4rem; }
+  .sm-sym       { padding-left: 0; padding-top: 4.6rem; }
+  .sm-sym-n     { top: .6rem; left: -.3rem; font-size: 4rem; }
+  /* Six vertical titles in 5.4rem columns is not a component on a phone. */
+  .sm-panels    { flex-direction: column; min-height: 0; }
+  .sm-panel     { flex: none !important; }
+  .sm-panel-tab { flex-direction: row; width: 100%; gap: 1rem; padding: 1.1rem 1.2rem; justify-content: flex-start; }
+  .sm-panel-t   { writing-mode: horizontal-tb; transform: none; }
+  .sm-panel.is-open .sm-panel-t { color: rgb(var(--rd-ivory-rgb) / .72); }
+  .sm-panel-body { padding: 0 1.2rem 1.4rem; max-width: none; animation: none; }
+  .sm-panel-h   { display: none; }          /* the tab already says it */
+  /* 13 weekly columns of phase copy is 13 × 24px. Unfold. */
+  .sm-phases    { grid-template-columns: 1fr; gap: 1.6rem; }
+  .sm-marks     { display: none; }          /* 13 columns of 24px say nothing */
+  .sm-bar-row   { grid-template-columns: 4.5rem minmax(0, 1fr); gap: 1rem; }
+  .sm-fit       { grid-template-columns: 1fr; }
+  .sm-fit-col   { padding: 1.8rem 0; }
+  .sm-fit-col.is-not { padding: 1.8rem 0 0; border-left: 0; border-top: 2px solid rgb(var(--rd-ivory-rgb) / .14); }
+}
+
+/* ── Reduced motion ────────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  /* The two loops stop where they are — a still feed and a still band are both
+     legible; a blank one is not. */
+  .fc-track--up, .fc-track--down,
+  .sm-band--l .sm-band-track, .sm-band--r .sm-band-track { animation: none !important; }
+  .sm-sym       { clip-path: none !important; transition: none !important; }
+  .sm-cell      { opacity: 1 !important; }
+  .sm-bar-fill  { transform: scaleX(1) !important; transition: none !important; }
+  .sm-pack-wash { transition: none !important; }
+  .sm-panel-body { animation: none !important; }
+  .sm-panel     { transition: none !important; }
+}

@@ -26,6 +26,7 @@ import webAppDevelopment from './web-app-development';
 import customSoftwareDevelopment from './custom-software-development';
 import brandStrategy from './brand-strategy';
 import seo from './seo';
+import socialMediaMarketing from './social-media-marketing';
 
 export type { ServicePage } from './types';
 
@@ -115,6 +116,7 @@ export const pages: Readonly<Record<string, ServicePage>> = {
   [customSoftwareDevelopment.slug]: customSoftwareDevelopment,
   [brandStrategy.slug]: brandStrategy,
   [seo.slug]: seo,
+  [socialMediaMarketing.slug]: socialMediaMarketing,
 };
 
 /** True when the craft is sold AND its page exists — i.e. it is linkable. */
