@@ -23,6 +23,7 @@
  */
 import type { ServicePage } from './types';
 import webAppDevelopment from './web-app-development';
+import customSoftwareDevelopment from './custom-software-development';
 
 export type { ServicePage } from './types';
 
@@ -55,7 +56,7 @@ export const services: readonly Service[] = [
     slug: 'custom-software-development',
     title: 'Custom Software Development',
     navLabel: 'Custom Software',
-    navBlurb: 'Dashboards, integrations, automations.',
+    navBlurb: 'ERPs, automations, integrations.',
     soon: false,
   },
   {
@@ -109,6 +110,7 @@ export const services: readonly Service[] = [
  */
 export const pages: Readonly<Record<string, ServicePage>> = {
   [webAppDevelopment.slug]: webAppDevelopment,
+  [customSoftwareDevelopment.slug]: customSoftwareDevelopment,
 };
 
 /** True when the craft is sold AND its page exists — i.e. it is linkable. */
