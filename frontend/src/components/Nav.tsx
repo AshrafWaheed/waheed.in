@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { AnimatePresence, motion } from 'framer-motion';
-import { services } from '@/content/services';
+import { services, isLinkable } from '@/content/services';
 
 /**
  * Top-level bar. `Services` is not in this list — it is a dropdown, not a link,
@@ -125,21 +125,7 @@ export default function Nav({}: { blogPublic?: boolean }) {
                     <ul className="nav-panel-list">
                       {services.map((s) => (
                         <li key={s.slug}>
-                          {s.soon ? (
-                            /* Not an anchor at all — there is no page behind it,
-                               and a disabled-looking link that still navigates
-                               into a 404 is worse than plain text. */
-                            <span className="nav-panel-item is-soon" aria-disabled="true">
-                              <span className="nav-panel-num">{s.num}</span>
-                              <span className="nav-panel-text">
-                                <span className="nav-panel-title">
-                                  {s.navLabel}
-                                  <span className="nav-soon">Coming soon</span>
-                                </span>
-                                <span className="nav-panel-blurb">{s.navBlurb}</span>
-                              </span>
-                            </span>
-                          ) : (
+                          {isLinkable(s) ? (
                             <Link
                               href={`/services/${s.slug}`}
                               className={`nav-panel-item${pathname === `/services/${s.slug}` ? ' active' : ''}`}
@@ -150,6 +136,23 @@ export default function Nav({}: { blogPublic?: boolean }) {
                                 <span className="nav-panel-blurb">{s.navBlurb}</span>
                               </span>
                             </Link>
+                          ) : (
+                            /* Not an anchor at all — there is no page behind it,
+                               and a disabled-looking link that still navigates
+                               into a 404 is worse than plain text. The chip only
+                               appears for crafts we are not selling yet; a sold
+                               craft whose page is still being written is simply
+                               dimmed until it exists. */
+                            <span className="nav-panel-item is-soon" aria-disabled="true">
+                              <span className="nav-panel-num">{s.num}</span>
+                              <span className="nav-panel-text">
+                                <span className="nav-panel-title">
+                                  {s.navLabel}
+                                  {s.soon && <span className="nav-soon">Coming soon</span>}
+                                </span>
+                                <span className="nav-panel-blurb">{s.navBlurb}</span>
+                              </span>
+                            </span>
                           )}
                         </li>
                       ))}
@@ -205,12 +208,7 @@ export default function Nav({}: { blogPublic?: boolean }) {
             <div className="mob-group">
               <p className="mob-group-label">Services</p>
               {services.map((s) =>
-                s.soon ? (
-                  <span key={s.slug} className="mob-sub is-soon" aria-disabled="true">
-                    {s.navLabel}
-                    <span className="nav-soon">Coming soon</span>
-                  </span>
-                ) : (
+                isLinkable(s) ? (
                   <Link
                     key={s.slug}
                     href={`/services/${s.slug}`}
@@ -219,6 +217,11 @@ export default function Nav({}: { blogPublic?: boolean }) {
                   >
                     {s.navLabel}
                   </Link>
+                ) : (
+                  <span key={s.slug} className="mob-sub is-soon" aria-disabled="true">
+                    {s.navLabel}
+                    {s.soon && <span className="nav-soon">Coming soon</span>}
+                  </span>
                 ),
               )}
             </div>

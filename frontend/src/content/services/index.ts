@@ -10,10 +10,21 @@
  * renders, so if a title drifts here the site starts saying two different names
  * for one craft. `num` is the display index (`01`…`07`), not an id.
  *
- * `soon: true` means the page is NOT built and the link is NOT navigable. The
- * nav renders those as inert text, not as anchors, so there is no route to
- * 404 into. Flipping the flag is the entire ceremony for launching one.
+ * `soon: true` means the craft is NOT being sold yet and the link is NOT
+ * navigable. The nav renders those as inert text, not as anchors, so there is
+ * no route to 404 into. Flipping the flag is the entire ceremony for launching
+ * one — once its page module exists.
+ *
+ * `soon: false` is a claim about the OFFER, not about the site. Whether a link
+ * appears is decided by `pages` below, which is a map of modules that actually
+ * exist. That indirection is the point: the nav cannot link to a page that has
+ * not been written, so shipping the five live crafts one at a time never leaves
+ * a public 404 behind.
  */
+import type { ServicePage } from './types';
+import webAppDevelopment from './web-app-development';
+
+export type { ServicePage } from './types';
 
 export interface Service {
   /** Display index — '01' … '07'. Matches the homepage bento. */
@@ -89,9 +100,29 @@ export const services: readonly Service[] = [
   },
 ] as const;
 
-/** The five that have pages. The nav links these; the sitemap lists these. */
-export const liveServices = services.filter((s) => !s.soon);
+/**
+ * Slug → page copy, for every page that has been WRITTEN.
+ *
+ * `/services/[slug]` renders from here and 404s on a miss, the nav links only
+ * these keys, and the sitemap lists only these keys. Adding a service page is
+ * therefore one import and one line — and there is no second place to forget.
+ */
+export const pages: Readonly<Record<string, ServicePage>> = {
+  [webAppDevelopment.slug]: webAppDevelopment,
+};
+
+/** True when the craft is sold AND its page exists — i.e. it is linkable. */
+export function isLinkable(s: Service): boolean {
+  return !s.soon && s.slug in pages;
+}
+
+/** In register order, so the nav, the sitemap and the pages agree. */
+export const linkableServices = services.filter(isLinkable);
+
+export function servicePage(slug: string): ServicePage | undefined {
+  return pages[slug];
+}
 
 export function serviceBySlug(slug: string): Service | undefined {
-  return services.find((s) => s.slug === slug && !s.soon);
+  return services.find((s) => s.slug === slug);
 }

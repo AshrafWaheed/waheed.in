@@ -6300,3 +6300,372 @@ html[data-nav="dark"] .burger span            { background: var(--rd-ivory); }
   .bl-grid { grid-template-columns: 1fr; gap: 1.5rem; }
   .bl-hero-engine { width: 120vw; height: 120vw; right: -46%; opacity: .12; }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   SERVICE DETAIL — /services/[slug]                                    `sd-`
+   ═══════════════════════════════════════════════════════════════════════════
+   One route renders five crafts, so this layer is the whole design of all of
+   them. It is a sibling to `pk-` (the offer ladder) and `ab-` (/about), and it
+   deliberately does NOT reuse their hero: /packages puts the engine left and
+   the copy right, /about is centred, and this one is copy-left with the craft's
+   own artifact on the right. Three inner pages, three openings.
+
+   Shared type primitives (.sd-h2, .sd-lede, .sd-head) are defined once here
+   because eight sections use them; everything else is scoped to its section.
+   ═════════════════════════════════════════════════════════════════════════ */
+
+/* ── Shared type ───────────────────────────────────────────────────────── */
+.sd-h2 {
+  font-family: var(--font-serif); font-weight: 500;
+  font-size: clamp(1.7rem, 3.2vw, 2.6rem); line-height: 1.12;
+  color: var(--rd-teal); margin: 0; max-width: 20ch;
+}
+.sd-h2 em { color: var(--rd-gold); font-style: normal; }
+.sd-h2--on-night     { color: var(--rd-white); }
+.sd-h2--on-night em  { color: var(--rd-gold-bloom); }
+
+.sd-lede {
+  font-family: var(--font-sans); font-size: clamp(.92rem, 1.15vw, 1rem);
+  line-height: 1.7; color: rgb(37 72 81 / .74); max-width: 48ch; margin: 1.3rem 0 0;
+}
+.sd-lede--on-night { color: var(--rd-on-night-dim); }
+
+/* The section header. Constrained to 62ch so a heading and its lede share one
+   measure instead of the heading running short over a wide paragraph. */
+.sd-head { max-width: 62ch; margin: 0 0 3.4rem; }
+
+/* ── §1 Hero ───────────────────────────────────────────────────────────── */
+.sd-hero {
+  position: relative; overflow: hidden;
+  min-height: 82vh; display: flex; align-items: center;
+  padding: 9.5rem 0 6.5rem;
+  background: radial-gradient(120% 130% at 18% 4%, #1e424d 0%, var(--rd-night) 58%, #081019 100%);
+  color: var(--rd-on-night);
+}
+/* Behind the ARTIFACT, not behind the copy — the artifact is a busy object and
+   the engine reads as its backdrop; sitting under the headline it would just be
+   texture behind text. */
+.sd-hero-engine {
+  position: absolute; top: 50%; right: -12%;
+  width: min(84vh, 700px); height: min(84vh, 700px);
+  translate: 0 -50%;            /* `transform` belongs to .ab-lay */
+  opacity: .3; pointer-events: none; z-index: 0;
+}
+.sd-hero-grid {
+  position: relative; z-index: 2;
+  display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, .82fr);
+  gap: clamp(2.5rem, 5vw, 5rem); align-items: center;
+}
+.sd-hero-h1 {
+  font-family: var(--font-serif); font-weight: 500;
+  font-size: clamp(2.3rem, 5vw, 3.9rem); line-height: 1.04;
+  color: var(--rd-white); max-width: 14ch; margin: 0;
+}
+.sd-hero-h1 em { color: var(--rd-gold-bloom); font-style: normal; }
+.sd-hero-sub {
+  margin: 1.5rem 0 0; max-width: 46ch;
+  font-family: var(--font-sans); font-size: clamp(.95rem, 1.25vw, 1.06rem);
+  line-height: 1.68; color: var(--rd-on-night-dim);
+}
+/* The promise line. Set in the label tier and hung off a short rule so it reads
+   as a claim being made, not as a third paragraph. */
+.sd-hero-promise {
+  margin: 1.8rem 0 0; padding-left: 1rem;
+  border-left: 2px solid rgb(var(--rd-gold-line-rgb) / .55);
+  font-family: var(--font-mono); font-size: .7rem; font-weight: 500;
+  letter-spacing: .1em; text-transform: uppercase; color: var(--rd-gold-bloom);
+}
+.sd-hero-acts { display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 2.4rem; }
+
+/* The artifact needs a card to sit in — CraftArtifact fills its container and
+   assumes a dark panel under it (that is what makes its ivory browser pop). */
+.sd-hero-art {
+  position: relative; aspect-ratio: 16 / 11; min-height: 290px;
+  padding: 1.1rem 1.2rem 0;
+  border: 1px solid rgb(var(--rd-gold-line-rgb) / .22);
+  border-radius: 22px;
+  background: linear-gradient(168deg, rgb(var(--rd-ivory-rgb) / .07), rgb(var(--rd-ivory-rgb) / .015));
+  box-shadow: 0 28px 70px rgb(0 0 0 / .38);
+  overflow: hidden;
+}
+
+/* ── §2 Problem ────────────────────────────────────────────────────────── */
+.sd-problem { background: var(--rd-ivory); color: var(--rd-teal); padding: 6.5rem 0 7rem; }
+.sd-problem-grid {
+  display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr);
+  gap: clamp(2.5rem, 6vw, 5.5rem); align-items: start;
+}
+.sd-problem-lead .sd-h2 { max-width: 16ch; }
+
+/* Stacked, hanging off one shared rule — symptoms accumulate, they do not
+   compete, which is what three side-by-side cards would have made them do. */
+.sd-symptoms { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--rd-border); }
+.sd-symptom {
+  display: grid; grid-template-columns: 3.2rem minmax(0, 1fr);
+  gap: 1rem; padding: 1.9rem 0;
+  border-bottom: 1px solid var(--rd-border);
+}
+.sd-symptom-i {
+  font-family: var(--font-mono); font-size: .62rem; font-weight: 500;
+  letter-spacing: .12em; color: var(--rd-gold-line); line-height: 2.1;
+}
+.sd-symptom-t {
+  font-family: var(--font-serif); font-weight: 500; font-size: 1.12rem;
+  line-height: 1.3; color: var(--rd-teal); margin: 0 0 .5rem;
+}
+.sd-symptom-b {
+  font-family: var(--font-sans); font-size: .86rem; line-height: 1.68;
+  color: rgb(37 72 81 / .72); margin: 0; max-width: 52ch;
+}
+
+/* ── §3 Deliverables ───────────────────────────────────────────────────── */
+.sd-build { background: var(--rd-night); color: var(--rd-on-night); padding: 6.8rem 0 7.4rem; }
+.sd-deliv {
+  display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1px; background: rgb(var(--rd-ivory-rgb) / .1);
+  border: 1px solid rgb(var(--rd-ivory-rgb) / .1); border-radius: 20px; overflow: hidden;
+}
+/* Hairline grid, not gapped cards: six cells reading as one delivered SYSTEM is
+   the claim, and gaps would make them six separate purchases. */
+.sd-deliv-cell {
+  background: var(--rd-night); padding: 2.1rem 1.7rem 2.3rem;
+  transition: background .35s ease;
+}
+.sd-deliv-cell:hover { background: var(--rd-night-mid); }
+.sd-deliv-num {
+  display: block; font-family: var(--font-mono); font-size: .6rem; font-weight: 500;
+  letter-spacing: .14em; color: var(--rd-gold-line); margin-bottom: 1.1rem;
+}
+.sd-deliv-t {
+  font-family: var(--font-serif); font-weight: 500; font-size: 1.05rem;
+  line-height: 1.32; color: var(--rd-white); margin: 0 0 .6rem;
+}
+.sd-deliv-b {
+  font-family: var(--font-sans); font-size: .82rem; line-height: 1.66;
+  color: var(--rd-on-night-dim); margin: 0;
+}
+
+/* ── §4 Process ────────────────────────────────────────────────────────── */
+.sd-process { background: var(--rd-ivory); color: var(--rd-teal); padding: 6.5rem 0 6rem; }
+.sd-phases {
+  list-style: none; margin: 0; padding: 0;
+  display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0;
+}
+.sd-phase { position: relative; padding: 0 1.6rem 0 0; }
+/* The rail runs horizontally here — the vertical khatam rail belongs to the
+   offer ladder, and time reads left to right anyway. */
+.sd-phase-mark { display: block; position: relative; height: 36px; margin-bottom: 1.5rem; }
+.sd-phase-mark::before {
+  content: ''; position: absolute; left: 0; right: -1.6rem; top: 50%;
+  height: 1px; margin-top: -.5px;
+  background: rgb(var(--rd-gold-rgb) / .2);
+  transition: background .5s ease;
+}
+.sd-phase:last-child .sd-phase-mark::before { right: 0; }
+.sd-phase.is-on .sd-phase-mark::before { background: rgb(var(--rd-gold-line-rgb) / .72); }
+.sd-phase-node {
+  position: relative; z-index: 1;
+  display: grid; place-items: center; width: 36px; height: 36px; border-radius: 50%;
+  background: var(--rd-ivory); color: rgb(var(--rd-gold-rgb) / .42);
+  box-shadow: inset 0 0 0 1px rgb(var(--rd-gold-rgb) / .16);
+  transition: color .45s ease, transform .45s cubic-bezier(.22, 1, .36, 1);
+}
+.sd-phase.is-on .sd-phase-node {
+  color: var(--rd-gold-line); transform: scale(1.1);
+  box-shadow: inset 0 0 0 1px rgb(var(--rd-gold-line-rgb) / .45);
+}
+.sd-phase-span {
+  display: block; font-family: var(--font-mono); font-size: .6rem; font-weight: 500;
+  letter-spacing: .14em; text-transform: uppercase; color: var(--rd-gold);
+  margin-bottom: .7rem;
+}
+.sd-phase-t {
+  font-family: var(--font-serif); font-weight: 500; font-size: 1.06rem;
+  line-height: 1.3; color: var(--rd-teal); margin: 0 0 .6rem;
+}
+.sd-phase-b {
+  font-family: var(--font-sans); font-size: .82rem; line-height: 1.66;
+  color: rgb(37 72 81 / .72); margin: 0;
+}
+
+/* ── §5 Outcomes + fit ─────────────────────────────────────────────────── */
+.sd-out { background: var(--rd-night-2); color: var(--rd-on-night); padding: 6.8rem 0 6.2rem; }
+.sd-out-list {
+  list-style: none; margin: 0 0 4rem; padding: 0;
+  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.1rem 3rem; max-width: 62rem;
+}
+.sd-out-item {
+  display: grid; grid-template-columns: 1.5rem minmax(0, 1fr); gap: .7rem;
+  font-family: var(--font-sans); font-size: .92rem; line-height: 1.6;
+  color: var(--rd-on-night);
+}
+/* A drawn check, not a glyph — one element, and it inherits the accent. */
+.sd-tick {
+  width: 13px; height: 8px; margin-top: .48rem;
+  border-left: 1.8px solid var(--rd-gold-line);
+  border-bottom: 1.8px solid var(--rd-gold-line);
+  transform: rotate(-45deg);
+}
+.sd-fit {
+  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1px; background: rgb(var(--rd-ivory-rgb) / .12);
+  border: 1px solid rgb(var(--rd-ivory-rgb) / .12); border-radius: 18px; overflow: hidden;
+}
+/* Equal weight, on purpose. Shrinking the refusal column into a footnote is
+   what would make the whole section stop being believable. */
+.sd-fit-col { background: var(--rd-night-2); padding: 2.2rem 1.9rem 2.4rem; }
+.sd-fit-h {
+  font-family: var(--font-mono); font-size: .64rem; font-weight: 500;
+  letter-spacing: .16em; text-transform: uppercase;
+  color: var(--rd-gold-line); margin: 0 0 1.3rem;
+}
+.sd-fit-col.is-not .sd-fit-h { color: rgb(var(--rd-ivory-rgb) / .5); }
+.sd-fit-col ul { list-style: none; margin: 0; padding: 0; display: grid; gap: .9rem; }
+.sd-fit-col li {
+  position: relative; padding-left: 1.15rem;
+  font-family: var(--font-sans); font-size: .86rem; line-height: 1.62;
+  color: var(--rd-on-night-dim);
+}
+.sd-fit-col li::before {
+  content: ''; position: absolute; left: 0; top: .62em;
+  width: 5px; height: 5px; border-radius: 50%;
+  background: rgb(var(--rd-gold-line-rgb) / .7);
+}
+.sd-fit-col.is-not li::before {
+  border-radius: 0; height: 1.6px; width: 8px; top: .78em;
+  background: rgb(var(--rd-ivory-rgb) / .38);
+}
+
+/* ── §6 Packages funnel ────────────────────────────────────────────────── */
+.sd-pack { background: var(--rd-ivory); color: var(--rd-teal); padding: 6.5rem 0 2.6rem; }
+.sd-pack-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.2rem;
+}
+.sd-pack-card {
+  border: 1px solid var(--rd-border); border-radius: 18px; background: var(--rd-white);
+  transition: border-color .3s ease, transform .3s cubic-bezier(.22, 1, .36, 1);
+}
+.sd-pack-card:hover { border-color: rgb(var(--rd-gold-line-rgb) / .5); transform: translateY(-3px); }
+.sd-pack-link { display: flex; flex-direction: column; height: 100%; padding: 1.8rem 1.7rem 1.9rem; }
+.sd-pack-eyebrow {
+  font-family: var(--font-mono); font-size: .58rem; font-weight: 500;
+  letter-spacing: .16em; text-transform: uppercase; color: var(--rd-gold-line);
+}
+.sd-pack-t {
+  font-family: var(--font-serif); font-weight: 500; font-size: 1.14rem;
+  line-height: 1.28; color: var(--rd-teal); margin: .9rem 0 .6rem;
+}
+.sd-pack-b {
+  font-family: var(--font-sans); font-size: .82rem; line-height: 1.62;
+  color: rgb(37 72 81 / .7); margin: 0 0 1.4rem; flex: 1;
+}
+.sd-pack-cue {
+  font-family: var(--font-mono); font-size: .6rem; font-weight: 500;
+  letter-spacing: .12em; text-transform: uppercase; color: var(--rd-gold);
+}
+
+/* ── §7 FAQ ────────────────────────────────────────────────────────────── */
+.sd-faq { background: var(--rd-ivory); color: var(--rd-teal); padding: 3.5rem 0 7rem; }
+.sd-faq-grid {
+  display: grid; grid-template-columns: minmax(0, .7fr) minmax(0, 1.3fr);
+  gap: clamp(2rem, 5vw, 4.5rem); align-items: start;
+  padding-top: 3.5rem; border-top: 1px solid var(--rd-border);
+}
+.sd-faq-list { border-top: 1px solid var(--rd-border); }
+.sd-q { border-bottom: 1px solid var(--rd-border); }
+.sd-q summary {
+  display: flex; align-items: center; justify-content: space-between; gap: 1.5rem;
+  padding: 1.35rem 0; cursor: pointer; list-style: none;
+  font-family: var(--font-serif); font-weight: 500; font-size: 1.02rem;
+  line-height: 1.35; color: var(--rd-teal);
+  transition: color .2s ease;
+}
+.sd-q summary::-webkit-details-marker { display: none; }
+.sd-q summary:hover { color: var(--rd-gold); }
+/* A plus that becomes a minus: two bars, one of which rotates away. */
+.sd-q-mark { position: relative; flex: none; width: 13px; height: 13px; }
+.sd-q-mark::before, .sd-q-mark::after {
+  content: ''; position: absolute; inset: 50% 0 auto 0; height: 1.5px;
+  margin-top: -.75px; background: var(--rd-gold-line);
+  transition: transform .3s cubic-bezier(.22, 1, .36, 1);
+}
+.sd-q-mark::after { transform: rotate(90deg); }
+.sd-q[open] .sd-q-mark::after { transform: rotate(0deg); }
+.sd-q > p {
+  margin: 0; padding: 0 3rem 1.6rem 0; max-width: 62ch;
+  font-family: var(--font-sans); font-size: .87rem; line-height: 1.72;
+  color: rgb(37 72 81 / .74);
+}
+
+/* ── §8 Close ──────────────────────────────────────────────────────────── */
+/* The bracket close — this page's own ending. / bleeds a rosette, /about splits
+   across a hairline, /packages insets a panel, /faq runs a bar. Here: two short
+   rules that stop well short of the measure, framing without boxing. */
+.sd-cta {
+  background: linear-gradient(180deg, var(--rd-night) 0%, #081019 100%);
+  color: var(--rd-on-night); padding: 6.5rem 1.5rem 7rem; text-align: center;
+}
+.sd-cta-in { display: flex; flex-direction: column; align-items: center; }
+.sd-cta-rule {
+  width: 74px; height: 1px;
+  background: linear-gradient(90deg, transparent, rgb(var(--rd-gold-line-rgb) / .75), transparent);
+}
+.sd-cta-eyebrow {
+  margin: 2.2rem 0 1.4rem;
+  font-family: var(--font-mono); font-size: .64rem; font-weight: 500;
+  letter-spacing: .2em; text-transform: uppercase; color: var(--rd-gold-line);
+}
+.sd-cta-h {
+  font-family: var(--font-serif); font-weight: 500;
+  font-size: clamp(1.9rem, 4vw, 3rem); line-height: 1.1;
+  color: var(--rd-white); margin: 0; max-width: 18ch;
+}
+.sd-cta-h em { color: var(--rd-gold-bloom); font-style: normal; }
+.sd-cta-b {
+  margin: 1.4rem 0 0; max-width: 46ch;
+  font-family: var(--font-sans); font-size: .93rem; line-height: 1.7;
+  color: var(--rd-on-night-dim);
+}
+.sd-cta-acts {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: center;
+  gap: 1.6rem; margin: 2.4rem 0 3rem;
+}
+.sd-cta-alt {
+  font-family: var(--font-mono); font-size: .64rem; font-weight: 500;
+  letter-spacing: .14em; text-transform: uppercase;
+  color: rgb(var(--rd-ivory-rgb) / .68); transition: color .2s ease;
+}
+.sd-cta-alt:hover { color: var(--rd-gold-bloom); }
+
+/* ── Responsive ────────────────────────────────────────────────────────── */
+@media (max-width: 1024px) {
+  .sd-hero-grid    { grid-template-columns: 1fr; gap: 3rem; }
+  .sd-hero-art     { order: 2; max-width: 520px; }
+  .sd-hero-h1      { max-width: 18ch; }
+  .sd-problem-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+  .sd-deliv        { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .sd-phases       { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 2.6rem; }
+  .sd-faq-grid     { grid-template-columns: 1fr; gap: 2rem; }
+}
+@media (max-width: 700px) {
+  .sd-hero         { min-height: 0; padding: 8rem 0 4.5rem; }
+  .sd-hero-engine  { width: 130vw; height: 130vw; right: -50%; opacity: .18; }
+  .sd-hero-art     { min-height: 240px; padding: 1rem 1rem 0; border-radius: 18px; }
+  .sd-deliv        { grid-template-columns: 1fr; }
+  .sd-phases       { grid-template-columns: 1fr; row-gap: 2.2rem; }
+  /* The rail turns vertical when the phases stack — a horizontal segment under
+     a single stacked item would point at nothing. */
+  .sd-phase        { padding: 0 0 0 3.2rem; }
+  .sd-phase-mark   { position: absolute; left: 0; top: 0; height: 100%; margin: 0; width: 36px; }
+  .sd-phase-mark::before {
+    left: 50%; right: auto; top: 36px; bottom: -2.2rem;
+    width: 1px; height: auto; margin: 0 0 0 -.5px;
+  }
+  .sd-phase:last-child .sd-phase-mark::before { bottom: 0; }
+  .sd-out-list     { grid-template-columns: 1fr; }
+  .sd-fit          { grid-template-columns: 1fr; }
+  .sd-symptom      { grid-template-columns: 2.4rem minmax(0, 1fr); }
+  .sd-cta          { padding: 5rem 1.5rem 5.5rem; }
+  .sd-q > p        { padding-right: 0; }
+}
