@@ -63,7 +63,14 @@ export interface ServicePage {
   outcomes: {
     eyebrow: string;
     heading: { lead: string; em: string };
-    /** Five. Results, not features. */
+    /**
+     * Five. Results, not features.
+     *
+     * CONVENTION: an item containing ' → ' is a from/to pair, and a layout may
+     * split on it to render the two halves as a shift. Pages that do not use
+     * the arrow render as a plain list everywhere, so this is opt-in per page
+     * and costs nothing to ignore.
+     */
     list: string[];
     fitHeading: string;
     fit: string[];

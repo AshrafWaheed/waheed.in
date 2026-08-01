@@ -3,15 +3,23 @@ import { notFound } from 'next/navigation';
 import { pageMeta } from '@/lib/seo';
 import SmoothScroll from '@/components/motion/SmoothScroll';
 import SectionNav from '@/components/motion/useSectionNav';
-import ServiceHero from '@/components/service/ServiceHero';
-import ServiceProblem from '@/components/service/ServiceProblem';
-import ServiceBuild from '@/components/service/ServiceBuild';
-import ServiceProcess from '@/components/service/ServiceProcess';
-import ServiceOutcomes from '@/components/service/ServiceOutcomes';
-import ServicePackages from '@/components/service/ServicePackages';
-import ServiceFaq from '@/components/service/ServiceFaq';
-import ServiceCta from '@/components/service/ServiceCta';
+import DefaultServiceLayout from '@/components/service/layouts/DefaultServiceLayout';
+import BrandStrategyLayout from '@/components/service/layouts/BrandStrategyLayout';
+import type { ServiceLayoutProps } from '@/components/service/layouts/types';
 import { services, pages, servicePage } from '@/content/services';
+
+/**
+ * Slug → layout. Each craft can own its journey.
+ *
+ * Every service page makes the same argument in the same eight beats, so the
+ * CONTENT shape is shared (content/services/types.ts) — but a page whose whole
+ * subject is differentiation cannot be rendered by the same objects as the page
+ * before it without losing that argument on sight. Anything not listed here
+ * falls back to the default scan-down journey.
+ */
+const LAYOUTS: Record<string, React.ComponentType<ServiceLayoutProps>> = {
+  'brand-strategy': BrandStrategyLayout,
+};
 
 /**
  * /services/[slug] — one route, five pages.
@@ -25,9 +33,7 @@ import { services, pages, servicePage } from '@/content/services';
  * and the nav and the sitemap read the same map — so nothing on the site can
  * link here before the copy has been written.
  *
- * Colour rhythm: dark → light → dark → light → dark → light → light → dark. The
- * two adjacent light bands (packages, FAQ) are the quiet run before the close,
- * and are separated by their own top hairline rather than by a colour flip.
+ * The section list itself lives in a LAYOUT, picked by slug — see LAYOUTS above.
  */
 
 export function generateStaticParams() {
@@ -61,6 +67,7 @@ export default async function ServiceDetailPage({
   // Index in the register — drives which CraftArtifact the hero mounts, so the
   // page opens on the same object the homepage bento showed for this craft.
   const artifact = services.findIndex((s) => s.slug === slug);
+  const Layout = LAYOUTS[slug] ?? DefaultServiceLayout;
 
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -94,14 +101,7 @@ export default async function ServiceDetailPage({
       <SectionNav />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <main>
-        <ServiceHero page={page} artifact={artifact} />
-        <ServiceProblem page={page} />
-        <ServiceBuild page={page} />
-        <ServiceProcess page={page} />
-        <ServiceOutcomes page={page} />
-        <ServicePackages page={page} />
-        <ServiceFaq page={page} />
-        <ServiceCta page={page} />
+        <Layout page={page} artifact={artifact} />
       </main>
     </SmoothScroll>
   );

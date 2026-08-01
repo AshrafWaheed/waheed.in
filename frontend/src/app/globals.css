@@ -6669,3 +6669,476 @@ html[data-nav="dark"] .burger span            { background: var(--rd-ivory); }
   .sd-cta          { padding: 5rem 1.5rem 5.5rem; }
   .sd-q > p        { padding-right: 0; }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   BRAND STRATEGY — /services/brand-strategy                            `bs-`
+   ═══════════════════════════════════════════════════════════════════════════
+   A sibling to `sd-`, not a variant of it. This page argues that looking like
+   everyone else is what costs you the sale, so it cannot be rendered with the
+   same objects as the service page before it: centred hero inside a field of
+   marks, a pinned illustration, a horizontal rail, an alternating spine, and
+   swaps instead of a ticked list.
+
+   Motion rules that hold across the whole layer:
+   · every entrance is a transform + opacity — nothing animates layout
+   · every entrance is a CSS transition toggled by an `is-in` class from an
+     IntersectionObserver, so the still frame is the correct frame
+   · the reduced-motion block at the end is the single off switch
+   ═════════════════════════════════════════════════════════════════════════ */
+
+/* ── Shared type ───────────────────────────────────────────────────────── */
+.bs-eyebrow {
+  display: inline-block; margin: 0 0 1.5rem;
+  font-family: var(--font-mono); font-size: .68rem; font-weight: 500;
+  letter-spacing: .2em; text-transform: uppercase; color: var(--rd-gold-line);
+  border-bottom: 1px solid rgb(var(--rd-gold-line-rgb) / .55);
+  padding: 0 0 .5rem; margin-right: -.2em;
+}
+.bs-h2 {
+  font-family: var(--font-serif); font-weight: 500;
+  font-size: clamp(1.8rem, 3.6vw, 2.9rem); line-height: 1.1;
+  color: var(--rd-teal); margin: 0; max-width: 21ch;
+}
+.bs-h2 em { color: var(--rd-gold); font-style: normal; }
+.bs-h2--tight { max-width: 16ch; }
+.bs-lede {
+  font-family: var(--font-sans); font-size: clamp(.92rem, 1.15vw, 1rem);
+  line-height: 1.72; color: rgb(37 72 81 / .74); max-width: 52ch; margin: 1.4rem 0 0;
+}
+/* On the dark bands both flip together. */
+.bs-hero .bs-h2, .bs-diag .bs-h2, .bs-spine .bs-h2 { color: var(--rd-white); }
+.bs-hero .bs-h2 em, .bs-diag .bs-h2 em, .bs-spine .bs-h2 em { color: var(--rd-gold-bloom); }
+.bs-diag .bs-lede, .bs-spine .bs-lede { color: var(--rd-on-night-dim); }
+
+/* ── §1 Hero — centred inside the field ────────────────────────────────── */
+.bs-hero {
+  position: relative; overflow: hidden;
+  min-height: 92vh; display: flex; align-items: center;
+  padding: 9.5rem 0 6rem; text-align: center;
+  background: radial-gradient(120% 110% at 50% 42%, #1d414c 0%, var(--rd-night) 55%, #070f16 100%);
+  color: var(--rd-on-night);
+}
+.bs-hero-field { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
+.bs-hero-field .bf { width: 100%; height: 100%; display: block; }
+.bs-hero-in {
+  position: relative; z-index: 2;
+  display: flex; flex-direction: column; align-items: center;
+}
+.bs-hero-h1 {
+  font-family: var(--font-serif); font-weight: 500;
+  font-size: clamp(2.6rem, 7vw, 5.4rem); line-height: 1; letter-spacing: -.015em;
+  color: var(--rd-white); margin: 0; max-width: 14ch;
+  /* The headline sits ON the resolving mark, so it carries its own scrim. */
+  text-shadow: 0 2px 40px rgb(7 15 22 / .85), 0 0 90px rgb(7 15 22 / .6);
+}
+.bs-hero-h1 em { color: var(--rd-gold-bloom); font-style: normal; }
+.bs-hero-promise {
+  margin: 2.6rem 0 0;
+  font-family: var(--font-mono); font-size: .68rem; font-weight: 500;
+  letter-spacing: .18em; text-transform: uppercase; color: var(--rd-gold-bloom);
+}
+.bs-hero-sub {
+  margin: 1.5rem auto 0; max-width: 50ch;
+  font-family: var(--font-sans); font-size: clamp(.95rem, 1.2vw, 1.04rem);
+  line-height: 1.7; color: var(--rd-on-night-dim);
+  text-shadow: 0 1px 24px rgb(7 15 22 / .8);
+}
+.bs-hero-acts { display: flex; flex-wrap: wrap; justify-content: center; gap: 1rem; margin-top: 2.6rem; }
+
+/* BrandField — the crowd fades up, the chosen one resolves after it. */
+.bf-mark {
+  opacity: 0; stroke-opacity: .17;
+  animation: bf-in 1.1s cubic-bezier(.22, 1, .36, 1) forwards;
+}
+@keyframes bf-in { to { opacity: 1; } }
+.bf-halo      { opacity: 0; animation: bf-in 1.6s 1.05s ease-out forwards; }
+.bf-ring      { animation: bf-draw 1.9s 1.15s cubic-bezier(.22, 1, .36, 1) forwards; }
+.bf-ring--2   { animation-delay: 1.35s; }
+@keyframes bf-draw { to { stroke-dashoffset: 0; } }
+.bf-hero-mark {
+  opacity: 0; transform-box: fill-box; transform-origin: center;
+  animation: bf-pop 1.3s 1s cubic-bezier(.22, 1, .36, 1) forwards;
+}
+.bf-hero-mark--in { animation-delay: 1.18s; }
+@keyframes bf-pop { from { opacity: 0; transform: scale(.6) rotate(-25deg); } to { opacity: 1; transform: none; } }
+
+/* ── §2 Diagnosis — sticky plate, scrolling symptoms ───────────────────── */
+.bs-diag { background: var(--rd-night); color: var(--rd-on-night); padding: 7rem 0 5rem; }
+.bs-diag-head { max-width: 60ch; margin: 0 0 4.5rem; }
+.bs-diag-grid {
+  display: grid; grid-template-columns: minmax(0, .95fr) minmax(0, 1.05fr);
+  gap: clamp(2.5rem, 6vw, 5.5rem); align-items: start;
+}
+/* Sticky rather than a GSAP pin: nothing here is scrubbed, and sticky survives
+   resize, reduced motion and a nav-height change without any teardown. */
+.bs-diag-sticky { position: sticky; top: 22vh; }
+.bs-plate {
+  position: relative;
+  border: 1px solid rgb(var(--rd-ivory-rgb) / .12); border-radius: 22px;
+  background: linear-gradient(168deg, rgb(var(--rd-ivory-rgb) / .06), rgb(var(--rd-ivory-rgb) / .015));
+  padding: 1.6rem 1.6rem 3.4rem;
+}
+.bs-plate .dp { display: block; width: 100%; height: auto; }
+/* Cross-fade between the three drawings — same frame, same optical centre, so
+   the change reads as one diagram being re-drawn. */
+.dp-plate { opacity: 0; visibility: hidden; transition: opacity .45s ease, visibility .45s; }
+.dp-plate.is-on { opacity: 1; visibility: visible; }
+.dp-plate.is-on .dp-card { opacity: 0; animation: bf-in .5s ease-out forwards; }
+.dp-plate.is-on .dp-bar  { opacity: 0; animation: bf-in .5s ease-out forwards; }
+.dp-plate.is-on .dp-dot  { opacity: 0; animation: bf-in .4s ease-out forwards; }
+.dp-plate.is-on .dp-fall,
+.dp-plate.is-on .dp-hit  { animation: bf-draw 1.5s .25s cubic-bezier(.22, 1, .36, 1) forwards; }
+.dp-plate.is-on .dp-miss { animation: bf-draw 1.7s .3s cubic-bezier(.22, 1, .36, 1) forwards; }
+
+.bs-plate-steps {
+  position: absolute; left: 1.6rem; bottom: 1.5rem;
+  display: flex; gap: .5rem;
+}
+.bs-plate-step {
+  width: 26px; height: 2px; border-radius: 2px;
+  background: rgb(var(--rd-ivory-rgb) / .18); transition: background .35s ease;
+}
+.bs-plate-step.is-on { background: var(--rd-gold-line); }
+
+.bs-diag-list { list-style: none; margin: 0; padding: 0; }
+/* Each symptom is a full screen tall so exactly one is ever level with the
+   plate — that is what makes the swap feel deliberate instead of twitchy. */
+.bs-sym {
+  min-height: 72vh; display: flex; flex-direction: column; justify-content: center;
+  padding: 2rem 0;
+  opacity: .34; transition: opacity .5s ease;
+}
+.bs-sym.is-on { opacity: 1; }
+.bs-sym-i {
+  font-family: var(--font-mono); font-size: .62rem; font-weight: 500;
+  letter-spacing: .16em; color: var(--rd-gold-line); margin-bottom: 1.1rem;
+}
+.bs-sym-t {
+  font-family: var(--font-serif); font-weight: 500;
+  font-size: clamp(1.3rem, 2.4vw, 1.9rem); line-height: 1.18;
+  color: var(--rd-white); margin: 0 0 1rem; max-width: 18ch;
+}
+.bs-sym-b {
+  font-family: var(--font-sans); font-size: .92rem; line-height: 1.72;
+  color: var(--rd-on-night-dim); margin: 0; max-width: 46ch;
+}
+
+/* ── §3 Rail — the six artefacts travelling sideways ───────────────────── */
+.bs-rail { background: var(--rd-ivory); color: var(--rd-teal); overflow: hidden; }
+.bs-rail-stage {
+  min-height: 100vh; display: flex; flex-direction: column; justify-content: center;
+  padding: 5rem 0;
+}
+.bs-rail-head { max-width: 62ch; margin-bottom: 3rem; }
+.bs-rail-bar {
+  margin-top: 2.4rem; width: min(320px, 60%); height: 2px;
+  background: var(--rd-border); border-radius: 2px; overflow: hidden;
+}
+.bs-rail-fill {
+  display: block; width: 100%; height: 100%;
+  background: var(--rd-gold-line); transform: scaleX(0); transform-origin: left;
+}
+.bs-rail-row {
+  display: flex; gap: 1.4rem; width: max-content;
+  padding: 0 max(1.5rem, calc((100vw - 1180px) / 2 + 1.5rem));
+  will-change: transform;
+}
+.bs-card {
+  flex: none; width: min(360px, 78vw);
+  display: flex; flex-direction: column;
+  padding: 2.2rem 1.9rem 2rem;
+  border: 1px solid var(--rd-border); border-radius: 20px; background: var(--rd-white);
+  transition: border-color .3s ease;
+}
+.bs-card:hover { border-color: rgb(var(--rd-gold-line-rgb) / .5); }
+.bs-card-num {
+  font-family: var(--font-mono); font-size: .6rem; font-weight: 500;
+  letter-spacing: .16em; color: var(--rd-gold-line);
+}
+.bs-card-t {
+  font-family: var(--font-serif); font-weight: 500; font-size: 1.24rem;
+  line-height: 1.24; color: var(--rd-teal); margin: 1.1rem 0 .8rem; max-width: 16ch;
+}
+.bs-card-b {
+  font-family: var(--font-sans); font-size: .85rem; line-height: 1.68;
+  color: rgb(37 72 81 / .72); margin: 0 0 1.6rem; flex: 1;
+}
+.bs-card-mark { color: rgb(var(--rd-gold-rgb) / .45); display: inline-flex; }
+
+/* ── §4 Spine — alternating phases, scroll-drawn line ──────────────────── */
+.bs-spine { background: var(--rd-night-2); color: var(--rd-on-night); padding: 7rem 0 7.5rem; }
+.bs-spine-head { max-width: 60ch; margin: 0 auto 4.5rem; text-align: center; }
+.bs-spine-head .bs-h2, .bs-spine-head .bs-lede { margin-left: auto; margin-right: auto; }
+.bs-steps { list-style: none; margin: 0 auto; padding: 0; position: relative; max-width: 1000px; }
+.bs-steps-line {
+  position: absolute; left: 50%; top: 0; bottom: 0; width: 1px; margin-left: -.5px;
+  background: rgb(var(--rd-ivory-rgb) / .13);
+}
+.bs-steps-fill {
+  display: block; width: 100%; height: 100%;
+  background: linear-gradient(180deg, var(--rd-gold-line), var(--rd-gold-bloom));
+  transform: scaleY(0); transform-origin: top;
+}
+.bs-step {
+  position: relative; display: grid; padding: 0 0 4rem;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 0;
+}
+.bs-step:last-child { padding-bottom: 0; }
+.bs-step-node {
+  position: absolute; left: 50%; top: .4rem; z-index: 2;
+  display: grid; place-items: center; width: 38px; height: 38px; border-radius: 50%;
+  translate: -50% 0;                       /* `transform` is the entrance's */
+  background: var(--rd-night-2); color: rgb(var(--rd-gold-rgb) / .5);
+  box-shadow: inset 0 0 0 1px rgb(var(--rd-ivory-rgb) / .14);
+  transition: color .5s ease, box-shadow .5s ease;
+}
+.bs-step.is-in .bs-step-node {
+  color: var(--rd-gold-bloom);
+  box-shadow: inset 0 0 0 1px rgb(var(--rd-gold-line-rgb) / .5);
+}
+.bs-step-card {
+  opacity: 0; transition: opacity .8s cubic-bezier(.22, 1, .36, 1), transform .8s cubic-bezier(.22, 1, .36, 1);
+}
+/* Each phase enters from the side it lives on — the whole reason for alternating. */
+.bs-step.is-left  .bs-step-card { grid-column: 1; padding-right: 3.6rem; text-align: right; transform: translateX(-40px); }
+.bs-step.is-right .bs-step-card { grid-column: 2; padding-left: 3.6rem; transform: translateX(40px); }
+.bs-step.is-in .bs-step-card { opacity: 1; transform: none; }
+.bs-step-span {
+  display: block; font-family: var(--font-mono); font-size: .6rem; font-weight: 500;
+  letter-spacing: .16em; text-transform: uppercase; color: var(--rd-gold-line);
+  margin-bottom: .75rem;
+}
+.bs-step-t {
+  font-family: var(--font-serif); font-weight: 500; font-size: 1.28rem;
+  line-height: 1.24; color: var(--rd-white); margin: 0 0 .75rem;
+}
+.bs-step-b {
+  font-family: var(--font-sans); font-size: .87rem; line-height: 1.7;
+  color: var(--rd-on-night-dim); margin: 0;
+}
+
+/* ── §5 Shift — five before/after swaps ────────────────────────────────── */
+.bs-shift { background: var(--rd-ivory); color: var(--rd-teal); padding: 7rem 0 7rem; }
+.bs-shift-head { max-width: 60ch; margin: 0 0 3.4rem; }
+.bs-swaps { list-style: none; margin: 0 0 4.5rem; padding: 0; border-top: 1px solid var(--rd-border); }
+.bs-swap {
+  display: grid; grid-template-columns: minmax(0, 1fr) 5.5rem minmax(0, 1fr);
+  align-items: center; gap: 1rem;
+  padding: 1.6rem 0; border-bottom: 1px solid var(--rd-border);
+}
+.bs-swap-from {
+  font-family: var(--font-sans); font-size: .95rem; line-height: 1.5;
+  color: rgb(37 72 81 / .5); text-align: right;
+}
+.bs-swap-to {
+  font-family: var(--font-serif); font-weight: 500; font-size: 1.06rem; line-height: 1.35;
+  color: var(--rd-teal);
+  opacity: 0; transform: translateX(-16px);
+  transition: opacity .7s cubic-bezier(.22, 1, .36, 1) .25s, transform .7s cubic-bezier(.22, 1, .36, 1) .25s;
+}
+.bs-swap.is-in .bs-swap-to { opacity: 1; transform: none; }
+/* The connector draws left-to-right, then the arrowhead lands. */
+.bs-swap-arrow { position: relative; display: block; height: 9px; }
+.bs-swap-line {
+  position: absolute; left: 0; right: 6px; top: 4px; height: 1px;
+  background: var(--rd-gold-line);
+  transform: scaleX(0); transform-origin: left;
+  transition: transform .55s cubic-bezier(.22, 1, .36, 1);
+}
+.bs-swap.is-in .bs-swap-line { transform: scaleX(1); }
+.bs-swap-head {
+  position: absolute; right: 4px; top: 0; width: 9px; height: 9px;
+  border-top: 1px solid var(--rd-gold-line); border-right: 1px solid var(--rd-gold-line);
+  transform: rotate(45deg) scale(0); transform-origin: center;
+  transition: transform .35s cubic-bezier(.22, 1, .36, 1) .5s;
+}
+.bs-swap.is-in .bs-swap-head { transform: rotate(45deg) scale(1); }
+
+.bs-fit { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.4rem; }
+.bs-fit-col {
+  padding: 2.2rem 2rem 2.4rem;
+  border: 1px solid var(--rd-border); border-radius: 20px; background: var(--rd-white);
+}
+/* Hatched, not dimmed — the refusal has to stay as legible as the invitation. */
+.bs-fit-col.is-not {
+  background:
+    repeating-linear-gradient(-45deg,
+      rgb(37 72 81 / .035) 0 6px, transparent 6px 13px),
+    var(--rd-white);
+}
+.bs-fit-h {
+  font-family: var(--font-mono); font-size: .64rem; font-weight: 500;
+  letter-spacing: .16em; text-transform: uppercase;
+  color: var(--rd-gold); margin: 0 0 1.3rem;
+}
+.bs-fit-col.is-not .bs-fit-h { color: rgb(37 72 81 / .55); }
+.bs-fit-col ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 1rem; }
+.bs-fit-col li {
+  position: relative; padding-left: 1.5rem;
+  font-family: var(--font-sans); font-size: .88rem; line-height: 1.62;
+  color: rgb(37 72 81 / .82);
+}
+.bs-fit-col li::before {
+  content: ''; position: absolute; left: 0; top: .42em;
+  width: 9px; height: 5px;
+  border-left: 1.6px solid var(--rd-gold-line); border-bottom: 1.6px solid var(--rd-gold-line);
+  transform: rotate(-45deg);
+}
+.bs-fit-col.is-not li::before {
+  top: .68em; width: 10px; height: 1.6px; border: 0; transform: none;
+  background: rgb(37 72 81 / .34);
+}
+
+/* ── §6 Packages — rows, not a third grid ──────────────────────────────── */
+.bs-pack { background: var(--rd-ivory); color: var(--rd-teal); padding: 0 0 3rem; }
+.bs-pack-head { max-width: 60ch; margin: 0 0 2rem; padding-top: 3.5rem; border-top: 1px solid var(--rd-border); }
+.bs-pack-rows { list-style: none; margin: 0; padding: 0; }
+.bs-pack-row {
+  display: grid; grid-template-columns: 9rem minmax(0, 1fr) minmax(0, 1.15fr) 2rem;
+  align-items: baseline; gap: 1.5rem;
+  padding: 1.7rem .6rem; border-bottom: 1px solid var(--rd-border);
+  transition: background .3s ease, padding-left .3s cubic-bezier(.22, 1, .36, 1);
+}
+.bs-pack-row:hover { background: var(--rd-white); padding-left: 1.4rem; }
+.bs-pack-eyebrow {
+  font-family: var(--font-mono); font-size: .58rem; font-weight: 500;
+  letter-spacing: .16em; text-transform: uppercase; color: var(--rd-gold-line);
+}
+.bs-pack-t { font-family: var(--font-serif); font-weight: 500; font-size: 1.14rem; color: var(--rd-teal); }
+.bs-pack-b { font-family: var(--font-sans); font-size: .84rem; line-height: 1.6; color: rgb(37 72 81 / .68); }
+.bs-pack-cue {
+  justify-self: end; color: var(--rd-gold); font-size: 1rem;
+  transition: transform .3s cubic-bezier(.22, 1, .36, 1);
+}
+.bs-pack-row:hover .bs-pack-cue { transform: translateX(5px); }
+
+/* ── §7 FAQ — numbered, mark leading ───────────────────────────────────── */
+.bs-faq { background: var(--rd-ivory); color: var(--rd-teal); padding: 3rem 0 7rem; }
+.bs-faq-head { max-width: 60ch; margin: 0 0 2.2rem; padding-top: 3.5rem; border-top: 1px solid var(--rd-border); }
+.bs-faq-list { border-top: 1px solid var(--rd-border); }
+.bs-q { border-bottom: 1px solid var(--rd-border); }
+.bs-q summary {
+  display: grid; grid-template-columns: 1.6rem 3rem minmax(0, 1fr);
+  align-items: center; gap: .6rem;
+  padding: 1.5rem .4rem; cursor: pointer; list-style: none;
+  transition: background .25s ease;
+}
+.bs-q summary::-webkit-details-marker { display: none; }
+.bs-q summary:hover { background: var(--rd-white); }
+.bs-q-n {
+  font-family: var(--font-mono); font-size: .6rem; font-weight: 500;
+  letter-spacing: .14em; color: var(--rd-gold-line);
+}
+.bs-q-t {
+  font-family: var(--font-serif); font-weight: 500;
+  font-size: clamp(1rem, 1.5vw, 1.18rem); line-height: 1.3; color: var(--rd-teal);
+}
+/* Leading mark: a plus that becomes a minus. */
+.bs-q-mark { position: relative; width: 13px; height: 13px; }
+.bs-q-mark::before, .bs-q-mark::after {
+  content: ''; position: absolute; inset: 50% 0 auto 0; height: 1.5px;
+  margin-top: -.75px; background: var(--rd-gold);
+  transition: transform .3s cubic-bezier(.22, 1, .36, 1);
+}
+.bs-q-mark::after { transform: rotate(90deg); }
+.bs-q[open] .bs-q-mark::after { transform: rotate(0deg); }
+.bs-q > p {
+  margin: 0; padding: 0 2rem 1.7rem 5.6rem; max-width: 74ch;
+  font-family: var(--font-sans); font-size: .88rem; line-height: 1.74;
+  color: rgb(37 72 81 / .74);
+}
+
+/* ── §8 Close — one rule, everything hung off its left edge ────────────── */
+.bs-close {
+  background: linear-gradient(180deg, var(--rd-night) 0%, #070f16 100%);
+  color: var(--rd-on-night); padding: 6.5rem 0 7rem;
+}
+.bs-close-rule { display: block; height: 1px; background: rgb(var(--rd-gold-line-rgb) / .35); }
+.bs-close-grid {
+  display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr);
+  gap: clamp(2rem, 5vw, 4.5rem); align-items: end; padding-top: 3.2rem;
+}
+.bs-close-eyebrow {
+  display: inline-flex; align-items: center; gap: .6rem; margin: 0 0 1.5rem;
+  font-family: var(--font-mono); font-size: .64rem; font-weight: 500;
+  letter-spacing: .2em; text-transform: uppercase; color: var(--rd-gold-line);
+}
+.bs-close-h {
+  font-family: var(--font-serif); font-weight: 500;
+  font-size: clamp(2rem, 4.6vw, 3.4rem); line-height: 1.06;
+  color: var(--rd-white); margin: 0; max-width: 15ch;
+}
+.bs-close-h em { color: var(--rd-gold-bloom); font-style: normal; }
+.bs-close-tail { padding-bottom: .4rem; }
+.bs-close-b {
+  margin: 0 0 2rem; max-width: 42ch;
+  font-family: var(--font-sans); font-size: .93rem; line-height: 1.72;
+  color: var(--rd-on-night-dim);
+}
+.bs-close-acts { display: flex; flex-wrap: wrap; align-items: center; gap: 1.5rem; }
+.bs-close-alt {
+  font-family: var(--font-mono); font-size: .62rem; font-weight: 500;
+  letter-spacing: .14em; text-transform: uppercase;
+  color: rgb(var(--rd-ivory-rgb) / .66); transition: color .2s ease;
+}
+.bs-close-alt:hover { color: var(--rd-gold-bloom); }
+
+/* ── Responsive ────────────────────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .bs-hero        { min-height: 78vh; padding: 8rem 0 4.5rem; }
+  /* `slice` scales the field by HEIGHT, so on a phone the crowd arrives about
+     four times larger relative to the type than it is on desktop. Dimming is
+     the fix rather than rescaling — the marks are meant to crowd. */
+  .bs-hero-field  { opacity: .6; }
+  .bs-diag-grid   { grid-template-columns: 1fr; gap: 2.5rem; }
+  .bs-diag-sticky { position: static; }
+  .bs-sym         { min-height: 0; padding: 1.8rem 0; opacity: 1; border-top: 1px solid rgb(var(--rd-ivory-rgb) / .12); }
+  .bs-sym:first-child { border-top: 0; }
+  /* No pin below 901px — the row becomes a native scroll-snap swipe, which is
+     better on touch than a hijacked page. */
+  .bs-rail-stage  { min-height: 0; padding: 5.5rem 0; }
+  .bs-rail-row    { overflow-x: auto; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; width: auto; }
+  .bs-card        { scroll-snap-align: start; }
+  .bs-rail-bar    { display: none; }
+  /* The spine moves to the left edge and every phase enters from the right. */
+  .bs-steps-line  { left: 18px; }
+  .bs-step        { grid-template-columns: 1fr; padding-bottom: 3rem; }
+  .bs-step-node   { left: 18px; }
+  .bs-step.is-left .bs-step-card,
+  .bs-step.is-right .bs-step-card {
+    grid-column: 1; text-align: left; padding: 0 0 0 3.6rem; transform: translateX(28px);
+  }
+  .bs-step.is-in .bs-step-card { transform: none; }
+  .bs-swap        { grid-template-columns: 1fr; gap: .5rem; }
+  .bs-swap-from   { text-align: left; }
+  .bs-swap-arrow  { width: 46px; }
+  .bs-swap-to     { transform: translateY(10px); }
+  .bs-fit         { grid-template-columns: 1fr; }
+  .bs-pack-row    { grid-template-columns: minmax(0, 1fr) 1.5rem; row-gap: .5rem; }
+  .bs-pack-eyebrow, .bs-pack-t { grid-column: 1; }
+  .bs-pack-b      { grid-column: 1; }
+  .bs-pack-cue    { grid-column: 2; grid-row: 1 / span 3; align-self: center; }
+  .bs-q summary   { grid-template-columns: 1.4rem 2.4rem minmax(0, 1fr); }
+  .bs-q > p       { padding: 0 0 1.6rem 4.4rem; }
+  .bs-close-grid  { grid-template-columns: 1fr; align-items: start; gap: 2.2rem; }
+}
+
+/* ── Reduced motion ────────────────────────────────────────────────────── */
+/* Unlayered and last, so it beats every animation above without !important on
+   each one. Everything lands in its FINAL state — a still frame, not a blank. */
+@media (prefers-reduced-motion: reduce) {
+  .bf-mark, .bf-halo, .bf-hero-mark,
+  .dp-plate.is-on .dp-card, .dp-plate.is-on .dp-bar, .dp-plate.is-on .dp-dot {
+    animation: none !important; opacity: 1 !important; transform: none !important;
+  }
+  .bf-ring, .dp-plate.is-on .dp-fall, .dp-plate.is-on .dp-hit, .dp-plate.is-on .dp-miss {
+    animation: none !important; stroke-dashoffset: 0 !important;
+  }
+  .bs-step-card, .bs-swap-to {
+    opacity: 1 !important; transform: none !important; transition: none !important;
+  }
+  .bs-swap-line { transform: scaleX(1) !important; transition: none !important; }
+  .bs-swap-head { transform: rotate(45deg) scale(1) !important; transition: none !important; }
+  .bs-steps-fill { transform: scaleY(1) !important; }
+  .bs-sym { opacity: 1 !important; }
+}
