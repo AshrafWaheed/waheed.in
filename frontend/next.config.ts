@@ -23,6 +23,15 @@ const nextConfig: NextConfig = {
   async headers() {
     return [{ source: "/:path*", headers: securityHeaders }];
   },
+
+  async redirects() {
+    return [
+      // /services was the packages page until the seven crafts took the
+      // namespace. Permanent, because the old URL is indexed and linked; the
+      // match is exact, so /services/<slug> is untouched by it.
+      { source: "/services", destination: "/packages", permanent: true },
+    ];
+  },
 };
 
 export default nextConfig;

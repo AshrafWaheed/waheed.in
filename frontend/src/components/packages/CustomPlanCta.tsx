@@ -14,17 +14,17 @@
  * a clone of the homepage close, rosette and all, which made four different
  * pages end on one gesture and put petal edges behind the heading.
  *
- * Copy is verbatim from content/services.ts.
+ * Copy is verbatim from content/packages.ts.
  */
 import SplitReveal from '@/components/motion/SplitReveal';
 import ExplodeButton from '@/components/motion/ExplodeButton';
-import { customPlan } from '@/content/services';
+import { customPlan } from '@/content/packages';
 
 export default function CustomPlanCta() {
   return (
-    <section className="hy-cta sv-cta" data-section-color="dark">
+    <section className="hy-cta pk-cta" data-section-color="dark">
       <div className="cnt">
-        <div className="sv-cta-panel">
+        <div className="pk-cta-panel">
           <div>
             <span className="hy-cta-eyebrow">{customPlan.eyebrow}</span>
             <h2 className="hy-cta-h">

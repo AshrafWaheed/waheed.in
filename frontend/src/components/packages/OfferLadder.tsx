@@ -24,21 +24,21 @@
  * No numerals are printed. The rung meter carries the level graphically because
  * the copy contains no numbering, and inventing "01…05" would be adding content.
  *
- * Copy is verbatim from content/services.ts.
+ * Copy is verbatim from content/packages.ts.
  */
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import Spotlight from '@/components/motion/Spotlight';
 import Magnetic from '@/components/motion/Magnetic';
 import Khatam from '@/components/graphics/Khatam';
-import { ladder } from '@/content/services';
+import { ladder } from '@/content/packages';
 
 const N = ladder.rungs.length;
 
 /** Ascending ticks: `level + 1` of five lit. Decorative, no text. */
 function TierMeter({ level, lit }: { level: number; lit: boolean }) {
   return (
-    <svg className="sv-meter" width="54" height="30" viewBox="0 0 54 30" fill="none"
+    <svg className="pk-meter" width="54" height="30" viewBox="0 0 54 30" fill="none"
       stroke="currentColor" strokeLinecap="round" aria-hidden="true">
       {Array.from({ length: N }, (_, n) => (
         <line
@@ -76,40 +76,40 @@ export default function OfferLadder() {
   }, []);
 
   return (
-    <section className="sv-ladder-sec" data-section-color="light">
+    <section className="pk-ladder-sec" data-section-color="light">
       <div className="cnt">
-        <div ref={ladderRef} className="sv-ladder">
+        <div ref={ladderRef} className="pk-ladder">
           {ladder.rungs.map((r, i) => (
             <Spotlight
               key={r.title}
-              className={`sv-rung${r.featured ? ' is-featured' : ''}${i <= active ? ' is-on' : ''}`}
+              className={`pk-rung${r.featured ? ' is-featured' : ''}${i <= active ? ' is-on' : ''}`}
             >
               <div
                 ref={(el) => { rungRefs.current[i] = el; }}
                 data-i={i}
-                className="sv-rung-mark"
+                className="pk-rung-mark"
                 aria-hidden="true"
               >
-                <span className="sv-node">
+                <span className="pk-node">
                   <Khatam size={17} inner={0.5} stroke="currentColor" strokeWidth={1.5} />
                 </span>
                 <TierMeter level={i} lit={i <= active} />
               </div>
 
-              <div className="sv-rung-in reveal">
-                <div className="sv-rung-lead">
-                  {r.badge && <span className="sv-badge">{r.badge}</span>}
-                  <span className="sv-rung-eyebrow">{r.eyebrow}</span>
-                  <h3 className="sv-rung-title">{r.title}</h3>
-                  <p className="sv-rung-sub">{r.subtitle}</p>
+              <div className="pk-rung-in reveal">
+                <div className="pk-rung-lead">
+                  {r.badge && <span className="pk-badge">{r.badge}</span>}
+                  <span className="pk-rung-eyebrow">{r.eyebrow}</span>
+                  <h3 className="pk-rung-title">{r.title}</h3>
+                  <p className="pk-rung-sub">{r.subtitle}</p>
                 </div>
 
-                <div className="sv-rung-tail">
-                  <p className="sv-rung-desc">{r.desc}</p>
+                <div className="pk-rung-tail">
+                  <p className="pk-rung-desc">{r.desc}</p>
                   <Magnetic strength={0.35}>
                     <Link
                       href={ladder.applyHref}
-                      className={`btn btn-sm ${r.featured ? 'btn-gold' : 'btn-outline'} sv-apply`}
+                      className={`btn btn-sm ${r.featured ? 'btn-gold' : 'btn-outline'} pk-apply`}
                       data-cursor
                     >
                       {ladder.applyLabel}

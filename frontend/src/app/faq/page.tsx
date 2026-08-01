@@ -29,7 +29,7 @@ const faqJsonLd = {
 /**
  * /faq — rebuilt to homepage standard. The old single FaqContent client component
  * is now three components, with the page-level primitives (Lenis, khatam cursor,
- * colour-aware nav) mounted here as on / , /about and /services.
+ * colour-aware nav) mounted here as on / , /about and /packages.
  */
 export default function FAQPage() {
   return (

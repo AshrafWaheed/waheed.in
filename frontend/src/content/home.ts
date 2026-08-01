@@ -37,7 +37,7 @@ export const hero = {
     'All of it grounded in Islamic principles, from the first brief to ' +
     'the final deliverable.',
   ctaPrimary:   { label: 'Apply for a Free Discovery Call', href: '/contact' },
-  ctaSecondary: { label: 'Explore Our Services',            href: '/services' },
+  ctaSecondary: { label: 'Explore Our Services',            href: '/packages' },
 } as const;
 
 /* ─── Trust strip (marquee) ────────────────────────────────────── */
@@ -152,7 +152,7 @@ export const services = {
   heading: 'The infrastructure halal brands are built on.',
   sub: 'Top tier packages, each strategically crafted to move the business forward.',
   featuredBadge: 'BEST OFFER',
-  footerLink: { label: 'View all packages →', href: '/services' },
+  footerLink: { label: 'View all packages →', href: '/packages' },
   cards: [
     {
       eyebrow:  'Web & Brand',

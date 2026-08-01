@@ -1,14 +1,21 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { AnimatePresence, motion } from 'framer-motion';
+import { services } from '@/content/services';
 
-const buildLinks = () => [
+/**
+ * Top-level bar. `Services` is not in this list — it is a dropdown, not a link,
+ * because there is no /services index page: the seven crafts live at
+ * /services/[slug] and the trigger only opens the panel. Everything else here
+ * is a plain destination.
+ */
+const LINKS = [
   { href: '/',         label: 'Home'     },
   { href: '/about',    label: 'About'    },
-  { href: '/services', label: 'Services' },
+  { href: '/packages', label: 'Packages' },
   { href: '/blog',     label: 'Blog'     },
   { href: '/faq',      label: 'FAQs'     },
 ];
@@ -16,11 +23,15 @@ const buildLinks = () => [
 const EASE = [0.22, 1, 0.36, 1] as const;
 
 export default function Nav({}: { blogPublic?: boolean }) {
-  const LINKS = buildLinks();
-
   const [scrolled, setScrolled] = useState(false);
-  const [open, setOpen]         = useState(false);
+  const [open, setOpen]         = useState(false);   // mobile overlay
+  const [drop, setDrop]         = useState(false);   // desktop services panel
   const pathname                = usePathname();
+  const dropRef                 = useRef<HTMLLIElement | null>(null);
+  /** Hover-out is delayed so the pointer can cross the gap to the panel. */
+  const closeTimer              = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const onServices = pathname.startsWith('/services');
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 50);
@@ -28,18 +39,43 @@ export default function Nav({}: { blogPublic?: boolean }) {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  // Close menu on navigation
-  useEffect(() => { setOpen(false); }, [pathname]);
+  // Close both menus on navigation
+  useEffect(() => { setOpen(false); setDrop(false); }, [pathname]);
 
-  // Lock body scroll when menu is open
+  // Lock body scroll when the mobile overlay is open
   useEffect(() => {
     document.body.style.overflow = open ? 'hidden' : '';
     return () => { document.body.style.overflow = ''; };
   }, [open]);
 
+  // Escape closes the dropdown; a pointer/focus landing outside it does too.
+  useEffect(() => {
+    if (!drop) return;
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setDrop(false); };
+    const onOutside = (e: Event) => {
+      if (dropRef.current && !dropRef.current.contains(e.target as Node)) setDrop(false);
+    };
+    document.addEventListener('keydown', onKey);
+    document.addEventListener('pointerdown', onOutside);
+    document.addEventListener('focusin', onOutside);
+    return () => {
+      document.removeEventListener('keydown', onKey);
+      document.removeEventListener('pointerdown', onOutside);
+      document.removeEventListener('focusin', onOutside);
+    };
+  }, [drop]);
+
+  useEffect(() => () => { if (closeTimer.current) clearTimeout(closeTimer.current); }, []);
+
+  const hold  = () => { if (closeTimer.current) clearTimeout(closeTimer.current); setDrop(true); };
+  const relax = () => {
+    if (closeTimer.current) clearTimeout(closeTimer.current);
+    closeTimer.current = setTimeout(() => setDrop(false), 140);
+  };
+
   return (
     <>
-      <nav className={`nav${scrolled ? ' scrolled' : ''}`}>
+      <nav className={`nav${scrolled ? ' scrolled' : ''}${open ? ' menu-open' : ''}`}>
         <div className="cnt nav-inner">
 
           {/* Logo */}
@@ -53,12 +89,79 @@ export default function Nav({}: { blogPublic?: boolean }) {
 
           {/* Desktop links */}
           <ul className="nav-links">
-            {LINKS.map(({ href, label }) => (
+            <li>
+              <Link href="/" className={pathname === '/' ? 'active' : ''}>Home</Link>
+            </li>
+            <li>
+              <Link href="/about" className={pathname.startsWith('/about') ? 'active' : ''}>About</Link>
+            </li>
+
+            <li
+              className="nav-drop"
+              ref={dropRef}
+              onMouseEnter={hold}
+              onMouseLeave={relax}
+            >
+              <button
+                type="button"
+                className={`nav-drop-trigger${onServices ? ' active' : ''}`}
+                aria-expanded={drop}
+                aria-haspopup="true"
+                onClick={() => setDrop((d) => !d)}
+              >
+                Services
+                <span className={`nav-caret${drop ? ' is-up' : ''}`} aria-hidden="true" />
+              </button>
+
+              <AnimatePresence>
+                {drop && (
+                  <motion.div
+                    className="nav-panel"
+                    initial={{ opacity: 0, y: -6 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -6 }}
+                    transition={{ duration: 0.2, ease: EASE }}
+                  >
+                    <ul className="nav-panel-list">
+                      {services.map((s) => (
+                        <li key={s.slug}>
+                          {s.soon ? (
+                            /* Not an anchor at all — there is no page behind it,
+                               and a disabled-looking link that still navigates
+                               into a 404 is worse than plain text. */
+                            <span className="nav-panel-item is-soon" aria-disabled="true">
+                              <span className="nav-panel-num">{s.num}</span>
+                              <span className="nav-panel-text">
+                                <span className="nav-panel-title">
+                                  {s.navLabel}
+                                  <span className="nav-soon">Coming soon</span>
+                                </span>
+                                <span className="nav-panel-blurb">{s.navBlurb}</span>
+                              </span>
+                            </span>
+                          ) : (
+                            <Link
+                              href={`/services/${s.slug}`}
+                              className={`nav-panel-item${pathname === `/services/${s.slug}` ? ' active' : ''}`}
+                            >
+                              <span className="nav-panel-num">{s.num}</span>
+                              <span className="nav-panel-text">
+                                <span className="nav-panel-title">{s.navLabel}</span>
+                                <span className="nav-panel-blurb">{s.navBlurb}</span>
+                              </span>
+                            </Link>
+                          )}
+                        </li>
+                      ))}
+                    </ul>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </li>
+
+            {LINKS.slice(2).map(({ href, label }) => (
               <li key={href}>
-                <Link
-                  href={href}
-                  className={(href === '/' ? pathname === '/' : pathname.startsWith(href)) ? 'active' : ''}
-                >
+                <Link href={href} className={pathname.startsWith(href) ? 'active' : ''}>
                   {label}
                 </Link>
               </li>
@@ -94,7 +197,33 @@ export default function Nav({}: { blogPublic?: boolean }) {
             exit={{ opacity: 0, y: -8 }}
             transition={{ duration: 0.25, ease: EASE }}
           >
-            {LINKS.map(({ href, label }) => (
+            <Link href="/" onClick={() => setOpen(false)}>Home</Link>
+            <Link href="/about" onClick={() => setOpen(false)}>About</Link>
+
+            {/* Always expanded on mobile — a second tap-to-open layer inside a
+                menu the user already had to open is one gesture too many. */}
+            <div className="mob-group">
+              <p className="mob-group-label">Services</p>
+              {services.map((s) =>
+                s.soon ? (
+                  <span key={s.slug} className="mob-sub is-soon" aria-disabled="true">
+                    {s.navLabel}
+                    <span className="nav-soon">Coming soon</span>
+                  </span>
+                ) : (
+                  <Link
+                    key={s.slug}
+                    href={`/services/${s.slug}`}
+                    className="mob-sub"
+                    onClick={() => setOpen(false)}
+                  >
+                    {s.navLabel}
+                  </Link>
+                ),
+              )}
+            </div>
+
+            {LINKS.slice(2).map(({ href, label }) => (
               <Link key={href} href={href} onClick={() => setOpen(false)}>
                 {label}
               </Link>

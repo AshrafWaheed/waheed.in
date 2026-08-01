@@ -811,6 +811,164 @@ a.blog-chip-link:hover { background: var(--rd-gold); color: var(--rd-white); }
 .nav-links a.active::after       { transform: scaleX(1); }
 .nav-links a.active              { color: #254851; }
 
+/* ─── Services dropdown ──────────────────────────────────────────
+   The trigger is a <button>, not a link — there is no /services index
+   page — so it has to be talked back into looking like its siblings:
+   the surrounding `a` rules never reach it. Everything from `.nav-links a`
+   is restated here rather than the selector being widened, because the
+   underline sweep on ::after has to stay off the caret. */
+.nav-drop { position: relative; }
+.nav-drop-trigger {
+  display:        inline-flex;
+  align-items:    center;
+  gap:            .42em;
+  font-family:    inherit;
+  font-size:      0.78rem;
+  font-weight:    500;
+  letter-spacing: 0.01em;
+  color:          #3a3a3a;
+  background:     none;
+  border:         none;
+  padding:        0.3rem 0;
+  cursor:         pointer;
+  transition:     color 0.2s;
+}
+.nav-drop-trigger:hover,
+.nav-drop-trigger.active,
+.nav-drop-trigger[aria-expanded="true"] { color: #254851; }
+
+/* A chevron drawn from a rotated square: no icon font, no SVG, and it
+   flips by animating one rotation instead of swapping two glyphs. */
+.nav-caret {
+  width: .38em; height: .38em;
+  border-right:  1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+  transform: translateY(-.14em) rotate(45deg);
+  transition: transform .25s ease;
+}
+.nav-caret.is-up { transform: translateY(.06em) rotate(225deg); }
+
+/* The panel is anchored to the trigger and given a top gap that the
+   pointer has to cross; `relax()` in Nav.tsx holds the menu open for
+   140ms so that crossing never closes it. */
+.nav-panel {
+  position:   absolute;
+  top:        calc(100% + 1.05rem);
+  left:       50%;
+  translate:  -50% 0;
+  z-index:    10;
+  width:      min(20rem, 92vw);
+  padding:    .5rem;
+  background: var(--rd-white);
+  border:     1px solid var(--rd-border);
+  border-radius: 16px;
+  box-shadow: 0 18px 44px rgb(17 39 46 / .13), 0 2px 8px rgb(17 39 46 / .06);
+}
+/* Bridges the gap between trigger and panel so :hover never breaks
+   mid-travel. Invisible, and only as tall as the gap it covers. */
+.nav-panel::before {
+  content: ''; position: absolute;
+  left: 0; right: 0; top: -1.05rem; height: 1.05rem;
+}
+.nav-panel-list { list-style: none; margin: 0; padding: 0; }
+
+.nav-panel-item {
+  display:      flex;
+  gap:          .7rem;
+  padding:      .58rem .62rem;
+  border-radius: 11px;
+  color:        var(--rd-night);
+  transition:   background .18s ease, color .18s ease;
+}
+.nav-panel-item::after { content: none; }        /* kill the nav underline sweep */
+a.nav-panel-item:hover,
+a.nav-panel-item.active { background: rgb(var(--rd-gold-line-rgb) / .09); }
+
+/* The panel rows are anchors inside `.nav-links`, so BOTH the base link
+   colour and the dark-nav override reach them — and the dark one paints
+   them near-white on a white card. They are restated at a specificity
+   that beats each, rather than the ancestor selectors being narrowed,
+   because those two rules are the whole contract for the bar itself. */
+.nav-links a.nav-panel-item,
+html[data-nav="dark"] .nav-links a.nav-panel-item,
+html[data-nav="dark"] .nav-links a.nav-panel-item:hover,
+html[data-nav="dark"] .nav-links a.nav-panel-item.active { color: var(--rd-night); }
+
+.nav-panel-num {
+  flex: none;
+  font-family:    var(--font-mono);
+  font-size:      .58rem;
+  letter-spacing: .1em;
+  line-height:    1.7;
+  color:          var(--rd-gold-line);
+}
+.nav-panel-text  { display: flex; flex-direction: column; gap: .12rem; min-width: 0; }
+.nav-panel-title {
+  display: flex; align-items: center; gap: .5rem; flex-wrap: wrap;
+  font-size: .76rem; font-weight: 500; line-height: 1.35;
+}
+.nav-panel-blurb {
+  font-size: .66rem; line-height: 1.4; color: rgb(17 39 46 / .58);
+}
+
+/* Coming-soon rows. Rendered as <span>, so there is nothing to hover
+   into and nothing to click — the styling only has to agree with that. */
+.nav-panel-item.is-soon { cursor: default; opacity: .62; }
+.nav-panel-item.is-soon .nav-panel-num { color: var(--rd-border-strong); }
+.nav-soon {
+  font-family:    var(--font-mono);
+  font-size:      .52rem;
+  font-weight:    500;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color:          var(--rd-gold-line);
+  border:         1px solid rgb(var(--rd-gold-line-rgb) / .3);
+  border-radius:  999px;
+  padding:        .16em .5em .2em;
+  white-space:    nowrap;
+}
+
+/* Over a dark hero the bar goes transparent; the trigger follows the
+   links, but the PANEL stays light — a dark card on a dark section
+   loses its edge, and it is a surface, not chrome. */
+html[data-nav="dark"] .nav-drop-trigger            { color: rgb(var(--rd-ivory-rgb) / .85); }
+html[data-nav="dark"] .nav-drop-trigger:hover,
+html[data-nav="dark"] .nav-drop-trigger.active,
+html[data-nav="dark"] .nav-drop-trigger[aria-expanded="true"] { color: var(--rd-white); }
+
+/* ─── Mobile services group ──────────────────────────────────────
+   Flat, not collapsible: the overlay is already a disclosure. */
+.mob-group {
+  display: flex; flex-direction: column; gap: .85rem;
+  padding-left: .9rem;
+  border-left: 2px solid rgb(var(--rd-gold-line-rgb) / .28);
+}
+.mob-group-label {
+  font-family:    var(--font-mono);
+  font-size:      .62rem;
+  font-weight:    500;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color:          var(--rd-gold-line);
+  margin:         0;
+}
+.mob-menu .mob-sub {
+  display: flex; align-items: center; gap: .55rem; flex-wrap: wrap;
+  font-family: var(--font-sans);
+  font-size:   .92rem;
+  font-weight: 500;
+  line-height: 1.25;
+  color:       var(--rd-night);
+}
+.mob-menu .mob-sub.is-soon { opacity: .55; }
+
+/* The overlay is light, but the bar above it may still be in dark mode from
+   the page underneath — which inverts the logo to white and the burger to
+   ivory, both of which then vanish. While the menu is open the bar is over
+   the overlay, not the page, so the inversion is simply switched off. */
+html[data-nav="dark"] .nav.menu-open .nav-logo-img { filter: none; }
+html[data-nav="dark"] .nav.menu-open .burger span  { background: #254851; }
+
 .burger {
   display:         none;
   flex-direction:  column;
@@ -850,7 +1008,9 @@ a.blog-chip-link:hover { background: var(--rd-gold); color: var(--rd-white); }
 .mob-menu a:hover { color: #335C67; }
 
 /* ─── Responsive ─────────────────────────────────────────────── */
-@media (max-width: 640px) {
+/* Raised from 640px when Services became a sixth bar item: six links plus
+   the CTA stop fitting a tablet-width bar well before the old breakpoint. */
+@media (max-width: 860px) {
   .nav-links { display: none; }
   .nav-cta   { display: none !important; }
   .burger    { display: flex; }
@@ -5268,7 +5428,7 @@ html[data-nav="dark"] .burger span            { background: var(--rd-ivory); }
    ══════════════════════════════════════════════════════════════════════════ */
 
 /* ── §1 Hero — mirrored twin of .ab-hero: engine LEFT, copy right ───────── */
-.sv-hero {
+.pk-hero {
   position: relative; overflow: hidden;
   min-height: 56vh;
   display: flex; align-items: center;
@@ -5276,30 +5436,30 @@ html[data-nav="dark"] .burger span            { background: var(--rd-ivory); }
   background: radial-gradient(115% 125% at 82% 6%, #1e424d 0%, var(--rd-night) 56%, #081019 100%);
   color: var(--rd-on-night);
 }
-.sv-hero-engine {
+.pk-hero-engine {
   position: absolute; top: 50%; left: -15%;
   width: min(78vh, 640px); height: min(78vh, 640px);
   translate: 0 -50%;            /* `transform` belongs to .ab-lay */
   opacity: .36; pointer-events: none; z-index: 0;
 }
-.sv-hero-inner { position: relative; z-index: 2; text-align: right; }
-.sv-hero-h1 {
+.pk-hero-inner { position: relative; z-index: 2; text-align: right; }
+.pk-hero-h1 {
   font-family: var(--font-serif); font-weight: 500;
   font-size: clamp(2.3rem, 5.4vw, 4.2rem); line-height: 1.05;
   color: var(--rd-white); max-width: 22ch; margin: 0 0 0 auto;
 }
-.sv-hero-h1 em { color: var(--rd-gold-bloom); }
-.sv-hero-sub {
+.pk-hero-h1 em { color: var(--rd-gold-bloom); }
+.pk-hero-sub {
   margin: 1.5rem 0 0 auto; max-width: 42ch;
   font-family: var(--font-sans); font-size: clamp(1rem, 1.3vw, 1.1rem);
   line-height: 1.65; color: var(--rd-on-night-dim);
 }
 
 /* ── §2 The ladder ─────────────────────────────────────────────────────── */
-.sv-ladder-sec { background: var(--rd-ivory); color: var(--rd-teal); padding: 6rem 0 7rem; }
-.sv-ladder { border-top: 1px solid var(--rd-border); }
+.pk-ladder-sec { background: var(--rd-ivory); color: var(--rd-teal); padding: 6rem 0 7rem; }
+.pk-ladder { border-top: 1px solid var(--rd-border); }
 
-.sv-rung {
+.pk-rung {
   display: grid; grid-template-columns: 88px 1fr;
   align-items: start;
   padding: 2.9rem 0;
@@ -5310,125 +5470,125 @@ html[data-nav="dark"] .burger span            { background: var(--rd-ivory); }
 }
 
 /* The rail. Drawn per rung and full-bleed vertically, so consecutive rungs join
-   into one continuous line — hence no `gap` anywhere in .sv-ladder. */
-.sv-rung-mark {
+   into one continuous line — hence no `gap` anywhere in .pk-ladder. */
+.pk-rung-mark {
   position: relative; align-self: stretch;
   display: flex; flex-direction: column; align-items: center; gap: 1.2rem;
   color: var(--rd-gold);
 }
-.sv-rung-mark::before {
+.pk-rung-mark::before {
   content: ''; position: absolute; top: -2.9rem; bottom: -2.9rem; left: 50%;
   width: 1px; margin-left: -.5px;
   background: rgb(var(--rd-gold-rgb) / .22);
   transition: background .5s ease;
 }
-.sv-rung.is-on .sv-rung-mark::before { background: rgb(var(--rd-gold-line-rgb) / .6); }
-.sv-node {
+.pk-rung.is-on .pk-rung-mark::before { background: rgb(var(--rd-gold-line-rgb) / .6); }
+.pk-node {
   position: relative; z-index: 1;
   display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%;
   background: var(--rd-ivory);
   color: rgb(var(--rd-gold-rgb) / .3);
   transition: color .45s ease, transform .45s cubic-bezier(.22, 1, .36, 1);
 }
-.sv-rung.is-on .sv-node { color: var(--rd-gold-line); transform: scale(1.12); }
-/* Masks the rail behind it, exactly as .sv-node does — otherwise the vertical
+.pk-rung.is-on .pk-node { color: var(--rd-gold-line); transform: scale(1.12); }
+/* Masks the rail behind it, exactly as .pk-node does — otherwise the vertical
    line runs straight through the ticks and the meter reads as noise. */
-.sv-meter {
+.pk-meter {
   position: relative; z-index: 1;
   color: var(--rd-gold); transition: color .45s ease;
   background: var(--rd-ivory); padding: 2px 4px; border-radius: 4px;
 }
 
-.sv-rung-in {
+.pk-rung-in {
   display: grid; grid-template-columns: 1.02fr .98fr;
   gap: clamp(1.5rem, 4vw, 3.5rem); align-items: start;
 }
-.sv-badge {
+.pk-badge {
   display: inline-block; margin-bottom: .8rem;
   font-family: var(--font-mono); font-size: .6rem; font-weight: 500;
   letter-spacing: .16em; text-transform: uppercase;
   color: var(--rd-night); background: var(--rd-gold-bloom);
   padding: .28rem .7rem; border-radius: 999px;
 }
-.sv-rung-eyebrow {
+.pk-rung-eyebrow {
   display: block; font-family: var(--font-mono); font-size: .68rem; font-weight: 500;
   letter-spacing: .22em; text-transform: uppercase; color: var(--rd-gold);
   margin-bottom: .7rem;
 }
-.sv-rung-title {
+.pk-rung-title {
   font-family: var(--font-serif); font-size: clamp(1.5rem, 2.7vw, 2.15rem); font-weight: 500;
   color: #254851; line-height: 1.14; margin: 0;
 }
-.sv-rung-sub {
+.pk-rung-sub {
   margin-top: .8rem; font-family: var(--font-sans); font-size: 1rem;
   line-height: 1.6; color: #35606b; max-width: 34ch;
 }
-.sv-rung-desc {
+.pk-rung-desc {
   font-family: var(--font-sans); font-size: .95rem; line-height: 1.8; color: #5b6b6f;
   text-wrap: pretty; margin: 0;
 }
-.sv-apply { margin-top: 1.5rem; }
+.pk-apply { margin-top: 1.5rem; }
 
 /* The one landing on the ladder. */
-.sv-rung.is-featured {
+.pk-rung.is-featured {
   background: linear-gradient(180deg, #16323a, #11272e);
   border-bottom-color: transparent;
   padding: 3.2rem 2.4rem;
   margin: .9rem calc(-1 * clamp(1rem, 2vw, 2.4rem));
   box-shadow: 0 34px 70px -34px rgba(0, 0, 0, .55);
 }
-.sv-rung.is-featured .sv-node,
-.sv-rung.is-featured .sv-meter { background: #142c34; }
-.sv-rung.is-featured .sv-rung-mark,
-.sv-rung.is-featured .sv-meter        { color: var(--rd-gold-line); }
-.sv-rung.is-featured .sv-rung-eyebrow { color: var(--rd-gold-line); }
-.sv-rung.is-featured .sv-rung-title   { color: var(--rd-white); }
-.sv-rung.is-featured .sv-rung-sub     { color: var(--rd-on-night); }
-.sv-rung.is-featured .sv-rung-desc    { color: var(--rd-on-night-dim); }
+.pk-rung.is-featured .pk-node,
+.pk-rung.is-featured .pk-meter { background: #142c34; }
+.pk-rung.is-featured .pk-rung-mark,
+.pk-rung.is-featured .pk-meter        { color: var(--rd-gold-line); }
+.pk-rung.is-featured .pk-rung-eyebrow { color: var(--rd-gold-line); }
+.pk-rung.is-featured .pk-rung-title   { color: var(--rd-white); }
+.pk-rung.is-featured .pk-rung-sub     { color: var(--rd-on-night); }
+.pk-rung.is-featured .pk-rung-desc    { color: var(--rd-on-night-dim); }
 /* The rail has to keep running through the panel, and the panel's own padding is
    taller than a normal rung's, so the ::before overhang is re-stated to match. */
-.sv-rung.is-featured .sv-rung-mark::before {
+.pk-rung.is-featured .pk-rung-mark::before {
   top: calc(-3.2rem - .9rem); bottom: calc(-3.2rem - .9rem);
 }
 
 /* btn-outline reads teal on this ivory band, matching the old page's override. */
-.sv-rung:not(.is-featured) .btn-outline { border-color: #254851; color: #254851; }
-.sv-rung:not(.is-featured) .btn-outline:hover { background: #254851; color: var(--rd-white); }
+.pk-rung:not(.is-featured) .btn-outline { border-color: #254851; color: #254851; }
+.pk-rung:not(.is-featured) .btn-outline:hover { background: #254851; color: var(--rd-white); }
 
 /* ── responsive ────────────────────────────────────────────────────────── */
 @media (max-width: 1024px) {
-  .sv-rung-in { grid-template-columns: 1fr; gap: 1.1rem; }
-  .sv-rung-sub { max-width: 52ch; }
+  .pk-rung-in { grid-template-columns: 1fr; gap: 1.1rem; }
+  .pk-rung-sub { max-width: 52ch; }
 }
 @media (max-width: 860px) {
-  .sv-hero-inner, .sv-hero-h1, .sv-hero-sub { text-align: left; margin-left: 0; margin-right: auto; }
-  .sv-hero-engine { left: -34%; opacity: .26; }
+  .pk-hero-inner, .pk-hero-h1, .pk-hero-sub { text-align: left; margin-left: 0; margin-right: auto; }
+  .pk-hero-engine { left: -34%; opacity: .26; }
 }
 @media (max-width: 768px) {
-  .sv-hero { min-height: 44vh; padding: 8rem 0 4.5rem; }
-  .sv-hero-engine { left: -42%; width: 116vw; height: 116vw; opacity: .22; }
-  .sv-hero-h1 { max-width: 100%; }
-  .sv-ladder-sec { padding: 4rem 0 4.5rem; }
+  .pk-hero { min-height: 44vh; padding: 8rem 0 4.5rem; }
+  .pk-hero-engine { left: -42%; width: 116vw; height: 116vw; opacity: .22; }
+  .pk-hero-h1 { max-width: 100%; }
+  .pk-ladder-sec { padding: 4rem 0 4.5rem; }
   /* Rail column collapses: at this width it costs more horizontal room than the
      ascent is worth, so the meter moves inline above the eyebrow instead. */
-  .sv-rung { grid-template-columns: 1fr; padding: 2.2rem 0; }
-  .sv-rung-mark {
+  .pk-rung { grid-template-columns: 1fr; padding: 2.2rem 0; }
+  .pk-rung-mark {
     flex-direction: row; align-self: auto; justify-content: flex-start;
     gap: .9rem; margin-bottom: 1.1rem;
   }
-  .sv-rung-mark::before { display: none; }
+  .pk-rung-mark::before { display: none; }
   /* .cnt leaves only ~15px of gutter at 390, so -1rem (19px) overflowed the
      document by 3px. Stay inside the gutter. */
-  .sv-rung.is-featured { padding: 2.4rem 1.5rem; margin-inline: -0.7rem; }
+  .pk-rung.is-featured { padding: 2.4rem 1.5rem; margin-inline: -0.7rem; }
 }
 @media (min-width: 861px) and (max-height: 800px) {
-  .sv-hero { min-height: 0; padding: 8rem 0 4.5rem; }
+  .pk-hero { min-height: 0; padding: 8rem 0 4.5rem; }
 }
 
 /* ── reduced motion ────────────────────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
-  .sv-node { transform: none !important; transition: none !important; }
-  .sv-rung, .sv-rung-mark::before, .sv-meter { transition: none !important; }
+  .pk-node { transform: none !important; transition: none !important; }
+  .pk-rung, .pk-rung-mark::before, .pk-meter { transition: none !important; }
 }
 
 
@@ -5836,8 +5996,8 @@ html[data-nav="dark"] .burger span            { background: var(--rd-ivory); }
 .ab-cta .hy-cta-acts, .ab-cta-acts { margin-top: 0; }
 
 /* ── /services — an inset panel: the escape hatch, shaped like a request ─── */
-.sv-cta { padding: 6rem 1.5rem; }
-.sv-cta-panel {
+.pk-cta { padding: 6rem 1.5rem; }
+.pk-cta-panel {
   position: relative; z-index: 1; text-align: left;
   display: grid; grid-template-columns: minmax(0, 1fr) auto;
   align-items: center; gap: 2.6rem;
@@ -5845,9 +6005,9 @@ html[data-nav="dark"] .burger span            { background: var(--rd-ivory); }
   border: 1px solid var(--rd-hairline); border-radius: 22px;
   background: rgb(var(--rd-ivory-rgb) / .04);
 }
-.sv-cta .hy-cta-h { font-size: clamp(1.7rem, 3vw, 2.4rem); }
-.sv-cta .hy-cta-body { margin: .9rem 0 0; max-width: 46ch; }
-.sv-cta .hy-cta-acts { margin: 0; }
+.pk-cta .hy-cta-h { font-size: clamp(1.7rem, 3vw, 2.4rem); }
+.pk-cta .hy-cta-body { margin: .9rem 0 0; max-width: 46ch; }
+.pk-cta .hy-cta-acts { margin: 0; }
 
 /* ── /faq — a bar, not a hero. It follows a long list of questions. ──────── */
 .fq-cta { padding: 4.2rem 1.5rem 4.6rem; }
@@ -5865,9 +6025,9 @@ html[data-nav="dark"] .burger span            { background: var(--rd-ivory); }
    squeezed against the copy, so all three stack and go back to reading
    top-to-bottom — which is the one thing every close still shares. */
 @media (max-width: 880px) {
-  .ab-cta-grid, .sv-cta-panel, .fq-cta-row { grid-template-columns: 1fr; align-items: start; }
+  .ab-cta-grid, .pk-cta-panel, .fq-cta-row { grid-template-columns: 1fr; align-items: start; }
   .ab-cta-grid { gap: 2.2rem; }
-  .sv-cta-panel { gap: 1.8rem; padding: 2.2rem 1.7rem; }
+  .pk-cta-panel { gap: 1.8rem; padding: 2.2rem 1.7rem; }
   .fq-cta-row { gap: 1.9rem; }
 }
 
