@@ -8039,3 +8039,280 @@ html[data-nav="dark"] .burger span            { background: var(--rd-ivory); }
   .sm-panel-body { animation: none !important; }
   .sm-panel     { transition: none !important; }
 }
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   01 · WEB & APP DEVELOPMENT — hero deltas (`wa-`)
+   ═══════════════════════════════════════════════════════════════════════════
+
+   A delta layer on `sd-`, not a replacement for it. The section keeps `.sd-hero`
+   for its background, engine and grid; everything here is what THIS page needs
+   on top — an artifact that keeps moving, and a stack strip along the bottom.
+
+   Unlayered on purpose, like every other page layer on the site: it has to
+   outrank the `sd-` rules it is amending regardless of source order.
+
+   The rig's whole state machine is one attribute, `data-stage`, on `.wa-rig`.
+   React writes it every 3.4s and nothing else re-renders; each stage is reached
+   by CSS transition, so there is no per-frame JS anywhere in this hero.
+   ═════════════════════════════════════════════════════════════════════════ */
+
+/* Two children now — the grid and the strip — so the section stacks instead of
+   putting them side by side. `.cnt` carries its own width, so stretching does
+   not apply to it. */
+.wa-hero { flex-direction: column; justify-content: center; padding-bottom: 5rem; }
+.wa-hero .sd-hero-grid { grid-template-columns: minmax(0, 1fr) minmax(0, .95fr); }
+.wa-hero .sd-hero-h1   { max-width: 12ch; }
+
+@keyframes wa-rise  { from { opacity: 0; transform: translateY(12px); } }
+@keyframes wa-pulse { 50% { opacity: .25; } }
+@keyframes wa-sweep { 0% { transform: translateX(-100%); } 55%, 100% { transform: translateX(100%); } }
+@keyframes wa-cap   { from { opacity: 0; transform: translateY(5px); } }
+@keyframes wa-push-in { from { opacity: 0; transform: translateY(-14px) scale(.94); } }
+@keyframes wa-tap {
+  0%   { opacity: 0; transform: scale(.4); box-shadow: 0 0 0 0 rgb(var(--rd-gold-line-rgb) / .5); }
+  22%  { opacity: 1; transform: scale(1); }
+  100% { opacity: 0; transform: scale(1); box-shadow: 0 0 0 15px rgb(var(--rd-gold-line-rgb) / 0); }
+}
+/* Animating `left`/`top` rather than a translate, because the trip has to be a
+   fixed fraction of the RIG — a px translate would land short on a narrow card
+   and overshoot the phone on a wide one. One element, three stages a minute. */
+@keyframes wa-fly {
+  0%       { left: 24%; top: 42%; opacity: 0; transform: scale(.66); }
+  12%      { opacity: 1; transform: scale(1); }
+  66%      { left: 74%; top: 55%; opacity: 1; transform: scale(.6); }
+  82%, 100% { left: 76%; top: 57%; opacity: 0; transform: scale(.5); }
+}
+
+/* ── The card ──────────────────────────────────────────────────────────── */
+.wa-art {
+  position: relative; aspect-ratio: 16 / 11; min-height: 340px;
+  padding: 1.2rem 1.3rem 1.1rem;
+  border: 1px solid rgb(var(--rd-gold-line-rgb) / .22);
+  border-radius: 22px;
+  background: linear-gradient(168deg, rgb(var(--rd-ivory-rgb) / .07), rgb(var(--rd-ivory-rgb) / .015));
+  box-shadow: 0 28px 70px rgb(0 0 0 / .38);
+  overflow: hidden;
+}
+
+/* The devices are all absolute, so the only thing in flow is the caption block —
+   which is why `justify-content: flex-end` parks it at the bottom. */
+.wa-rig { position: relative; width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: flex-end; }
+
+/* Light follows whichever surface is forward. `translate` is its own animatable
+   property, so this moves without touching the devices' transforms. */
+.wa-halo {
+  position: absolute; left: 50%; top: 42%; width: 82%; height: 104%;
+  border-radius: 50%; pointer-events: none; z-index: 0;
+  background: radial-gradient(closest-side, rgb(var(--rd-gold-line-rgb) / .4), transparent 74%);
+  filter: blur(8px);
+  transition: translate 1s cubic-bezier(.22, 1, .36, 1);
+}
+[data-stage="web"] .wa-halo { translate: -86% -50%; }
+[data-stage="app"] .wa-halo { translate: -6% -50%; }
+[data-stage="sys"] .wa-halo { translate: -50% -50%; }
+
+/* ── The site ──────────────────────────────────────────────────────────── */
+.wa-browser {
+  position: absolute; left: 0; top: 0; width: 76%; z-index: 2;
+  background: var(--rd-ivory); border-radius: 10px; overflow: hidden;
+  box-shadow: 0 20px 44px rgb(0 0 0 / .5);
+  transform-origin: 10% 40%;
+  transition: transform .95s cubic-bezier(.22, 1, .36, 1), opacity .8s ease;
+}
+[data-stage="web"] .wa-browser { transform: none; opacity: 1; }
+[data-stage="app"] .wa-browser { transform: translate(-4%, -2%) scale(.9); opacity: .38; }
+[data-stage="sys"] .wa-browser { transform: translate(-2%, -1%) scale(.96); opacity: 1; }
+
+.wa-chrome { display: flex; align-items: center; gap: 5px; padding: 7px 9px; background: var(--rd-border); }
+.wa-chrome > span { width: 6px; height: 6px; border-radius: 50%; background: #c0c9d3; flex-shrink: 0; }
+.wa-url {
+  margin-left: 5px; flex: 1; min-width: 0; height: 15px; border-radius: 8px; background: var(--rd-white);
+  display: flex; align-items: center; gap: 5px; padding: 0 8px;
+  font-family: var(--font-sans); font-size: 8px; color: #7a8a8e;
+}
+/* A real padlock silhouette — body plus shackle. A single bordered rect at this
+   size reads as an empty placeholder box, not as a lock. */
+.wa-lock { position: relative; width: 5px; height: 5px; border-radius: 1px; background: #9fb0b4; flex-shrink: 0; margin-top: 1px; }
+.wa-lock::before {
+  content: ''; position: absolute; left: 1px; right: 1px; top: -2.5px; height: 3px;
+  border: 1px solid #9fb0b4; border-bottom: 0; border-radius: 3px 3px 0 0;
+}
+/* `flex-shrink: 0` is load-bearing — the url pill is `flex: 1` and will
+   otherwise push this straight out of the overflow-hidden chrome. */
+.wa-live {
+  width: 6px; height: 6px; border-radius: 50%; margin-left: 7px; flex-shrink: 0;
+  background: var(--rd-gold-line); animation: wa-pulse 2s ease-in-out infinite;
+}
+
+.wa-view { position: relative; padding: 11px 12px 13px; display: flex; flex-direction: column; gap: 7px; overflow: hidden; }
+/* The page assembling itself, once, on arrival. `backwards` fill is what holds
+   each row at its from-state through its delay — so the base rule below is the
+   FINISHED state, and killing the animation lands on a built page, not a blank
+   one. Listed by name rather than `.wa-view > *` so the sweep is not swept up. */
+.wa-topnav, .wa-view .wa-blk, .wa-view .wa-ln, .wa-cards, .wa-cta {
+  animation: wa-rise .6s cubic-bezier(.22, 1, .36, 1) backwards;
+}
+.wa-topnav        { animation-delay: .60s; }
+.wa-view .wa-blk  { animation-delay: .70s; }
+.wa-view .wa-ln:nth-of-type(1) { animation-delay: .80s; }
+.wa-view .wa-ln:nth-of-type(2) { animation-delay: .87s; }
+.wa-cards         { animation-delay: .96s; }
+.wa-cta           { animation-delay: 1.08s; }
+
+.wa-topnav { display: flex; align-items: center; gap: 6px; }
+.wa-topnav b { width: 26px; height: 6px; border-radius: 2px; background: #254851; }
+.wa-topnav i { width: 14px; height: 3px; border-radius: 2px; background: #c8d2dc; }
+.wa-topnav i:first-of-type { margin-left: auto; }
+.wa-blk  { height: 46px; border-radius: 5px; background: linear-gradient(120deg, #254851, #335C67); }
+.wa-ln   { height: 5px; border-radius: 3px; background: #d2dae3; }
+.wa-ln.w78 { width: 78%; } .wa-ln.w54 { width: 54%; }
+.wa-cards { display: flex; gap: 6px; }
+.wa-cards span { flex: 1; height: 32px; border-radius: 5px; background: #eaeef3; border: 1px solid #d9e1e9; }
+.wa-cta {
+  align-self: flex-start; margin-top: 2px; padding: 4px 11px; border-radius: 999px;
+  background: var(--rd-gold-line); color: #0b1c23;
+  font-family: var(--font-sans); font-size: 8px; font-weight: 500; letter-spacing: .05em;
+}
+.wa-scan {
+  position: absolute; inset: 0; pointer-events: none; z-index: 3;
+  background: linear-gradient(100deg, transparent 42%, rgb(var(--rd-gold-line-rgb) / .2) 50%, transparent 58%);
+  transform: translateX(-100%);
+  animation: wa-sweep 4.6s ease-in-out 1.7s infinite;
+}
+
+/* ── The app ───────────────────────────────────────────────────────────── */
+/* `bottom` clears the caption block, which is the rig's only in-flow content.
+   Absolute children resolve against the PADDING box, so padding on `.wa-art`
+   cannot reserve that space for us. */
+.wa-phone {
+  position: absolute; right: 0; bottom: 62px; width: 26.5%; z-index: 4;
+  background: #10262f; border: 2px solid #35606d; border-radius: 16px;
+  padding: 8px 7px 7px;
+  box-shadow: 0 18px 40px rgb(0 0 0 / .55), inset 0 1px 0 rgb(var(--rd-ivory-rgb) / .1);
+  transform-origin: 84% 62%;
+  transition: transform .95s cubic-bezier(.22, 1, .36, 1), opacity .8s ease;
+}
+[data-stage="web"] .wa-phone { transform: translate(6%, 7%) scale(.86); opacity: .42; }
+[data-stage="app"] .wa-phone { transform: translate(-6%, -6%) scale(1.16); opacity: 1; }
+[data-stage="sys"] .wa-phone { transform: none; opacity: 1; }
+
+.wa-notch { display: block; width: 20px; height: 3px; border-radius: 2px; background: #3d6b78; margin: 0 auto 7px; }
+.wa-scr   { position: relative; display: flex; flex-direction: column; gap: 5px; }
+.wa-pblk  { height: 34px; border-radius: 4px; background: linear-gradient(120deg, #2f5a66, #437f8d); }
+.wa-pln   { height: 4px; border-radius: 2px; background: rgb(var(--rd-ivory-rgb) / .34); }
+.wa-pln.w82 { width: 82%; } .wa-pln.w58 { width: 58%; }
+.wa-ptiles { display: flex; gap: 5px; margin-top: 1px; }
+.wa-ptiles span {
+  flex: 1; height: 22px; border-radius: 4px;
+  background: rgb(var(--rd-ivory-rgb) / .12); border: 1px solid rgb(var(--rd-ivory-rgb) / .16);
+}
+.wa-tabs {
+  display: flex; justify-content: space-around; margin-top: 8px; padding-top: 6px;
+  border-top: 1px solid rgb(var(--rd-ivory-rgb) / .16);
+}
+.wa-tabs i { width: 9px; height: 9px; border-radius: 3px; background: rgb(var(--rd-ivory-rgb) / .26); transition: background .5s ease; }
+.wa-tabs i:first-child { background: var(--rd-gold-line); }
+/* The tap in the `app` stage moves the selection — the notification arrived and
+   was acted on, which is the entire argument for the app existing. */
+[data-stage="app"] .wa-tabs i:first-child  { background: rgb(var(--rd-ivory-rgb) / .26); }
+[data-stage="app"] .wa-tabs i:nth-child(3) { background: var(--rd-gold-line); }
+
+.wa-push {
+  position: absolute; left: -3px; right: -3px; top: -5px; z-index: 5;
+  display: flex; align-items: center; gap: 5px; padding: 5px 6px;
+  border-radius: 7px; background: rgb(var(--rd-ivory-rgb) / .96);
+  box-shadow: 0 8px 18px rgb(0 0 0 / .45);
+  animation: wa-push-in .6s cubic-bezier(.22, 1, .36, 1) .3s backwards;
+}
+.wa-push-i { width: 12px; height: 12px; border-radius: 3px; background: linear-gradient(140deg, #254851, #335C67); flex-shrink: 0; }
+.wa-push-txt { flex: 1; display: flex; flex-direction: column; gap: 3px; }
+.wa-push-txt b  { display: block; height: 3px; width: 62%; border-radius: 2px; background: #254851; }
+.wa-push-txt em { display: block; height: 3px; width: 88%; border-radius: 2px; background: #9fb0b4; }
+
+.wa-tap {
+  position: absolute; left: 62%; bottom: 9px; width: 10px; height: 10px; margin-left: -5px;
+  border-radius: 50%; background: rgb(var(--rd-gold-line-rgb) / .9); z-index: 6;
+  animation: wa-tap 1.4s ease-out 1.15s 2 backwards;
+}
+
+/* ── The component that crosses ────────────────────────────────────────── */
+.wa-share {
+  position: absolute; z-index: 5; width: 30px; height: 22px; border-radius: 5px;
+  border: 1px solid rgb(var(--rd-gold-line-rgb) / .8);
+  background: rgb(var(--rd-gold-line-rgb) / .2);
+  box-shadow: 0 6px 16px rgb(0 0 0 / .4);
+  animation: wa-fly 2.6s cubic-bezier(.5, 0, .2, 1) .4s infinite;
+}
+
+/* ── The caption block ─────────────────────────────────────────────────── */
+.wa-keys { position: relative; z-index: 7; display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; }
+.wa-key {
+  font-family: var(--font-mono); font-size: .56rem; font-weight: 500;
+  letter-spacing: .14em; text-transform: uppercase;
+  padding: 3px 9px; border-radius: 999px;
+  border: 1px solid rgb(var(--rd-ivory-rgb) / .14); color: rgb(var(--rd-ivory-rgb) / .4);
+  transition: color .45s ease, border-color .45s ease, background-color .45s ease;
+}
+.wa-key.is-on {
+  color: var(--rd-gold-bloom);
+  border-color: rgb(var(--rd-gold-line-rgb) / .5);
+  background-color: rgb(var(--rd-gold-line-rgb) / .12);
+}
+/* Keyed on the stage in React, so it remounts and the animation replays. */
+.wa-caption {
+  position: relative; z-index: 7; margin: .65rem 0 0; min-height: 2.1em;
+  font-family: var(--font-sans); font-size: .68rem; line-height: 1.5;
+  color: rgb(var(--rd-ivory-rgb) / .62);
+  animation: wa-cap .5s ease backwards;
+}
+
+/* ── The stack strip ───────────────────────────────────────────────────── */
+.wa-stack {
+  position: relative; z-index: 2; display: flex; flex-wrap: wrap;
+  align-items: center; gap: .7rem 2.2rem;
+  margin-top: 4rem; padding-top: 1.15rem;
+  border-top: 1px solid rgb(var(--rd-ivory-rgb) / .12);
+}
+.wa-stack-i {
+  font-family: var(--font-mono); font-size: .6rem; font-weight: 500;
+  letter-spacing: .16em; text-transform: uppercase; color: rgb(var(--rd-ivory-rgb) / .45);
+  animation: wa-rise .7s cubic-bezier(.22, 1, .36, 1) backwards;
+  animation-delay: calc(1.25s + var(--k) * .1s);
+}
+.wa-stack-i:last-child { color: var(--rd-gold-bloom); margin-left: auto; }
+
+/* ── Responsive ────────────────────────────────────────────────────────── */
+@media (max-width: 1024px) {
+  .wa-hero .sd-hero-grid { grid-template-columns: 1fr; }
+  .wa-art { order: 2; max-width: 520px; }
+}
+@media (max-width: 700px) {
+  .wa-art     { min-height: 268px; padding: 1rem 1rem .9rem; border-radius: 18px; aspect-ratio: 16 / 12.4; }
+  .wa-phone   { bottom: 58px; width: 27%; }
+  .wa-browser { width: 72%; }
+  .wa-view    { padding: 9px 10px 11px; gap: 6px; }
+  .wa-blk     { height: 38px; }
+  .wa-cards span { height: 26px; }
+  .wa-stack   { margin-top: 2.6rem; gap: .5rem 1.4rem; }
+  /* Auto-margin on the last item leaves a lone chip on its own row once the
+     strip wraps — at this width it just joins the queue. */
+  .wa-stack-i:last-child { margin-left: 0; }
+}
+
+/* ── Reduced motion ────────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  /* Every one of these lands on its FINAL frame: the page assembled, the strip
+     in place, the caption legible. The rig itself is parked on `sys` from
+     DeviceRig — both devices lit and level — so the stage transitions below have
+     nothing left to travel. */
+  .wa-topnav, .wa-view .wa-blk, .wa-view .wa-ln, .wa-cards, .wa-cta,
+  .wa-caption, .wa-stack-i, .wa-push { animation: none !important; }
+  /* The dot stays — it is a mark on the chrome, it is only the pulse that goes.
+     The other three exist ONLY as motion, so they are removed rather than
+     frozen: a sweep parked mid-page is a smear, and a component halfway between
+     two devices is a stray square. */
+  .wa-live { animation: none !important; }
+  .wa-scan, .wa-share, .wa-tap { display: none !important; }
+  .wa-browser, .wa-phone, .wa-halo, .wa-key, .wa-tabs i { transition: none !important; }
+}
