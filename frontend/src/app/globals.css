@@ -58,7 +58,19 @@
 @layer base {
   *, *::before, *::after { box-sizing: border-box; }
 
-  html { scroll-behavior: smooth; font-size: 19px; }
+  /* NO `scroll-behavior: smooth` HERE. It used to be, and it broke every
+     route change: the App Router scrolls the incoming page to the top by
+     calling `scrollIntoView()` on <main>, and a smooth root turns that into an
+     ANIMATION — which then runs against both the new page's layout settling and
+     Lenis writing `window.scrollTo` every frame from its own rAF. The three
+     fight, and the loser is the reader: navigating away from the bottom of one
+     page landed at the bottom of the next.
+     Measured, /packages (bottom) → /: y=11512 with the rule, y=0 without it.
+     Smoothing is Lenis's job on the pages that mount SmoothScroll, and nothing
+     in the app calls `scrollIntoView` or links to a `#` anchor, so the rule was
+     buying nothing. If some future anchor link needs easing, pass
+     `behavior: 'smooth'` at that call site rather than restoring this. */
+  html { font-size: 19px; }
 
   body {
     font-family:              var(--font-sans);
