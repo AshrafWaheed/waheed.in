@@ -35,7 +35,7 @@ export default function TermsPage() {
             <p>Waheed operates according to Islamic ethical principles. We reserve the right to decline or discontinue any project that conflicts with our values, including but not limited to projects involving interest-based finance, content that is inappropriate according to Islamic principles, or deceptive practices.</p>
 
             <h2>Payment terms</h2>
-            <p>A deposit is required before work begins. The remaining balance is divided into milestone-based payments as outlined in your proposal. All payments are due within 7 days of the relevant milestone being reached. We do not use interest-based payment structures.</p>
+            <p>No deposit is required before work begins. Projects are invoiced on a milestone basis, with the milestones and their amounts set out in your proposal; each milestone is invoiced only once the work it covers has been completed and made available for your review. All payments are due within 7 days of the relevant milestone being reached. We do not use interest-based payment structures.</p>
 
             <h2>Intellectual property</h2>
             <p>Upon receipt of final payment, all deliverables created for your project become your property. Waheed retains the right to display completed work in its portfolio unless otherwise agreed in writing.</p>

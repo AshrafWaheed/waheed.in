@@ -145,7 +145,7 @@ export const FAQS: FaqItem[] = [
   {
     cat: 'Payment',
     q: 'Do you offer payment plans?',
-    a: "Yes. We typically require an upfront deposit, with the remaining balance divided into milestone-based payments throughout the project. We don't use interest-based payment plans, our structure is straightforward, fair, and transparent.",
+    a: "Yes, and we do not take an upfront payment. We work on a milestone-based system: the project is split into stages, and each stage is invoiced only once it is built and in front of you. You pay for what you can already see. No interest, no financing, nothing hidden — just a schedule you can check against the work.",
   },
 ];
 
