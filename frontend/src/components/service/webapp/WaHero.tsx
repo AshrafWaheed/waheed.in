@@ -13,9 +13,14 @@
  *
  *   · the artifact is DeviceRig instead of CraftArtifact — a rig that keeps
  *     cycling between the site, the app and the system behind both, so the phone
- *     is a first-class object here rather than a detail cropped by the card
+ *     is a first-class object here rather than a detail cropped by a card
  *   · a stack strip runs along the bottom of the hero, naming the surfaces
  *     before the reader has scrolled a pixel
+ *
+ * The rig is drawn in the homepage's floating-card language — solid objects on
+ * the gradient, no container panel — so `useParallaxOrigin` here is doing real
+ * work: it writes the `--px`/`--py` pair that each `.wa-slot` multiplies by its
+ * own `--k`, which is what puts the phone and the site at different depths.
  *
  * The strip is `aria-hidden`: it is five nouns that the build section states
  * properly in sentences, and read aloud it is noise between the buttons and the
@@ -100,14 +105,13 @@ export default function WaHero({ page }: { page: ServicePage }) {
           </motion.div>
         </div>
 
-        <motion.div
-          className="wa-art"
-          initial={{ opacity: 0, y: 26 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, ease: EASE, delay: 0.5 }}
-        >
+        {/* A bare stage — no wrapper animation. Each device runs its own
+            entrance off `.is-in` with its own delay, the way the homepage
+            flanks do, and a fade on this container would have made two solid
+            cards translucent on the way in. */}
+        <div className="wa-art">
           <DeviceRig />
-        </motion.div>
+        </div>
       </div>
 
       <div className="cnt wa-stack" aria-hidden="true">
