@@ -1019,12 +1019,42 @@ html[data-nav="dark"] .nav.menu-open .burger span  { background: #254851; }
 }
 .mob-menu a:hover { color: #335C67; }
 
+/* ─── Nav CTAs ───────────────────────────────────────────────── */
+/* Two ranked actions: "Book a call" is the one we want, so it keeps the solid
+   gold button; "Let's talk" is a ghost beside it. The ghost is nav-scoped
+   rather than a global .btn-* because it has to invert on dark sections,
+   which .btn-outline (fixed teal-on-transparent) cannot do. */
+.nav-ctas { display: flex; align-items: center; gap: .5rem; }
+.nav-ghost {
+  background: transparent;
+  border-color: rgba(37, 72, 81, .35);
+  color: #254851;
+}
+.nav-ghost:hover {
+  background: rgba(37, 72, 81, .06);
+  border-color: #254851;
+}
+html[data-nav="dark"] .nav:not(.scrolled) .nav-ghost {
+  border-color: rgba(255, 255, 255, .42);
+  color: var(--rd-white);
+}
+html[data-nav="dark"] .nav:not(.scrolled) .nav-ghost:hover {
+  background: rgba(255, 255, 255, .1);
+  border-color: var(--rd-gold-bloom);
+}
+
 /* ─── Responsive ─────────────────────────────────────────────── */
 /* Raised from 640px when Services became a sixth bar item: six links plus
-   the CTA stop fitting a tablet-width bar well before the old breakpoint. */
+   the CTA stop fitting a tablet-width bar well before the old breakpoint.
+   The ghost goes first, at 1080px — six links plus TWO buttons is tighter
+   still, and dropping the secondary action is cheaper than moving the whole
+   bar into the burger earlier than it needs to go. */
+@media (max-width: 1080px) {
+  .nav-ghost { display: none; }
+}
 @media (max-width: 860px) {
   .nav-links { display: none; }
-  .nav-cta   { display: none !important; }
+  .nav-ctas  { display: none !important; }
   .burger    { display: flex; }
 }
 
@@ -8561,4 +8591,187 @@ html[data-nav="dark"] .burger span            { background: var(--rd-ivory); }
   .wa-scan, .wa-share, .wa-tap { display: none !important; }
   .wa-slot { opacity: 1 !important; translate: none !important; transition: none !important; }
   .wa-browser, .wa-phone, .wa-halo, .wa-key, .wa-tabs i { transition: none !important; }
+}
+
+
+/* ══════════════════════════════════════════════════════════════════════════
+   /book — public booking flow (`bk-`)
+   Its own layer: a month calendar and a slot grid have no counterpart
+   anywhere else on the site. Form chrome is borrowed from the contact form
+   (.form-group / .form-input / .form-label / .form-error) so the two pages
+   feel like one hand wrote them, and the hero follows .ct-hero exactly —
+   /book has the same job /contact does, so it earns the same shortest-hero
+   treatment: no scroll cue, nothing below to invite a pause.
+   ══════════════════════════════════════════════════════════════════════════ */
+.bk-hero {
+  position: relative; overflow: hidden;
+  min-height: 42vh;
+  display: flex; align-items: center;
+  padding: 9rem 0 4.5rem;
+  background: radial-gradient(120% 120% at 24% 100%, #1e424d 0%, var(--rd-night) 54%, #081019 100%);
+  color: var(--rd-on-night);
+}
+.bk-hero--short { min-height: 30vh; padding: 8rem 0 3rem; }
+.bk-hero-inner { position: relative; z-index: 1; }
+.bk-hero-h1 {
+  font-family: var(--font-serif); font-weight: 500;
+  font-size: clamp(2.1rem, 4.8vw, 3.6rem); line-height: 1.05;
+  color: var(--rd-white); max-width: 18ch; margin: .6rem 0 0;
+}
+.bk-hero-h1 em { color: var(--rd-gold-bloom); font-style: italic; }
+.bk-hero-p {
+  margin-top: 1.2rem; max-width: 52ch;
+  font-family: var(--font-sans); font-size: clamp(.94rem, 1.1vw, 1.02rem);
+  line-height: 1.65; color: var(--rd-on-night-dim);
+}
+
+.bk-body { padding: 3.5rem 0 6rem; background: var(--rd-ivory); }
+
+.bk-card {
+  max-width: 880px; margin: 0 auto;
+  background: var(--rd-white); border: 1px solid var(--rd-border);
+  border-radius: 16px; padding: 1.8rem;
+  box-shadow: 0 24px 60px -34px rgba(17,39,46,.4);
+}
+
+/* ── picker ─────────────────────────────────────────────────────────────── */
+.bk-pick { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 2rem; }
+
+.bk-cal-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
+.bk-cal-head strong { font-family: var(--font-serif); font-size: 1.18rem; color: var(--rd-night); font-weight: 500; }
+.bk-cal-head button {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 32px; height: 32px; border: 1px solid var(--rd-border); border-radius: 8px;
+  background: var(--rd-white); color: var(--rd-teal); cursor: pointer; transition: background .15s, opacity .15s;
+}
+.bk-cal-head button:hover:not(:disabled) { background: var(--rd-ivory); }
+.bk-cal-head button:disabled { opacity: .3; cursor: not-allowed; }
+
+.bk-cal-week { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; margin-bottom: 6px; }
+.bk-cal-week span {
+  text-align: center; font-family: var(--font-sans); font-size: .68rem;
+  letter-spacing: .06em; text-transform: uppercase; color: #93a3a7;
+}
+.bk-cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+.bk-day {
+  aspect-ratio: 1; display: flex; align-items: center; justify-content: center;
+  border: 1px solid transparent; border-radius: 9px;
+  background: var(--rd-ivory); color: var(--rd-night);
+  font-family: var(--font-sans); font-size: .86rem; cursor: pointer;
+  transition: background .15s, color .15s, border-color .15s;
+}
+.bk-day:hover:not(:disabled) { background: var(--rd-gold-bloom); border-color: var(--rd-gold-line); }
+.bk-day:disabled { background: transparent; color: #c2cdd1; cursor: not-allowed; }
+.bk-day.is-today:not(:disabled) { border-color: var(--rd-border-strong); }
+.bk-day.is-on { background: var(--rd-teal); border-color: var(--rd-teal); color: var(--rd-white); }
+.bk-cal-loading {
+  display: flex; align-items: center; gap: .35rem; margin-top: .8rem;
+  font-family: var(--font-sans); font-size: .76rem; color: #8b9a9e;
+}
+
+.bk-times { display: flex; flex-direction: column; min-height: 260px; }
+.bk-times-head { margin-bottom: .9rem; }
+.bk-times-head strong {
+  display: block; font-family: var(--font-sans); font-size: .92rem;
+  color: var(--rd-night); font-weight: 500;
+}
+.bk-tzpick { display: flex; align-items: center; gap: .35rem; margin-top: .3rem; font-family: var(--font-sans); font-size: .74rem; color: #8b9a9e; }
+.bk-tzpick select {
+  font-family: var(--font-sans); font-size: .74rem; color: #5a6b6f;
+  border: 1px solid var(--rd-border); border-radius: 6px; padding: .12rem .3rem; background: var(--rd-white);
+  max-width: 190px;
+}
+.bk-times-empty {
+  display: flex; align-items: center; gap: .4rem;
+  font-family: var(--font-sans); font-size: .86rem; color: #93a3a7;
+  margin: auto 0; padding: 1rem 0;
+}
+.bk-slots {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(88px, 1fr));
+  gap: .45rem; align-content: start;
+}
+.bk-slot {
+  padding: .6rem .4rem; border: 1px solid var(--rd-border-strong); border-radius: 9px;
+  background: var(--rd-white); color: var(--rd-teal);
+  font-family: var(--font-sans); font-size: .86rem; cursor: pointer;
+  transition: background .15s, color .15s, border-color .15s;
+}
+.bk-slot:hover { border-color: var(--rd-gold-line); background: var(--rd-gold-bloom); }
+.bk-slot.is-on { background: var(--rd-teal); border-color: var(--rd-teal); color: var(--rd-white); }
+
+.bk-next { margin-top: 1.6rem; width: 100%; justify-content: center; }
+
+/* ── details ────────────────────────────────────────────────────────────── */
+.bk-back {
+  display: inline-flex; align-items: center; gap: .3rem; border: none; background: none;
+  color: var(--rd-teal); font-family: var(--font-sans); font-size: .82rem;
+  cursor: pointer; padding: 0; margin-bottom: 1.2rem;
+}
+.bk-back:hover { text-decoration: underline; }
+
+.bk-chosen {
+  display: flex; align-items: center; gap: .7rem; margin-bottom: 1.5rem;
+  padding: .85rem 1rem; border-radius: 11px;
+  background: var(--rd-gold-bloom); color: var(--rd-gold-ink);
+}
+.bk-chosen.is-off { background: var(--rd-ivory-dk); color: #6b7c80; }
+.bk-chosen strong { display: block; font-family: var(--font-sans); font-size: .95rem; font-weight: 500; }
+.bk-chosen span { display: block; font-family: var(--font-sans); font-size: .78rem; opacity: .82; }
+
+.bk-two { display: grid; grid-template-columns: 1fr 1fr; gap: 0 1rem; }
+.bk-submit { margin-top: .8rem; width: 100%; justify-content: center; }
+.bk-fine {
+  margin-top: .9rem; text-align: center;
+  font-family: var(--font-sans); font-size: .74rem; color: #93a3a7; line-height: 1.55;
+}
+.bk-error { margin-bottom: 1rem; }
+
+/* Honeypot: off-canvas rather than display:none, because some bots skip
+   hidden fields but happily fill positioned ones. */
+.bk-hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+
+/* ── confirmation + manage ──────────────────────────────────────────────── */
+.bk-done { text-align: center; max-width: 620px; }
+.bk-done-icon {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 56px; height: 56px; border-radius: 50%; margin-bottom: 1rem;
+  background: #eaf6ef; color: #2f7d55;
+}
+.bk-done h2 { font-family: var(--font-serif); font-size: clamp(1.6rem, 3vw, 2.1rem); color: var(--rd-night); margin: 0 0 .6rem; font-weight: 500; }
+.bk-done-when { font-family: var(--font-sans); font-size: 1.05rem; color: var(--rd-teal); margin: 0; }
+.bk-done-tz { font-family: var(--font-sans); font-size: .8rem; color: #93a3a7; margin: .2rem 0 1.4rem; }
+.bk-done-cta { display: inline-flex; align-items: center; gap: .4rem; margin-bottom: 1.4rem; }
+.bk-done-p { font-family: var(--font-sans); font-size: .88rem; color: #5a6b6f; line-height: 1.65; margin: 0 auto 1rem; max-width: 46ch; }
+.bk-done-manage { font-family: var(--font-sans); font-size: .8rem; color: #8b9a9e; text-decoration: underline; }
+.bk-done-manage:hover { color: var(--rd-teal); }
+.bk-note { font-family: var(--font-sans); font-size: .84rem; color: #6b7c80; line-height: 1.6; margin: 0 0 1.2rem; }
+.bk-note a, .bk-done-p a { color: var(--rd-gold); }
+
+.bk-flash {
+  display: flex; align-items: center; gap: .4rem; margin-bottom: 1.2rem;
+  padding: .7rem .9rem; border-radius: 9px; background: #eaf6ef; color: #2f7d55;
+  font-family: var(--font-sans); font-size: .85rem;
+}
+.bk-manage-actions { display: flex; flex-wrap: wrap; gap: 1.2rem; margin-top: .4rem; }
+.bk-linkbtn {
+  display: inline-flex; align-items: center; gap: .3rem; border: none; background: none; padding: 0;
+  font-family: var(--font-sans); font-size: .84rem; color: var(--rd-teal); cursor: pointer; text-decoration: underline;
+}
+.bk-linkbtn:hover { color: var(--rd-night); }
+.bk-linkbtn--danger { color: #b0413f; }
+.bk-linkbtn--danger:hover { color: #8a2f2d; }
+
+.bk-spin { animation: bk-rotate 1s linear infinite; }
+@keyframes bk-rotate { to { transform: rotate(360deg); } }
+
+@media (max-width: 820px) {
+  .bk-pick { grid-template-columns: 1fr; gap: 1.6rem; }
+  .bk-times { min-height: 0; }
+  .bk-card { padding: 1.2rem; }
+  .bk-two { grid-template-columns: 1fr; }
+}
+
+/* The spinner is the only motion here; everything else is a state change. */
+@media (prefers-reduced-motion: reduce) {
+  .bk-spin { animation: none !important; }
 }

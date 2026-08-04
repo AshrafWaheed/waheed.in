@@ -171,10 +171,18 @@ export default function Nav({}: { blogPublic?: boolean }) {
             ))}
           </ul>
 
-          {/* Desktop CTA */}
-          <Link href="/contact" className="btn btn-teal btn-sm nav-cta">
-            Let&apos;s talk →
-          </Link>
+          {/* Desktop CTAs. Two actions, ranked: booking a call is the one we
+              want, so it keeps the solid button; /contact stays reachable as a
+              ghost for people who would rather write than talk. They collapse
+              to the burger together below 1080px — see .nav-ctas. */}
+          <div className="nav-ctas">
+            <Link href="/contact" className="btn btn-sm nav-ghost">
+              Let&apos;s talk
+            </Link>
+            <Link href="/book" className="btn btn-gold btn-sm nav-cta">
+              Book a call →
+            </Link>
+          </div>
 
           {/* Burger */}
           <button
@@ -233,12 +241,20 @@ export default function Nav({}: { blogPublic?: boolean }) {
             ))}
 
             <Link
-              href="/contact"
+              href="/book"
               onClick={() => setOpen(false)}
               className="btn btn-gold"
               style={{ alignSelf: 'flex-start', marginTop: '1rem' }}
             >
-              Let&apos;s talk →
+              Book a call →
+            </Link>
+            <Link
+              href="/contact"
+              onClick={() => setOpen(false)}
+              className="btn btn-outline"
+              style={{ alignSelf: 'flex-start', marginTop: '.6rem' }}
+            >
+              Let&apos;s talk
             </Link>
           </motion.div>
         )}
