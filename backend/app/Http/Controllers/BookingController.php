@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Booking;
 use App\Models\BookingEvent;
 use App\Models\BookingType;
+use App\Jobs\SyncBookingToHubSpot;
+use App\Services\BookingMailer;
 use App\Services\GoogleCalendarService;
 use App\Services\SlotService;
 use Carbon\CarbonImmutable;
@@ -168,11 +170,17 @@ class BookingController extends Controller
             'visitor_tz' => $booking->visitor_tz,
         ]);
 
+        // Calendar BEFORE mail, so the confirmation carries the Meet link
+        // rather than an apology for not having one.
         $this->syncToCalendar($booking, $calendar);
+
+        $booking->refresh();
+        app(BookingMailer::class)->confirmed($booking);
+        SyncBookingToHubSpot::dispatch($booking->id);
 
         return response()->json([
             'ok' => true,
-            'booking' => $this->publicShape($booking->fresh()),
+            'booking' => $this->publicShape($booking),
         ], 201);
     }
 
@@ -205,6 +213,8 @@ class BookingController extends Controller
                 $booking->recordEvent(BookingEvent::CALENDAR_FAILED, ['op' => 'delete', 'message' => $e->getMessage()]);
             }
         }
+
+        app(BookingMailer::class)->cancelled($booking->fresh());
 
         return response()->json(['ok' => true, 'booking' => $this->publicShape($booking->fresh())]);
     }
@@ -262,7 +272,11 @@ class BookingController extends Controller
             $this->syncToCalendar($booking, $calendar);
         }
 
-        return response()->json(['ok' => true, 'booking' => $this->publicShape($booking->fresh())]);
+        $booking->refresh();
+        app(BookingMailer::class)->rescheduled($booking);
+        SyncBookingToHubSpot::dispatch($booking->id);
+
+        return response()->json(['ok' => true, 'booking' => $this->publicShape($booking)]);
     }
 
     /**

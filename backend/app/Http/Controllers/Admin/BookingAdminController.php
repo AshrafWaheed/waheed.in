@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Booking;
 use App\Models\BookingEvent;
+use App\Services\BookingMailer;
 use App\Services\GoogleCalendarService;
 use App\Services\SlotService;
 use Illuminate\Http\JsonResponse;
@@ -117,6 +118,10 @@ class BookingAdminController extends Controller
                     $booking->recordEvent(BookingEvent::CALENDAR_FAILED, ['op' => 'delete', 'message' => $e->getMessage()]);
                 }
             }
+
+            // The visitor is told either way — a call vanishing from someone's
+            // calendar with no explanation is the worst version of this.
+            app(BookingMailer::class)->cancelled($booking->fresh());
         }
 
         return $this->show($booking->fresh());

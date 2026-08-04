@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Booking;
 use App\Models\ContactSubmission;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Support\Facades\Http;
@@ -58,6 +59,148 @@ class HubSpotService
 
             return 'failed';
         }
+    }
+
+    /**
+     * Push a booked call into HubSpot: upsert the contact, find-or-create the
+     * company, and log a MEETING engagement against both.
+     *
+     * A meeting, not a deal — deliberately. A booked call is an activity, and
+     * the contact form already opens a deal at the `appointmentscheduled`
+     * stage. Creating a second deal here would double-count every lead who
+     * both filled the form and booked a call, which is most of them.
+     *
+     * Best-effort and non-fatal, exactly like {@see syncLead()}: the booking is
+     * already in MySQL and on a real calendar before this runs.
+     *
+     * @return 'synced'|'failed'|'skipped'
+     */
+    public function syncBooking(Booking $booking): string
+    {
+        $token = config('services.hubspot.token');
+        if (! $token) {
+            return 'skipped';
+        }
+
+        try {
+            $http = Http::withToken($token)->acceptJson()->timeout(15);
+
+            $contactId = $this->upsertBookingContact($http, $booking);
+            if (! $contactId) {
+                return 'failed';
+            }
+
+            $companyId = $booking->company
+                ? $this->findOrCreateCompanyByName($http, $booking->company, $booking->phone)
+                : null;
+
+            $meetingId = $this->createMeeting($http, $booking);
+
+            if ($meetingId) {
+                $this->associate($http, 'meetings', $meetingId, 'contacts', $contactId);
+                if ($companyId) {
+                    $this->associate($http, 'meetings', $meetingId, 'companies', $companyId);
+                }
+            }
+            if ($companyId) {
+                $this->associate($http, 'contacts', $contactId, 'companies', $companyId);
+            }
+
+            return $meetingId ? 'synced' : 'failed';
+        } catch (Throwable $e) {
+            Log::error('HubSpot booking sync threw', ['booking' => $booking->uid, 'message' => $e->getMessage()]);
+
+            return 'failed';
+        }
+    }
+
+    /** Same 409-means-existing dance as {@see upsertContact()}, booking fields. */
+    private function upsertBookingContact(PendingRequest $http, Booking $booking): ?string
+    {
+        [$first, $last] = $this->splitName($booking->name);
+
+        $props = array_filter([
+            'email' => $booking->email,
+            'firstname' => $first,
+            'lastname' => $last,
+            'phone' => $booking->phone,
+            'company' => $booking->company,
+        ], fn ($v) => $v !== null && $v !== '');
+
+        $res = $http->post(self::BASE.'/crm/v3/objects/contacts', ['properties' => $props]);
+        if ($res->successful()) {
+            return (string) $res->json('id');
+        }
+
+        if ($res->status() === 409 && preg_match('/Existing ID:\s*(\d+)/', $res->body(), $m)) {
+            $existingId = $m[1];
+            $http->patch(self::BASE."/crm/v3/objects/contacts/{$existingId}", ['properties' => $props]);
+
+            return $existingId;
+        }
+
+        Log::warning('HubSpot booking contact upsert failed', ['status' => $res->status(), 'body' => $res->body()]);
+
+        return null;
+    }
+
+    /**
+     * The meeting engagement itself. HubSpot wants millisecond timestamps, and
+     * silently mis-files the activity if `hs_timestamp` is omitted.
+     */
+    private function createMeeting(PendingRequest $http, Booking $booking): ?string
+    {
+        $body = trim(implode("\n", array_filter([
+            $booking->bookingType?->name,
+            $booking->meet_url ? 'Meet: '.$booking->meet_url : null,
+            $booking->message ? "\n".$booking->message : null,
+            "\nBooked via waheed.in · ref {$booking->uid}",
+        ])));
+
+        $props = array_filter([
+            'hs_timestamp' => $booking->starts_at->getTimestampMs(),
+            'hs_meeting_title' => ($booking->bookingType?->name ?? 'Call').' — '.$booking->name,
+            'hs_meeting_body' => $body,
+            'hs_meeting_start_time' => $booking->starts_at->getTimestampMs(),
+            'hs_meeting_end_time' => $booking->ends_at->getTimestampMs(),
+            'hs_meeting_location' => $booking->meet_url ?: 'Google Meet',
+            'hs_meeting_outcome' => $booking->status === Booking::STATUS_CANCELLED ? 'CANCELED' : 'SCHEDULED',
+        ], fn ($v) => $v !== null && $v !== '');
+
+        $res = $http->post(self::BASE.'/crm/v3/objects/meetings', ['properties' => $props]);
+        if ($res->successful()) {
+            return (string) $res->json('id');
+        }
+
+        Log::warning('HubSpot meeting create failed', ['status' => $res->status(), 'body' => $res->body()]);
+
+        return null;
+    }
+
+    /** Company lookup-or-create by bare name, shared by the booking path. */
+    private function findOrCreateCompanyByName(PendingRequest $http, string $name, ?string $phone = null): ?string
+    {
+        $name = trim($name);
+        if ($name === '') {
+            return null;
+        }
+
+        $search = $http->post(self::BASE.'/crm/v3/objects/companies/search', [
+            'filterGroups' => [[
+                'filters' => [['propertyName' => 'name', 'operator' => 'EQ', 'value' => $name]],
+            ]],
+            'properties' => ['name'],
+            'limit' => 1,
+        ]);
+        if ($search->successful() && ! empty($search->json('results'))) {
+            return (string) $search->json('results.0.id');
+        }
+
+        $res = $http->post(self::BASE.'/crm/v3/objects/companies', [
+            'properties' => array_filter(['name' => $name, 'phone' => $phone], fn ($v) => $v !== null && $v !== ''),
+        ]);
+
+        return $res->successful() ? (string) $res->json('id') : null;
     }
 
     /** Create the contact, or update it if the email already exists (HTTP 409). */

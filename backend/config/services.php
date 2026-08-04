@@ -40,6 +40,14 @@ return [
         'publication_id' => env('BEEHIIV_PUBLICATION_ID'),
     ],
 
+    'booking' => [
+        // Where the internal "someone booked a call" notice goes. Defaults to
+        // the From address so the module is never silently un-notified.
+        'notify_to' => env('BOOKING_NOTIFY_TO', env('MAIL_FROM_ADDRESS')),
+        // How long before a call its reminder goes out.
+        'reminder_hours' => (int) env('BOOKING_REMINDER_HOURS', 24),
+    ],
+
     /*
      * Google OAuth (web client) for the booking module. Single-tenant: one
      * admin connects one Google account once, and its refresh token drives
