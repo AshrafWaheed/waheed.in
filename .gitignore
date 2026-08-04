@@ -1,6 +1,8 @@
 # Laravel
 backend/.env
 backend/ADMIN_CREDENTIALS.txt
+# Google OAuth client download — the secret lives in backend/.env, never here.
+backend/client_secret_*.json
 backend/vendor/
 backend/node_modules/
 backend/storage/logs/*

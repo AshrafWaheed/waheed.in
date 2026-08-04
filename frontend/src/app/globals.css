@@ -3232,6 +3232,33 @@ html[data-nav="dark"] .nav.menu-open .burger span  { background: #254851; }
 .adm-mode-hint a { color: var(--rd-gold); text-decoration: none; display: inline-flex; align-items: center; gap: .2rem; }
 .adm-mode-hint a:hover { text-decoration: underline; }
 
+/* ── Booking module: shared admin primitives ────────────────────────────────
+   Added for the Google panel, but deliberately generic (`adm-`, not `bkg-`) —
+   a key/value read-out, a button row and a button are exactly what the
+   availability and bookings screens need next, and a second private copy of
+   each would be the wrong kind of thrift. */
+.adm-kv { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1px; background: var(--rd-border); border: 1px solid var(--rd-border); border-radius: 10px; overflow: hidden; margin-bottom: 1.6rem; }
+.adm-kv > div { background: var(--rd-white); padding: .85rem 1.1rem; }
+.adm-kv dt { font-family: var(--font-sans); font-size: .72rem; letter-spacing: .06em; text-transform: uppercase; color: #7a8b8f; margin-bottom: .25rem; }
+.adm-kv dd { font-family: var(--font-sans); font-size: .88rem; color: #2b3d41; margin: 0; word-break: break-word; }
+
+.adm-actions { display: flex; flex-wrap: wrap; gap: .6rem; margin-bottom: 1.6rem; }
+
+.adm-btn { display: inline-flex; align-items: center; gap: .45rem; padding: .6rem 1.05rem; border: 1px solid var(--rd-border-strong); border-radius: 8px; background: var(--rd-white); color: #2b3d41; font-family: var(--font-sans); font-size: .85rem; cursor: pointer; transition: background .15s, border-color .15s, opacity .15s; }
+.adm-btn:hover:not(:disabled) { background: var(--rd-ivory); border-color: #9fb0bd; }
+.adm-btn:disabled { opacity: .55; cursor: not-allowed; }
+.adm-btn--primary { background: var(--rd-teal); border-color: var(--rd-teal); color: var(--rd-white); }
+.adm-btn--primary:hover:not(:disabled) { background: var(--rd-night); border-color: var(--rd-night); }
+.adm-btn--danger { color: #b0413f; border-color: rgba(197,74,74,.4); }
+.adm-btn--danger:hover:not(:disabled) { background: #fdecec; border-color: rgba(197,74,74,.6); }
+
+.adm-note h3 { font-family: var(--font-sans); font-size: .9rem; color: #3a4b4f; margin: 0 0 .6rem; }
+.adm-note ol { margin: 0 0 .6rem; padding-left: 1.2rem; }
+.adm-note li { margin-bottom: .5rem; }
+.adm-note p { margin: .5rem 0 0; }
+.adm-note a { color: var(--rd-gold); text-decoration: none; display: inline-flex; align-items: center; gap: .25rem; }
+.adm-note a:hover { text-decoration: underline; }
+
 
 /* ══════════════════════════════════════════════════════════════════════════
    REDESIGN TOKEN LAYER — "The Barakah Engine"

@@ -32,4 +32,18 @@ class Setting extends Model
             ['value' => $value ? '1' : '0'],
         );
     }
+
+    /** Read a plain string setting (booking timezone, etc.). */
+    public static function get(string $key, ?string $default = null): ?string
+    {
+        $value = static::query()->where('key', $key)->value('value');
+
+        return $value === null || $value === '' ? $default : $value;
+    }
+
+    /** Write a plain string setting. */
+    public static function put(string $key, string $value): void
+    {
+        static::query()->updateOrCreate(['key' => $key], ['value' => $value]);
+    }
 }

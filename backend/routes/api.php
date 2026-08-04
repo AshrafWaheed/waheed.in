@@ -2,10 +2,12 @@
 
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\ContactController as AdminContactController;
+use App\Http\Controllers\Admin\GoogleAuthController;
 use App\Http\Controllers\Admin\PostController;
 use App\Http\Controllers\Admin\SubscriberController as AdminSubscriberController;
 use App\Http\Controllers\Admin\TaxonomyController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\BookingController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\NewsletterController;
 use App\Http\Controllers\PublicPostController;
@@ -25,6 +27,17 @@ Route::prefix('admin')->group(function () {
         Route::post('profile/password', [AuthController::class, 'updatePassword']);
 
         Route::get('taxonomy', [TaxonomyController::class, 'index']);
+
+        // Google Calendar connection for the booking module. `callback` is
+        // reached by the Next.js route handler at /api/google/auth/callback,
+        // which is where the Google Console's registered redirect URI lands.
+        Route::prefix('google')->group(function () {
+            Route::get('status', [GoogleAuthController::class, 'status']);
+            Route::get('connect', [GoogleAuthController::class, 'connect']);
+            Route::post('callback', [GoogleAuthController::class, 'callback']);
+            Route::post('test', [GoogleAuthController::class, 'test']);
+            Route::delete('/', [GoogleAuthController::class, 'destroy']);
+        });
 
         // User management.
         Route::post('users/{user}/password', [UserController::class, 'resetPassword']);
@@ -49,6 +62,21 @@ Route::get('site/mode', [SettingsController::class, 'mode'])->middleware('thrott
 // ── Public blog API (read-only; consumed by Next.js SSR over loopback) ──
 Route::get('posts', [PublicPostController::class, 'index']);
 Route::get('posts/{post:slug}', [PublicPostController::class, 'show']);
+
+// ── Public booking API (called by the Next.js /api/booking proxies) ──
+// Read routes are loose, writes are tight: `store` is the one that puts a real
+// event on a real calendar, so it is the one worth rate-limiting hard.
+Route::prefix('booking')->group(function () {
+    Route::get('types', [BookingController::class, 'types'])->middleware('throttle:60,1');
+    Route::get('slots', [BookingController::class, 'slots'])->middleware('throttle:120,1');
+    Route::post('/', [BookingController::class, 'store'])->middleware('throttle:8,60');
+
+    Route::prefix('manage/{token}')->middleware('throttle:30,1')->group(function () {
+        Route::get('/', [BookingController::class, 'show']);
+        Route::post('cancel', [BookingController::class, 'cancel']);
+        Route::post('reschedule', [BookingController::class, 'reschedule']);
+    });
+});
 
 // ── Public form intake (called by the Next.js /api proxies) ──
 Route::post('contact', [ContactController::class, 'store'])->middleware('throttle:15,1');

@@ -40,6 +40,28 @@ return [
         'publication_id' => env('BEEHIIV_PUBLICATION_ID'),
     ],
 
+    /*
+     * Google OAuth (web client) for the booking module. Single-tenant: one
+     * admin connects one Google account once, and its refresh token drives
+     * every calendar call from then on. Visitors never see Google.
+     *
+     * The redirect URI is registered in the Google Console as
+     * https://waheed.in/api/google/auth/callback — which nginx routes to
+     * NEXT.JS, not here. Next receives the code and forwards it to
+     * /api/admin/google/callback over loopback. Do not "fix" this by pointing
+     * the URI at Laravel; :8000 is not publicly reachable.
+     *
+     * Scopes are requested at authorize time (see GoogleOAuthService::SCOPES),
+     * but they must ALSO be listed on the OAuth consent screen, and the Google
+     * Calendar API must be enabled on the project, or every call 403s.
+     */
+    'google' => [
+        'client_id' => env('GOOGLE_CLIENT_ID'),
+        'client_secret' => env('GOOGLE_CLIENT_SECRET'),
+        'redirect' => env('GOOGLE_REDIRECT_URI', 'https://waheed.in/api/google/auth/callback'),
+        'calendar_id' => env('GOOGLE_CALENDAR_ID', 'primary'),
+    ],
+
     'hubspot' => [
         // Private App access token. Scopes needed: crm.objects.contacts.write,
         // crm.objects.companies.write, crm.objects.deals.write (+ .read).
