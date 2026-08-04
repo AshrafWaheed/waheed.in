@@ -248,7 +248,46 @@ class SlotService
 
         usort($windows, fn ($a, $b) => $a[0] <=> $b[0]);
 
-        return $windows;
+        return $this->merge($windows);
+    }
+
+    /**
+     * Collapse overlapping or touching windows into one.
+     *
+     * This is not tidying — it is required for correctness. Each window is
+     * sliced into its own grid starting at its own edge, so two windows that
+     * overlap produce two grids out of phase with each other: 10:00–16:30 plus
+     * 15:00–16:30 offers 15:00, 15:20 and 15:40 as separate slots, and the
+     * first two collide for any call longer than 20 minutes. The admin screen
+     * cannot prevent the input either — "Wednesday 10–16:30" and a leftover
+     * "15:00–16:30" is an ordinary editing slip — so the engine has to be the
+     * thing that copes.
+     *
+     * Touching windows (13:00–15:00 after 10:00–13:00) merge too, giving one
+     * continuous grid rather than a phase reset at the seam.
+     *
+     * @param  array<int, array{0: CarbonImmutable, 1: CarbonImmutable}>  $windows  sorted by start
+     * @return array<int, array{0: CarbonImmutable, 1: CarbonImmutable}>
+     */
+    private function merge(array $windows): array
+    {
+        $merged = [];
+
+        foreach ($windows as [$start, $end]) {
+            $last = count($merged) - 1;
+
+            if ($last >= 0 && $start->lessThanOrEqualTo($merged[$last][1])) {
+                if ($end->greaterThan($merged[$last][1])) {
+                    $merged[$last][1] = $end;
+                }
+
+                continue;
+            }
+
+            $merged[] = [$start, $end];
+        }
+
+        return $merged;
     }
 
     /**

@@ -3252,6 +3252,72 @@ html[data-nav="dark"] .nav.menu-open .burger span  { background: #254851; }
 .adm-btn--danger { color: #b0413f; border-color: rgba(197,74,74,.4); }
 .adm-btn--danger:hover:not(:disabled) { background: #fdecec; border-color: rgba(197,74,74,.6); }
 
+/* ── Booked-calls list + detail drawer (`bkl-`) ────────────────────────────
+   The rows are <button>s, not table rows: the whole row opens the drawer, and
+   a clickable <tr> is a worse target for both pointers and screen readers. */
+.bkl-bar { display: flex; flex-wrap: wrap; gap: .8rem; justify-content: space-between; align-items: center; margin-bottom: 1.1rem; }
+.bkl-tabs { display: flex; gap: .3rem; }
+.bkl-tab { display: inline-flex; align-items: center; gap: .4rem; padding: .45rem .85rem; border: 1px solid transparent; border-radius: 8px; background: transparent; color: #5a6b6f; font-family: var(--font-sans); font-size: .84rem; cursor: pointer; }
+.bkl-tab span { font-size: .72rem; background: rgba(37,72,81,.1); border-radius: 20px; padding: .05rem .4rem; }
+.bkl-tab:hover { background: var(--rd-ivory); }
+.bkl-tab.is-on { background: var(--rd-teal); border-color: var(--rd-teal); color: var(--rd-white); }
+.bkl-tab.is-on span { background: rgba(255,255,255,.22); }
+
+.bkl-search { display: flex; align-items: center; gap: .4rem; border: 1px solid var(--rd-border); border-radius: 8px; padding: .35rem .6rem; background: var(--rd-white); color: #8b9a9e; }
+.bkl-search input { border: none; outline: none; background: transparent; font-family: var(--font-sans); font-size: .84rem; color: #2b3d41; min-width: 180px; }
+
+.bkl-empty { font-family: var(--font-sans); font-size: .86rem; color: #7a8b8f; padding: 2rem 0; text-align: center; }
+
+.bkl-list { display: flex; flex-direction: column; gap: .4rem; }
+.bkl-row { display: grid; grid-template-columns: minmax(160px, 1.1fr) minmax(160px, 1.4fr) auto; gap: .9rem; align-items: center; width: 100%; text-align: left; padding: .7rem .9rem; border: 1px solid var(--rd-border); border-radius: 10px; background: var(--rd-white); cursor: pointer; font-family: var(--font-sans); transition: border-color .15s, background .15s; }
+.bkl-row:hover { border-color: var(--rd-border-strong); background: var(--rd-ivory); }
+.bkl-when strong, .bkl-who strong { display: block; font-size: .86rem; color: #2b3d41; font-weight: 500; }
+.bkl-when small, .bkl-who small { display: block; font-size: .74rem; color: #7a8b8f; margin-top: .1rem; }
+.bkl-tags { display: flex; flex-wrap: wrap; gap: .3rem; justify-content: flex-end; }
+.bkl-tag { display: inline-flex; align-items: center; gap: .2rem; font-style: normal; font-size: .7rem; padding: .15rem .45rem; border-radius: 20px; background: rgba(37,72,81,.08); color: #5a6b6f; }
+.bkl-tag--meet { background: var(--rd-gold-bloom); color: var(--rd-gold-ink); }
+.bkl-tag--warn { background: #fdecec; color: #b0413f; }
+.bkl-tag--cancelled { background: #fdecec; color: #b0413f; }
+.bkl-tag--no_show { background: #fff4e5; color: #a2681f; }
+.bkl-tag--completed { background: #eaf6ef; color: #2f7d55; }
+
+.bkl-links { display: grid; gap: .5rem; margin-top: 2rem; }
+.bkl-links .adm-mode-status { margin-bottom: 0; }
+
+.bkl-drawer-wrap { position: fixed; inset: 0; z-index: 200; }
+.bkl-backdrop { position: absolute; inset: 0; background: rgba(17,39,46,.42); }
+.bkl-drawer { position: absolute; top: 0; right: 0; height: 100%; width: min(460px, 100%); overflow-y: auto; background: var(--rd-white); box-shadow: -18px 0 46px -22px rgba(0,0,0,.5); padding: 1.3rem 1.4rem 3rem; }
+.bkl-drawer header { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; margin-bottom: 1.2rem; }
+.bkl-drawer header h2 { font-family: var(--font-sans); font-size: 1.05rem; color: #1f3237; margin: 0; }
+.bkl-drawer header p { font-family: var(--font-sans); font-size: .8rem; color: #7a8b8f; margin: .15rem 0 0; }
+.bkl-drawer header button { border: none; background: transparent; color: #7a8b8f; cursor: pointer; padding: .2rem; border-radius: 6px; }
+.bkl-drawer header button:hover { background: var(--rd-ivory); color: #2b3d41; }
+.bkl-drawer .adm-kv dd small { color: #8b9a9e; font-size: .72rem; }
+.bkl-drawer .adm-kv a { color: var(--rd-gold); text-decoration: none; }
+
+.bkl-msg { background: var(--rd-ivory); border-radius: 9px; padding: .8rem .95rem; margin-bottom: 1.3rem; }
+.bkl-msg h3, .bkl-note h3, .bkl-timeline h3 { display: flex; align-items: center; gap: .35rem; font-family: var(--font-sans); font-size: .76rem; letter-spacing: .05em; text-transform: uppercase; color: #7a8b8f; margin: 0 0 .45rem; }
+.bkl-msg p { font-family: var(--font-sans); font-size: .84rem; color: #3a4b4f; line-height: 1.6; margin: 0; white-space: pre-wrap; }
+
+.bkl-note { margin: 1.3rem 0; }
+.bkl-note textarea { width: 100%; font-family: var(--font-sans); font-size: .84rem; color: #2b3d41; border: 1px solid var(--rd-border); border-radius: 8px; padding: .6rem .7rem; resize: vertical; }
+.bkl-note textarea:focus { outline: 2px solid rgb(var(--rd-gold-line-rgb) / .5); outline-offset: 1px; }
+
+.bkl-timeline ol { list-style: none; padding: 0; margin: 0; }
+.bkl-timeline li { display: grid; grid-template-columns: 14px 1fr; gap: .6rem; padding-bottom: .9rem; position: relative; }
+.bkl-timeline li:not(:last-child)::before { content: ''; position: absolute; left: 6px; top: 14px; bottom: 0; width: 1px; background: var(--rd-border); }
+.bkl-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--rd-teal); margin-top: .3rem; margin-left: 2px; }
+.bkl-timeline li.is-bad .bkl-dot { background: #b0413f; }
+.bkl-timeline strong { display: block; font-family: var(--font-sans); font-size: .82rem; color: #2b3d41; font-weight: 500; }
+.bkl-timeline time { display: block; font-family: var(--font-sans); font-size: .73rem; color: #8b9a9e; }
+.bkl-timeline em { display: block; font-style: normal; font-size: .74rem; color: #b0413f; margin-top: .15rem; }
+
+@media (max-width: 640px) {
+  .bkl-row { grid-template-columns: 1fr; gap: .35rem; }
+  .bkl-tags { justify-content: flex-start; }
+  .bkl-drawer { padding: 1rem 1.1rem 3rem; }
+}
+
 /* ── Booking availability editor (`bka-`) ──────────────────────────────────
    Its own layer because none of this is reusable: a 7-row weekly grid of
    paired time inputs has no sibling anywhere else in the panel. Everything

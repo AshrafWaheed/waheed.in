@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\ContactController as AdminContactController;
+use App\Http\Controllers\Admin\BookingAdminController;
 use App\Http\Controllers\Admin\BookingSettingsController;
 use App\Http\Controllers\Admin\GoogleAuthController;
 use App\Http\Controllers\Admin\PostController;
@@ -39,6 +40,13 @@ Route::prefix('admin')->group(function () {
             Route::patch('types/{type}', [BookingSettingsController::class, 'updateType']);
             Route::patch('settings', [BookingSettingsController::class, 'updateSettings']);
         });
+
+        // Booked calls.
+        Route::get('bookings', [BookingAdminController::class, 'index']);
+        Route::get('bookings/{booking}', [BookingAdminController::class, 'show']);
+        Route::patch('bookings/{booking}', [BookingAdminController::class, 'update']);
+        Route::post('bookings/{booking}/cancel', [BookingAdminController::class, 'cancel']);
+        Route::post('bookings/{booking}/resync', [BookingAdminController::class, 'resync']);
 
         // Google Calendar connection for the booking module. `callback` is
         // reached by the Next.js route handler at /api/google/auth/callback,
