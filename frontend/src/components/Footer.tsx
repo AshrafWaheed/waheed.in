@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { recentPosts } from '@/lib/recent-posts';
 
 // "Insights" only appears once the blog is public (site fully live).
 const buildNav = (blogPublic: boolean) => [
@@ -41,8 +42,13 @@ const SOCIAL = [
   { label: 'WhatsApp',  href: 'https://wa.me/915424072195',                        icon: 'whatsapp'  as const },
 ];
 
-export default function Footer({ blogPublic = false }: { blogPublic?: boolean }) {
+export default async function Footer({ blogPublic = false }: { blogPublic?: boolean }) {
   const NAV = buildNav(blogPublic);
+
+  // Gated on `blogPublic` for the same reason the "Insights" nav link is: while
+  // the site is in coming-soon or maintenance, /blog is not public, and a
+  // footer listing post titles would both leak them and link into a wall.
+  const posts = blogPublic ? await recentPosts(3) : [];
 
   return (
     <footer className="footer">
@@ -86,7 +92,7 @@ export default function Footer({ blogPublic = false }: { blogPublic?: boolean })
             </div>
           </div>
 
-          {/* Right, nav column */}
+          {/* Right, nav + recent posts */}
           <div className="footer-right">
             <div className="footer-cols">
               <div className="footer-col">
@@ -95,6 +101,23 @@ export default function Footer({ blogPublic = false }: { blogPublic?: boolean })
                   <Link key={l.label} href={l.href}>{l.label}</Link>
                 ))}
               </div>
+
+              {/* Rendered only when there is something to show — an empty
+                  "Recent insights" heading is worse than no column, and the
+                  blog genuinely starts empty. */}
+              {posts.length > 0 && (
+                <div className="footer-col footer-col--posts">
+                  <span className="footer-col-title">Recent insights</span>
+                  {posts.map((p) => (
+                    <Link key={p.slug} href={`/blog/${p.slug}`} className="footer-post">
+                      <span className="footer-post-title">{p.title}</span>
+                      {p.author?.name && (
+                        <span className="footer-post-by">{p.author.name}</span>
+                      )}
+                    </Link>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
 
