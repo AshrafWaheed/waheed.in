@@ -3252,6 +3252,65 @@ html[data-nav="dark"] .nav.menu-open .burger span  { background: #254851; }
 .adm-btn--danger { color: #b0413f; border-color: rgba(197,74,74,.4); }
 .adm-btn--danger:hover:not(:disabled) { background: #fdecec; border-color: rgba(197,74,74,.6); }
 
+/* ── Booking availability editor (`bka-`) ──────────────────────────────────
+   Its own layer because none of this is reusable: a 7-row weekly grid of
+   paired time inputs has no sibling anywhere else in the panel. Everything
+   generic it needs (.adm-btn, .adm-actions) is borrowed from above. */
+.bka-sec { border: 1px solid var(--rd-border); border-radius: 12px; background: var(--rd-white); padding: 1.3rem 1.4rem; margin-bottom: 1.4rem; }
+.bka-h2 { display: flex; align-items: center; gap: .45rem; font-family: var(--font-sans); font-size: .95rem; color: #2b3d41; margin: 0 0 .35rem; }
+.bka-help { font-family: var(--font-sans); font-size: .8rem; color: #6b7c80; margin: 0 0 1rem; line-height: 1.55; }
+
+.bka-week { display: flex; flex-direction: column; gap: .5rem; margin-bottom: 1.2rem; }
+.bka-day { display: grid; grid-template-columns: 108px 1fr; align-items: start; gap: .8rem; padding: .55rem .7rem; border-radius: 8px; background: var(--rd-ivory); }
+.bka-day.is-off { opacity: .72; }
+.bka-dayname { font-family: var(--font-sans); font-size: .84rem; color: #3a4b4f; padding-top: .4rem; }
+.bka-windows { display: flex; flex-wrap: wrap; align-items: center; gap: .45rem; }
+.bka-closed { font-family: var(--font-sans); font-size: .78rem; color: #8b9a9e; font-style: italic; }
+.bka-window { display: inline-flex; align-items: center; gap: .3rem; background: var(--rd-white); border: 1px solid var(--rd-border); border-radius: 7px; padding: .25rem .35rem; }
+.bka-window span { color: #9aa9ad; font-size: .78rem; }
+
+.bka-sec input[type="time"], .bka-sec input[type="date"], .bka-sec input[type="number"],
+.bka-sec input[type="text"], .bka-sec select {
+  font-family: var(--font-sans); font-size: .82rem; color: #2b3d41; background: var(--rd-white);
+  border: 1px solid var(--rd-border); border-radius: 6px; padding: .32rem .45rem;
+}
+.bka-window input[type="time"] { border: none; padding: .1rem .2rem; }
+.bka-sec input:focus, .bka-sec select:focus { outline: 2px solid rgb(var(--rd-gold-line-rgb) / .5); outline-offset: 1px; }
+
+.bka-x { display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; border: none; background: transparent; color: #a8544f; border-radius: 5px; cursor: pointer; }
+.bka-x:hover { background: #fdecec; }
+.bka-add { display: inline-flex; align-items: center; gap: .2rem; border: 1px dashed var(--rd-border-strong); background: transparent; color: #5a6b6f; border-radius: 7px; padding: .3rem .55rem; font-family: var(--font-sans); font-size: .76rem; cursor: pointer; }
+.bka-add:hover { background: var(--rd-white); border-color: #9fb0bd; }
+.bka-saved { font-family: var(--font-sans); font-size: .8rem; color: #2f7d55; align-self: center; }
+
+.bka-ovlist { list-style: none; padding: 0; margin: 0 0 1rem; display: flex; flex-direction: column; gap: .35rem; }
+.bka-ovlist li { display: flex; align-items: center; gap: .6rem; padding: .45rem .6rem; background: var(--rd-ivory); border-radius: 7px; font-family: var(--font-sans); font-size: .82rem; color: #3a4b4f; }
+.bka-ovlist em { color: #7a8b8f; font-size: .78rem; }
+.bka-ovlist .bka-x { margin-left: auto; }
+.bka-tag { font-size: .72rem; padding: .12rem .45rem; border-radius: 20px; background: var(--rd-gold-bloom); color: var(--rd-gold-ink); }
+.bka-tag--closed { background: #fdecec; color: #b0413f; }
+.bka-ovform { display: flex; flex-wrap: wrap; gap: .45rem; align-items: center; }
+.bka-ovform input[type="text"] { flex: 1; min-width: 140px; }
+
+.bka-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: .9rem; margin-bottom: 1.1rem; }
+.bka-field { display: flex; flex-direction: column; gap: .25rem; }
+.bka-field-label { font-family: var(--font-sans); font-size: .78rem; color: #3a4b4f; }
+.bka-field small { font-family: var(--font-sans); font-size: .7rem; color: #8b9a9e; }
+
+.bka-check { display: flex; gap: .55rem; align-items: flex-start; font-family: var(--font-sans); font-size: .82rem; color: #3a4b4f; }
+.bka-check input { margin-top: .2rem; }
+.bka-check small { display: block; font-size: .74rem; color: #8b9a9e; margin-top: .15rem; }
+
+.bka-preview { list-style: none; padding: 0; margin: .8rem 0 0; display: flex; flex-direction: column; gap: .3rem; }
+.bka-preview li { display: grid; grid-template-columns: 100px 70px 1fr; gap: .6rem; align-items: baseline; padding: .35rem .5rem; border-radius: 6px; background: var(--rd-ivory); font-family: var(--font-sans); font-size: .78rem; color: #3a4b4f; }
+.bka-preview em { color: #6b7c80; font-style: normal; font-size: .74rem; }
+
+@media (max-width: 640px) {
+  .bka-day { grid-template-columns: 1fr; gap: .35rem; }
+  .bka-dayname { padding-top: 0; }
+  .bka-preview li { grid-template-columns: 1fr; gap: .1rem; }
+}
+
 .adm-note h3 { font-family: var(--font-sans); font-size: .9rem; color: #3a4b4f; margin: 0 0 .6rem; }
 .adm-note ol { margin: 0 0 .6rem; padding-left: 1.2rem; }
 .adm-note li { margin-bottom: .5rem; }

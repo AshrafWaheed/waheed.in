@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { adminApi } from '@/lib/admin-api';
-import { CalendarCheck, CalendarX, ChevronRight } from 'lucide-react';
+import { CalendarCheck, CalendarX, ChevronRight, Clock } from 'lucide-react';
 
 export const dynamic = 'force-dynamic';
 
@@ -48,12 +48,21 @@ export default async function BookingsPage() {
         <ChevronRight size={18} />
       </Link>
 
+      <Link href="/jundullah/bookings/availability" className="adm-mode-status adm-mode-status--idle" style={{ textDecoration: 'none' }}>
+        <Clock size={18} />
+        <div style={{ flex: 1 }}>
+          <strong>Availability</strong>
+          <span>Your weekly hours, days off, and how the call itself is scheduled.</span>
+        </div>
+        <ChevronRight size={18} />
+      </Link>
+
       <div className="adm-note">
         <h3>Still being built</h3>
         <p>
-          The booking database and the Google connection are live. The public booking page, the
-          availability editor and the list of booked calls are the next steps — nothing is exposed
-          to visitors yet, so no one can book while this is half-finished.
+          The database, the Google connection and the availability rules are live. The list of
+          booked calls and the public booking page are the next steps — nothing is exposed to
+          visitors yet, so no one can book while this is half-finished.
         </p>
       </div>
     </div>

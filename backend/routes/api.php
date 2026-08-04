@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\ContactController as AdminContactController;
+use App\Http\Controllers\Admin\BookingSettingsController;
 use App\Http\Controllers\Admin\GoogleAuthController;
 use App\Http\Controllers\Admin\PostController;
 use App\Http\Controllers\Admin\SubscriberController as AdminSubscriberController;
@@ -27,6 +28,17 @@ Route::prefix('admin')->group(function () {
         Route::post('profile/password', [AuthController::class, 'updatePassword']);
 
         Route::get('taxonomy', [TaxonomyController::class, 'index']);
+
+        // Booking availability: weekly grid, date exceptions, call-type knobs.
+        Route::prefix('booking')->group(function () {
+            Route::get('availability', [BookingSettingsController::class, 'index']);
+            Route::put('availability', [BookingSettingsController::class, 'updateAvailability']);
+            Route::get('preview', [BookingSettingsController::class, 'preview']);
+            Route::post('overrides', [BookingSettingsController::class, 'storeOverride']);
+            Route::delete('overrides/{override}', [BookingSettingsController::class, 'destroyOverride']);
+            Route::patch('types/{type}', [BookingSettingsController::class, 'updateType']);
+            Route::patch('settings', [BookingSettingsController::class, 'updateSettings']);
+        });
 
         // Google Calendar connection for the booking module. `callback` is
         // reached by the Next.js route handler at /api/google/auth/callback,
