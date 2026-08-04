@@ -6966,26 +6966,43 @@ html[data-nav="dark"] .burger span            { background: var(--rd-ivory); }
 /* Sticky rather than a GSAP pin: nothing here is scrubbed, and sticky survives
    resize, reduced motion and a nav-height change without any teardown. */
 .bs-diag-sticky { position: sticky; top: 22vh; }
-.bs-plate {
-  position: relative;
-  border: 1px solid rgb(var(--rd-ivory-rgb) / .12); border-radius: 22px;
-  background: linear-gradient(168deg, rgb(var(--rd-ivory-rgb) / .06), rgb(var(--rd-ivory-rgb) / .015));
-  padding: 1.6rem 1.6rem 3.4rem;
+/* A BARE STAGE — no panel, no border, no tinted fill.
+   The drawings inside are solid light cards now, and wrapping solid cards in a
+   translucent tile is precisely what made this column read as a faint overlay
+   instead of as objects. The homepage collage never does it; neither does the
+   01 hero. Padding is kept only to hold the step indicator clear of the art. */
+.bs-plate { position: relative; padding: 0 0 1.9rem; }
+.bs-plate .dp { display: block; width: 100%; height: auto; overflow: visible; }
+
+/* Swap between the three boards.
+   The outgoing one leaves BEFORE the incoming one arrives (note the delay on
+   `.is-on`): a symmetrical cross-fade would hold two solid white cards at 50%
+   over each other for a quarter second, and two half-transparent cards is the
+   exact look this rebuild removes. */
+.dp-plate { opacity: 0; visibility: hidden; transition: opacity .22s ease, visibility .22s; }
+.dp-plate.is-on {
+  opacity: 1; visibility: visible;
+  transition: opacity .4s ease .16s, visibility 0s;
 }
-.bs-plate .dp { display: block; width: 100%; height: auto; }
-/* Cross-fade between the three drawings — same frame, same optical centre, so
-   the change reads as one diagram being re-drawn. */
-.dp-plate { opacity: 0; visibility: hidden; transition: opacity .45s ease, visibility .45s; }
-.dp-plate.is-on { opacity: 1; visibility: visible; }
-.dp-plate.is-on .dp-card { opacity: 0; animation: bf-in .5s ease-out forwards; }
-.dp-plate.is-on .dp-bar  { opacity: 0; animation: bf-in .5s ease-out forwards; }
-.dp-plate.is-on .dp-dot  { opacity: 0; animation: bf-in .4s ease-out forwards; }
-.dp-plate.is-on .dp-fall,
-.dp-plate.is-on .dp-hit  { animation: bf-draw 1.5s .25s cubic-bezier(.22, 1, .36, 1) forwards; }
-.dp-plate.is-on .dp-miss { animation: bf-draw 1.7s .3s cubic-bezier(.22, 1, .36, 1) forwards; }
+
+/* Entrance is a rise, not a fade — the cards are opaque the whole way in.
+   `bf-in` fades, so it is deliberately not used here. */
+.dp-plate.is-on .dp-card,
+.dp-plate.is-on .dp-row { animation: dp-rise .5s cubic-bezier(.22, 1, .36, 1) backwards; }
+.dp-plate.is-on .dp-bar { animation: dp-grow .55s cubic-bezier(.22, 1, .36, 1) backwards; }
+.dp-plate.is-on .dp-tag { animation: dp-stamp .45s cubic-bezier(.34, 1.4, .64, 1) .42s backwards; }
+
+@keyframes dp-rise  { from { transform: translateY(14px); } }
+@keyframes dp-grow  { from { transform: scaleY(0); } }
+@keyframes dp-stamp { from { transform: translateY(-8px) scale(.9); opacity: 0; } }
+
+/* Mono numerals for the discount tag — the one piece of type inside the art. */
+.dp-num {
+  font-family: var(--font-mono); font-size: 19px; font-weight: 600; letter-spacing: -.01em;
+}
 
 .bs-plate-steps {
-  position: absolute; left: 1.6rem; bottom: 1.5rem;
+  position: absolute; left: 0; bottom: .1rem;
   display: flex; gap: .5rem;
 }
 .bs-plate-step {
@@ -7322,10 +7339,15 @@ html[data-nav="dark"] .burger span            { background: var(--rd-ivory); }
    each one. Everything lands in its FINAL state — a still frame, not a blank. */
 @media (prefers-reduced-motion: reduce) {
   .bf-mark, .bf-halo, .bf-hero-mark,
-  .dp-plate.is-on .dp-card, .dp-plate.is-on .dp-bar, .dp-plate.is-on .dp-dot {
+  .dp-plate.is-on .dp-card, .dp-plate.is-on .dp-bar,
+  .dp-plate.is-on .dp-row, .dp-plate.is-on .dp-tag {
     animation: none !important; opacity: 1 !important; transform: none !important;
   }
-  .bf-ring, .dp-plate.is-on .dp-fall, .dp-plate.is-on .dp-hit, .dp-plate.is-on .dp-miss {
+  /* The board swap itself stays instant rather than eased — but it must still
+     SWAP, so only the transition is killed, never the opacity that decides
+     which of the three is showing. */
+  .dp-plate { transition: none !important; }
+  .bf-ring {
     animation: none !important; stroke-dashoffset: 0 !important;
   }
   .bs-step-card, .bs-swap-to {
