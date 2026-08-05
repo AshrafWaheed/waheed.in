@@ -14,6 +14,7 @@ import IhsanProcessTactile from '@/components/home/tactile/IhsanProcessTactile';
 import RefusalHybrid from '@/components/home/hybrid/RefusalHybrid';
 import NewsletterHybrid from '@/components/home/hybrid/NewsletterHybrid';
 import FinalCtaHybrid from '@/components/home/hybrid/FinalCtaHybrid';
+import SiteJsonLd from '@/components/seo/SiteJsonLd';
 
 // The homepage — Hybrid variant, with the tactile Expertise bento and tactile
 // Ihsan Process swapped in. Indexable (metadata lives in layout).
@@ -21,6 +22,9 @@ export default function HomePage() {
   return (
     <SmoothScroll>
       <SectionNav />
+      {/* Organization + WebSite schema. Homepage only — this is the site's one
+          canonical statement of who it is; see the component's header. */}
+      <SiteJsonLd />
       <main>
         <HeroFoundersFlank />
         <TrustStripHybrid />

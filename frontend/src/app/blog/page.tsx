@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import GirihEngine from '@/components/graphics/GirihEngine';
 import { laravelFetch } from '@/lib/laravel';
+import { OG_IMAGE, TWITTER_IMAGE } from '@/lib/seo';
 
 export const dynamic = 'force-dynamic';
 
@@ -22,6 +23,13 @@ export const metadata: Metadata = {
     siteName: 'WAHEED',
     locale: 'en_GB',
     type: 'website',
+    images: [OG_IMAGE],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Insights · WAHEED',
+    description: BLOG_DESC,
+    images: [TWITTER_IMAGE],
   },
 };
 

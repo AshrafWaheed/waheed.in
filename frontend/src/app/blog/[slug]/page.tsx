@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import GirihEngine from '@/components/graphics/GirihEngine';
 import { laravelFetch } from '@/lib/laravel';
+import { OG_IMAGE, TWITTER_IMAGE } from '@/lib/seo';
 
 export const dynamic = 'force-dynamic';
 
@@ -93,10 +94,18 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       url,
       type: 'article',
       siteName: 'WAHEED',
-      images: image ? [image] : undefined,
+      // The post's own cover when it has one, otherwise the sitewide card.
+      // A post with no cover used to ship no og:image at all and got the bare
+      // grey rectangle every chat app draws for a link with nothing to show.
+      images: [image ?? OG_IMAGE],
       publishedTime: post.published_at ?? undefined,
     },
-    twitter: { card: image ? 'summary_large_image' : 'summary', title, description },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      images: [image ?? TWITTER_IMAGE],
+    },
     robots: { index: true, follow: true },
   };
 }

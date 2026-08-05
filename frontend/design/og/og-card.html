@@ -1,0 +1,204 @@
+<!doctype html>
+<!--
+  THE SOCIAL CARD — source for src/app/opengraph-image.jpg + twitter-image.jpg.
+
+  Those two files are the picture that shows when a waheed.in link is pasted
+  into WhatsApp, LinkedIn, Slack or X. They are the same image; Next.js wants a
+  file per convention, and X reads twitter:image in preference to og:image.
+
+  They are CHECKED-IN BINARIES, not generated at build time. This file is the
+  source. To change the card, edit here and re-shoot:
+
+      # from frontend/ — inline the logo, because the card has to be one
+      # self-contained file to screenshot from file://
+      node -e "
+      const fs=require('fs');
+      const b64=fs.readFileSync('public/logo.png').toString('base64');
+      fs.writeFileSync('/tmp/og.html',
+        fs.readFileSync('design/og/og-card.html','utf8')
+          .replace('LOGO_SRC','data:image/png;base64,'+b64));
+      "
+      # screenshot /tmp/og.html at 1200x630, deviceScaleFactor 1 → shot.png
+      convert shot.png -quality 92 -sampling-factor 4:4:4 -strip \
+        src/app/opengraph-image.jpg
+      cp src/app/opengraph-image.jpg src/app/twitter-image.jpg
+
+  ── Why a screenshot and not next/og's ImageResponse ────────────────────────
+  ImageResponse would render this per request from JSX, which is the
+  fashionable answer and the wrong one here: the card uses the site's real
+  fonts and its real gradient stack, and satori supports neither without
+  shipping font binaries and hand-flattening every gradient into something it
+  can draw. A screenshot is byte-identical to what was signed off, costs
+  nothing at runtime, and cannot break on a Next upgrade.
+
+  The trade is one card for the whole site. Blog posts already send their own
+  cover_image as og:image, so the pages most worth a bespoke card have one.
+
+  ── Constraints ────────────────────────────────────────────────────────────
+  · 1200x630. Under 600x315 X drops to the small card; over 8 MB Facebook
+    refuses it and the Next build fails.
+  · JPEG, not PNG. The gradient makes a 429 KB PNG and an 84 KB JPEG that is
+    indistinguishable at q92 4:4:4, and scrapers time out.
+  · The headline is VERBATIM from src/content/home.ts. It is the hero line; a
+    card that says something the page does not is the kind of drift nobody
+    notices for a year.
+-->
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500&family=JetBrains+Mono:wght@500&display=block" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --night:      #11272e;
+    --night-mid:  #18353f;
+    --night-hi:   #1f4450;
+    --ivory:      #F5F7FA;
+    --bloom:      #bcdcf7;
+    --line:       #4f93d6;
+  }
+
+  html, body { width: 1200px; height: 630px; }
+
+  body {
+    font-family: 'Space Grotesk', sans-serif;
+    background: var(--night);
+    overflow: hidden;
+  }
+
+  .card {
+    position: relative;
+    width: 1200px;
+    height: 630px;
+    background:
+      radial-gradient(110% 88% at 86% 12%, rgba(79,147,214,.22) 0%, rgba(79,147,214,0) 60%),
+      linear-gradient(135deg, var(--night) 0%, var(--night-mid) 54%, var(--night-hi) 100%);
+    overflow: hidden;
+  }
+
+  /* The girih motif, bled off the right edge — the same eight-point
+     construction GirihEngine draws on the site, held at linework weight so it
+     reads as texture and never competes with the headline. */
+  .motif {
+    position: absolute;
+    top: -118px;
+    right: -330px;
+    width: 660px;
+    height: 660px;
+    opacity: .34;
+  }
+
+  .inner {
+    position: absolute;
+    inset: 38px;
+    border: 1px solid rgba(79,147,214,.2);
+    border-radius: 6px;
+    padding: 64px 70px 58px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 16px;
+    font-weight: 500;
+    letter-spacing: .24em;
+    text-transform: uppercase;
+    color: var(--line);
+    display: flex;
+    align-items: center;
+    gap: 18px;
+  }
+  .eyebrow::after {
+    content: '';
+    flex: 0 0 88px;
+    height: 1px;
+    background: rgba(79,147,214,.4);
+  }
+
+  h1 {
+    margin-top: 52px;
+    max-width: 800px;
+    font-size: 62px;
+    font-weight: 400;
+    line-height: 1.13;
+    letter-spacing: -.022em;
+    color: var(--ivory);
+  }
+  h1 em {
+    font-style: normal;
+    color: var(--bloom);
+  }
+
+  /* The wordmark signs the card rather than heading it: the headline is what
+     has to survive being shown at 300px wide in a chat window, and the mark is
+     the thing you recognise once you are already looking. White-on-dark via
+     the same filter the footer uses, so it is the exact lockup people see at
+     the bottom of every page. */
+  .foot {
+    margin-top: auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 32px;
+    padding-top: 34px;
+    border-top: 1px solid rgba(79,147,214,.16);
+  }
+  .logo {
+    height: 46px;
+    width: auto;
+    /* Not the footer's `brightness(0) invert(1)`: flattening the mark to one
+       tone fuses the two teal arcs into the letterforms they pass through, and
+       "waheed" comes out smudged. Inverting and flipping the hue keeps the two
+       tones apart — white letters, the arcs a soft blue that lands inside the
+       accent ramp instead of the warm tan a plain invert would give. */
+    filter: invert(1) hue-rotate(180deg) saturate(1.6);
+    opacity: .95;
+  }
+  .url {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 17px;
+    font-weight: 500;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: rgba(245,247,250,.72);
+  }
+</style>
+</head>
+<body>
+  <div class="card">
+    <svg class="motif" viewBox="0 0 400 400" fill="none"
+         stroke="#4f93d6" stroke-width="1.2" aria-hidden="true">
+      <g opacity=".5">
+        <circle cx="200" cy="200" r="186"/>
+        <circle cx="200" cy="200" r="140"/>
+        <circle cx="200" cy="200" r="72"/>
+      </g>
+      <!-- Two squares at 45° = the eight-point star the whole motif hangs on. -->
+      <g opacity=".95">
+        <rect x="61" y="61" width="278" height="278"/>
+        <rect x="61" y="61" width="278" height="278" transform="rotate(45 200 200)"/>
+        <rect x="102" y="102" width="196" height="196" transform="rotate(22.5 200 200)"/>
+        <rect x="102" y="102" width="196" height="196" transform="rotate(67.5 200 200)"/>
+      </g>
+      <g opacity=".55">
+        <path d="M200 14 L200 386 M14 200 L386 200 M69 69 L331 331 M331 69 L69 331"/>
+      </g>
+    </svg>
+
+    <div class="inner">
+      <span class="eyebrow">Ihsan-Led Tech &amp; Marketing</span>
+
+      <h1>Scale your brand online <em>without compromising your values.</em></h1>
+
+      <div class="foot">
+        <img class="logo" src="LOGO_SRC" alt="">
+        <span class="url">waheed.in</span>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

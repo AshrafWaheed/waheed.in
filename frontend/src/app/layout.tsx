@@ -67,13 +67,32 @@ const amiri = Amiri({
   display: "swap",
 });
 
+/**
+ * ROOT metadata — the homepage's own, and the fallback for anything that does
+ * not override it.
+ *
+ * A page that sets nothing inherits ALL of this, canonical included, which is
+ * why every public route either calls `pageMeta` (src/lib/seo.ts) or, when its
+ * page is a client component and cannot export metadata, carries a layout that
+ * does — see src/app/contact/layout.tsx for the one case of that.
+ *
+ * The card image is not declared here: `opengraph-image.jpg` and
+ * `twitter-image.jpg` sit beside this file, and Next resolves them by
+ * convention into og:image / twitter:image with the right dimensions and the
+ * alt text from the matching .alt.txt. See design/og/og-card.html.
+ */
 export const metadata: Metadata = {
   other: { 'man-site-verification': '4448e038432f15e8da67b866b4fb98b8' },
   title: "WAHEED · Halal Digital Studio",
   description:
     "We help Muslim-led brands grow with integrity. Strategy, design, and digital products built on Shariah-aligned values. No shortcuts. No compromise.",
   metadataBase: new URL("https://waheed.in"),
-  alternates: { canonical: "https://waheed.in" },
+  alternates: {
+    canonical: "https://waheed.in",
+    types: {
+      'application/rss+xml': [{ url: 'https://waheed.in/blog/rss.xml', title: 'WAHEED · Insights' }],
+    },
+  },
   openGraph: {
     title: "WAHEED · Halal Digital Studio",
     description:
@@ -82,6 +101,30 @@ export const metadata: Metadata = {
     siteName: "WAHEED",
     locale: "en_GB",
     type: "website",
+  },
+  /*
+   * `summary_large_image` is stated rather than left to inference. With no
+   * twitter block at all Next emitted `twitter:card content="summary"`, which
+   * is the 1:1 thumbnail card — a 1200x630 image shown as a small square with
+   * the sides cropped off, i.e. the headline gone.
+   */
+  twitter: { card: 'summary_large_image' },
+  /*
+   * `max-image-preview: large` is the one that earns its place: without it
+   * Google shows a thumbnail-sized image (or none) beside a result, and it is
+   * also the gate on Discover eligibility. The snippet/video values are the
+   * documented "no limit" sentinels.
+   */
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+      'max-video-preview': -1,
+    },
   },
 };
 
