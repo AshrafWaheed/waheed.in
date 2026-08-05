@@ -173,7 +173,7 @@
   height:        60px;
   width:         auto;
   margin-bottom: 2rem;
-  filter:        brightness(0) invert(1);
+  filter:        var(--rd-logo-on-dark);
   opacity:       .95;
 }
 .coming-bismillah {
@@ -321,7 +321,7 @@
   max-width: 1100px; margin: 0 auto; padding: .9rem 1.5rem;
   display: flex; align-items: center; gap: 1rem;
 }
-.adm-topbar-logo { height: 30px; width: auto; filter: brightness(0) invert(1); opacity: .95; }
+.adm-topbar-logo { height: 30px; width: auto; filter: var(--rd-logo-on-dark); opacity: .95; }
 .adm-topbar-title { font-family: var(--font-serif); font-size: 1.15rem; color: var(--rd-gold-bloom); }
 .adm-topbar-right { margin-left: auto; display: flex; align-items: center; gap: 1rem; }
 .adm-topbar-user { font-family: var(--font-sans); font-size: .8rem; color: rgb(var(--rd-ivory-rgb) / .7); }
@@ -1870,7 +1870,7 @@ html[data-nav="dark"] .nav:not(.scrolled) .nav-ghost:hover {
   object-fit:   contain;
   display:      block;
   margin-bottom: 1.2rem;
-  filter:       brightness(0) invert(1);
+  filter:       var(--rd-logo-on-dark);
   opacity:      .9;
 }
 .footer-grid {
@@ -3135,7 +3135,7 @@ html[data-nav="dark"] .nav:not(.scrolled) .nav-ghost:hover {
   position: sticky; top: 0; height: 100dvh;
 }
 .adm-sb-head { padding: 1.3rem 1.3rem; display: flex; align-items: center; gap: .6rem; border-bottom: 1px solid rgb(var(--rd-gold-bloom-rgb) / .12); }
-.adm-sb-logo { height: 28px; width: auto; filter: brightness(0) invert(1); opacity: .95; }
+.adm-sb-logo { height: 28px; width: auto; filter: var(--rd-logo-on-dark); opacity: .95; }
 .adm-sb-brand { font-family: var(--font-serif); color: var(--rd-gold-bloom); font-size: 1.1rem; }
 .adm-sb-nav { flex: 1; padding: 1rem .8rem; display: flex; flex-direction: column; gap: .15rem; overflow-y: auto; }
 .adm-sb-link {
@@ -3522,6 +3522,25 @@ html[data-nav="dark"] .nav:not(.scrolled) .nav-ghost:hover {
 
   --rd-hairline:     rgb(var(--rd-gold-line-rgb) / .18);
 
+  /* ── THE WORDMARK ON DARK ────────────────────────────────────────────────
+     logo.png is two-tone: black letterforms with two teal arcs that pass
+     THROUGH the "h" and trail off the "d". Every dark context used to whiten
+     it with `brightness(0) invert(1)`, which flattens both tones to the same
+     white — so the arcs fused into the letters they cross and the mark came
+     out smudged, worst at the sizes where it is largest (the footer's 80px,
+     the nav's 54px).
+
+     Inverting and flipping the hue keeps the two tones apart instead: the
+     letters go white, and the arcs land on a soft blue inside the accent ramp
+     rather than the warm tan a plain `invert(1)` would give — which is the
+     whole reason for the hue-rotate, since a warm mark under a blue accent was
+     the exact temperature clash the palette re-cut removed.
+
+     One token, five call sites (footer, dark nav, coming-soon, and the two
+     admin chrome logos), because a mark that is drawn one way in the nav and
+     another in the footer of the same page is worse than either. */
+  --rd-logo-on-dark: invert(1) hue-rotate(180deg) saturate(1.6);
+
   /* ── CARD ARTWORK — the seam, now closed ─────────────────────────────────
      The Expertise/Services card artwork (CraftDash's schematics, CraftArtifact's
      miniature interfaces, the tier HUDs) was briefly held back on the original
@@ -3608,7 +3627,7 @@ html[data-nav="dark"] .nav {
 html[data-nav="dark"] .nav-links a            { color: rgb(var(--rd-ivory-rgb) / .85); }
 html[data-nav="dark"] .nav-links a:hover,
 html[data-nav="dark"] .nav-links a.active     { color: var(--rd-white); }
-html[data-nav="dark"] .nav-logo-img           { filter: brightness(0) invert(1); }
+html[data-nav="dark"] .nav-logo-img           { filter: var(--rd-logo-on-dark); }
 html[data-nav="dark"] .burger span            { background: var(--rd-ivory); }
 
 /* ─── Live-dashboard hooks (CraftDash + GirihEngine) ────────────── */

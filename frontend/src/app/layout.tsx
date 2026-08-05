@@ -82,7 +82,6 @@ const amiri = Amiri({
  * alt text from the matching .alt.txt. See design/og/og-card.html.
  */
 export const metadata: Metadata = {
-  other: { 'man-site-verification': '4448e038432f15e8da67b866b4fb98b8' },
   title: "WAHEED · Halal Digital Studio",
   description:
     "We help Muslim-led brands grow with integrity. Strategy, design, and digital products built on Shariah-aligned values. No shortcuts. No compromise.",
