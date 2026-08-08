@@ -3712,7 +3712,10 @@ html[data-nav="dark"] .burger span            { background: var(--rd-ivory); }
   font-family: var(--font-sans); font-size: clamp(1rem, 1.4vw, 1.12rem); line-height: 1.6;
   color: var(--rd-on-night-dim); max-width: 46rem; margin: 0 auto 2.4rem;
 }
-.hy-hero-ctas { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+/* align-items:center, not the default stretch: a StackButton is an inline-block
+   whose face does not grow with the flex line, so under stretch it pinned to
+   the top of the row and sat visibly high against the button beside it. */
+.hy-hero-ctas { display: flex; gap: 1rem; justify-content: center; align-items: center; flex-wrap: wrap; }
 .hy-scroll-cue { position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%); z-index: 1; }
 .hy-scroll-line {
   display: block; width: 1px; height: 46px; transform-origin: top;
@@ -8920,6 +8923,18 @@ html[data-nav="dark"] .burger span            { background: var(--rd-ivory); }
 }
 
 .stk--sm .stk-face { padding: .5rem 1.1rem; font-size: .75rem; }
+
+/* lg pairs with a legacy `.btn` sitting beside it. The metrics below ARE
+   `.btn`'s — copied on purpose rather than eyeballed to a matching pixel
+   height, so if `.btn` is ever retuned the pair moves together instead of
+   silently drifting apart. Note rem is 19px here, not 16px (the override block
+   near the top of this file), which is why .95rem lands at ~18px. */
+.stk--lg .stk-face {
+  padding:        .95rem 1.6rem;
+  font-size:      .72rem;
+  letter-spacing: .05em;
+  line-height:    1.65;
+}
 
 /* Pressed. A 1px sink is the only transform the FACE ever gets — everything
    else in here moves the plates behind it, and moving both at once turns a

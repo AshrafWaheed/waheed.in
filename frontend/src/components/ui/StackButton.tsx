@@ -63,8 +63,17 @@ const SPRING = { stiffness: 150, damping: 15, mass: 0.1 };
 
 type Common = {
   children: React.ReactNode;
-  /** md ≈ 40px tall (the design's default), sm ≈ 34px for dense chrome. */
-  size?: 'md' | 'sm';
+  /**
+   * md is the design's own size (~43px). sm is for dense chrome.
+   *
+   * lg exists for one reason: pairing with a legacy `.btn` in the same row.
+   * The Figma hero has a single button and so says nothing about pairing, but
+   * ours sits next to "Explore Our Services", and at md the primary CTA came
+   * out 43px against the secondary's 61px — a primary action visibly smaller
+   * than the secondary reads as a mistake, not as hierarchy. lg borrows
+   * `.btn`'s exact type metrics so the two cannot drift apart.
+   */
+  size?: 'md' | 'sm' | 'lg';
   /** Trailing arrow, as on the nav's "Talk to us". */
   arrow?: boolean;
   className?: string;
@@ -164,7 +173,7 @@ export default function StackButton(props: StackButtonProps) {
 
   const cls = [
     'stk',
-    size === 'sm' ? 'stk--sm' : '',
+    size === 'md' ? '' : `stk--${size}`,
     engaged ? 'is-engaged' : '',
     className ?? '',
   ]

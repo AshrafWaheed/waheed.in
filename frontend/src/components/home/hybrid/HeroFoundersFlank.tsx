@@ -36,6 +36,7 @@ import { motion } from 'framer-motion';
 import type { Variants } from 'framer-motion';
 import SplitReveal from '@/components/motion/SplitReveal';
 import Magnetic from '@/components/motion/Magnetic';
+import StackButton from '@/components/ui/StackButton';
 import { hero } from '@/content/home';
 
 const EASE = [0.22, 1, 0.36, 1] as const;
@@ -211,8 +212,13 @@ export default function HeroFoundersFlank() {
         </motion.p>
 
         <motion.div className="hy-hero-ctas" custom={1.3} variants={fadeUp} initial="hidden" animate="visible">
+          {/* The redesign's three-plate button. Still wrapped in Magnetic so it
+              moves with the secondary CTA beside it — the plate pull is a
+              SECOND, smaller motion layered on top of that, which is the
+              parallax the design is after. Label and href stay from
+              content/home.ts; only the component changed. */}
           <Magnetic strength={0.4}>
-            <Link href={hero.ctaPrimary.href} className="btn btn-gold" data-cursor>{hero.ctaPrimary.label}</Link>
+            <StackButton href={hero.ctaPrimary.href} size="lg">{hero.ctaPrimary.label}</StackButton>
           </Magnetic>
           <Magnetic strength={0.4}>
             <Link href={hero.ctaSecondary.href} className="btn btn-outline-lt" data-cursor>{hero.ctaSecondary.label}</Link>
