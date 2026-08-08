@@ -8843,3 +8843,128 @@ html[data-nav="dark"] .burger span            { background: var(--rd-ivory); }
 @media (prefers-reduced-motion: reduce) {
   .bk-spin { animation: none !important; }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   stk- · STACKBUTTON — the three-plate button from the Figma redesign
+   ═══════════════════════════════════════════════════════════════════════════
+   Component: src/components/ui/StackButton.tsx, which carries the measured
+   offsets and the reasoning. This file owns the look only.
+
+   Unlayered, like every other delta layer here, so it wins over the `@layer`
+   base without needing a single !important — the `.btn` rules it sits beside
+   are pill-averse by design ("3px radius, never pill") and this button is a
+   pill, so the two must not share a class.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.stk {
+  /* Scoped, NOT --rd-*. The site accent is currently blue; the redesign moves
+     it to gold. Reaching for --rd-gold today would render this blue-on-blue.
+     When the palette migrates, these four lines change and nothing else. */
+  --stk-face: #F0D97A;
+  --stk-mid:  #4B8BCB;
+  --stk-back: #FFFFFF;
+  /* Measured, and NOT --rd-night. The outline and the label are both pure
+     #000000 in the file (597px and 70px of it in one button, so it is a real
+     stroke, not antialiasing). This was #1A363D on the first pass, which is
+     the dark GROUND colour — the outlines vanished into the background and the
+     three plates lost the thing that separates them. On a dark section the
+     outline is most of the effect. */
+  --stk-ink:  #000000;
+
+  position:       relative;
+  display:        inline-block;
+  vertical-align: middle;
+  /* The shells travel outside the face box. Nothing may clip them, and no
+     ancestor may be given overflow:hidden on this axis without breaking the
+     effect — that is the one integration hazard in this component. */
+  isolation:      isolate;
+}
+
+/* The two plates behind. Absolutely inset so they are always exactly the face's
+   size — the effect is three IDENTICAL plates out of register, and a shell even
+   a pixel off would read as a rendering fault rather than as depth. */
+.stk-shell {
+  position:       absolute;
+  inset:          0;
+  border-radius:  9999px;
+  border:         1.5px solid var(--stk-ink);
+  /* Hover must be decided by the face alone. Without this, the crescent
+     sticking out at rest is its own hit target, and grazing it fires
+     pointerenter/leave in a loop along the top edge. */
+  pointer-events: none;
+  will-change:    transform;
+}
+.stk-shell--mid  { background: var(--stk-mid);  z-index: -1; }
+.stk-shell--back { background: var(--stk-back); z-index: -2; }
+
+.stk-face {
+  position:        relative;
+  z-index:         1;
+  display:         inline-flex;
+  align-items:     center;
+  justify-content: center;
+  gap:             .55rem;
+  padding:         .68rem 1.5rem;
+  border-radius:   9999px;
+  border:          1.5px solid var(--stk-ink);
+  background:      var(--stk-face);
+  color:           var(--stk-ink);
+  font-family:     var(--font-sans);
+  font-size:       .82rem;
+  font-weight:     500;
+  letter-spacing:  .01em;
+  line-height:     1;
+  text-decoration: none;
+  cursor:          pointer;
+  transition:      background .18s ease-out, transform .12s ease-out;
+}
+
+.stk--sm .stk-face { padding: .5rem 1.1rem; font-size: .75rem; }
+
+/* Pressed. A 1px sink is the only transform the FACE ever gets — everything
+   else in here moves the plates behind it, and moving both at once turns a
+   press into a wobble. */
+.stk-face:active { transform: translateY(1px); }
+
+.stk-face:focus-visible {
+  outline:        2px solid var(--stk-ink);
+  outline-offset: 3px;
+}
+
+.stk-face:disabled {
+  opacity:        .5;
+  cursor:         not-allowed;
+  pointer-events: none;
+}
+
+.stk-arrow {
+  width:      1.35rem;
+  height:     .68rem;
+  flex:       0 0 auto;
+  overflow:   visible;
+  transition: transform .22s cubic-bezier(.22,.61,.36,1);
+}
+/* The arrow leans into the travel. Scoped to `hover: hover` so a touch device,
+   where :hover latches after a tap, does not leave it stuck forward. */
+@media (hover: hover) {
+  .stk:hover .stk-arrow { transform: translateX(3px); }
+}
+
+/* ── Reduced motion ─────────────────────────────────────────────────────────
+   The plates are pinned at their REST offsets and stay there. These override
+   the inline transforms framer-motion writes, which is the only reason
+   !important appears in this file — an inline style cannot be beaten otherwise.
+
+   Rest is the right frame to land on: it is the state the design draws, and it
+   is the one that still explains what the button is. Collapsed would be a
+   button that has quietly lost two thirds of itself.
+
+   Hover still gives feedback, just not by moving: the face darkens instead. */
+@media (prefers-reduced-motion: reduce) {
+  .stk-shell        { transition: none !important; }
+  .stk-shell--mid   { transform: translate(5px, -3px)  !important; }
+  .stk-shell--back  { transform: translate(10px, -7px) !important; }
+  .stk-arrow        { transition: none !important; }
+  .stk:hover .stk-arrow { transform: none !important; }
+  .stk-face:hover   { background: #e6c95f; }
+}

@@ -12,6 +12,7 @@ import {
   Users,
   UserCircle,
   Power,
+  Palette,
   Menu,
   X,
   LogOut,
@@ -26,6 +27,9 @@ const NAV = [
   { href: '/jundullah/settings', label: 'Site mode', icon: Power },
   { href: '/jundullah/users', label: 'Users', icon: Users },
   { href: '/jundullah/profile', label: 'My profile', icon: UserCircle },
+  // Not a settings screen — a preview bench for redesign components, so they
+  // can be clicked and judged before anything is mounted on the public site.
+  { href: '/jundullah/lab', label: 'Design lab', icon: Palette },
 ];
 
 export default function AdminSidebar({ name, email }: { name: string; email: string }) {
