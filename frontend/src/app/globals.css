@@ -8983,3 +8983,159 @@ html[data-nav="dark"] .burger span            { background: var(--rd-ivory); }
   .stk:hover .stk-arrow { transform: none !important; }
   .stk-face:hover   { background: #e6c95f; }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   HERO REDUX + NAV PILL — Figma redesign, WAHEEDWEB Page 2
+   ═══════════════════════════════════════════════════════════════════════════
+   Unlayered delta, appended so it wins over the base by source order without
+   !important (except where it must beat framer-motion's inline styles or an
+   earlier media-query rule of equal specificity). Colours are the design's
+   literal gold #F0D97A rather than --rd-gold-*, for the same reason StackButton
+   uses --stk-*: the site accent is still blue and the palette has not migrated
+   yet. When it does, these few literals point at the tokens.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── The nav becomes a floating white pill ──────────────────────────────────
+   A white pill reads on ANY background, so it replaces both the old full-width
+   white bar and the transparent-over-dark inversion the SectionNav applied.
+   The data-nav="dark" overrides below neutralise that inversion so the pill and
+   its dark text/logo stay put over the dark hero. */
+.nav {
+  background: transparent;
+  backdrop-filter: none; -webkit-backdrop-filter: none;
+  border-bottom: none;
+  padding: .85rem 0 0;
+}
+.nav.scrolled { padding-top: .5rem; box-shadow: none; border-color: transparent; }
+.nav-inner {
+  background: var(--rd-white);
+  border-radius: 999px;
+  padding: .48rem .55rem .48rem 1.4rem;
+  box-shadow: 0 16px 40px rgba(8, 20, 25, .28), 0 3px 10px rgba(8, 20, 25, .14);
+}
+.nav.scrolled .nav-inner { box-shadow: 0 10px 30px rgba(8, 20, 25, .26), 0 2px 6px rgba(8, 20, 25, .12); }
+.nav-ctas { gap: 0; }
+
+/* Stay a white pill over dark sections — override the SectionNav inversion. */
+html[data-nav="dark"] .nav                 { background: transparent; }
+html[data-nav="dark"] .nav-links a         { color: #3a3a3a; }
+html[data-nav="dark"] .nav-links a:hover,
+html[data-nav="dark"] .nav-links a.active  { color: #254851; }
+html[data-nav="dark"] .nav-drop-trigger    { color: #3a3a3a; }
+html[data-nav="dark"] .nav-drop-trigger:hover,
+html[data-nav="dark"] .nav-drop-trigger.active,
+html[data-nav="dark"] .nav-drop-trigger[aria-expanded="true"] { color: #254851; }
+html[data-nav="dark"] .nav-logo-img        { filter: none; }
+html[data-nav="dark"] .burger span         { background: #254851; }
+
+/* ── Hero: local palette + the marquee-carrying column ──────────────────────
+   .ff-stage is display:contents so the grid stays on .ff-hero and every
+   existing responsive rule keeps working; the trust note and marquee are extra
+   full-width rows below the three columns. */
+.ff-hero {
+  --hero-gold: #F0D97A;
+  --hero-ink:  #1A363D;
+  padding-bottom: 0;          /* the white marquee is the section's floor now */
+  background: radial-gradient(135% 105% at 50% -8%, #24505d 0%, #1a363d 46%, #11242b 100%);
+}
+.ff-stage { display: contents; }
+
+/* Eyebrow: was an underlined mono line; now the design's filled gold chip. */
+.ff-pill {
+  display: inline-block; margin: 0 auto 1.5rem;
+  transform: none;                                   /* drop the underline nudges */
+  background: var(--hero-gold); color: var(--hero-ink);
+  font-family: var(--font-sans); font-weight: 500;
+  font-size: .82rem; letter-spacing: 0; text-transform: none;
+  border: none; border-radius: 999px;
+  padding: .5rem 1.15rem;
+}
+
+/* Headline, two stacked lines. */
+.ff-h1 { max-width: 18ch; margin-inline: auto; }
+.ff-h1-lead,
+.ff-h1-turn { display: block; }
+.ff-h1-turn { margin-top: .12em; }         /* inline flow inside, so "trusted." stays whole */
+/* `.ff-h1 em.ff-trusted` (0,2,1), not `.ff-trusted` (0,1,0): the base rule
+   `.hy-hero-h1 em { color: var(--rd-gold-bloom) }` is (0,1,1) and was painting
+   this the blue bloom instead of the design's gold. */
+.ff-h1 em.ff-trusted { font-style: italic; font-weight: 600; color: var(--hero-gold); }
+.ff-h1-arrow { display: inline-flex; vertical-align: -.08em; margin: 0 .3em; color: var(--hero-gold); }
+.ff-h1-arrow svg { width: 1.15em; height: auto; }
+
+/* ── "invisible": faint at rest, revealed by a cursor-torch ─────────────────
+   Two layers of the same word. The base is barely above the ground; the glow
+   is clipped to a radial light centred on the pointer (--lx/--ly, written by
+   the hero's pointer handler in the word's own coordinates), so the word only
+   resolves where the light falls. Default -999px parks the light off-screen so
+   nothing shows until the cursor arrives. */
+.ff-invisible { position: relative; display: inline-block; font-style: italic; }
+.ff-invisible-base { color: rgba(150, 190, 214, .11); }
+.ff-invisible-glow {
+  position: absolute; inset: 0; pointer-events: none;
+  color: transparent;
+  background: radial-gradient(circle 100px at var(--lx, -999px) var(--ly, -999px),
+    #eaf5ff 0%, #a9d2f4 34%, rgba(120, 170, 210, .35) 58%, transparent 74%);
+  -webkit-background-clip: text; background-clip: text;
+}
+
+/* Sub: gold rule under the two named phrases. */
+.ff-uline {
+  text-decoration: underline;
+  text-decoration-color: var(--hero-gold);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 4px;
+}
+
+/* ── Trust note + logo marquee ──────────────────────────────────────────────
+   The note sits bottom-left on the dark, tilted, with a hand-drawn arrow down
+   into the band. The marquee is a full-bleed white strip flush to the section
+   floor; two copies of the row scroll -50% for a seamless loop. */
+.ff-trust-note {
+  grid-column: 1 / -1; justify-self: start; align-self: end;
+  position: relative; z-index: 5;
+  margin: 2.5rem 0 -.5rem; padding-left: .25rem;
+  display: inline-flex; align-items: flex-start; gap: .4rem;
+  transform: rotate(-4deg);
+  font-family: var(--font-sans); font-size: .82rem; line-height: 1.2;
+  color: rgb(var(--rd-ivory-rgb) / .78); max-width: 22ch;
+}
+.ff-trust-arrow { flex: 0 0 auto; width: 2rem; height: auto; color: var(--hero-gold); margin-top: .1rem; }
+
+.ff-marquee {
+  grid-column: 1 / -1;
+  width: 100vw; position: relative; left: 50%; margin-left: -50vw;
+  margin-top: clamp(2rem, 4vw, 3.25rem);
+  background: var(--rd-white);
+  padding: 1.9rem 0; overflow: hidden;
+}
+.ff-marquee-track {
+  display: flex; align-items: center; gap: clamp(2.5rem, 5vw, 4.5rem);
+  width: max-content;
+  animation: ff-marquee 34s linear infinite;
+}
+.ff-logo {
+  flex: 0 0 auto;
+  width: clamp(112px, 12vw, 168px); height: clamp(46px, 5vw, 74px);
+  border-radius: 10px;
+  background: #E4E7EB;
+}
+@keyframes ff-marquee { to { transform: translateX(-50%); } }
+.ff-marquee:hover .ff-marquee-track { animation-play-state: paused; }
+
+/* Reduced motion / no-hover: the torch cannot run (its coordinates come from a
+   pointer), so the word must be legible without it, and the marquee holds
+   still. */
+@media (prefers-reduced-motion: reduce) {
+  .ff-invisible-base { color: rgb(var(--rd-gold-bloom-rgb) / .92); }
+  .ff-marquee-track  { animation: none; }
+}
+@media (hover: none) {
+  .ff-invisible-base { color: rgb(var(--rd-gold-bloom-rgb) / .92); }
+}
+
+/* Narrow: the note stops floating left and the marquee tightens. */
+@media (max-width: 620px) {
+  .ff-trust-note { justify-self: center; transform: none; text-align: center; max-width: none; margin-bottom: 0; }
+  .ff-marquee { padding: 1.3rem 0; margin-top: 2rem; }
+}

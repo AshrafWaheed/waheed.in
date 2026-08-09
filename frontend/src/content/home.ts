@@ -15,29 +15,46 @@ export interface Heading {
   lead: string;
   em?: string;
   tail?: string;
+  /**
+   * A fragment set BETWEEN `lead` and `em`, rendered as the near-invisible word
+   * only the hero uses (the "invisible → trusted" torch line). Optional so
+   * every other heading on the site keeps the plain {lead, em, tail} shape.
+   */
+  hidden?: string;
 }
 
-/* ─── Hero ─────────────────────────────────────────────────────── */
+/* ─── Hero ─────────────────────────────────────────────────────────
+   Copy is VERBATIM from the Figma redesign (WAHEEDWEB, Page 2 hero). It
+   replaced the earlier "Scale your brand online / Ihsan-Led Tech & Marketing"
+   set wholesale — headline, eyebrow, sub and the CTA all changed together, so
+   this is a copy change made under explicit instruction, not drift.
+
+   The headline is three parts, not two: `lead` upright, then `hidden`
+   ("invisible") which the hero renders faint and reveals under a cursor-torch,
+   then `em` ("trusted") in gold italic, with a drawn arrow between them. The
+   demonstration IS the sentence — the word "invisible" is invisible until you
+   move a light over it. */
 export const hero = {
   bismillah: 'بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ',
-  /* Shortened from 'Ihsan-Led Tech & Marketing for Halal, Impact-Driven
-     Initiatives'. At 63 characters it needed 676px on one line against a 620px
-     centre column, so it wrapped to three lines inside its own pill. Trimming
-     the qualifier was chosen over tightening the tracking or shrinking the
-     type — an eyebrow that has to be set smaller to fit is an eyebrow that is
-     too long. The dropped clause is not lost: "halal" and "impact-driven" both
-     carry in the sub directly beneath it. */
-  eyebrow: 'Ihsan-Led Tech & Marketing',
+  eyebrow: 'The Long-Term Partner for Your Halal Brand',
   headline: {
-    lead: 'Scale your brand online',
-    em: 'without compromising your values.',
+    lead: 'Take your brand from',
+    hidden: 'invisible',
+    em: 'trusted',
   } as Heading,
   sub:
-    'We build your tech. We sharpen your brand. We grow your audience. ' +
-    'All of it grounded in Islamic principles, from the first brief to ' +
-    'the final deliverable.',
-  ctaPrimary:   { label: 'Apply for a Free Discovery Call', href: '/contact' },
-  ctaSecondary: { label: 'Explore Our Services',            href: '/packages' },
+    'Build the technology and growth systems you need to attract the right ' +
+    'customers. No compromise in values. Ever!',
+  /* Phrases the hero underlines in gold, matched verbatim against `sub`. Kept
+     as data rather than markup so the sentence stays one editable string and
+     the two decorated spans can never fall out of sync with it. */
+  subUnderline: ['attract', 'No compromise'],
+  trustedBy: 'Trusted by Muslim-led brands',
+  ctaPrimary:   { label: 'Book a call',          href: '/book'    },
+  /* Retained for the two unmounted hero variants (HeroHybrid, HeroSignalBoard)
+     that still reference it; the live hero renders a single CTA, per the
+     redesign. */
+  ctaSecondary: { label: 'Explore Our Services', href: '/packages' },
 } as const;
 
 /* ─── Trust strip (marquee) ────────────────────────────────────── */

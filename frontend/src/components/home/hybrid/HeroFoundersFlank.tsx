@@ -34,8 +34,6 @@ import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import type { Variants } from 'framer-motion';
-import SplitReveal from '@/components/motion/SplitReveal';
-import Magnetic from '@/components/motion/Magnetic';
 import StackButton from '@/components/ui/StackButton';
 import { hero } from '@/content/home';
 
@@ -47,6 +45,30 @@ const fadeUp: Variants = {
 
 type CSSVars = React.CSSProperties & Record<string, string | number>;
 const v = (o: Record<string, string | number>): CSSVars => o as CSSVars;
+
+/** Placeholder logo slots for the trust marquee — real marks drop in later. */
+const LOGO_SLOTS = Array.from({ length: 6 }, (_, i) => i);
+
+/**
+ * The sub-headline, with the phrases in `hero.subUnderline` wrapped in a gold
+ * rule. Split on the phrases (kept as delimiters) so the sentence stays one
+ * string in content and the decoration can never drift from the words.
+ */
+function SubCopy({ text, phrases }: { text: string; phrases: readonly string[] }) {
+  const escaped = phrases.map((p) => p.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
+  const re = new RegExp(`(${escaped.join('|')})`, 'g');
+  return (
+    <>
+      {text.split(re).map((part, i) =>
+        phrases.includes(part) ? (
+          <span key={i} className="ff-uline">{part}</span>
+        ) : (
+          <span key={i}>{part}</span>
+        ),
+      )}
+    </>
+  );
+}
 
 /* ── flank chips ─────────────────────────────────────────────────────────────
    Four, one per clause of the sub copy — grow the audience, build the tech,
@@ -118,6 +140,7 @@ function ChipSerp() {
 
 export default function HeroFoundersFlank() {
   const secRef = useRef<HTMLElement | null>(null);
+  const invRef = useRef<HTMLSpanElement | null>(null);
   const [inView, setInView] = useState(false);
 
   // Above the fold, so there is nothing to observe — run on mount. rAF so the
@@ -150,6 +173,17 @@ export default function HeroFoundersFlank() {
       tx = Math.max(-1, Math.min(1, (e.clientX - (r.left + r.width / 2)) / (r.width / 2)));
       ty = Math.max(-1, Math.min(1, (e.clientY - (r.top + r.height / 2)) / (r.height / 2)));
       if (!raf) raf = requestAnimationFrame(tick);
+
+      // The torch. Written straight to the "invisible" word in its own local
+      // coordinates every move (no rAF, no spring): the light has to sit
+      // exactly under the cursor or the reveal lags behind the pointer and the
+      // illusion breaks. Cheap — two custom-property writes on one small span.
+      const inv = invRef.current;
+      if (inv) {
+        const ir = inv.getBoundingClientRect();
+        inv.style.setProperty('--lx', `${e.clientX - ir.left}px`);
+        inv.style.setProperty('--ly', `${e.clientY - ir.top}px`);
+      }
     };
     const tick = () => {
       cx += (tx - cx) * 0.08;
@@ -171,75 +205,113 @@ export default function HeroFoundersFlank() {
       className={`ff-hero${inView ? ' is-in' : ''}`}
       data-section-color="dark"
     >
-      {/* ── left flank: the woman, sitting low on ivory ───────────────────── */}
-      <div className="ff-flank ff-flank--l">
-        <Link
-          href="/about"
-          className="ff-card ff-card--woman ff-lay"
-          style={v({ '--k': 1, '--d': '.5s' })}
-          aria-label="Meet the founders"
-          data-cursor
-        >
-          <img className="ff-fig" src="/founders/woman.svg" alt="" aria-hidden="true" />
-        </Link>
-        <div className="ff-chip-at ff-at--traffic ff-lay" style={v({ '--k': 2.5, '--d': '1.12s' })}>
-          <ChipTraffic />
+      {/* The three-column stage. Its own wrapper now, so the trust marquee can
+          be a full-bleed sibling below it rather than a grid cell fighting the
+          centre track. */}
+      <div className="ff-stage">
+        {/* ── left flank: the woman, sitting low on ivory ─────────────────── */}
+        <div className="ff-flank ff-flank--l">
+          <Link
+            href="/about"
+            className="ff-card ff-card--woman ff-lay"
+            style={v({ '--k': 1, '--d': '.5s' })}
+            aria-label="Meet the founders"
+            data-cursor
+          >
+            <img className="ff-fig" src="/founders/woman.svg" alt="" aria-hidden="true" />
+          </Link>
+          <div className="ff-chip-at ff-at--traffic ff-lay" style={v({ '--k': 2.5, '--d': '1.12s' })}>
+            <ChipTraffic />
+          </div>
+          <div className="ff-chip-at ff-at--copydoc ff-lay" style={v({ '--k': 3.0, '--d': '1.34s' })}>
+            <ChipCopydoc />
+          </div>
         </div>
-        <div className="ff-chip-at ff-at--copydoc ff-lay" style={v({ '--k': 3.0, '--d': '1.34s' })}>
-          <ChipCopydoc />
+
+        {/* ── centre: the copy ────────────────────────────────────────────── */}
+        <div className="ff-text">
+          <motion.p className="hy-bismillah" lang="ar" custom={0.1} variants={fadeUp} initial="hidden" animate="visible">
+            {hero.bismillah}
+          </motion.p>
+
+          <motion.p className="ff-pill" custom={0.28} variants={fadeUp} initial="hidden" animate="visible">
+            {hero.eyebrow}
+          </motion.p>
+
+          <h1 className="hy-hero-h1 ff-h1">
+            <motion.span className="ff-h1-lead" custom={0.42} variants={fadeUp} initial="hidden" animate="visible">
+              {hero.headline.lead}
+            </motion.span>
+            <motion.span className="ff-h1-turn" custom={0.62} variants={fadeUp} initial="hidden" animate="visible">
+              {/* The word is present for a screen reader (in the base layer) and
+                  faint for a mouse user until the cursor-torch crosses it. The
+                  glow layer is an aria-hidden duplicate so the word is announced
+                  once, not twice. */}
+              <span className="ff-invisible" ref={invRef}>
+                <span className="ff-invisible-base">{hero.headline.hidden}</span>
+                <span className="ff-invisible-glow" aria-hidden="true">{hero.headline.hidden}</span>
+              </span>
+              <span className="ff-h1-arrow" aria-hidden="true">
+                <svg viewBox="0 0 40 16" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M2 8 H34 M27 2 L35.5 8 L27 14" />
+                </svg>
+              </span>
+              <em className="ff-trusted">{hero.headline.em}</em>.
+            </motion.span>
+          </h1>
+
+          <motion.p className="hy-hero-sub ff-sub" custom={1.15} variants={fadeUp} initial="hidden" animate="visible">
+            <SubCopy text={hero.sub} phrases={hero.subUnderline} />
+          </motion.p>
+
+          <motion.div className="hy-hero-ctas" custom={1.3} variants={fadeUp} initial="hidden" animate="visible">
+            {/* Single CTA, per the redesign. The three-plate button is NOT
+                wrapped in Magnetic — its face stays put and only the plates
+                behind it track the cursor. */}
+            <StackButton href={hero.ctaPrimary.href} size="lg">{hero.ctaPrimary.label}</StackButton>
+          </motion.div>
+        </div>
+
+        {/* ── right flank: the man, riding high on gold-soft ──────────────── */}
+        <div className="ff-flank ff-flank--r">
+          <Link
+            href="/about"
+            className="ff-card ff-card--man ff-lay"
+            style={v({ '--k': 1.3, '--d': '.66s' })}
+            aria-label="Our story"
+            data-cursor
+          >
+            <img className="ff-fig" src="/founders/man.svg" alt="" aria-hidden="true" />
+          </Link>
+          <div className="ff-chip-at ff-at--growth ff-lay" style={v({ '--k': 2.2, '--d': '1.2s' })}>
+            <ChipGrowth />
+          </div>
+          <div className="ff-chip-at ff-at--serp ff-lay" style={v({ '--k': 3.2, '--d': '1.44s' })}>
+            <ChipSerp />
+          </div>
         </div>
       </div>
 
-      {/* ── centre: the copy, untouched ───────────────────────────────────── */}
-      <div className="ff-text">
-        <motion.p className="hy-bismillah" lang="ar" custom={0.1} variants={fadeUp} initial="hidden" animate="visible">
-          {hero.bismillah}
-        </motion.p>
+      {/* ── trust note + logo marquee ─────────────────────────────────────── */}
+      <p className="ff-trust-note">
+        {hero.trustedBy}
+        <svg className="ff-trust-arrow" viewBox="0 0 48 40" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          <path d="M4 4 C 20 6, 34 14, 40 34" />
+          <path d="M31 28 L40 35 L44 25" />
+        </svg>
+      </p>
 
-        <motion.p className="ff-pill" custom={0.28} variants={fadeUp} initial="hidden" animate="visible">
-          {hero.eyebrow}
-        </motion.p>
-
-        <h1 className="hy-hero-h1 ff-h1">
-          <SplitReveal text={hero.headline.lead} by="word" trigger="mount" delay={0.42} stagger={0.05} />{' '}
-          <em>
-            <SplitReveal text={hero.headline.em!} by="word" trigger="mount" delay={0.72} stagger={0.05} />
-          </em>
-        </h1>
-
-        <motion.p className="hy-hero-sub ff-sub" custom={1.15} variants={fadeUp} initial="hidden" animate="visible">
-          {hero.sub}
-        </motion.p>
-
-        <motion.div className="hy-hero-ctas" custom={1.3} variants={fadeUp} initial="hidden" animate="visible">
-          {/* The redesign's three-plate button. NOT wrapped in Magnetic: the
-              face is meant to stay put and let only the plates behind it slide
-              toward the cursor. A Magnetic wrapper would drag the whole stack,
-              face and all, which is the opposite of the effect. Label and href
-              stay from content/home.ts. */}
-          <StackButton href={hero.ctaPrimary.href} size="lg">{hero.ctaPrimary.label}</StackButton>
-          <Magnetic strength={0.4}>
-            <Link href={hero.ctaSecondary.href} className="btn btn-outline-lt" data-cursor>{hero.ctaSecondary.label}</Link>
-          </Magnetic>
-        </motion.div>
-      </div>
-
-      {/* ── right flank: the man, riding high on gold-soft ────────────────── */}
-      <div className="ff-flank ff-flank--r">
-        <Link
-          href="/about"
-          className="ff-card ff-card--man ff-lay"
-          style={v({ '--k': 1.3, '--d': '.66s' })}
-          aria-label="Our story"
-          data-cursor
-        >
-          <img className="ff-fig" src="/founders/man.svg" alt="" aria-hidden="true" />
-        </Link>
-        <div className="ff-chip-at ff-at--growth ff-lay" style={v({ '--k': 2.2, '--d': '1.2s' })}>
-          <ChipGrowth />
-        </div>
-        <div className="ff-chip-at ff-at--serp ff-lay" style={v({ '--k': 3.2, '--d': '1.44s' })}>
-          <ChipSerp />
+      {/* Placeholders until the real client marks arrive. Two identical runs in
+          the track make a seamless -50% loop; the second is aria-hidden so the
+          count is not announced twice. */}
+      <div className="ff-marquee">
+        <div className="ff-marquee-track">
+          {LOGO_SLOTS.map((i) => (
+            <span key={`a${i}`} className="ff-logo" aria-hidden="true" />
+          ))}
+          {LOGO_SLOTS.map((i) => (
+            <span key={`b${i}`} className="ff-logo" aria-hidden="true" />
+          ))}
         </div>
       </div>
     </section>

@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { AnimatePresence, motion } from 'framer-motion';
 import { services, isLinkable } from '@/content/services';
+import StackButton from '@/components/ui/StackButton';
 
 /**
  * Top-level bar. `Services` is not in this list — it is a dropdown, not a link,
@@ -171,17 +172,12 @@ export default function Nav({}: { blogPublic?: boolean }) {
             ))}
           </ul>
 
-          {/* Desktop CTAs. Two actions, ranked: booking a call is the one we
-              want, so it keeps the solid button; /contact stays reachable as a
-              ghost for people who would rather write than talk. They collapse
-              to the burger together below 1080px — see .nav-ctas. */}
+          {/* Desktop CTA — the redesign's single "Talk to us" three-plate
+              button (the hero owns "Book a call", so the nav points at the
+              other door). Collapses to the burger below 1080px — see
+              .nav-ctas. */}
           <div className="nav-ctas">
-            <Link href="/contact" className="btn btn-sm nav-ghost">
-              Let&apos;s talk
-            </Link>
-            <Link href="/book" className="btn btn-gold btn-sm nav-cta">
-              Book a call →
-            </Link>
+            <StackButton href="/contact" size="sm" arrow>Talk to us</StackButton>
           </div>
 
           {/* Burger */}
