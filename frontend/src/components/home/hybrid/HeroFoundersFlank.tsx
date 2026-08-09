@@ -212,14 +212,12 @@ export default function HeroFoundersFlank() {
         </motion.p>
 
         <motion.div className="hy-hero-ctas" custom={1.3} variants={fadeUp} initial="hidden" animate="visible">
-          {/* The redesign's three-plate button. Still wrapped in Magnetic so it
-              moves with the secondary CTA beside it — the plate pull is a
-              SECOND, smaller motion layered on top of that, which is the
-              parallax the design is after. Label and href stay from
-              content/home.ts; only the component changed. */}
-          <Magnetic strength={0.4}>
-            <StackButton href={hero.ctaPrimary.href} size="lg">{hero.ctaPrimary.label}</StackButton>
-          </Magnetic>
+          {/* The redesign's three-plate button. NOT wrapped in Magnetic: the
+              face is meant to stay put and let only the plates behind it slide
+              toward the cursor. A Magnetic wrapper would drag the whole stack,
+              face and all, which is the opposite of the effect. Label and href
+              stay from content/home.ts. */}
+          <StackButton href={hero.ctaPrimary.href} size="lg">{hero.ctaPrimary.label}</StackButton>
           <Magnetic strength={0.4}>
             <Link href={hero.ctaSecondary.href} className="btn btn-outline-lt" data-cursor>{hero.ctaSecondary.label}</Link>
           </Magnetic>
