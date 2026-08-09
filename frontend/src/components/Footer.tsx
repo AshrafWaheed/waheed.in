@@ -1,14 +1,22 @@
 import Link from 'next/link';
 import { recentPosts } from '@/lib/recent-posts';
+import { linkableServices } from '@/content/services';
 
-// "Insights" only appears once the blog is public (site fully live).
-const buildNav = (blogPublic: boolean) => [
-  { label: 'About',    href: '/about'    },
-  { label: 'Packages', href: '/packages' },
-  ...(blogPublic ? [{ label: 'Insights', href: '/blog' }] : []),
-  { label: 'FAQs',     href: '/faq'      },
-  { label: 'Apply',    href: '/contact'  },
-];
+/**
+ * Footer — rebuilt to the Figma redesign: a dark band with "Reach us directly"
+ * (email, WhatsApp, social) on the left and three link columns — Services,
+ * Quick link, Blogs — on the right. The big wordmark lockup lives in its own
+ * component above this (homepage only); the footer no longer repeats a logo.
+ *
+ * Gated on `blogPublic` exactly as before: while the site is in
+ * coming-soon/maintenance the blog is not public, so the Blogs column is
+ * omitted rather than linking into a wall. The ownership/co-founder legal line
+ * and copyright are preserved — they travel with every route that renders the
+ * chrome, /about included.
+ */
+
+const WA_NUMBER = '915424072195';
+const WA_DISPLAY = '+91 54240 72195';
 
 const ICONS = {
   instagram: (
@@ -35,54 +43,47 @@ const ICONS = {
 };
 
 const SOCIAL = [
-  { label: 'Instagram', href: 'https://www.instagram.com/waheedhq/',               icon: 'instagram' as const },
-  { label: 'Facebook',  href: 'https://www.facebook.com/waheedhq.fb/',             icon: 'facebook'  as const },
-  { label: 'YouTube',   href: 'https://youtube.com/@waheedhq',                     icon: 'youtube'   as const },
-  { label: 'LinkedIn',  href: 'https://www.linkedin.com/company/waheedhq/',        icon: 'linkedin'  as const },
-  { label: 'WhatsApp',  href: 'https://wa.me/915424072195',                        icon: 'whatsapp'  as const },
+  { label: 'Instagram', href: 'https://www.instagram.com/waheedhq/',        icon: 'instagram' as const },
+  { label: 'Facebook',  href: 'https://www.facebook.com/waheedhq.fb/',      icon: 'facebook'  as const },
+  { label: 'YouTube',   href: 'https://youtube.com/@waheedhq',              icon: 'youtube'   as const },
+  { label: 'LinkedIn',  href: 'https://www.linkedin.com/company/waheedhq/', icon: 'linkedin'  as const },
+  { label: 'WhatsApp',  href: `https://wa.me/${WA_NUMBER}`,                 icon: 'whatsapp'  as const },
+];
+
+const QUICK = [
+  { label: 'Home',        href: '/'         },
+  { label: 'About',       href: '/about'    },
+  { label: 'Packages',    href: '/packages' },
+  { label: 'FAQs',        href: '/faq'      },
+  { label: 'Book a call', href: '/book'     },
+  { label: 'Contact',     href: '/contact'  },
 ];
 
 export default async function Footer({ blogPublic = false }: { blogPublic?: boolean }) {
-  const NAV = buildNav(blogPublic);
-
-  // Gated on `blogPublic` for the same reason the "Insights" nav link is: while
-  // the site is in coming-soon or maintenance, /blog is not public, and a
-  // footer listing post titles would both leak them and link into a wall.
   const posts = blogPublic ? await recentPosts(3) : [];
 
   return (
-    <footer className="footer">
+    <footer className="ft">
       <div className="cnt">
-        <div className="footer-grid">
+        <div className="ft-grid">
 
-          {/* Left, brand */}
-          <div>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="/logo.png"
-              alt="Waheed"
-              className="footer-logo-img"
-            />
-            <p className="footer-tagline">
-              A long-term partner for halal brands that refuse to compromise their values
-            </p>
-            <div className="footer-meta">
-              <span>
-                <b>Email</b>
-                {' · '}
-                <a href="mailto:info@waheed.in">INFO@WAHEED.IN</a>
-              </span>
-            </div>
+          {/* Reach us directly */}
+          <div className="ft-reach">
+            <h2 className="ft-reach-h">Reach us directly</h2>
+            <ul className="ft-contact">
+              <li>
+                <span className="ft-lbl">Email</span>
+                <a href="mailto:info@waheed.in">info@waheed.in</a>
+              </li>
+              <li>
+                <span className="ft-lbl">WhatsApp</span>
+                <a href={`https://wa.me/${WA_NUMBER}`} target="_blank" rel="noopener noreferrer">{WA_DISPLAY}</a>
+              </li>
+            </ul>
 
-            <div className="footer-social">
+            <div className="ft-social" aria-label="Social links">
               {SOCIAL.map((l) => (
-                <a
-                  key={l.label}
-                  href={l.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={l.label}
-                >
+                <a key={l.label} href={l.href} target="_blank" rel="noopener noreferrer" aria-label={l.label}>
                   <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                     {ICONS[l.icon]}
                     {l.icon === 'instagram' && ICONS.instagramExtra}
@@ -92,54 +93,46 @@ export default async function Footer({ blogPublic = false }: { blogPublic?: bool
             </div>
           </div>
 
-          {/* Right, nav + recent posts */}
-          <div className="footer-right">
-            <div className="footer-cols">
-              <div className="footer-col">
-                <span className="footer-col-title">Navigation</span>
-                {NAV.map((l) => (
-                  <Link key={l.label} href={l.href}>{l.label}</Link>
-                ))}
-              </div>
+          {/* Services */}
+          <nav className="ft-col" aria-label="Services">
+            <span className="ft-col-title">Services</span>
+            {linkableServices.map((s) => (
+              <Link key={s.slug} href={`/services/${s.slug}`}>{s.navLabel}</Link>
+            ))}
+          </nav>
 
-              {/* Rendered only when there is something to show — an empty
-                  "Recent insights" heading is worse than no column, and the
-                  blog genuinely starts empty. */}
-              {posts.length > 0 && (
-                <div className="footer-col footer-col--posts">
-                  <span className="footer-col-title">Recent insights</span>
-                  {posts.map((p) => (
-                    <Link key={p.slug} href={`/blog/${p.slug}`} className="footer-post">
-                      <span className="footer-post-title">{p.title}</span>
-                      {p.author?.name && (
-                        <span className="footer-post-by">{p.author.name}</span>
-                      )}
-                    </Link>
-                  ))}
-                </div>
-              )}
-            </div>
-          </div>
+          {/* Quick links */}
+          <nav className="ft-col" aria-label="Quick links">
+            <span className="ft-col-title">Quick link</span>
+            {QUICK.map((l) => (
+              <Link key={l.href} href={l.href}>{l.label}</Link>
+            ))}
+          </nav>
 
+          {/* Blogs — only once the blog is public. */}
+          {blogPublic && (
+            <nav className="ft-col" aria-label="Blogs">
+              <span className="ft-col-title">Blogs</span>
+              <Link href="/blog">All insights</Link>
+              {posts.map((p) => (
+                <Link key={p.slug} href={`/blog/${p.slug}`} className="ft-post">{p.title}</Link>
+              ))}
+            </nav>
+          )}
         </div>
 
-        <div className="footer-bottom">
-          <p className="footer-copy">
+        <div className="ft-bottom">
+          <p className="ft-copy">
             © 2026 Waheed Digital Studio
             {' · '}
             <Link href="/privacy">Privacy</Link>
             {' · '}
             <Link href="/terms">Terms</Link>
           </p>
-          {/* Ownership + title disclaimer. Sits under the copyright line rather than
-              on its own page, so it travels with every route that renders the chrome —
-              including /about, where "Co-Founder" is actually used.
-
-              The nowrap on the term: its hyphen is a legitimate break point, but
-              splitting the very title being disclaimed across two lines reads like a
-              typo. Note no JSX comment may sit inside this <p> — a comment between two
-              text lines eats the newline that would otherwise render as a space. */}
-          <p className="footer-legal">
+          {/* Ownership + title disclaimer — travels with every route that renders
+              the chrome, /about included. No JSX comment may sit between the two
+              text lines of this <p>: it eats the newline that renders as a space. */}
+          <p className="ft-legal">
             Waheed is a professional service brand owned and operated by Ashraf Waheed Ansari.
             The title of <span className="whitespace-nowrap">‘Co-Founder’</span> used on this site
             denotes a strategic partnership and foundational contribution; it does not constitute
