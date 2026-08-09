@@ -4,7 +4,9 @@ import SectionNav from '@/components/motion/useSectionNav';
 // under it. HeroSignalBoard (B) is kept unmounted for comparison.
 import HeroFoundersFlank from '@/components/home/hybrid/HeroFoundersFlank';
 import TrustStripHybrid from '@/components/home/hybrid/TrustStripHybrid';
-import ManifestoHybrid from '@/components/home/hybrid/ManifestoHybrid';
+// Manifesto commented out per the redesign — the hero now runs straight into
+// the solutions grid, with no interstitial manifesto line.
+// import ManifestoHybrid from '@/components/home/hybrid/ManifestoHybrid';
 // "Our craft" uses the tactile Expertise bento (promoted from /home3, where it
 // was built); "Our methodology" uses the tactile Ihsan Process.
 import ExpertiseBento from '@/components/home/tactile/ExpertiseBento';
@@ -28,7 +30,7 @@ export default function HomePage() {
       <main>
         <HeroFoundersFlank />
         <TrustStripHybrid />
-        <ManifestoHybrid />
+        {/* <ManifestoHybrid /> — removed per the redesign; hero → solutions. */}
         <ExpertiseBento />
         <AudienceHybrid />
         <ServicesHybrid />

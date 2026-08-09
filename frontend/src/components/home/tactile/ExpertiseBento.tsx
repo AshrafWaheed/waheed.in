@@ -12,12 +12,40 @@
  * goes `is-live` via IntersectionObserver so its artifact only animates on
  * screen, and keeps the tactile signatures: cursor spotlight + hover lift.
  */
+import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import CraftArtifact from '@/components/graphics/CraftArtifact';
 import Spotlight from '@/components/motion/Spotlight';
 import SplitReveal from '@/components/motion/SplitReveal';
 import Khatam from '@/components/graphics/Khatam';
 import { expertise } from '@/content/home';
+import { services, isLinkable } from '@/content/services';
+
+/**
+ * The two groups the redesign splits the crafts into — "build" (make the
+ * product) and "grow" (get the customers). The boundary falls on a grid-row
+ * edge: doors 0–1 (Web & App, Custom Software) are one full 6-col row, doors
+ * 2–6 are the remaining three rows, so each group is a valid grid on its own
+ * and no card's span or entrance has to change.
+ *
+ * `services` (the routable catalogue) is index-aligned with `expertise.doors`
+ * — same order, same count — so `services[i]` gives door `i` its slug and tells
+ * us whether it has a page yet. That alignment is load-bearing; if either list
+ * is reordered, the arrows point at the wrong craft.
+ */
+const GROUPS = [
+  { label: 'I want to build', from: 0, to: 2 },
+  { label: 'I want to grow', from: 2, to: 7 },
+] as const;
+
+/** The bottom-left "go to this craft" affordance. */
+function GoArrow() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M7 17 L17 7 M9 7 H17 V15" />
+    </svg>
+  );
+}
 
 /**
  * Per-craft grid span + inner layout + entrance direction. Index matches
@@ -72,41 +100,69 @@ export default function ExpertiseBento() {
           </h2>
         </div>
 
-        <div className="xp-grid">
-          {doors.map((d, i) => {
-            const cell = CELLS[i];
-            return (
-              <Spotlight
-                key={d.num}
-                className={`xp-cell s${cell.span} l-${cell.layout} d-${cell.dir}${live[i] ? ' is-in' : ''}${d.soon ? ' is-soon' : ''}`}
-              >
-                <article
-                  ref={(el) => { cardRefs.current[i] = el; }}
-                  data-i={i}
-                  className={`xp-card${live[i] ? ' is-live' : ''}`}
-                  data-cursor
-                >
-                  <div className="xp-card-copy">
-                    <div className="xp-card-top">
-                      <span className="xp-num">{d.num}</span>
-                      {d.soon && <span className="xp-soon">Coming Soon</span>}
-                    </div>
-                    <h3 className="xp-title">{d.title}</h3>
-                    <p className="xp-desc">{d.desc}</p>
-                    <span className="xp-promise">
-                      <Khatam size={11} inner={0.5} stroke="var(--rd-gold-line)" strokeWidth={1.5} />
-                      {d.promise}
-                    </span>
-                  </div>
+        {GROUPS.map((g) => (
+          <div className="xp-group" key={g.label}>
+            <div className="xp-grouplabel">
+              <span className="xp-tab">{g.label}</span>
+            </div>
 
-                  <div className="xp-card-art">
-                    <CraftArtifact i={i} live={live[i]} />
-                  </div>
-                </article>
-              </Spotlight>
-            );
-          })}
-        </div>
+            <div className="xp-grid">
+              {doors.slice(g.from, g.to).map((d, j) => {
+                const i = g.from + j;                 // index into doors/CELLS/services
+                const cell = CELLS[i];
+                const svc = services[i];
+                const linkable = !!svc && isLinkable(svc) && !d.soon;
+                return (
+                  <Spotlight
+                    key={d.num}
+                    className={`xp-cell s${cell.span} l-${cell.layout} d-${cell.dir}${live[i] ? ' is-in' : ''}${d.soon ? ' is-soon' : ''}`}
+                  >
+                    <article
+                      ref={(el) => { cardRefs.current[i] = el; }}
+                      data-i={i}
+                      className={`xp-card${live[i] ? ' is-live' : ''}`}
+                      data-cursor
+                    >
+                      <div className="xp-card-copy">
+                        <div className="xp-card-top">
+                          <span className="xp-num">{d.num}</span>
+                          {d.soon && <span className="xp-soon">Coming Soon</span>}
+                        </div>
+                        <h3 className="xp-title">{d.title}</h3>
+                        <p className="xp-desc">{d.desc}</p>
+
+                        {/* The bottom-left affordance. A live craft gets the
+                            circular arrow that navigates to its page; a
+                            not-yet-built one keeps the khatam bullet, since
+                            there is nowhere to send anyone. The promise line
+                            rides alongside it either way. */}
+                        <div className="xp-foot">
+                          {linkable ? (
+                            <Link
+                              href={`/services/${svc.slug}`}
+                              className="xp-arrow"
+                              data-cursor
+                              aria-label={`Explore ${d.title}`}
+                            >
+                              <GoArrow />
+                            </Link>
+                          ) : (
+                            <Khatam size={11} inner={0.5} stroke="var(--rd-gold-line)" strokeWidth={1.5} />
+                          )}
+                          <span className="xp-promise">{d.promise}</span>
+                        </div>
+                      </div>
+
+                      <div className="xp-card-art">
+                        <CraftArtifact i={i} live={live[i]} />
+                      </div>
+                    </article>
+                  </Spotlight>
+                );
+              })}
+            </div>
+          </div>
+        ))}
       </div>
     </section>
   );
