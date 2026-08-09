@@ -17,6 +17,7 @@ import FoundingStoryHybrid from '@/components/home/hybrid/FoundingStoryHybrid';
 import RefusalHybrid from '@/components/home/hybrid/RefusalHybrid';
 import NewsletterHybrid from '@/components/home/hybrid/NewsletterHybrid';
 import ClarityFormHybrid from '@/components/home/hybrid/ClarityFormHybrid';
+import BrandLockup from '@/components/home/hybrid/BrandLockup';
 import SiteJsonLd from '@/components/seo/SiteJsonLd';
 
 // The homepage — Hybrid variant, with the tactile Expertise bento and tactile
@@ -40,6 +41,7 @@ export default function HomePage() {
         <RefusalHybrid />
         <NewsletterHybrid />
         <ClarityFormHybrid />
+        <BrandLockup />
       </main>
     </SmoothScroll>
   );
