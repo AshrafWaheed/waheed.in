@@ -9270,87 +9270,103 @@ html[data-nav="dark"] .burger span         { background: #254851; }
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   wp- · OUR WORK PROCESS — dark panel on white, gold dotted-square timeline
+   wp- · OUR WORK PROCESS — a compact pinned card, steps swapped on scroll
    ═══════════════════════════════════════════════════════════════════════════
-   Component: IhsanProcessTactile.tsx. Keeps the sticky-rail scroll; only the
-   skin is new. Replaces the old light `.tc-proc` treatment (whose rules stay
-   for the unmounted IhsanProcess variants). */
+   Component: IhsanProcessTactile.tsx. The panel is a short (~420px) dark card
+   that PINS (position: sticky) while the taller .wp-track scrolls past;
+   IntersectionObserver sentinels down the track advance the active step. Step
+   text sits at the TOP; the gold timeline fills and stacks from the BOTTOM up. */
 .wp {
   --wp-gold: #F0D97A;
   background: var(--rd-white);
-  padding: clamp(3.5rem, 6vw, 6.5rem) 0;
+  padding: clamp(3rem, 5vw, 5rem) 0;
 }
+/* Scroll distance for the pin — roughly one screenful per step. */
+.wp-track { position: relative; height: calc(var(--n, 5) * 56vh); }
+
 .wp-panel {
+  position: sticky;
+  top: clamp(84px, calc(50vh - 220px), 32vh);
+  height: clamp(400px, 56vh, 440px);
+  display: flex; flex-direction: column;
   background: #1A363D; color: var(--rd-ivory);
-  border-radius: clamp(20px, 3vw, 32px);
-  padding: clamp(2.2rem, 4vw, 3.6rem) clamp(1.4rem, 3.5vw, 3.4rem) clamp(1rem, 3vw, 2rem);
+  border-radius: clamp(18px, 2.5vw, 28px);
+  padding: clamp(1.7rem, 3vw, 2.5rem) clamp(1.4rem, 3vw, 3rem);
+  overflow: hidden;
 }
 .wp-h {
-  text-align: center;
+  flex: 0 0 auto; text-align: center;
   font-family: var(--font-serif); font-weight: 600;
-  font-size: clamp(1.8rem, 3.6vw, 2.7rem); color: var(--rd-white);
-  margin-bottom: clamp(1rem, 3vw, 2rem);
+  font-size: clamp(1.6rem, 3vw, 2.3rem); color: var(--rd-white);
+  margin-bottom: clamp(1.1rem, 2.4vw, 1.8rem);
 }
 
-.wp-grid { display: grid; grid-template-columns: 48px 1fr; gap: clamp(1.2rem, 3vw, 3rem); }
+/* rail | steps; the grid fills the card's remaining height. */
+.wp-grid { flex: 1 1 auto; min-height: 0; display: grid; grid-template-columns: 44px 1fr; gap: clamp(1.2rem, 3vw, 2.6rem); }
 
-/* The sticky timeline. A dotted gold line the full height, a solid gold fill
-   that grows to the active node, and one square node per step. */
+/* ── Timeline: dotted guide, plus a fill + squares that build BOTTOM → UP ──── */
 .wp-rail-wrap { position: relative; }
 .wp-rail {
-  position: sticky; top: 28vh; height: 46vh;
-  display: flex; flex-direction: column; justify-content: space-between; align-items: center;
+  position: relative; height: 100%;
+  display: flex; flex-direction: column-reverse;   /* step 1 sits at the bottom */
+  justify-content: space-between; align-items: center;
 }
 .wp-rail::before {
   content: ''; position: absolute; top: 7px; bottom: 7px; left: 50%; transform: translateX(-50%);
-  border-left: 2px dotted rgb(var(--rd-gold-bloom-rgb) / .32);
+  border-left: 2px dotted rgb(var(--rd-gold-bloom-rgb) / .3);
 }
+/* Solid fill anchored at the BOTTOM, rising to the active node. */
 .wp-rail-fill {
-  position: absolute; top: 7px; left: 50%; transform: translateX(-50%);
+  position: absolute; bottom: 7px; left: 50%; transform: translateX(-50%);
   width: 2px; height: calc((100% - 14px) * var(--p, 0));
   background: var(--wp-gold); transition: height .45s cubic-bezier(.22,1,.36,1);
 }
 .wp-node {
   position: relative; z-index: 1;
   width: 14px; height: 14px; border-radius: 3px;
-  background: #1A363D; border: 2px solid rgb(var(--rd-gold-bloom-rgb) / .4);
+  background: #1A363D; border: 2px solid rgb(var(--rd-gold-bloom-rgb) / .38);
   transition: background .3s ease, border-color .3s ease, transform .3s ease, box-shadow .3s ease;
 }
 .wp-node.is-done   { background: var(--wp-gold); border-color: var(--wp-gold); }
 .wp-node.is-active { transform: scale(1.18); box-shadow: 0 0 0 5px rgb(var(--rd-gold-bloom-rgb) / .16); }
 
-/* Steps — tall so each holds the centre band long enough to read; dim until
-   active, exactly as the old tc-proc scroll behaved. */
-.wp-steps { position: relative; }
+/* ── Steps: cross-fade in place, anchored to the TOP ──────────────────────── */
+.wp-steps { position: relative; height: 100%; }
 .wp-step {
-  min-height: 58vh; display: flex; flex-direction: column; justify-content: center;
-  opacity: .3; transition: opacity .5s ease;
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column; justify-content: flex-start;   /* top */
+  opacity: 0; transform: translateY(8px);
+  transition: opacity .45s ease, transform .45s ease; pointer-events: none;
 }
-.wp-step.active { opacity: 1; }
+.wp-step.active { opacity: 1; transform: none; pointer-events: auto; }
 .wp-title {
   font-family: var(--font-serif); font-weight: 600;
-  font-size: clamp(1.5rem, 3vw, 2.3rem); color: var(--rd-white); line-height: 1.12; margin-bottom: .5rem;
+  font-size: clamp(1.4rem, 2.6vw, 2.1rem); color: var(--rd-white); line-height: 1.12; margin-bottom: .45rem;
 }
 .wp-grounded {
-  font-family: var(--font-sans); font-style: italic; font-size: .98rem;
-  color: rgb(var(--rd-ivory-rgb) / .72); margin-bottom: 1.3rem;
+  font-family: var(--font-sans); font-style: italic; font-size: .96rem;
+  color: rgb(var(--rd-ivory-rgb) / .72); margin-bottom: 1.1rem;
 }
 .wp-grounded em { font-style: italic; color: var(--wp-gold); }
 .wp-desc {
-  font-family: var(--font-sans); font-size: 1.02rem; line-height: 1.7;
-  color: rgb(var(--rd-ivory-rgb) / .86); max-width: 56ch;
+  font-family: var(--font-sans); font-size: 1rem; line-height: 1.68;
+  color: rgb(var(--rd-ivory-rgb) / .86); max-width: 60ch;
 }
+
+/* Zero-size scroll markers down the track; never painted. */
+.wp-sent { position: absolute; left: 0; width: 1px; height: 1px; pointer-events: none; }
 
 @media (max-width: 720px) {
-  .wp-grid { grid-template-columns: 26px 1fr; gap: 1.1rem; }
-  .wp-step { min-height: 52vh; }
+  .wp-track { height: calc(var(--n, 5) * 64vh); }
+  .wp-panel { height: clamp(420px, 66vh, 520px); top: clamp(76px, calc(50vh - 260px), 18vh); }
+  .wp-grid { grid-template-columns: 22px 1fr; gap: 1rem; }
   .wp-node { width: 12px; height: 12px; }
+  .wp-desc { font-size: .95rem; }
 }
 
-/* Reduced motion: no scroll-driven dimming — every step legible, the rail full
-   and settled on the last node. */
+/* Reduced motion: the pin is plain sticky positioning (fine to keep); only the
+   fades/fills settle instantly. */
 @media (prefers-reduced-motion: reduce) {
-  .wp-step { opacity: 1 !important; transition: none; }
-  .wp-rail-fill { transition: none; }
-  .wp-node { transition: none; }
+  .wp-step { transition: none; }
+  .wp-rail-fill, .wp-node { transition: none; }
 }
