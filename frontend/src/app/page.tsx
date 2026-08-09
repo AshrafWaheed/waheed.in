@@ -16,7 +16,7 @@ import IhsanProcessTactile from '@/components/home/tactile/IhsanProcessTactile';
 import FoundingStoryHybrid from '@/components/home/hybrid/FoundingStoryHybrid';
 import RefusalHybrid from '@/components/home/hybrid/RefusalHybrid';
 import NewsletterHybrid from '@/components/home/hybrid/NewsletterHybrid';
-import FinalCtaHybrid from '@/components/home/hybrid/FinalCtaHybrid';
+import ClarityFormHybrid from '@/components/home/hybrid/ClarityFormHybrid';
 import SiteJsonLd from '@/components/seo/SiteJsonLd';
 
 // The homepage — Hybrid variant, with the tactile Expertise bento and tactile
@@ -39,7 +39,7 @@ export default function HomePage() {
         <AudienceHybrid />
         <RefusalHybrid />
         <NewsletterHybrid />
-        <FinalCtaHybrid />
+        <ClarityFormHybrid />
       </main>
     </SmoothScroll>
   );

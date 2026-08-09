@@ -52,6 +52,26 @@ export default function BookingFlow() {
   const [error, setError] = useState('');
   const [booked, setBooked] = useState<Booked | null>(null);
 
+  // Prefill from query params — the homepage clarity-call form sends the
+  // visitor here with ?email=&company=&phone= after creating the HubSpot
+  // contact, so the booking (which upserts the contact by email) attaches its
+  // meeting to that SAME contact. Read from the URL directly to avoid a
+  // useSearchParams Suspense boundary; runs once on mount.
+  useEffect(() => {
+    const q = new URLSearchParams(window.location.search);
+    const email = q.get('email') ?? '';
+    const phone = q.get('phone') ?? '';
+    const company = q.get('company') ?? '';
+    if (email || phone || company) {
+      setForm((f) => ({
+        ...f,
+        email: email || f.email,
+        phone: phone || f.phone,
+        company: company || f.company,
+      }));
+    }
+  }, []);
+
   useEffect(() => {
     const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC';
     setVisitorTz(tz); setShowTz(tz);

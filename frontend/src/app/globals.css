@@ -9472,3 +9472,44 @@ html[data-nav="dark"] .burger span         { background: #254851; }
   .nl-form { flex-direction: column; border-radius: 16px; }
   .nl-input, .nl-submit { width: 100%; }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   cf- · CLARITY-CALL FORM — copy left, form right, on dark
+   ═══════════════════════════════════════════════════════════════════════════
+   Component: ClarityFormHybrid.tsx. Submits to /api/contact then routes to
+   /book prefilled. */
+.cf { --cf-gold: #F0D97A; background: var(--rd-night-2); color: var(--rd-ivory); padding: clamp(4rem, 7vw, 6.5rem) 0; }
+.cf-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); gap: clamp(2rem, 5vw, 4.5rem); align-items: center; }
+.cf-h { font-family: var(--font-serif); font-weight: 600; font-size: clamp(1.9rem, 3.8vw, 3rem); color: var(--rd-white); line-height: 1.12; }
+.cf-h em { font-style: normal; color: var(--cf-gold); }
+.cf-body { margin-top: 1.1rem; font-family: var(--font-sans); font-size: 1rem; line-height: 1.7; color: rgb(var(--rd-ivory-rgb) / .8); max-width: 44ch; }
+.cf-alt { margin-top: 1.4rem; }
+.cf-alt-link { font-family: var(--font-sans); font-size: .92rem; color: var(--cf-gold); text-decoration: none; border-bottom: 1px solid rgb(var(--rd-gold-bloom-rgb) / .4); padding-bottom: 2px; }
+.cf-alt-link:hover { border-bottom-color: var(--cf-gold); }
+
+/* The form sits in a faint panel so the light inputs read as a group on dark. */
+.cf-form {
+  display: flex; flex-direction: column; gap: .8rem;
+  background: rgb(var(--rd-ivory-rgb) / .05);
+  border: 1px solid rgb(var(--rd-gold-bloom-rgb) / .12);
+  border-radius: clamp(16px, 2vw, 22px);
+  padding: clamp(1.4rem, 2.5vw, 2rem);
+}
+.cf-input {
+  width: 100%;
+  background: var(--rd-white); color: #1A363D;
+  border: 1.5px solid transparent; border-radius: 10px;
+  padding: .8rem 1rem;
+  font-family: var(--font-sans); font-size: .92rem; line-height: 1.4;
+}
+.cf-input::placeholder { color: #7a8a8e; }
+.cf-input:focus-visible { outline: none; border-color: var(--cf-gold); box-shadow: 0 0 0 3px rgb(240 217 122 / .3); }
+.cf-textarea { resize: vertical; min-height: 96px; }
+.cf-error { font-family: var(--font-sans); font-size: .82rem; color: #ffd7d5; }
+.cf-submit { margin-top: .3rem; }
+.cf-submit .stk { display: block; }
+.cf-submit .stk-face { width: 100%; }
+
+@media (max-width: 860px) {
+  .cf-grid { grid-template-columns: 1fr; gap: 2rem; }
+}

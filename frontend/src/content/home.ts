@@ -383,3 +383,34 @@ export const finalCta = {
     'respond within 24 hours, in sha Allah.',
   cta: { label: 'Book a free clarity call →', href: '/contact' },
 } as const;
+
+/* ─── Clarity-call form (homepage) ──────────────────────────────────
+   The redesign's "Have a project in mind? Book a clarity call." form. On
+   submit it posts to the LIVE /api/contact pipe (HubSpot contact + company +
+   deal, keyed by email), then sends the visitor to /book prefilled with that
+   same email — so the booking's own HubSpot sync attaches the meeting to the
+   very same contact. `name` is sent as the brand and `service` fixed to
+   "Clarity call" to satisfy the contact endpoint's required fields. */
+export const clarityForm = {
+  heading: { lead: 'Have a project in mind?', em: 'Book a clarity call.' } as Heading,
+  body:
+    "Whether you're exploring your options or ready to start immediately, we'd " +
+    "love to hear about your brand. Fill out the form and we'll be in touch, in sha Allah.",
+  fields: {
+    brand: 'Your brand',
+    project: 'Your project (describe your brand, goals, and challenges)',
+    email: 'Your email',
+    phone: 'Your WhatsApp number (optional)',
+  },
+  submitIdle: 'Submit & book a call',
+  submitBusy: 'Submitting…',
+  bookDirect: { label: 'or book a call directly', href: '/book' },
+  error: 'Something went wrong. Please try again, or email info@waheed.in.',
+} as const;
+
+/* ─── Brand lockup (pre-footer sign-off band) ───────────────────────
+   The giant wordmark with the tagline threaded around its arcs. */
+export const brandLockup = {
+  pre: 'The Long-Term',
+  post: 'Partner for Your Halal Brand',
+} as const;
