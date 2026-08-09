@@ -9523,7 +9523,7 @@ html[data-nav="dark"] .burger span         { background: #254851; }
 .lk {
   position: relative; overflow: hidden;
   background: var(--rd-night-2);
-  min-height: clamp(200px, 24vw, 360px);
+  min-height: clamp(280px, 32vw, 470px);
   padding-top: clamp(2.2rem, 3.5vw, 3.6rem);
 }
 /* Tagline across the top; arcs rise into the centre gap between the halves. */
@@ -9538,15 +9538,16 @@ html[data-nav="dark"] .burger span         { background: #254851; }
 }
 .lk-tag--post { text-align: right; }
 
-/* The giant mark, bottom-bled so its baseline is clipped by the band edge and
-   the arcs reach up toward the tagline. */
+/* The giant mark. Pushed well below the band's bottom edge so the FOOTER panel
+   (a lighter teal) slices across its lower third — the design's cut. Pure white
+   (arcs included) via brightness(0) invert(1), NOT the two-tone footer filter:
+   the redesign wants this one monochrome. */
 .lk-mark {
   position: absolute; z-index: 1;
   left: 50%; transform: translateX(-50%);
-  bottom: clamp(-40px, -3vw, -14px);
-  width: min(1480px, 94%); height: auto;
-  filter: var(--rd-logo-on-dark);
-  opacity: .97;
+  bottom: clamp(-210px, -15vw, -80px);
+  width: min(1560px, 98%); height: auto;
+  filter: brightness(0) invert(1);
   pointer-events: none;
 }
 
@@ -9560,7 +9561,9 @@ html[data-nav="dark"] .burger span         { background: #254851; }
    ft- · FOOTER (redesign) — dark band, "Reach us directly" + 3 link columns
    ═══════════════════════════════════════════════════════════════════════════
    Component: Footer.tsx. Replaces the old .footer-* treatment. */
-.ft { background: #1A363D; color: var(--rd-ivory); padding: clamp(3rem, 5vw, 4.5rem) 0 2.2rem; }
+/* Lighter teal than the #1A363D wordmark band above — the two-tone the design
+   shows, with the white wordmark cut at this panel's top edge. */
+.ft { background: #0F4B5A; color: var(--rd-ivory); padding: clamp(3rem, 5vw, 4.5rem) 0 2.2rem; }
 .ft-grid { display: grid; grid-template-columns: 1.5fr 1fr 1fr 1fr; gap: clamp(1.6rem, 4vw, 3.5rem); align-items: start; }
 
 .ft-reach-h { font-family: var(--font-serif); font-weight: 600; font-size: clamp(1.6rem, 2.6vw, 2.2rem); color: var(--rd-white); margin-bottom: 1.4rem; }
