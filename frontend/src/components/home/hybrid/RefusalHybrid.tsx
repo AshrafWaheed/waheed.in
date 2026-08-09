@@ -1,37 +1,47 @@
 'use client';
 
+/**
+ * RefusalHybrid — "What We Will Not Build", reskinned to the Figma redesign.
+ *
+ * Left: heading + a one-line sub with "honour" underlined gold. Right: the six
+ * refusals as a 2×3 grid of solid gold tiles (dark text on gold). Copy is
+ * `refusal` in content/home.ts — `title`/`sub`/`subUnderline` are the redesign's
+ * fields; the old `heading`/`intro` stay in content for unmounted variants.
+ */
 import SplitReveal from '@/components/motion/SplitReveal';
-import { DrawPath } from '@/components/motion/StrokeDraw';
-import RefusalSeal from '@/components/graphics/RefusalSeal';
 import { refusal } from '@/content/home';
 
-export default function RefusalHybrid() {
-  const { eyebrow, heading, intro, items } = refusal;
+/** Underline the one phrase in the sub. */
+function Sub({ text, underline }: { text: string; underline: string }) {
+  const i = text.indexOf(underline);
+  if (i === -1) return <>{text}</>;
   return (
-    <section className="hy-ref" data-section-color="dark">
-      <div className="cnt hy-ref-grid">
-        <div className="hy-ref-left">
-          <span className="hy-ref-eyebrow">{eyebrow}</span>
-          <h2 className="hy-ref-h">
-            <SplitReveal text={heading.lead} by="char" />{' '}
-            <em><SplitReveal text={heading.em!} by="char" /></em>{' '}
-            <SplitReveal text={heading.tail!} by="char" />
+    <>
+      {text.slice(0, i)}
+      <span className="rf-uline">{underline}</span>
+      {text.slice(i + underline.length)}
+    </>
+  );
+}
+
+export default function RefusalHybrid() {
+  const { title, sub, subUnderline, items } = refusal;
+
+  return (
+    <section className="rf" data-section-color="dark">
+      <div className="cnt rf-grid">
+        <div className="rf-left">
+          <h2 className="rf-h">
+            <SplitReveal text={title} by="word" />
           </h2>
-          <p className="hy-ref-intro">{intro}</p>
-          <div className="hy-ref-seal"><RefusalSeal size={120} /></div>
+          <p className="rf-sub">
+            <Sub text={sub} underline={subUnderline} />
+          </p>
         </div>
 
-        <ul className="hy-ref-list">
+        <ul className="rf-tiles">
           {items.map((item) => (
-            <li key={item} className="hy-ref-item">
-              <span className="hy-ref-x">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
-                  <DrawPath d="M6 6 L18 18" duration={0.5} amount={0.6} />
-                  <DrawPath d="M18 6 L6 18" duration={0.5} delay={0.12} amount={0.6} />
-                </svg>
-              </span>
-              <p className="hy-ref-text">{item}</p>
-            </li>
+            <li key={item} className="rf-tile">{item}</li>
           ))}
         </ul>
       </div>

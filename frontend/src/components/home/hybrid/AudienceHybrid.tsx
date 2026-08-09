@@ -7,19 +7,16 @@ import { audience } from '@/content/home';
 
 export default function AudienceHybrid() {
   const [active, setActive] = useState(0);
-  const { eyebrow, heading, items } = audience;
+  const { heading, sub, items } = audience;
 
   return (
     <section className="hy-aud" data-section-color="light">
       <div className="cnt">
         <div className="hy-aud-head">
-          <span className="hy-aud-eyebrow">{eyebrow}</span>
           <h2 className="hy-aud-h">
-            <SplitReveal text={heading.lead} by="word" />{' '}
-            <em>
-              <SplitReveal text={heading.em!} by="word" />
-            </em>
+            <SplitReveal text={heading.lead} by="word" />
           </h2>
+          <p className="hy-aud-sub">{sub}</p>
         </div>
 
         <div className="hy-aud-list">

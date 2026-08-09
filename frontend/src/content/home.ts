@@ -154,33 +154,41 @@ export const expertise = {
   ],
 } as const;
 
-/* ─── Audience — Who we work with ──────────────────────────────── */
+/* ─── Audience — Who we love to work with ──────────────────────────
+   Heading, sub and the five categories are the redesign's copy; the section
+   keeps its OLD accordion styling (per instruction). Bodies are adapted from
+   the previous four categories where they map; "Hospitality and Experiences"
+   is new and its body is newly written in the same voice. `eyebrow` is retained
+   only for any unmounted variant that still reads it. */
 export const audience = {
   eyebrow: 'Who we work with',
-  heading: {
-    lead: 'We transform brands that',
-    em: 'refuse to compromise their values.',
-  } as Heading,
+  heading: { lead: 'Who We Love to Work With', em: '' } as Heading,
+  sub: 'We are committed to helping faith-conscious and values-led Muslims and non-Muslims running impact-driven brands around the world.',
   items: [
     {
       num: '01',
-      title: 'Halal D2C Brands',
-      body: 'Halal D2C brands in food, modest fashion, lifestyle, and beauty that have built something truly impactful for the Ummah and want to grow it the right way.',
+      title: 'e-Commerce Brands',
+      body: 'Halal D2C and e-commerce brands in food, modest fashion, lifestyle, and beauty that have built something truly impactful for the Ummah and want to grow it the right way.',
     },
     {
       num: '02',
-      title: 'Islamic Educational Institutions',
-      body: 'Academies, ed-tech platforms, and Islamic learning institutions building engaging learning environments that respect both their pedagogy and their audiences.',
+      title: 'Hospitality and Experiences',
+      body: 'Halal-friendly hospitality, travel, and experience brands — restaurants, venues, and destinations — that want a digital presence as considered as the experience they offer.',
     },
     {
       num: '03',
-      title: 'NGOs, Charities & Masajid',
-      body: "Da'wah organisations, fundraising operations, and masajid that need digital systems built to compound, not just sizzle when a seasonal campaign ends.",
+      title: 'Educational Institutions',
+      body: 'Academies, ed-tech platforms, and Islamic learning institutions building engaging learning environments that respect both their pedagogy and their audiences.',
     },
     {
       num: '04',
-      title: 'Muslim Coaches & Educators',
-      body: 'Coaches, consultants, and educators building personal brands grounded in Islamic wisdom, who need a digital presence that reflects their credibility and converts the right students and clients.',
+      title: 'NGOs, Charities, & Masajid',
+      body: "Da'wah organisations, fundraising operations, and masajid that need digital systems built to compound, not just sizzle when a seasonal campaign ends.",
+    },
+    {
+      num: '05',
+      title: 'Consultants, Coaches & Educators',
+      body: 'Coaches, consultants, and educators building personal brands grounded in Islamic wisdom, who need a digital presence that reflects their credibility and converts the right clients.',
     },
   ],
 } as const;
@@ -337,6 +345,10 @@ export const refusal = {
   eyebrow: 'A standard, not a disclaimer',
   heading: { lead: 'What we', em: 'will not', tail: 'build.' } as Heading,
   intro: 'Naming what we refuse is how we honour what we build.',
+  title: 'What We Will Not Build',
+  sub: 'We name what we refuse to build to honour what we build.',
+  /** Underlined verbatim in the sub. */
+  subUnderline: 'honour',
   items: [
     'Gambling or lottery platforms',
     'Interest-based financial products',
@@ -351,12 +363,13 @@ export const refusal = {
 export const newsletter = {
   eyebrow: 'Halal Brand Letters',
   heading: { lead: 'No pitch. Just one useful idea,', em: 'every Thursday.' } as Heading,
-  body:
-    'Strategic notes for halal brand & organisation founders, on positioning, ' +
-    'conversion, brand integrity, and growing without compromise.',
+  /** Live section (NewsletterHybrid) uses `title` + `body`; `heading` stays for
+     any unmounted variant. Copy is the redesign's. */
+  title: 'Subscribe to Waheed Brand Notes',
+  body: 'Get one smart idea about halal brand growth in your inbox every Thursday morning.',
   success: 'You’re on the list, Jazakallahu Khayran.',
-  placeholder: 'your@email.com',
-  submitIdle: 'Subscribe →',
+  placeholder: 'Your email address',
+  submitIdle: 'Subscribe',
   submitBusy: 'Saving…',
   note: 'Confirmed opt-in. Unsubscribe any time. We never sell or share your data.',
 } as const;

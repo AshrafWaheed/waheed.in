@@ -9414,3 +9414,61 @@ html[data-nav="dark"] .burger span         { background: #254851; }
   .fs-grid { grid-template-columns: 1fr; gap: 2rem; }
   .fs-media { min-height: 280px; }
 }
+
+/* Audience sub-line (redesign copy under the moved heading; old accordion kept). */
+.hy-aud-sub { margin-top: .9rem; max-width: 60ch; font-family: var(--font-sans); font-size: 1.02rem; line-height: 1.6; color: #4a5a5e; }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   rf- · WHAT WE WILL NOT BUILD — dark band, gold refusal tiles
+   ═══════════════════════════════════════════════════════════════════════════ */
+.rf { --rf-gold: #F0D97A; background: var(--rd-night-2); color: var(--rd-ivory); padding: clamp(4rem, 7vw, 6.5rem) 0; }
+.rf-grid { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: clamp(2rem, 5vw, 4.5rem); align-items: center; }
+.rf-h { font-family: var(--font-serif); font-weight: 600; font-size: clamp(1.9rem, 3.8vw, 3rem); color: var(--rd-white); line-height: 1.12; margin-bottom: 1rem; }
+.rf-sub { font-family: var(--font-sans); font-size: 1rem; line-height: 1.6; color: rgb(var(--rd-ivory-rgb) / .78); max-width: 34ch; }
+.rf-uline { text-decoration: underline; text-decoration-color: var(--rf-gold); text-decoration-thickness: 2px; text-underline-offset: 3px; }
+.rf-tiles { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: clamp(.7rem, 1.4vw, 1.1rem); }
+.rf-tile {
+  display: flex; align-items: center; justify-content: center; text-align: center;
+  min-height: clamp(56px, 6vw, 76px); padding: .8rem 1rem;
+  background: var(--rf-gold); color: #1A363D; border-radius: 10px;
+  font-family: var(--font-sans); font-weight: 500; font-size: clamp(.82rem, 1vw, .95rem); line-height: 1.25;
+}
+@media (max-width: 860px) {
+  .rf-grid { grid-template-columns: 1fr; gap: 2rem; }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   nl- · SUBSCRIBE TO WAHEED BRAND NOTES — white card on dark
+   ═══════════════════════════════════════════════════════════════════════════ */
+.nl { --nl-gold: #F0D97A; background: var(--rd-night-2); padding: clamp(1rem, 3vw, 3rem) 0 clamp(4rem, 7vw, 6rem); }
+.nl-card {
+  max-width: 720px; margin: 0 auto; text-align: center;
+  background: var(--rd-white); color: #1A363D;
+  border-radius: clamp(18px, 2.5vw, 26px);
+  padding: clamp(2.2rem, 4vw, 3.4rem) clamp(1.6rem, 4vw, 3rem);
+}
+.nl-h { font-family: var(--font-serif); font-weight: 600; font-size: clamp(1.6rem, 3vw, 2.4rem); color: #16303a; }
+.nl-body { margin-top: .8rem; font-family: var(--font-sans); font-size: 1rem; line-height: 1.55; color: #4a5a5e; }
+.nl-form { display: flex; gap: .6rem; max-width: 460px; margin: 1.7rem auto 0; }
+.nl-input {
+  flex: 1 1 auto; min-width: 0;
+  border: 1.5px solid var(--rd-border-strong); border-radius: 999px;
+  padding: .7rem 1.1rem; font-family: var(--font-sans); font-size: .92rem; color: #1A363D; background: var(--rd-white);
+}
+.nl-input:focus-visible { outline: 2px solid var(--nl-gold); outline-offset: 1px; border-color: transparent; }
+.nl-submit {
+  flex: 0 0 auto; cursor: pointer;
+  background: var(--nl-gold); color: #1A363D; border: 1.5px solid #1A363D; border-radius: 999px;
+  padding: .7rem 1.4rem; font-family: var(--font-sans); font-weight: 500; font-size: .9rem;
+  transition: transform .12s ease, background .2s ease;
+}
+.nl-submit:hover { background: #e6c95f; }
+.nl-submit:active { transform: translateY(1px); }
+.nl-submit:disabled { opacity: .6; cursor: not-allowed; }
+.nl-note { margin-top: .9rem; font-family: var(--font-sans); font-size: .74rem; color: #7a8a8e; }
+.nl-success { margin-top: 1.4rem; font-family: var(--font-serif); font-size: 1.1rem; color: #1f5fa8; }
+.nl-error { margin-top: .8rem; font-family: var(--font-sans); font-size: .82rem; color: #b0413f; }
+@media (max-width: 520px) {
+  .nl-form { flex-direction: column; border-radius: 16px; }
+  .nl-input, .nl-submit { width: 100%; }
+}

@@ -1,8 +1,15 @@
 'use client';
 
+/**
+ * NewsletterHybrid — "Subscribe to Waheed Brand Notes", reskinned to the Figma
+ * redesign: a white rounded card centred on the dark section, with an inline
+ * email field + gold Subscribe StackButton.
+ *
+ * Behaviour is unchanged — it still POSTs to /api/newsletter. Copy is the
+ * redesign's (`newsletter.title` / `newsletter.body`).
+ */
 import { useState } from 'react';
 import SplitReveal from '@/components/motion/SplitReveal';
-import ExplodeButton from '@/components/motion/ExplodeButton';
 import { newsletter } from '@/content/home';
 
 export default function NewsletterHybrid() {
@@ -35,27 +42,23 @@ export default function NewsletterHybrid() {
     }
   }
 
-  const { eyebrow, heading, body, success, placeholder, submitIdle, submitBusy, note } = newsletter;
+  const { title, body, success, placeholder, submitIdle, submitBusy, note } = newsletter;
 
   return (
-    <section className="hy-nl" data-section-color="light">
-      <div className="cnt hy-nl-grid">
-        <div className="hy-nl-copy">
-          <span className="hy-nl-eyebrow">{eyebrow}</span>
-          <h2 className="hy-nl-h">
-            <SplitReveal text={heading.lead} by="word" />{' '}
-            <em><SplitReveal text={heading.em!} by="word" /></em>
+    <section className="nl" data-section-color="dark">
+      <div className="cnt">
+        <div className="nl-card">
+          <h2 className="nl-h">
+            <SplitReveal text={title} by="word" />
           </h2>
-          <p className="hy-nl-body">{body}</p>
-        </div>
+          <p className="nl-body">{body}</p>
 
-        <div className="hy-nl-form-wrap">
           {submitted ? (
-            <p className="hy-nl-success">{success}</p>
+            <p className="nl-success">{success}</p>
           ) : (
-            <form className="hy-nl-form" onSubmit={handleSubmit} noValidate>
+            <form className="nl-form" onSubmit={handleSubmit} noValidate>
               <input
-                className="hy-nl-input"
+                className="nl-input"
                 type="email"
                 placeholder={placeholder}
                 value={email}
@@ -64,13 +67,16 @@ export default function NewsletterHybrid() {
                 aria-label="Email address"
                 disabled={submitting}
               />
-              <ExplodeButton type="submit" disabled={submitting} className="btn btn-gold">
+              {/* Plain button, not StackButton: it lives inside a form and the
+                  three-plate travel would fight the input it sits flush against.
+                  Gold face to match. */}
+              <button type="submit" className="nl-submit" disabled={submitting}>
                 {submitting ? submitBusy : submitIdle}
-              </ExplodeButton>
+              </button>
             </form>
           )}
-          {error && <p className="hy-nl-error">{error}</p>}
-          <p className="hy-nl-note">{note}</p>
+          {error && <p className="nl-error">{error}</p>}
+          <p className="nl-note">{note}</p>
         </div>
       </div>
     </section>

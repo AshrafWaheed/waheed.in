@@ -33,10 +33,10 @@ export default function HomePage() {
         <TrustStripHybrid />
         {/* <ManifestoHybrid /> — removed per the redesign; hero → solutions. */}
         <ExpertiseBento />
-        <AudienceHybrid />
         <ServicesHybrid />
         <IhsanProcessTactile />
         <FoundingStoryHybrid />
+        <AudienceHybrid />
         <RefusalHybrid />
         <NewsletterHybrid />
         <FinalCtaHybrid />
