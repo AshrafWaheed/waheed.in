@@ -217,10 +217,65 @@ export const services = {
   ],
 } as const;
 
+/* ─── Growth System Packages ───────────────────────────────────────
+   The redesign's packages section (WAHEEDWEB, Page 2). A separate export from
+   the older `services` above — which still feeds the unmounted Services.tsx
+   variant — so nothing there has to change. Copy is verbatim from the Figma;
+   the three tiers and their inclusion lists mirror the first three rungs of the
+   /packages ladder. */
+export const growthPackages = {
+  heading: 'Growth System Packages',
+  sub: 'The right strategy, channels, and execution = real growth. Explore our packages that drive your growth, the halal way!',
+  /** Underlined verbatim in the sub, matched as a substring. */
+  subUnderline: 'real growth',
+  footnote: 'Packages are tailored to fit your goals, scope, and capacity.',
+  cta: { label: 'Contact us', href: '/contact' },
+  cards: [
+    {
+      title: 'Brand Audit',
+      featured: false,
+      items: [
+        'Brand & website audit',
+        'Personalised report',
+        '60-min strategy call',
+        '30-day post-hand off ongoing support',
+      ],
+    },
+    {
+      title: 'Foundation Engagements',
+      featured: true,
+      badge: 'For best results',
+      items: [
+        'Everything in Brand Audit',
+        'Visual and brand foundations',
+        'Full website design, copy, & development',
+        'Basic SEO setup',
+        'Social media audit & strategy',
+        '90-day ongoing support and strategy optimisation',
+      ],
+    },
+    {
+      title: 'The Authority System',
+      featured: false,
+      items: [
+        'Everything in foundations',
+        'Advanced SEO set up',
+        'Full social media management',
+        'Creative assets*',
+      ],
+      note: '* Additional charges apply to requests for extra assets.',
+    },
+  ],
+} as const;
+
 /* ─── Ihsan Process — five principles ──────────────────────────── */
 export const process = {
+  /* Heading renamed to the redesign's "Our Work Process". `eyebrow` and `sub`
+     are retained for the unmounted IhsanProcess / IhsanProcessHybrid variants;
+     the live IhsanProcessTactile renders neither, per the redesign. `em` is
+     empty because the new heading is a single unhighlighted phrase. */
   eyebrow: 'Our methodology',
-  heading: { lead: 'The Ihsan Process.', em: 'How we build.' } as Heading,
+  heading: { lead: 'Our Work Process', em: '' } as Heading,
   sub: 'Five phases that bring clarity and organisation to the process, each grounded in an Islamic principle.',
   /** Label template rendered as `grounded in {grounded}`. */
   groundedPrefix: 'grounded in ',

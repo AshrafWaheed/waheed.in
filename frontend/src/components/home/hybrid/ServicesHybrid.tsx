@@ -1,67 +1,89 @@
 'use client';
 
-import Link from 'next/link';
+/**
+ * ServicesHybrid — "Growth System Packages", rebuilt to the Figma redesign.
+ *
+ * Three checklist cards on a light section: two teal tiers flanking a raised,
+ * darker "Foundation Engagements" card wearing a gold "For best results" tab.
+ * Every inclusion is a gold ✦ + a line of copy; each card closes with a
+ * "Contact us" StackButton. Copy is `growthPackages` in content/home.ts.
+ *
+ * The older paragraph-card version (and the `services` content it read) is gone
+ * from here but kept in content for the unmounted Services.tsx variant.
+ */
 import SplitReveal from '@/components/motion/SplitReveal';
 import Spotlight from '@/components/motion/Spotlight';
-import Magnetic from '@/components/motion/Magnetic';
-import Khatam from '@/components/graphics/Khatam';
-import { services } from '@/content/home';
+import StackButton from '@/components/ui/StackButton';
+import { growthPackages } from '@/content/home';
 
-/** Small per-card HUD: ascending gold ticks + a khatam. Decorative. */
-function TierHud({ level }: { level: number }) {
+/** The inclusion bullet — a four-point gold spark, matching the Figma. */
+function Spark() {
   return (
-    <svg width="72" height="34" viewBox="0 0 72 34" fill="none" stroke="currentColor" aria-hidden="true">
-      <g strokeWidth="2" strokeLinecap="round">
-        {[0, 1, 2].map((n) => (
-          <line key={n} x1={6 + n * 12} y1={28} x2={6 + n * 12} y2={28 - (n + 1) * 6}
-            opacity={n <= level ? 0.95 : 0.28} />
-        ))}
-      </g>
-      <g transform="translate(52 6)">
-        <path d="M9 0 l2.3 4.6 5.1 0.7 -3.7 3.6 0.9 5.1 -4.6 -2.4 -4.6 2.4 0.9 -5.1 -3.7 -3.6 5.1 -0.7 Z"
-          strokeWidth="1.3" opacity="0.85" />
-      </g>
+    <svg className="gp-spark" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+      <path d="M8 0 C8.6 4 12 7.4 16 8 C12 8.6 8.6 12 8 16 C7.4 12 4 8.6 0 8 C4 7.4 7.4 4 8 0 Z" />
     </svg>
   );
 }
 
+/** Wrap the one underlined phrase in the sub. */
+function Sub({ text, underline }: { text: string; underline: string }) {
+  const i = text.indexOf(underline);
+  if (i === -1) return <>{text}</>;
+  return (
+    <>
+      {text.slice(0, i)}
+      <span className="gp-uline">{underline}</span>
+      {text.slice(i + underline.length)}
+    </>
+  );
+}
+
 export default function ServicesHybrid() {
-  const { eyebrow, heading, sub, featuredBadge, footerLink, cards } = services;
+  const { heading, sub, subUnderline, footnote, cta, cards } = growthPackages;
 
   return (
-    <section className="hy-svc" data-section-color="dark">
+    <section className="gp" data-section-color="light">
       <div className="cnt">
-        <div className="hy-svc-head">
-          <span className="hy-svc-eyebrow">{eyebrow}</span>
-          <h2 className="hy-svc-h">
+        <div className="gp-head">
+          <h2 className="gp-h">
             <SplitReveal text={heading} by="word" />
           </h2>
-          <p className="hy-svc-sub">{sub}</p>
+          <p className="gp-sub">
+            <Sub text={sub} underline={subUnderline} />
+          </p>
         </div>
 
-        <div className="hy-svc-grid">
-          {cards.map((card, i) => (
-            <Spotlight key={card.title} className={`hy-svc-card-wrap${card.featured ? ' featured' : ''}`}>
-              <article className={`hy-svc-card${card.featured ? ' featured' : ''}`} data-cursor>
-                {card.featured && <span className="hy-svc-badge">{featuredBadge}</span>}
-                <div className="hy-svc-hud"><TierHud level={i} /></div>
-                <span className="hy-svc-card-eyebrow">{card.eyebrow}</span>
-                <h3 className="hy-svc-title">{card.title}</h3>
-                <p className="hy-svc-subtitle">{card.subtitle}</p>
-                <p className="hy-svc-desc">{card.desc}</p>
+        <div className="gp-grid">
+          {cards.map((card) => (
+            <Spotlight
+              key={card.title}
+              className={`gp-card-wrap${card.featured ? ' featured' : ''}`}
+            >
+              <article className={`gp-card${card.featured ? ' featured' : ''}`} data-cursor>
+                {'badge' in card && card.badge && <span className="gp-badge">{card.badge}</span>}
+
+                <h3 className="gp-title">{card.title}</h3>
+
+                <ul className="gp-list">
+                  {card.items.map((item) => (
+                    <li key={item} className="gp-item">
+                      <Spark />
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+
+                {'note' in card && card.note && <p className="gp-note">{card.note}</p>}
+
+                <div className="gp-cta">
+                  <StackButton href={cta.href} size="sm">{cta.label}</StackButton>
+                </div>
               </article>
             </Spotlight>
           ))}
         </div>
 
-        <div className="hy-svc-foot">
-          <Magnetic>
-            <Link href={footerLink.href} className="btn btn-outline-lt" data-cursor>
-              {footerLink.label}
-              <Khatam size={12} inner={0.5} stroke="currentColor" strokeWidth={1.4} className="hy-svc-foot-star" />
-            </Link>
-          </Magnetic>
-        </div>
+        <p className="gp-foot">{footnote}</p>
       </div>
     </section>
   );

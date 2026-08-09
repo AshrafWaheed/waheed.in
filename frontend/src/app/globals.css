@@ -9190,3 +9190,167 @@ html[data-nav="dark"] .burger span         { background: #254851; }
 
 /* Group-closing CTA (Contact us / View our packages), centred under each group. */
 .xp-groupcta { text-align: center; margin-top: clamp(1.8rem, 3vw, 2.6rem); }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   gp- · GROWTH SYSTEM PACKAGES — Figma redesign (light section, teal cards)
+   ═══════════════════════════════════════════════════════════════════════════
+   Component: ServicesHybrid.tsx. Replaces the old dark `.hy-svc` section (whose
+   rules stay for the unmounted Services.tsx). Gold is the design's #F0D97A. */
+.gp {
+  --gp-gold: #F0D97A;
+  --gp-card: #0F4B5A;              /* the two flanking cards */
+  --gp-card-hi: #12303a;           /* the raised featured card, darker */
+  --gp-ink: #1A363D;
+  background: var(--rd-white);
+  color: var(--gp-ink);
+  padding: clamp(4rem, 7vw, 7rem) 0;
+}
+.gp-head { max-width: 760px; margin: 0 auto clamp(2.4rem, 4vw, 3.4rem); text-align: center; }
+.gp-h {
+  font-family: var(--font-serif); font-weight: 600;
+  font-size: clamp(1.9rem, 4vw, 3rem); line-height: 1.1; color: #16303a;
+}
+.gp-sub { margin-top: 1rem; font-family: var(--font-sans); font-size: 1rem; line-height: 1.55; color: #4a5a5e; }
+.gp-uline { text-decoration: underline; text-decoration-color: var(--gp-gold); text-decoration-thickness: 2px; text-underline-offset: 3px; }
+
+/* Three columns; the middle one is raised. `align-items:start` so the taller
+   featured card does not stretch its shorter neighbours. */
+.gp-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: clamp(1rem, 2vw, 1.6rem); align-items: start;
+  max-width: 1060px; margin: 0 auto;
+}
+.gp-card-wrap { border-radius: 22px; }
+.gp-card-wrap.featured { margin-top: -1.4rem; }   /* the redesign lifts it */
+
+.gp-card {
+  position: relative; height: 100%;
+  display: flex; flex-direction: column;
+  background: var(--gp-card); border-radius: 22px;
+  padding: clamp(1.6rem, 2.4vw, 2.2rem) clamp(1.4rem, 2vw, 1.9rem) clamp(1.5rem, 2vw, 1.9rem);
+  transition: transform .3s ease, box-shadow .3s ease;
+}
+.gp-card.featured {
+  background: var(--gp-card-hi);
+  padding-top: clamp(2.4rem, 3.4vw, 3.2rem);   /* room for the tab */
+  box-shadow: 0 30px 70px rgba(11, 32, 40, .38);
+}
+.gp-card-wrap:hover .gp-card { transform: translateY(-6px); box-shadow: 0 26px 60px rgba(11,32,40,.34); }
+.gp-card-wrap.featured:hover .gp-card { transform: translateY(-6px); }
+
+.gp-badge {
+  position: absolute; top: -.9rem; left: 50%; transform: translateX(-50%);
+  background: var(--gp-gold); color: var(--gp-ink);
+  font-family: var(--font-sans); font-weight: 500; font-size: .72rem;
+  padding: .35rem .9rem; border-radius: 999px; white-space: nowrap;
+}
+
+.gp-title {
+  font-family: var(--font-serif); font-weight: 600;
+  font-size: clamp(1.5rem, 2.2vw, 1.9rem); line-height: 1.12;
+  color: var(--gp-gold); margin-bottom: 1.3rem;
+}
+
+.gp-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: .7rem; flex: 1; }
+.gp-item { display: flex; align-items: flex-start; gap: .6rem; font-family: var(--font-sans); font-size: .9rem; line-height: 1.4; color: rgb(var(--rd-ivory-rgb) / .92); }
+.gp-spark { flex: 0 0 auto; width: 15px; height: 15px; margin-top: .12rem; color: var(--gp-gold); }
+
+.gp-note { margin-top: .9rem; font-family: var(--font-sans); font-size: .72rem; line-height: 1.4; color: rgb(var(--rd-ivory-rgb) / .55); }
+
+.gp-cta { margin-top: 1.5rem; }
+/* The button spans the card so it reads as the card's action, not a chip. */
+.gp-cta .stk { display: block; }
+.gp-cta .stk-face { width: 100%; }
+
+.gp-foot { text-align: center; margin-top: clamp(2rem, 3.5vw, 3rem); font-family: var(--font-sans); font-size: .95rem; color: #56666a; }
+
+@media (max-width: 860px) {
+  .gp-grid { grid-template-columns: 1fr; max-width: 460px; }
+  .gp-card-wrap.featured { margin-top: 0; }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   wp- · OUR WORK PROCESS — dark panel on white, gold dotted-square timeline
+   ═══════════════════════════════════════════════════════════════════════════
+   Component: IhsanProcessTactile.tsx. Keeps the sticky-rail scroll; only the
+   skin is new. Replaces the old light `.tc-proc` treatment (whose rules stay
+   for the unmounted IhsanProcess variants). */
+.wp {
+  --wp-gold: #F0D97A;
+  background: var(--rd-white);
+  padding: clamp(3.5rem, 6vw, 6.5rem) 0;
+}
+.wp-panel {
+  background: #1A363D; color: var(--rd-ivory);
+  border-radius: clamp(20px, 3vw, 32px);
+  padding: clamp(2.2rem, 4vw, 3.6rem) clamp(1.4rem, 3.5vw, 3.4rem) clamp(1rem, 3vw, 2rem);
+}
+.wp-h {
+  text-align: center;
+  font-family: var(--font-serif); font-weight: 600;
+  font-size: clamp(1.8rem, 3.6vw, 2.7rem); color: var(--rd-white);
+  margin-bottom: clamp(1rem, 3vw, 2rem);
+}
+
+.wp-grid { display: grid; grid-template-columns: 48px 1fr; gap: clamp(1.2rem, 3vw, 3rem); }
+
+/* The sticky timeline. A dotted gold line the full height, a solid gold fill
+   that grows to the active node, and one square node per step. */
+.wp-rail-wrap { position: relative; }
+.wp-rail {
+  position: sticky; top: 28vh; height: 46vh;
+  display: flex; flex-direction: column; justify-content: space-between; align-items: center;
+}
+.wp-rail::before {
+  content: ''; position: absolute; top: 7px; bottom: 7px; left: 50%; transform: translateX(-50%);
+  border-left: 2px dotted rgb(var(--rd-gold-bloom-rgb) / .32);
+}
+.wp-rail-fill {
+  position: absolute; top: 7px; left: 50%; transform: translateX(-50%);
+  width: 2px; height: calc((100% - 14px) * var(--p, 0));
+  background: var(--wp-gold); transition: height .45s cubic-bezier(.22,1,.36,1);
+}
+.wp-node {
+  position: relative; z-index: 1;
+  width: 14px; height: 14px; border-radius: 3px;
+  background: #1A363D; border: 2px solid rgb(var(--rd-gold-bloom-rgb) / .4);
+  transition: background .3s ease, border-color .3s ease, transform .3s ease, box-shadow .3s ease;
+}
+.wp-node.is-done   { background: var(--wp-gold); border-color: var(--wp-gold); }
+.wp-node.is-active { transform: scale(1.18); box-shadow: 0 0 0 5px rgb(var(--rd-gold-bloom-rgb) / .16); }
+
+/* Steps — tall so each holds the centre band long enough to read; dim until
+   active, exactly as the old tc-proc scroll behaved. */
+.wp-steps { position: relative; }
+.wp-step {
+  min-height: 58vh; display: flex; flex-direction: column; justify-content: center;
+  opacity: .3; transition: opacity .5s ease;
+}
+.wp-step.active { opacity: 1; }
+.wp-title {
+  font-family: var(--font-serif); font-weight: 600;
+  font-size: clamp(1.5rem, 3vw, 2.3rem); color: var(--rd-white); line-height: 1.12; margin-bottom: .5rem;
+}
+.wp-grounded {
+  font-family: var(--font-sans); font-style: italic; font-size: .98rem;
+  color: rgb(var(--rd-ivory-rgb) / .72); margin-bottom: 1.3rem;
+}
+.wp-grounded em { font-style: italic; color: var(--wp-gold); }
+.wp-desc {
+  font-family: var(--font-sans); font-size: 1.02rem; line-height: 1.7;
+  color: rgb(var(--rd-ivory-rgb) / .86); max-width: 56ch;
+}
+
+@media (max-width: 720px) {
+  .wp-grid { grid-template-columns: 26px 1fr; gap: 1.1rem; }
+  .wp-step { min-height: 52vh; }
+  .wp-node { width: 12px; height: 12px; }
+}
+
+/* Reduced motion: no scroll-driven dimming — every step legible, the rail full
+   and settled on the last node. */
+@media (prefers-reduced-motion: reduce) {
+  .wp-step { opacity: 1 !important; transition: none; }
+  .wp-rail-fill { transition: none; }
+  .wp-node { transition: none; }
+}
