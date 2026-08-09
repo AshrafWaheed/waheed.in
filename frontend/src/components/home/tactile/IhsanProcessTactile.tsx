@@ -84,14 +84,19 @@ export default function IhsanProcessTactile() {
             </div>
           </div>
 
-          {/* Scroll sentinels — one per step, spaced down the track. Never painted. */}
+          {/* Scroll sentinels — one per step, each covering its own SEGMENT of
+              the track (not a 1px point). The observer band is a zero-height
+              line at the viewport centre; a full-height segment always contains
+              that line for its whole stretch, so exactly one step is active at a
+              time and every transition fires. A 1px sentinel here silently
+              skipped the middle steps — the line crossed it between frames. */}
           {proc.steps.map((step, i) => (
             <span
               key={step.grounded}
               ref={(el) => { sentRefs.current[i] = el; }}
               data-i={i}
               className="wp-sent"
-              style={{ top: `${((i + 0.5) / N) * 100}%` }}
+              style={{ top: `${(i / N) * 100}%`, height: `${100 / N}%` }}
               aria-hidden="true"
             />
           ))}

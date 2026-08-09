@@ -9353,8 +9353,9 @@ html[data-nav="dark"] .burger span         { background: #254851; }
   color: rgb(var(--rd-ivory-rgb) / .86); max-width: 60ch;
 }
 
-/* Zero-size scroll markers down the track; never painted. */
-.wp-sent { position: absolute; left: 0; width: 1px; height: 1px; pointer-events: none; }
+/* Scroll markers down the track — full-segment height (set inline) so the
+   centre-line observer always has exactly one to intersect. Never painted. */
+.wp-sent { position: absolute; left: 0; width: 1px; pointer-events: none; }
 
 @media (max-width: 720px) {
   .wp-track { height: calc(var(--n, 5) * 64vh); }
