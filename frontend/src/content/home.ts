@@ -77,55 +77,77 @@ export const manifesto = {
 
 /* ─── Expertise — Seven crafts ─────────────────────────────────── */
 export const expertise = {
+  /* Section copy is VERBATIM from the Figma redesign's "Solutions" section
+     (WAHEEDWEB, Page 2), replacing the old "Seven crafts, one standard."
+     heading and every craft blurb under instruction. The redesign has no
+     eyebrow above the heading, so the component no longer renders one.
+
+     The redesign lists EIGHT solutions and our bento has seven cells, so one is
+     dropped: "App Design & Development", whose remit overlaps our web offering
+     the most. Card 01 therefore carries the website copy (its artifact is a
+     browser mock), and the rest map craft-for-craft onto the matching artifact.
+     The `promise` lines and the artifacts are ours and stay — see the note in
+     content history for why the cards keep their layout. */
+  /* Retained only for the unmounted ExpertiseHybrid variant that still reads it;
+     the live ExpertiseBento no longer renders an eyebrow, per the redesign. */
   eyebrow: 'Our craft',
-  heading: { lead: 'Seven crafts, one', em: 'standard.' } as Heading,
+  heading: { lead: 'The Solutions to Help You Build & Grow' } as Heading,
+
+  /* The two halves the crafts divide into, each closed by the button the
+     redesign shows under it. `from`/`to` (the grid-row boundary) are a layout
+     fact and live in the component, not here. */
+  groups: [
+    { label: 'I want to build', cta: { label: 'Contact us',        href: '/contact'  } },
+    { label: 'I want to grow',  cta: { label: 'View our packages', href: '/packages' } },
+  ],
+
   doors: [
     {
       num: '01',
-      title: 'Web & App Development',
-      desc: 'Your website is the first impression and the closing pitch. We build sites and applications that load fast, convert decisively, and are built to convert visitors you never speak to.',
+      title: 'Website Design & Development',
+      desc: 'Your website is often your first door to turning visitors into paying customers. Have it clearly communicate your product or offer, load quickly, and deliver a user-optimised experience.',
       promise: 'Built to convert. Made to last.',
       soon: false,
     },
     {
       num: '02',
-      title: 'Custom Software Development',
-      desc: "Off-the-shelf tools weren't built for your business. We engineer dashboards, integrations, and automations that pay themselves back in saved hours and clearer decisions.",
+      title: 'Custom Software Design & Development',
+      desc: 'Different operations often require custom software solutions. Build the right systems that pay for themselves through saved hours, streamlined workflows, and clearer decision-making.',
       promise: 'Software that earns its keep.',
       soon: false,
     },
     {
       num: '03',
-      title: 'Brand Strategy',
-      desc: 'A weak brand competes on price; a strong brand commands premium trust. We craft positioning, narrative and visual systems that make the right buyer feel chosen, and the wrong buyer move on.',
+      title: 'Visual & Brand Strategy',
+      desc: 'Great branding shapes people’s perception of your brand. Go from missed to noticed with the right visual identity, positioning, and messaging.',
       promise: 'Positioning that pre-sells.',
       soon: false,
     },
     {
       num: '04',
-      title: 'SEO',
-      desc: 'Ads stop the moment you stop paying. We compound your visibility on Google with technical fixes, intent-driven content, and authority signals that bring qualified buyers to your door, for years.',
+      title: 'Search Engine Optimisation',
+      desc: "SEO is dead? Nope, it's evolving! Compound your online visibility organically and attract qualified buyers to your door.",
       promise: 'Traffic that compounds.',
       soon: false,
     },
     {
       num: '05',
-      title: 'Social Media Marketing',
-      desc: 'Posting daily and praying for reach is not a strategy. We build content engines that earn trust first, sell second, and turn passive followers into a community that buys, refers and returns.',
+      title: 'Social Media Growth',
+      desc: 'A long-term successful brand is built on trust, and trust-led brands are community-first. Social media gives you a cost-effective way to build a loyal community.',
       promise: 'Content engagements, then sales.',
       soon: false,
     },
     {
       num: '06',
-      title: 'Conversion Copywriting',
-      desc: 'Beautiful design without sharp words leaves money on the table. We write headlines, landing pages and email sequences that move readers from curious to convinced, and convinced to customer.',
+      title: 'Copywriting',
+      desc: "Great copy makes people feel like they're talking to a trusted friend. Win your audience's heart with jargon-free copywriting that speaks their language and understands cultural nuances.",
       promise: 'Words that close.',
       soon: true,
     },
     {
       num: '07',
-      title: 'Ad Creatives',
-      desc: 'Sharp targeting still dies on weak creative. We design and write scroll-stopping ad creatives (static, motion, and copy) engineered to earn attention and turn cold audiences into buyers, without clickbait or compromise.',
+      title: 'Creative Asset Design',
+      desc: 'Low-quality, fully AI-generated assets are killing audience trust. Human-led, AI-assisted strategic content design helps you share your message without compromising authenticity and creativity.',
       promise: 'Creative that earns the click.',
       soon: true,
     },

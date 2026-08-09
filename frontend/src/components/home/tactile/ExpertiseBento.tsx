@@ -18,24 +18,26 @@ import CraftArtifact from '@/components/graphics/CraftArtifact';
 import Spotlight from '@/components/motion/Spotlight';
 import SplitReveal from '@/components/motion/SplitReveal';
 import Khatam from '@/components/graphics/Khatam';
+import StackButton from '@/components/ui/StackButton';
 import { expertise } from '@/content/home';
 import { services, isLinkable } from '@/content/services';
 
 /**
  * The two groups the redesign splits the crafts into — "build" (make the
  * product) and "grow" (get the customers). The boundary falls on a grid-row
- * edge: doors 0–1 (Web & App, Custom Software) are one full 6-col row, doors
- * 2–6 are the remaining three rows, so each group is a valid grid on its own
- * and no card's span or entrance has to change.
+ * edge: doors 0–1 are one full 6-col row, doors 2–6 are the remaining three
+ * rows, so each group is a valid grid on its own and no card's span or entrance
+ * has to change. Labels and closing CTAs come from `expertise.groups`; only the
+ * `from`/`to` row boundary lives here, because it is layout, not copy.
  *
  * `services` (the routable catalogue) is index-aligned with `expertise.doors`
  * — same order, same count — so `services[i]` gives door `i` its slug and tells
  * us whether it has a page yet. That alignment is load-bearing; if either list
  * is reordered, the arrows point at the wrong craft.
  */
-const GROUPS = [
-  { label: 'I want to build', from: 0, to: 2 },
-  { label: 'I want to grow', from: 2, to: 7 },
+const RANGES = [
+  { from: 0, to: 2 },
+  { from: 2, to: 7 },
 ] as const;
 
 /** The bottom-left "go to this craft" affordance. */
@@ -85,30 +87,28 @@ export default function ExpertiseBento() {
     return () => obs.disconnect();
   }, []);
 
-  const { eyebrow, heading, doors } = expertise;
+  const { heading, doors, groups } = expertise;
 
   return (
     <section className="xp" data-section-color="dark">
       <div className="cnt">
         <div className="xp-head">
-          <span className="xp-eyebrow">{eyebrow}</span>
           <h2 className="xp-h">
-            <SplitReveal text={heading.lead} by="char" />{' '}
-            <em>
-              <SplitReveal text={heading.em!} by="char" />
-            </em>
+            <SplitReveal text={heading.lead} by="char" />
           </h2>
         </div>
 
-        {GROUPS.map((g) => (
+        {RANGES.map((r, gi) => {
+          const g = groups[gi];
+          return (
           <div className="xp-group" key={g.label}>
             <div className="xp-grouplabel">
               <span className="xp-tab">{g.label}</span>
             </div>
 
             <div className="xp-grid">
-              {doors.slice(g.from, g.to).map((d, j) => {
-                const i = g.from + j;                 // index into doors/CELLS/services
+              {doors.slice(r.from, r.to).map((d, j) => {
+                const i = r.from + j;                 // index into doors/CELLS/services
                 const cell = CELLS[i];
                 const svc = services[i];
                 const linkable = !!svc && isLinkable(svc) && !d.soon;
@@ -161,8 +161,15 @@ export default function ExpertiseBento() {
                 );
               })}
             </div>
+
+            {/* The button that closes each group in the redesign: "Contact us"
+                under build, "View our packages" under grow. */}
+            <div className="xp-groupcta">
+              <StackButton href={g.cta.href} size="sm">{g.cta.label}</StackButton>
+            </div>
           </div>
-        ))}
+          );
+        })}
       </div>
     </section>
   );

@@ -9187,3 +9187,6 @@ html[data-nav="dark"] .burger span         { background: #254851; }
 @media (prefers-reduced-motion: reduce) {
   .xp-cell:hover .xp-arrow { transform: none; }
 }
+
+/* Group-closing CTA (Contact us / View our packages), centred under each group. */
+.xp-groupcta { text-align: center; margin-top: clamp(1.8rem, 3vw, 2.6rem); }
