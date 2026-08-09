@@ -13,6 +13,7 @@ import ExpertiseBento from '@/components/home/tactile/ExpertiseBento';
 import AudienceHybrid from '@/components/home/hybrid/AudienceHybrid';
 import ServicesHybrid from '@/components/home/hybrid/ServicesHybrid';
 import IhsanProcessTactile from '@/components/home/tactile/IhsanProcessTactile';
+import FoundingStoryHybrid from '@/components/home/hybrid/FoundingStoryHybrid';
 import RefusalHybrid from '@/components/home/hybrid/RefusalHybrid';
 import NewsletterHybrid from '@/components/home/hybrid/NewsletterHybrid';
 import FinalCtaHybrid from '@/components/home/hybrid/FinalCtaHybrid';
@@ -35,6 +36,7 @@ export default function HomePage() {
         <AudienceHybrid />
         <ServicesHybrid />
         <IhsanProcessTactile />
+        <FoundingStoryHybrid />
         <RefusalHybrid />
         <NewsletterHybrid />
         <FinalCtaHybrid />

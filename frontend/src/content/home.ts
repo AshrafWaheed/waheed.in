@@ -318,6 +318,20 @@ export const process = {
   ],
 } as const;
 
+/* ─── Founding story — homepage teaser that links to /about ─────────
+   Copy verbatim from the Figma redesign's "Our Founding Story" section. It is a
+   teaser: the full story lives on /about, which is where "Learn more" points. */
+export const founding = {
+  heading: 'Our Founding Story',
+  paras: [
+    "It started when the founding team received messages from organisations looking for fully Shariah-compliant marketing services. That's when she realised there was a lack of truly halal alternatives to mainstream marketing—alternatives that don't compromise the principles, modesty, or peace of mind of halal business and organisation founders and operators, while still helping them achieve meaningful brand growth.",
+    "More than simply serving the community through their technical expertise, both founders see Waheed as an opportunity for da'wah—a way to demonstrate that brands can grow, create meaningful impact, and achieve success without compromising their faith and values.",
+  ],
+  /** Underlined verbatim inside the first paragraph. */
+  underline: 'truly halal',
+  cta: { label: 'Learn more', href: '/about' },
+} as const;
+
 /* ─── Refusal — what we will not build ─────────────────────────── */
 export const refusal = {
   eyebrow: 'A standard, not a disclaimer',
