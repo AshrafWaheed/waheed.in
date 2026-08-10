@@ -9415,6 +9415,48 @@ html[data-nav="dark"] .burger span         { background: #254851; }
   .fs-media { min-height: 280px; }
 }
 
+/* ═══════════════════════════════════════════════════════════════════════════
+   afs- · ABOUT — OUR FOUNDING STORY (redesign, light band)
+   ═══════════════════════════════════════════════════════════════════════════
+   Component: about/FoundingStoryAbout.tsx. A white section (portrait left,
+   heading + two paragraphs right) per the WAHEEDWEB About artboard. Heading is
+   the design's bold sans, mapped to DM Sans 800. Column split ≈ 0.52 : 1 mirrors
+   the Figma's 340px image beside the 653px text column. */
+.afs {
+  background: var(--rd-white);
+  color: var(--rd-night-2);
+  padding: clamp(4rem, 7vw, 7rem) 0;
+}
+.afs-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.52fr) minmax(0, 1fr);
+  gap: clamp(2.5rem, 6vw, 6rem);
+  align-items: center;
+}
+.afs-media {
+  position: relative; overflow: hidden;
+  aspect-ratio: 340 / 424;
+  border-radius: clamp(14px, 2vw, 22px);
+  background: var(--rd-night-2);
+  display: grid; place-items: center;
+}
+.afs-media-mark { opacity: .55; }
+.afs-h {
+  font-family: var(--font-sans); font-weight: 800; letter-spacing: -0.015em;
+  font-size: clamp(1.9rem, 3.4vw, 2.6rem); color: var(--rd-night-2);
+  line-height: 1.1; margin-bottom: clamp(1.4rem, 2.2vw, 1.9rem);
+}
+.afs-p {
+  font-family: var(--font-sans); font-size: clamp(1rem, 1.1vw, 1.12rem);
+  line-height: 1.7; color: #33484f; max-width: 60ch;
+}
+.afs-p + .afs-p { margin-top: 1.15rem; }
+
+@media (max-width: 820px) {
+  .afs-grid { grid-template-columns: 1fr; gap: 2.2rem; }
+  .afs-media { aspect-ratio: 16 / 11; max-height: 340px; }
+}
+
 /* Audience sub-line (redesign copy under the moved heading; old accordion kept). */
 .hy-aud-sub { margin-top: .9rem; max-width: 60ch; font-family: var(--font-sans); font-size: 1.02rem; line-height: 1.6; color: #4a5a5e; }
 

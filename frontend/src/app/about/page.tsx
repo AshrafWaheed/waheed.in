@@ -3,7 +3,9 @@ import { pageMeta } from '@/lib/seo';
 import SmoothScroll from '@/components/motion/SmoothScroll';
 import SectionNav from '@/components/motion/useSectionNav';
 import AboutHero from '@/components/about/AboutHero';
-import GapNarrative from '@/components/about/GapNarrative';
+import FoundingStoryAbout from '@/components/about/FoundingStoryAbout';
+// Old GapNarrative superseded by the redesigned sections (rebuilt one at a time).
+// import GapNarrative from '@/components/about/GapNarrative';
 import FoundersAbout from '@/components/about/FoundersAbout';
 import JourneyOutro from '@/components/about/JourneyOutro';
 import AboutCta from '@/components/about/AboutCta';
@@ -36,7 +38,7 @@ export default function AboutPage() {
       <SectionNav />
       <main>
         <AboutHero />
-        <GapNarrative />
+        <FoundingStoryAbout />
         <FoundersAbout />
         <JourneyOutro />
         <AboutCta />
