@@ -6,6 +6,7 @@ import AboutHero from '@/components/about/AboutHero';
 import FoundingStoryAbout from '@/components/about/FoundingStoryAbout';
 import TheGapAbout from '@/components/about/TheGapAbout';
 import PeopleBehindAbout from '@/components/about/PeopleBehindAbout';
+import ValuesAbout from '@/components/about/ValuesAbout';
 // Old sections superseded by the redesigned ones (rebuilt one at a time).
 // import GapNarrative from '@/components/about/GapNarrative';
 // import FoundersAbout from '@/components/about/FoundersAbout';
@@ -43,6 +44,7 @@ export default function AboutPage() {
         <FoundingStoryAbout />
         <TheGapAbout />
         <PeopleBehindAbout />
+        <ValuesAbout />
         <JourneyOutro />
         <AboutCta />
       </main>
