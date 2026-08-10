@@ -24,7 +24,7 @@ type CSSVars = React.CSSProperties & Record<string, string | number>;
 const v = (o: Record<string, string | number>): CSSVars => o as CSSVars;
 
 export default function SoStack({ page }: { page: ServicePage }) {
-  const { eyebrow, heading, sub, items } = page.build;
+  const { heading, sub, items } = page.build;
   const refs = useRef<(HTMLElement | null)[]>([]);
 
   useEffect(() => {
@@ -46,7 +46,6 @@ export default function SoStack({ page }: { page: ServicePage }) {
     <section className="so-stack" data-section-color="dark">
       <div className="cnt">
         <header className="so-head">
-          <p className="so-eyebrow">{eyebrow}</p>
           <h2 className="so-h2 so-h2--on-night">
             <SplitReveal text={heading} by="word" />
           </h2>

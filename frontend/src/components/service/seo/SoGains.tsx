@@ -19,7 +19,7 @@ type CSSVars = React.CSSProperties & Record<string, string | number>;
 const v = (o: Record<string, string | number>): CSSVars => o as CSSVars;
 
 export default function SoGains({ page }: { page: ServicePage }) {
-  const { eyebrow, heading, list, fitHeading, fit, notHeading, not } = page.outcomes;
+  const { heading, list, fitHeading, fit, notHeading, not } = page.outcomes;
   const refs = useRef<(HTMLElement | null)[]>([]);
 
   useEffect(() => {
@@ -41,7 +41,6 @@ export default function SoGains({ page }: { page: ServicePage }) {
     <section className="so-gains" data-section-color="dark">
       <div className="cnt">
         <header className="so-head">
-          <p className="so-eyebrow">{eyebrow}</p>
           <h2 className="so-h2 so-h2--on-night">
             <SplitReveal text={heading.lead} by="word" />{' '}
             <em>

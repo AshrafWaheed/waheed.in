@@ -30,7 +30,7 @@ function risePath(w = 1200, h = 300): string {
 }
 
 export default function SoClose({ page }: { page: ServicePage }) {
-  const { eyebrow, heading, body } = page.cta;
+  const { heading, body } = page.cta;
 
   return (
     <section className="so-close" data-section-color="dark">
@@ -51,7 +51,6 @@ export default function SoClose({ page }: { page: ServicePage }) {
       </svg>
 
       <div className="cnt so-close-in">
-        <p className="so-close-eyebrow">{eyebrow}</p>
         <h2 className="so-close-h">
           <SplitReveal text={heading.lead} by="word" />{' '}
           <em>

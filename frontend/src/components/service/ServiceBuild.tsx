@@ -15,13 +15,12 @@ import SplitReveal from '@/components/motion/SplitReveal';
 import type { ServicePage } from '@/content/services';
 
 export default function ServiceBuild({ page }: { page: ServicePage }) {
-  const { eyebrow, heading, sub, items } = page.build;
+  const { heading, sub, items } = page.build;
 
   return (
     <section className="sd-build" data-section-color="dark">
       <div className="cnt">
         <header className="sd-head">
-          <p className="ab-pill">{eyebrow}</p>
           <h2 className="sd-h2 sd-h2--on-night">
             <SplitReveal text={heading} by="word" />
           </h2>

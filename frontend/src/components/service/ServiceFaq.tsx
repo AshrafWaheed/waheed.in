@@ -16,8 +16,7 @@ export default function ServiceFaq({ page }: { page: ServicePage }) {
     <section className="sd-faq" data-section-color="light">
       <div className="cnt sd-faq-grid">
         <div className="sd-faq-lead">
-          <p className="ab-pill">Before you ask</p>
-          <h2 className="sd-h2">Straight answers.</h2>
+          <h2 className="sd-h2">Questions, answered.</h2>
         </div>
 
         <div className="sd-faq-list">

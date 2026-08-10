@@ -28,14 +28,13 @@ type CSSVars = React.CSSProperties & Record<string, string | number>;
 const v = (o: Record<string, string | number>): CSSVars => o as CSSVars;
 
 export default function SmEngine({ page }: { page: ServicePage }) {
-  const { eyebrow, heading, sub, items } = page.build;
+  const { heading, sub, items } = page.build;
   const [open, setOpen] = useState(0);
 
   return (
     <section className="sm-engine" data-section-color="dark">
       <div className="cnt">
         <header className="sm-head">
-          <p className="sm-eyebrow">{eyebrow}</p>
           <h2 className="sm-h2 sm-h2--on-night">
             <SplitReveal text={heading} by="word" />
           </h2>

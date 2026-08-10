@@ -24,7 +24,6 @@ export default function SoPackages({ page }: { page: ServicePage }) {
     <section className="so-pack" data-section-color="light">
       <div className="cnt">
         <header className="so-pack-head">
-          <p className="so-eyebrow">Where this sits</p>
           <h2 className="so-h2 so-h2--tight">
             <SplitReveal text="The packages that include it." by="word" />
           </h2>
@@ -33,7 +32,6 @@ export default function SoPackages({ page }: { page: ServicePage }) {
         <div className="so-pack-cols">
           {rungs.map((r) => (
             <Link key={r.title} href="/packages" className="so-pack-col reveal" data-cursor>
-              <span className="so-pack-eyebrow">{r.eyebrow}</span>
               <span className="so-pack-t">{r.title}</span>
               <span className="so-pack-b">{r.subtitle}</span>
               <span className="so-pack-cue">See what&rsquo;s inside →</span>

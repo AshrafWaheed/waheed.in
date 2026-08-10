@@ -57,13 +57,12 @@ export default function BsRail({ page }: { page: ServicePage }) {
     return () => mm.revert();
   }, []);
 
-  const { eyebrow, heading, sub, items } = page.build;
+  const { heading, sub, items } = page.build;
 
   return (
     <section ref={sectionRef} className="bs-rail" data-section-color="light">
       <div className="bs-rail-stage">
         <div className="cnt bs-rail-head">
-          <p className="bs-eyebrow">{eyebrow}</p>
           <h2 className="bs-h2 bs-h2--tight">
             <SplitReveal text={heading} by="word" />
           </h2>

@@ -73,7 +73,7 @@ const brandStrategy: ServicePage = {
 
   build: {
     eyebrow: 'What you get',
-    heading: 'Six artefacts, one argument.',
+    heading: 'Six brand artefacts, one argument.',
     sub:
       'Strategy that stays in a workshop is a nice afternoon. These are the things it becomes — ' +
       'each one written down, handed over, and usable by anyone who joins next year.',

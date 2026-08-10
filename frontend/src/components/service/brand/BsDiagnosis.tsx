@@ -21,7 +21,7 @@ import DiagnosisPlate from '@/components/graphics/DiagnosisPlate';
 import type { ServicePage } from '@/content/services';
 
 export default function BsDiagnosis({ page }: { page: ServicePage }) {
-  const { eyebrow, heading, body, symptoms } = page.problem;
+  const { heading, body, symptoms } = page.problem;
   const itemRefs = useRef<(HTMLElement | null)[]>([]);
   const [active, setActive] = useState(0);
 
@@ -42,7 +42,6 @@ export default function BsDiagnosis({ page }: { page: ServicePage }) {
     <section className="bs-diag" data-section-color="dark">
       <div className="cnt">
         <header className="bs-diag-head">
-          <p className="bs-eyebrow">{eyebrow}</p>
           <h2 className="bs-h2">
             <SplitReveal text={heading.lead} by="word" />{' '}
             <em>

@@ -14,11 +14,10 @@
 import Link from 'next/link';
 import SplitReveal from '@/components/motion/SplitReveal';
 import ExplodeButton from '@/components/motion/ExplodeButton';
-import Khatam from '@/components/graphics/Khatam';
 import type { ServicePage } from '@/content/services';
 
 export default function BsClose({ page }: { page: ServicePage }) {
-  const { eyebrow, heading, body } = page.cta;
+  const { heading, body } = page.cta;
 
   return (
     <section className="bs-close" data-section-color="dark">
@@ -27,10 +26,6 @@ export default function BsClose({ page }: { page: ServicePage }) {
 
         <div className="bs-close-grid">
           <div>
-            <p className="bs-close-eyebrow">
-              <Khatam size={13} inner={0.5} stroke="currentColor" strokeWidth={1.6} />
-              {eyebrow}
-            </p>
             <h2 className="bs-close-h">
               <SplitReveal text={heading.lead} by="word" />{' '}
               <em>

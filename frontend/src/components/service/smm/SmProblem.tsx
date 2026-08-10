@@ -24,7 +24,7 @@ type CSSVars = React.CSSProperties & Record<string, string | number>;
 const v = (o: Record<string, string | number>): CSSVars => o as CSSVars;
 
 export default function SmProblem({ page }: { page: ServicePage }) {
-  const { eyebrow, heading, body, symptoms } = page.problem;
+  const { heading, body, symptoms } = page.problem;
   const refs = useRef<(HTMLElement | null)[]>([]);
 
   useEffect(() => {
@@ -46,7 +46,6 @@ export default function SmProblem({ page }: { page: ServicePage }) {
     <section className="sm-problem" data-section-color="light">
       <div className="cnt">
         <header className="sm-head">
-          <p className="sm-eyebrow">{eyebrow}</p>
           <h2 className="sm-h2">
             <SplitReveal text={heading.lead} by="word" />{' '}
             <em>

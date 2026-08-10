@@ -28,7 +28,6 @@ export default function SmPackages({ page }: { page: ServicePage }) {
     <section className="sm-pack" data-section-color="light">
       <div className="cnt">
         <header className="sm-pack-head">
-          <p className="sm-eyebrow">Where this sits</p>
           <h2 className="sm-h2 sm-h2--tight">
             <SplitReveal text="The packages that include it." by="word" />
           </h2>
@@ -40,7 +39,6 @@ export default function SmPackages({ page }: { page: ServicePage }) {
               <Link href="/packages" className="sm-pack-bar reveal" data-cursor>
                 <span className="sm-pack-wash" aria-hidden="true" />
                 <span className="sm-pack-in">
-                  <span className="sm-pack-eyebrow">{r.eyebrow}</span>
                   <span className="sm-pack-t">{r.title}</span>
                   <span className="sm-pack-b">{r.subtitle}</span>
                 </span>

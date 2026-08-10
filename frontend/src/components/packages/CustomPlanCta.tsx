@@ -26,7 +26,6 @@ export default function CustomPlanCta() {
       <div className="cnt">
         <div className="pk-cta-panel">
           <div>
-            <span className="hy-cta-eyebrow">{customPlan.eyebrow}</span>
             <h2 className="hy-cta-h">
               <SplitReveal text={customPlan.heading} by="word" />
             </h2>

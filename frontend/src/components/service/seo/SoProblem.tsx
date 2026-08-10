@@ -24,7 +24,7 @@ type CSSVars = React.CSSProperties & Record<string, string | number>;
 const v = (o: Record<string, string | number>): CSSVars => o as CSSVars;
 
 export default function SoProblem({ page }: { page: ServicePage }) {
-  const { eyebrow, heading, body, symptoms } = page.problem;
+  const { heading, body, symptoms } = page.problem;
   const lineRef = useRef<HTMLParagraphElement>(null);
 
   const words = body.split(' ');
@@ -51,7 +51,6 @@ export default function SoProblem({ page }: { page: ServicePage }) {
   return (
     <section className="so-problem" data-section-color="light">
       <div className="cnt">
-        <p className="so-eyebrow">{eyebrow}</p>
         <h2 className="so-h2">
           {heading.lead} <em>{heading.em}</em>
         </h2>

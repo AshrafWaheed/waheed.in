@@ -15,13 +15,12 @@ import SplitReveal from '@/components/motion/SplitReveal';
 import type { ServicePage } from '@/content/services';
 
 export default function ServiceProblem({ page }: { page: ServicePage }) {
-  const { eyebrow, heading, body, symptoms } = page.problem;
+  const { heading, body, symptoms } = page.problem;
 
   return (
     <section className="sd-problem" data-section-color="light">
       <div className="cnt sd-problem-grid">
         <div className="sd-problem-lead">
-          <p className="ab-pill">{eyebrow}</p>
           <h2 className="sd-h2">
             <SplitReveal text={heading.lead} by="word" />{' '}
             <em>

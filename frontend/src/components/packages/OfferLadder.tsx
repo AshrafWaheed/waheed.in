@@ -99,7 +99,6 @@ export default function OfferLadder() {
               <div className="pk-rung-in reveal">
                 <div className="pk-rung-lead">
                   {r.badge && <span className="pk-badge">{r.badge}</span>}
-                  <span className="pk-rung-eyebrow">{r.eyebrow}</span>
                   <h3 className="pk-rung-title">{r.title}</h3>
                   <p className="pk-rung-sub">{r.subtitle}</p>
                 </div>

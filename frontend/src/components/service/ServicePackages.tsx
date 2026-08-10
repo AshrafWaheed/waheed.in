@@ -29,7 +29,6 @@ export default function ServicePackages({ page }: { page: ServicePage }) {
     <section className="sd-pack" data-section-color="light">
       <div className="cnt">
         <header className="sd-head">
-          <p className="ab-pill">Where this sits</p>
           <h2 className="sd-h2">
             <SplitReveal text="The packages that include it." by="word" />
           </h2>
@@ -39,7 +38,6 @@ export default function ServicePackages({ page }: { page: ServicePage }) {
           {rungs.map((r) => (
             <Spotlight key={r.title} className="sd-pack-card reveal">
               <Link href="/packages" className="sd-pack-link" data-cursor>
-                <span className="sd-pack-eyebrow">{r.eyebrow}</span>
                 <h3 className="sd-pack-t">{r.title}</h3>
                 <p className="sd-pack-b">{r.subtitle}</p>
                 <span className="sd-pack-cue">See what&rsquo;s inside →</span>

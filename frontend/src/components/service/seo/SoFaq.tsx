@@ -18,8 +18,7 @@ export default function SoFaq({ page }: { page: ServicePage }) {
     <section className="so-faq" data-section-color="light">
       <div className="cnt">
         <header className="so-faq-head">
-          <p className="so-eyebrow">Before you ask</p>
-          <h2 className="so-h2 so-h2--tight">Straight answers.</h2>
+          <h2 className="so-h2 so-h2--tight">Questions, answered.</h2>
         </header>
 
         <div className="so-faq-grid">

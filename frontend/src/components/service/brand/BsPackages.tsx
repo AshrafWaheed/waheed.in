@@ -29,7 +29,6 @@ export default function BsPackages({ page }: { page: ServicePage }) {
     <section className="bs-pack" data-section-color="light">
       <div className="cnt">
         <header className="bs-pack-head">
-          <p className="bs-eyebrow">Where this sits</p>
           <h2 className="bs-h2 bs-h2--tight">
             <SplitReveal text="The packages that include it." by="word" />
           </h2>
@@ -39,7 +38,6 @@ export default function BsPackages({ page }: { page: ServicePage }) {
           {rungs.map((r) => (
             <li key={r.title}>
               <Link href="/packages" className="bs-pack-row reveal" data-cursor>
-                <span className="bs-pack-eyebrow">{r.eyebrow}</span>
                 <span className="bs-pack-t">{r.title}</span>
                 <span className="bs-pack-b">{r.subtitle}</span>
                 <span className="bs-pack-cue" aria-hidden="true">→</span>

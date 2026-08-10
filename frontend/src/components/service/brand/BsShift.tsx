@@ -25,7 +25,7 @@ function split(item: string): { from: string | null; to: string } {
 }
 
 export default function BsShift({ page }: { page: ServicePage }) {
-  const { eyebrow, heading, list, fitHeading, fit, notHeading, not } = page.outcomes;
+  const { heading, list, fitHeading, fit, notHeading, not } = page.outcomes;
   const rowRefs = useRef<(HTMLElement | null)[]>([]);
 
   useEffect(() => {
@@ -47,7 +47,6 @@ export default function BsShift({ page }: { page: ServicePage }) {
     <section className="bs-shift" data-section-color="light">
       <div className="cnt">
         <header className="bs-shift-head">
-          <p className="bs-eyebrow">{eyebrow}</p>
           <h2 className="bs-h2">
             <SplitReveal text={heading.lead} by="word" />{' '}
             <em>

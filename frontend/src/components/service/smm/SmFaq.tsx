@@ -20,8 +20,7 @@ export default function SmFaq({ page }: { page: ServicePage }) {
     <section className="sm-faq" data-section-color="light">
       <div className="cnt">
         <header className="sm-faq-head">
-          <p className="sm-eyebrow">Before you ask</p>
-          <h2 className="sm-h2 sm-h2--tight">Straight answers.</h2>
+          <h2 className="sm-h2 sm-h2--tight">Questions, answered.</h2>
         </header>
 
         <dl className="sm-qa">

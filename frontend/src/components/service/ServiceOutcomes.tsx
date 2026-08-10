@@ -16,13 +16,12 @@ import SplitReveal from '@/components/motion/SplitReveal';
 import type { ServicePage } from '@/content/services';
 
 export default function ServiceOutcomes({ page }: { page: ServicePage }) {
-  const { eyebrow, heading, list, fitHeading, fit, notHeading, not } = page.outcomes;
+  const { heading, list, fitHeading, fit, notHeading, not } = page.outcomes;
 
   return (
     <section className="sd-out" data-section-color="dark">
       <div className="cnt">
         <header className="sd-head">
-          <p className="ab-pill">{eyebrow}</p>
           <h2 className="sd-h2 sd-h2--on-night">
             <SplitReveal text={heading.lead} by="word" />{' '}
             <em>

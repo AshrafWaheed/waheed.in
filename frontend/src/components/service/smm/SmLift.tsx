@@ -23,7 +23,7 @@ type CSSVars = React.CSSProperties & Record<string, string | number>;
 const v = (o: Record<string, string | number>): CSSVars => o as CSSVars;
 
 export default function SmLift({ page }: { page: ServicePage }) {
-  const { eyebrow, heading, list, fitHeading, fit, notHeading, not } = page.outcomes;
+  const { heading, list, fitHeading, fit, notHeading, not } = page.outcomes;
   const refs = useRef<(HTMLElement | null)[]>([]);
 
   useEffect(() => {
@@ -45,7 +45,6 @@ export default function SmLift({ page }: { page: ServicePage }) {
     <section className="sm-lift" data-section-color="dark">
       <div className="cnt">
         <header className="sm-head">
-          <p className="sm-eyebrow">{eyebrow}</p>
           <h2 className="sm-h2 sm-h2--on-night">
             <SplitReveal text={heading.lead} by="word" />{' '}
             <em>

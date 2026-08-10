@@ -70,7 +70,7 @@ const socialMediaMarketing: ServicePage = {
 
   build: {
     eyebrow: 'What we build',
-    heading: 'The engine, in six parts.',
+    heading: 'The growth engine, in six parts.',
     sub:
       'Not a posting schedule. A system with an argument in it — where each piece has a job, ' +
       'the jobs add up, and the person who has to run it next month can actually run it.',

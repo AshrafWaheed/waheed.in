@@ -73,7 +73,7 @@ const seo: ServicePage = {
 
   build: {
     eyebrow: 'What we build',
-    heading: 'Six layers, built bottom-up.',
+    heading: 'Six SEO layers, built bottom-up.',
     sub:
       'Search is a stack, and it is only ever as strong as the layer under it. Publishing on ' +
       'a site Google cannot crawl properly is the most common way to spend a year on content ' +
@@ -132,7 +132,7 @@ const seo: ServicePage = {
 
   process: {
     eyebrow: 'How it runs',
-    heading: 'A staircase, not a switch.',
+    heading: 'How SEO compounds: a staircase, not a switch.',
     sub:
       'Twelve months, because that is honestly how long the compounding takes to show. Each ' +
       'step is a landing you can stop on — the work done so far keeps paying whether or not ' +

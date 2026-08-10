@@ -17,7 +17,7 @@ import Khatam from '@/components/graphics/Khatam';
 import type { ServicePage } from '@/content/services';
 
 export default function ServiceProcess({ page }: { page: ServicePage }) {
-  const { eyebrow, heading, sub, steps } = page.process;
+  const { heading, sub, steps } = page.process;
   const stepRefs = useRef<(HTMLElement | null)[]>([]);
   const [reached, setReached] = useState(-1);
 
@@ -41,7 +41,6 @@ export default function ServiceProcess({ page }: { page: ServicePage }) {
     <section className="sd-process" data-section-color="light">
       <div className="cnt">
         <header className="sd-head">
-          <p className="ab-pill">{eyebrow}</p>
           <h2 className="sd-h2">
             <SplitReveal text={heading} by="word" />
           </h2>

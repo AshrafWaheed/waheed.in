@@ -38,7 +38,7 @@ function weekRange(span: string): [number, number] {
 }
 
 export default function SmCadence({ page }: { page: ServicePage }) {
-  const { eyebrow, heading, sub, steps } = page.process;
+  const { heading, sub, steps } = page.process;
   const gridRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -66,7 +66,6 @@ export default function SmCadence({ page }: { page: ServicePage }) {
     <section className="sm-cadence" data-section-color="light">
       <div className="cnt">
         <header className="sm-head">
-          <p className="sm-eyebrow">{eyebrow}</p>
           <h2 className="sm-h2">
             <SplitReveal text={heading} by="word" />
           </h2>

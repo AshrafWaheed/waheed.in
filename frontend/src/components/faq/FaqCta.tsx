@@ -21,7 +21,6 @@ export default function FaqCta() {
     <section className="hy-cta fq-cta" data-section-color="dark">
       <div className="cnt fq-cta-row">
         <div>
-          <span className="hy-cta-eyebrow">{faqCta.eyebrow}</span>
           <h2 className="hy-cta-h">
             <SplitReveal text={faqCta.heading} by="word" />
           </h2>

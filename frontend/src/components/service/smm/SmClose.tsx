@@ -44,14 +44,13 @@ function Band({ dir }: { dir: 'l' | 'r' }) {
 }
 
 export default function SmClose({ page }: { page: ServicePage }) {
-  const { eyebrow, heading, body } = page.cta;
+  const { heading, body } = page.cta;
 
   return (
     <section className="sm-close" data-section-color="dark">
       <Band dir="l" />
 
       <div className="cnt sm-close-in">
-        <p className="sm-close-eyebrow">{eyebrow}</p>
         <h2 className="sm-close-h">
           <SplitReveal text={heading.lead} by="word" />{' '}
           <em>

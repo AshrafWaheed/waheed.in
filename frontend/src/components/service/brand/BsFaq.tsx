@@ -17,8 +17,7 @@ export default function BsFaq({ page }: { page: ServicePage }) {
     <section className="bs-faq" data-section-color="light">
       <div className="cnt">
         <header className="bs-faq-head">
-          <p className="bs-eyebrow">Before you ask</p>
-          <h2 className="bs-h2 bs-h2--tight">Straight answers.</h2>
+          <h2 className="bs-h2 bs-h2--tight">Questions, answered.</h2>
         </header>
 
         <div className="bs-faq-list">

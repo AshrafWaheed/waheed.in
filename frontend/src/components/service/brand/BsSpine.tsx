@@ -20,7 +20,7 @@ import Khatam from '@/components/graphics/Khatam';
 import type { ServicePage } from '@/content/services';
 
 export default function BsSpine({ page }: { page: ServicePage }) {
-  const { eyebrow, heading, sub, steps } = page.process;
+  const { heading, sub, steps } = page.process;
   const listRef = useRef<HTMLOListElement>(null);
   const fillRef = useRef<HTMLSpanElement>(null);
   const itemRefs = useRef<(HTMLElement | null)[]>([]);
@@ -67,7 +67,6 @@ export default function BsSpine({ page }: { page: ServicePage }) {
     <section className="bs-spine" data-section-color="dark">
       <div className="cnt">
         <header className="bs-spine-head">
-          <p className="bs-eyebrow">{eyebrow}</p>
           <h2 className="bs-h2">
             <SplitReveal text={heading} by="word" />
           </h2>
