@@ -3510,17 +3510,31 @@ html[data-nav="dark"] .nav:not(.scrolled) .nav-ghost:hover {
      lot of rules need the accent at an arbitrary alpha. `rgb(var(--x-rgb) / .18)`
      keeps that possible without inventing a token per opacity step — and, more
      to the point, without any of them going stale next time the palette moves. */
-  --rd-gold-bloom-lt: #dcefff;
-  --rd-gold-bloom:    #bcdcf7;
-  --rd-gold-line:     #4f93d6;
-  --rd-gold:          #1f5fa8;
-  --rd-gold-ink:      #16406f;
+  /* ── PALETTE RE-CUT: teal + YELLOW (was teal + blue) ─────────────────────
+     The brand accent is now the redesign gold #F0D97A (home + about), not the
+     old blue. The ramp keeps its light→dark ROLES, but note one change of habit
+     forced by yellow: the base is BRIGHT (great on the site's many dark bands,
+     poor as small text on ivory), whereas the old blue base read on both. So on
+     the handful of LIGHT containers, scope-override `--rd-gold` to
+     `--rd-gold-ink` (see the `.adm-shell`/light-section overrides) instead of
+     re-colouring each rule. Blue survives only as a SECONDARY accent
+     (`--rd-blue`) — the one Gap card and the one Values tile. */
+  --rd-gold-bloom-lt: #fbf4d6;   /* lightest — big washes / glows            */
+  --rd-gold-bloom:    #f4e4a6;   /* light    — fills behind chips/badges     */
+  --rd-gold-line:     #e7c65a;   /* mid      — linework, hairlines, rules    */
+  --rd-gold:          #F0D97A;          /* base     — the signature accent (on dark)*/
+  --rd-gold-ink:      #7a5e10;   /* darkest  — accent text on ivory/gold fill*/
 
-  --rd-gold-bloom-rgb: 188 220 247;
-  --rd-gold-line-rgb:  79 147 214;
-  --rd-gold-rgb:       31 95 168;
+  --rd-gold-bloom-rgb: 244 228 166;
+  --rd-gold-line-rgb:  231 198 90;
+  --rd-gold-rgb:       240 217 122;
 
-  --rd-hairline:     rgb(var(--rd-gold-line-rgb) / .18);
+  /* Secondary accent — blue. Kept for the few places the redesign uses it. */
+  --rd-blue:          #4f93d6;
+  --rd-blue-soft:     #bcdcf7;
+  --rd-blue-rgb:      79 147 214;
+
+  --rd-hairline:     rgb(var(--rd-gold-line-rgb) / .30);
 
   /* ── THE WORDMARK ON DARK ────────────────────────────────────────────────
      logo.png is two-tone: black letterforms with two teal arcs that pass
@@ -3558,6 +3572,18 @@ html[data-nav="dark"] .nav:not(.scrolled) .nav-ghost:hover {
   --gx-line:     var(--rd-gold-line);
   --gx-bloom:    var(--rd-gold-bloom);
   --gx-line-rgb: var(--rd-gold-line-rgb);
+}
+
+/* ── Yellow-on-light containment ──────────────────────────────────────────────
+   The base gold (#F0D97A) is tuned for the site's dark bands; as small text or
+   thin marks on ivory it fails contrast. Rather than re-colour every rule, any
+   LIGHT band (and the two light-UI shells that aren't tagged as sections —
+   admin + blog) remaps the accent to the dark gold-ink for its whole subtree.
+   Fills that need the bright yellow on light set it explicitly. */
+[data-section-color="light"],
+.adm-shell,
+.blog-wrap {
+  --rd-gold: var(--rd-gold-ink);
 }
 
 /* ─── Khatam custom cursor (desktop / fine-pointer only) ─────────────
@@ -8863,7 +8889,7 @@ html[data-nav="dark"] .burger span            { background: var(--rd-ivory); }
   /* Scoped, NOT --rd-*. The site accent is currently blue; the redesign moves
      it to gold. Reaching for --rd-gold today would render this blue-on-blue.
      When the palette migrates, these four lines change and nothing else. */
-  --stk-face: #F0D97A;
+  --stk-face: var(--rd-gold);
   --stk-mid:  #4B8BCB;
   --stk-back: #FFFFFF;
   /* Measured, and NOT --rd-night. The outline and the label are both pure
@@ -9033,7 +9059,7 @@ html[data-nav="dark"] .burger span         { background: #254851; }
    existing responsive rule keeps working; the trust note and marquee are extra
    full-width rows below the three columns. */
 .ff-hero {
-  --hero-gold: #F0D97A;
+  --hero-gold: var(--rd-gold);
   --hero-ink:  #1A363D;
   padding-bottom: 0;          /* the white marquee is the section's floor now */
   background: radial-gradient(135% 105% at 50% -8%, #24505d 0%, #1a363d 46%, #11242b 100%);
@@ -9147,7 +9173,7 @@ html[data-nav="dark"] .burger span         { background: #254851; }
    heading colour, the bottom-left navigation arrow, and the two-group division
    are new. Gold is the design's literal #F0D97A (see the hero/StackButton note
    on why it is not --rd-gold-* yet). */
-.xp { --xp-gold: #F0D97A; }
+.xp { --xp-gold: var(--rd-gold); }
 
 /* Card heading + index to gold. The index sits directly above the title and
    reads as one unit with it, so it moves too rather than staying blue. */
@@ -9197,7 +9223,7 @@ html[data-nav="dark"] .burger span         { background: #254851; }
    Component: ServicesHybrid.tsx. Replaces the old dark `.hy-svc` section (whose
    rules stay for the unmounted Services.tsx). Gold is the design's #F0D97A. */
 .gp {
-  --gp-gold: #F0D97A;
+  --gp-gold: var(--rd-gold);
   --gp-card: #0F4B5A;              /* the two flanking cards */
   --gp-card-hi: #12303a;           /* the raised featured card, darker */
   --gp-ink: #1A363D;
@@ -9277,7 +9303,7 @@ html[data-nav="dark"] .burger span         { background: #254851; }
    IntersectionObserver sentinels down the track advance the active step. Step
    text sits at the TOP; the gold timeline fills and stacks from the BOTTOM up. */
 .wp {
-  --wp-gold: #F0D97A;
+  --wp-gold: var(--rd-gold);
   background: var(--rd-white);
   padding: clamp(3rem, 5vw, 5rem) 0;
 }
@@ -9377,7 +9403,7 @@ html[data-nav="dark"] .burger span         { background: #254851; }
    ═══════════════════════════════════════════════════════════════════════════
    Component: FoundingStoryHybrid.tsx. Links to /about. */
 .fs {
-  --fs-gold: #F0D97A;
+  --fs-gold: var(--rd-gold);
   background: var(--rd-night-2);
   color: var(--rd-ivory);
   padding: clamp(4rem, 7vw, 7rem) 0;
@@ -9495,8 +9521,8 @@ html[data-nav="dark"] .burger span         { background: #254851; }
   box-shadow: 0 24px 60px -24px rgba(0, 0, 0, .6);
 }
 .tg-card--back  { top: 0;      left: 34.5%; background: var(--rd-white); z-index: 1; }
-.tg-card--mid   { top: 13.6%;  left: 17.9%; background: #4f93d6;         z-index: 2; }
-.tg-card--front { top: 26.3%;  left: 0;     background: #F0D97A;         z-index: 3; }
+.tg-card--mid   { top: 13.6%;  left: 17.9%; background: var(--rd-blue);   z-index: 2; }
+.tg-card--front { top: 26.3%;  left: 0;     background: var(--rd-gold);         z-index: 3; }
 
 @media (max-width: 820px) {
   .tg-grid { grid-template-columns: 1fr; gap: 2.6rem; }
@@ -9601,7 +9627,7 @@ html[data-nav="dark"] .burger span         { background: #254851; }
   padding: .6rem 1.1rem;
 }
 .va-tile--teal { background: #0F4B5A; color: var(--rd-white); }
-.va-tile--gold { background: #F0D97A; color: var(--rd-night-2); }
+.va-tile--gold { background: var(--rd-gold); color: var(--rd-night-2); }
 .va-tile-label {
   font-family: var(--font-sans); font-weight: 700;
   font-size: clamp(.95rem, 1.15vw, 1.15rem); line-height: 1.25;
@@ -9636,7 +9662,7 @@ html[data-nav="dark"] .burger span         { background: #254851; }
 /* ═══════════════════════════════════════════════════════════════════════════
    rf- · WHAT WE WILL NOT BUILD — dark band, gold refusal tiles
    ═══════════════════════════════════════════════════════════════════════════ */
-.rf { --rf-gold: #F0D97A; background: var(--rd-night-2); color: var(--rd-ivory); padding: clamp(4rem, 7vw, 6.5rem) 0; }
+.rf { --rf-gold: var(--rd-gold); background: var(--rd-night-2); color: var(--rd-ivory); padding: clamp(4rem, 7vw, 6.5rem) 0; }
 .rf-grid { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: clamp(2rem, 5vw, 4.5rem); align-items: center; }
 .rf-h { font-family: var(--font-serif); font-weight: 600; font-size: clamp(1.9rem, 3.8vw, 3rem); color: var(--rd-white); line-height: 1.12; margin-bottom: 1rem; }
 .rf-sub { font-family: var(--font-sans); font-size: 1rem; line-height: 1.6; color: rgb(var(--rd-ivory-rgb) / .78); max-width: 34ch; }
@@ -9655,7 +9681,7 @@ html[data-nav="dark"] .burger span         { background: #254851; }
 /* ═══════════════════════════════════════════════════════════════════════════
    nl- · SUBSCRIBE TO WAHEED BRAND NOTES — white card on dark
    ═══════════════════════════════════════════════════════════════════════════ */
-.nl { --nl-gold: #F0D97A; background: var(--rd-night-2); padding: clamp(1rem, 3vw, 3rem) 0 clamp(4rem, 7vw, 6rem); }
+.nl { --nl-gold: var(--rd-gold); background: var(--rd-night-2); padding: clamp(1rem, 3vw, 3rem) 0 clamp(4rem, 7vw, 6rem); }
 .nl-card {
   max-width: 720px; margin: 0 auto; text-align: center;
   background: var(--rd-white); color: #1A363D;
@@ -9693,7 +9719,7 @@ html[data-nav="dark"] .burger span         { background: #254851; }
    ═══════════════════════════════════════════════════════════════════════════
    Component: ClarityFormHybrid.tsx. Submits to /api/contact then routes to
    /book prefilled. */
-.cf { --cf-gold: #F0D97A; background: var(--rd-night-2); color: var(--rd-ivory); padding: clamp(4rem, 7vw, 6.5rem) 0; }
+.cf { --cf-gold: var(--rd-gold); background: var(--rd-night-2); color: var(--rd-ivory); padding: clamp(4rem, 7vw, 6.5rem) 0; }
 .cf-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); gap: clamp(2rem, 5vw, 4.5rem); align-items: center; }
 .cf-h { font-family: var(--font-serif); font-weight: 600; font-size: clamp(1.9rem, 3.8vw, 3rem); color: var(--rd-white); line-height: 1.12; }
 .cf-h em { font-style: normal; color: var(--cf-gold); }
@@ -9819,7 +9845,7 @@ html[data-nav="dark"] .burger span         { background: #254851; }
   display: grid; place-items: center; color: rgb(var(--rd-ivory-rgb) / .8);
   transition: color .2s ease, background .2s ease, border-color .2s ease;
 }
-.ft-social a:hover { color: #1A363D; background: #F0D97A; border-color: #F0D97A; }
+.ft-social a:hover { color: #1A363D; background: var(--rd-gold); border-color: var(--rd-gold); }
 .ft-social svg { width: 16px; height: 16px; }
 
 .ft-col { display: flex; flex-direction: column; gap: .7rem; }
