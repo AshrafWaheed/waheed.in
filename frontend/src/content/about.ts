@@ -43,6 +43,18 @@ export const foundingStory = {
   ],
 } as const;
 
+/* ─── §2b The Gap in Halal Industry Marketing (redesign) ───────────
+   Verbatim from the WAHEEDWEB Figma "About Us" artboard (node 74:440).
+   Rendered as two paragraphs; the em dashes and curly apostrophe are as
+   authored — do not tidy. */
+export const theGap = {
+  heading: 'The Gap in Halal Industry Marketing',
+  paras: [
+    'We see it time and time again: websites that failed to convert because they didn’t offer a simple experience that helped their audience find the answers they needed. Content that lacked clear positioning because teams thought speaking to everyone was the best approach. Growth strategies that felt disconnected from their values—and, eventually, from barakah—because they forced halal brand founders to compromise their integrity for the sake of sales.',
+    'And we want to change that.',
+  ],
+} as const;
+
 /* ─── §2 The Founding Story ────────────────────────────────────── */
 export const gap = {
   eyebrow: 'The Founding Story',

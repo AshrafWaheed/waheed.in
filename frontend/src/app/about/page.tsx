@@ -4,6 +4,7 @@ import SmoothScroll from '@/components/motion/SmoothScroll';
 import SectionNav from '@/components/motion/useSectionNav';
 import AboutHero from '@/components/about/AboutHero';
 import FoundingStoryAbout from '@/components/about/FoundingStoryAbout';
+import TheGapAbout from '@/components/about/TheGapAbout';
 // Old GapNarrative superseded by the redesigned sections (rebuilt one at a time).
 // import GapNarrative from '@/components/about/GapNarrative';
 import FoundersAbout from '@/components/about/FoundersAbout';
@@ -39,6 +40,7 @@ export default function AboutPage() {
       <main>
         <AboutHero />
         <FoundingStoryAbout />
+        <TheGapAbout />
         <FoundersAbout />
         <JourneyOutro />
         <AboutCta />

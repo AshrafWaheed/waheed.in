@@ -9457,6 +9457,52 @@ html[data-nav="dark"] .burger span         { background: #254851; }
   .afs-media { aspect-ratio: 16 / 11; max-height: 340px; }
 }
 
+/* ═══════════════════════════════════════════════════════════════════════════
+   tg- · ABOUT — THE GAP IN HALAL INDUSTRY MARKETING (redesign, dark band)
+   ═══════════════════════════════════════════════════════════════════════════
+   Component: about/TheGapAbout.tsx. Copy left, a diagonal stack of three
+   overlapping placeholder cards right. Stack box ≈ 519×575 with 340×424 cards
+   (65.5% × 73.7%) stepping ~90px left / ~75px down per the Figma. */
+.tg {
+  background: var(--rd-night-2);
+  color: var(--rd-ivory);
+  padding: clamp(4.5rem, 8vw, 8rem) 0;
+}
+.tg-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 0.95fr);
+  gap: clamp(2.5rem, 6vw, 6rem);
+  align-items: center;
+}
+.tg-h {
+  font-family: var(--font-sans); font-weight: 800; letter-spacing: -0.015em;
+  font-size: clamp(1.9rem, 3.4vw, 2.6rem); color: var(--rd-white);
+  line-height: 1.1; margin-bottom: clamp(1.4rem, 2.2vw, 1.9rem); max-width: 15ch;
+}
+.tg-p {
+  font-family: var(--font-sans); font-size: clamp(1rem, 1.1vw, 1.12rem);
+  line-height: 1.7; color: rgb(var(--rd-ivory-rgb) / .82); max-width: 52ch;
+}
+.tg-p + .tg-p { margin-top: 1.1rem; }
+
+.tg-stack {
+  position: relative; width: min(519px, 100%); margin-left: auto;
+  aspect-ratio: 519 / 575;
+}
+.tg-card {
+  position: absolute; width: 65.5%; height: 73.7%;
+  border-radius: clamp(10px, 1.4vw, 16px);
+  box-shadow: 0 24px 60px -24px rgba(0, 0, 0, .6);
+}
+.tg-card--back  { top: 0;      left: 34.5%; background: var(--rd-white); z-index: 1; }
+.tg-card--mid   { top: 13.6%;  left: 17.9%; background: #4f93d6;         z-index: 2; }
+.tg-card--front { top: 26.3%;  left: 0;     background: #F0D97A;         z-index: 3; }
+
+@media (max-width: 820px) {
+  .tg-grid { grid-template-columns: 1fr; gap: 2.6rem; }
+  .tg-stack { width: min(420px, 86%); margin: 0 auto; }
+}
+
 /* Audience sub-line (redesign copy under the moved heading; old accordion kept). */
 .hy-aud-sub { margin-top: .9rem; max-width: 60ch; font-family: var(--font-sans); font-size: 1.02rem; line-height: 1.6; color: #4a5a5e; }
 
