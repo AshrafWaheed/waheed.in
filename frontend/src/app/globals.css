@@ -9550,17 +9550,35 @@ html[data-nav="dark"] .burger span         { background: #254851; }
    the redesign wants this one monochrome. */
 .lk-mark {
   position: absolute; z-index: 1;
-  left: 50%; transform: translateX(-50%);
+  /* Centred via auto margins (NOT translateX) — Framer Motion owns the transform
+     for the rise-out-of-the-footer lift, so the centring must live elsewhere. */
+  left: 0; right: 0; margin-inline: auto;
   bottom: clamp(-130px, -6.5vw, -50px);
   width: min(1600px, 100%); height: auto;
   filter: brightness(0) invert(1);
   pointer-events: none;
 }
 
+/* ── Mobile ──────────────────────────────────────────────────────────────────
+   The two-halves-around-the-arcs layout can't survive a phone's width, so the
+   tagline stacks and centres above a big wordmark that still bleeds up out of
+   the footer. */
 @media (max-width: 720px) {
-  .lk { min-height: 150px; padding-top: 1.8rem; }
-  .lk-tagwrap { gap: 1.2rem; }
-  .lk-tag { font-size: .8rem; }
+  .lk {
+    min-height: clamp(250px, 66vw, 350px);
+    align-items: flex-start;
+  }
+  .lk-tagwrap {
+    flex-direction: column; align-items: center; text-align: center;
+    max-width: 90%; padding-right: 0; padding-top: 2.2rem;
+    gap: .25rem;
+  }
+  .lk-tag, .lk-tag--post { text-align: center; }
+  .lk-tag { font-size: clamp(.95rem, 4.6vw, 1.25rem); }
+  .lk-mark {
+    width: min(760px, 122%);
+    bottom: clamp(-32px, -8vw, -18px);
+  }
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
