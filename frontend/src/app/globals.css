@@ -9503,6 +9503,77 @@ html[data-nav="dark"] .burger span         { background: #254851; }
   .tg-stack { width: min(420px, 86%); margin: 0 auto; }
 }
 
+/* ═══════════════════════════════════════════════════════════════════════════
+   pbw- · ABOUT — THE PEOPLE BEHIND WAHEED (redesign)
+   ═══════════════════════════════════════════════════════════════════════════
+   Component: about/PeopleBehindAbout.tsx. A white rounded panel on the dark
+   band: centred heading + intro, then two founder columns. Portraits reuse the
+   homepage founder artwork (bottom-anchored bust on a tinted panel) rather than
+   the Figma's grey boxes — same --fig geometry as .ab-card. */
+.pbw {
+  background: var(--rd-night-2);
+  padding: clamp(3.5rem, 6vw, 6rem) 0;
+}
+.pbw-panel {
+  background: var(--rd-white);
+  border-radius: clamp(22px, 3vw, 40px);
+  padding: clamp(2.5rem, 5vw, 4.5rem) clamp(1.4rem, 4vw, 4rem);
+}
+.pbw-h {
+  text-align: center; font-family: var(--font-sans); font-weight: 800;
+  letter-spacing: -0.015em; font-size: clamp(1.7rem, 3vw, 2.4rem);
+  color: var(--rd-night-2); line-height: 1.12;
+}
+.pbw-intro {
+  text-align: center; margin: clamp(1rem, 1.6vw, 1.4rem) auto 0; max-width: 64ch;
+  font-family: var(--font-sans); font-size: clamp(1rem, 1.05vw, 1.08rem);
+  line-height: 1.6; color: #33484f;
+}
+.pbw-grid {
+  margin-top: clamp(2.2rem, 4vw, 3.4rem);
+  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(2rem, 5vw, 5rem);
+}
+.pbw-person { display: flex; flex-direction: column; align-items: center; }
+
+/* Portrait card — tinted panel, founder bust bleeding up from the bottom.
+   Mirrors .ab-card / .ab-fig geometry; .pbw-fig needs max-width:none so the
+   global `img{max-width:100%}` reset doesn't clamp --fig-w. */
+.pbw-card {
+  position: relative; overflow: hidden;
+  width: 100%; max-width: 412px; aspect-ratio: 412 / 424;
+  border-radius: clamp(12px, 1.6vw, 18px);
+  background: var(--panel, var(--rd-ivory));
+}
+.pbw-fig {
+  position: absolute; left: 50%; bottom: var(--fig-b, 0%);
+  width: var(--fig-w, 108%); max-width: none; height: auto;
+  transform: translateX(calc(-50% + var(--fig-x, 0%))); display: block;
+}
+.pbw-card--man   { --panel: #ece0bb;          --fig-w: 121%; --fig-b: 0%; --fig-x: 1.4%; }
+.pbw-card--woman { --panel: var(--rd-ivory);  --fig-w: 98%;  --fig-b: 0%; --fig-x: -4.4%; }
+
+.pbw-name {
+  text-align: center; margin-top: clamp(1.2rem, 2vw, 1.6rem);
+  font-family: var(--font-sans); font-weight: 800; letter-spacing: -0.01em;
+  font-size: clamp(1.3rem, 1.8vw, 1.7rem); color: var(--rd-night-2);
+}
+.pbw-title, .pbw-role {
+  text-align: center; margin-top: .3rem;
+  font-family: var(--font-sans); font-weight: 700;
+  font-size: clamp(.95rem, 1.02vw, 1.05rem); color: var(--rd-night-2);
+}
+.pbw-role { margin-top: .1rem; }
+.pbw-bio {
+  text-align: center; margin: clamp(1.1rem, 2vw, 1.5rem) auto 0; max-width: 48ch;
+  font-family: var(--font-sans); font-size: clamp(.98rem, 1vw, 1.02rem);
+  line-height: 1.65; color: #33484f;
+}
+
+@media (max-width: 760px) {
+  .pbw-grid { grid-template-columns: 1fr; gap: 3rem; }
+}
+
 /* Audience sub-line (redesign copy under the moved heading; old accordion kept). */
 .hy-aud-sub { margin-top: .9rem; max-width: 60ch; font-family: var(--font-sans); font-size: 1.02rem; line-height: 1.6; color: #4a5a5e; }
 

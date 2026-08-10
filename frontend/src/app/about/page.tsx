@@ -5,9 +5,10 @@ import SectionNav from '@/components/motion/useSectionNav';
 import AboutHero from '@/components/about/AboutHero';
 import FoundingStoryAbout from '@/components/about/FoundingStoryAbout';
 import TheGapAbout from '@/components/about/TheGapAbout';
-// Old GapNarrative superseded by the redesigned sections (rebuilt one at a time).
+import PeopleBehindAbout from '@/components/about/PeopleBehindAbout';
+// Old sections superseded by the redesigned ones (rebuilt one at a time).
 // import GapNarrative from '@/components/about/GapNarrative';
-import FoundersAbout from '@/components/about/FoundersAbout';
+// import FoundersAbout from '@/components/about/FoundersAbout';
 import JourneyOutro from '@/components/about/JourneyOutro';
 import AboutCta from '@/components/about/AboutCta';
 
@@ -41,7 +42,7 @@ export default function AboutPage() {
         <AboutHero />
         <FoundingStoryAbout />
         <TheGapAbout />
-        <FoundersAbout />
+        <PeopleBehindAbout />
         <JourneyOutro />
         <AboutCta />
       </main>

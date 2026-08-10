@@ -55,6 +55,33 @@ export const theGap = {
   ],
 } as const;
 
+/* ─── §2c The People Behind Waheed (redesign) ──────────────────────
+   Verbatim from the WAHEEDWEB Figma "About Us" artboard (nodes 74:456–74:490).
+   `fig` maps each person to the existing founder artwork (public/founders/*.svg,
+   the same used on the homepage hero): Ashraf → man, Bint Khan → woman. The em
+   dashes and curly apostrophes are as authored — do not tidy. */
+export const peopleBehind = {
+  heading: 'The People Behind Waheed',
+  intro:
+    'Waheed was founded by two experienced professionals with backgrounds in technology and marketing. The two first met when they were hired by the same halal advertising agency, where they sharpened their expertise in their respective fields.',
+  members: [
+    {
+      name: 'Ashraf Waheed Ansari',
+      title: 'Founder & CEO',
+      role: 'Technology & Strategy',
+      fig: 'man' as const,
+      bio: 'Ashraf spent his early career at a tech company led by non-Muslims, where he was dismissed after experiencing Islamophobic discrimination. By the Mercy of Allah, he was granted another means of earning rizq at a halal advertising agency, where he started as a web developer. He eventually progressed to technical lead and ad operations, and those two years of experience—building products and understanding how advertising actually functions—gave him a deep, practical understanding of user experience and Muslim consumer behaviour.',
+    },
+    {
+      name: 'Bint Khan',
+      title: 'Managing Partner',
+      role: 'Marketing & Operations',
+      fig: 'woman' as const,
+      bio: 'Bint Khan started her career looking for work that wouldn’t force her to compromise her Islamic principles. She was hired as a social media manager at the same halal advertising agency and eventually went on to work as a digital marketing professional at a large Islamic fintech organisation. Through those two years of experience, she learned to recognise what actually earns trust online—audience psychology, halal-compliant content, and the small creative decisions that determine whether a Muslim audience feels spoken to or spoken at.',
+    },
+  ],
+} as const;
+
 /* ─── §2 The Founding Story ────────────────────────────────────── */
 export const gap = {
   eyebrow: 'The Founding Story',
