@@ -9611,6 +9611,25 @@ html[data-nav="dark"] .burger span         { background: #254851; }
   .va-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
+/* ═══════════════════════════════════════════════════════════════════════════
+   qa- · ABOUT — THE BARAKAH QUOTE (redesign, dark band)
+   ═══════════════════════════════════════════════════════════════════════════
+   Component: about/QuoteAbout.tsx. Large centred pull-quote + attribution. */
+.qa {
+  background: var(--rd-night-2);
+  padding: clamp(3.5rem, 7vw, 7rem) 0;
+}
+.qa-text {
+  max-width: min(640px, 92%); margin: 0 auto; text-align: center;
+  font-family: var(--font-sans); font-weight: 800; letter-spacing: -0.01em;
+  font-size: clamp(1.6rem, 3vw, 2.4rem); line-height: 1.25; color: var(--rd-white);
+}
+.qa-by {
+  margin-top: clamp(1.4rem, 2.5vw, 2rem); text-align: center;
+  font-family: var(--font-sans); font-size: clamp(.95rem, 1.1vw, 1.05rem);
+  color: rgb(var(--rd-ivory-rgb) / .7);
+}
+
 /* Audience sub-line (redesign copy under the moved heading; old accordion kept). */
 .hy-aud-sub { margin-top: .9rem; max-width: 60ch; font-family: var(--font-sans); font-size: 1.02rem; line-height: 1.6; color: #4a5a5e; }
 

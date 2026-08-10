@@ -7,11 +7,16 @@ import FoundingStoryAbout from '@/components/about/FoundingStoryAbout';
 import TheGapAbout from '@/components/about/TheGapAbout';
 import PeopleBehindAbout from '@/components/about/PeopleBehindAbout';
 import ValuesAbout from '@/components/about/ValuesAbout';
-// Old sections superseded by the redesigned ones (rebuilt one at a time).
+import QuoteAbout from '@/components/about/QuoteAbout';
+// The clarity form + brand lockup are shared with the homepage; the global
+// Footer is mounted in app/layout.tsx, so it already follows the lockup here.
+import ClarityFormHybrid from '@/components/home/hybrid/ClarityFormHybrid';
+import BrandLockup from '@/components/home/hybrid/BrandLockup';
+// Old sections superseded by the redesign (kept as files, no longer mounted).
 // import GapNarrative from '@/components/about/GapNarrative';
 // import FoundersAbout from '@/components/about/FoundersAbout';
-import JourneyOutro from '@/components/about/JourneyOutro';
-import AboutCta from '@/components/about/AboutCta';
+// import JourneyOutro from '@/components/about/JourneyOutro';
+// import AboutCta from '@/components/about/AboutCta';
 
 export const metadata: Metadata = pageMeta({
   title: 'About · WAHEED',
@@ -45,8 +50,9 @@ export default function AboutPage() {
         <TheGapAbout />
         <PeopleBehindAbout />
         <ValuesAbout />
-        <JourneyOutro />
-        <AboutCta />
+        <QuoteAbout />
+        <ClarityFormHybrid />
+        <BrandLockup />
       </main>
     </SmoothScroll>
   );

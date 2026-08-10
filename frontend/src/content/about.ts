@@ -94,6 +94,14 @@ export const values = {
   items: ['', '', '', '', '', ''] as readonly string[],
 } as const;
 
+/* ─── §2e The Barakah quote (redesign) ─────────────────────────────
+   Verbatim from the WAHEEDWEB Figma "About Us" artboard (nodes 74:493/74:495).
+   The curly quotation marks and the spaced em dash are as authored. */
+export const quote = {
+  text: '“Growth is not the goal. Growth with Barakah is — the one that never costs your integrity.”',
+  by: 'Waheed',
+} as const;
+
 /* ─── §2 The Founding Story ────────────────────────────────────── */
 export const gap = {
   eyebrow: 'The Founding Story',
