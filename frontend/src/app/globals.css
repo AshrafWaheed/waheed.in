@@ -9223,6 +9223,10 @@ html[data-nav="dark"] .burger span         { background: #254851; }
    Component: ServicesHybrid.tsx. Replaces the old dark `.hy-svc` section (whose
    rules stay for the unmounted Services.tsx). Gold is the design's #F0D97A. */
 .gp {
+  /* A white section, but its content sits on dark teal cards, so the gold stays
+     BRIGHT here — opt out of the light-band gold-ink remap (also fixes the
+     Contact-us StackButton face, which reads --rd-gold). */
+  --rd-gold: #F0D97A;
   --gp-gold: var(--rd-gold);
   --gp-card: #0F4B5A;              /* the two flanking cards */
   --gp-card-hi: #12303a;           /* the raised featured card, darker */
@@ -9303,6 +9307,8 @@ html[data-nav="dark"] .burger span         { background: #254851; }
    IntersectionObserver sentinels down the track advance the active step. Step
    text sits at the TOP; the gold timeline fills and stacks from the BOTTOM up. */
 .wp {
+  /* Bright gold on the timeline/nodes — opt out of the light-band ink remap. */
+  --rd-gold: #F0D97A;
   --wp-gold: var(--rd-gold);
   background: var(--rd-white);
   padding: clamp(3rem, 5vw, 5rem) 0;
