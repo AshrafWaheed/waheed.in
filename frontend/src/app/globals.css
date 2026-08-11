@@ -9183,14 +9183,24 @@ html[data-nav="dark"] .burger span         { background: #254851; }
 /* The two groups, each headed by a gold pill that names it — this is the
    "divide into building and growing" the redesign asks for. */
 .xp-group + .xp-group { margin-top: clamp(2.4rem, 4vw, 3.6rem); }
-.xp-grouplabel { text-align: center; margin: 0 0 1.8rem; }
-.xp-tab {
-  display: inline-block;
-  background: var(--xp-gold); color: #1A363D;
-  font-family: var(--font-sans); font-weight: 500; font-size: .82rem;
-  letter-spacing: .01em;
-  padding: .55rem 1.25rem; border-radius: 999px;
+
+/* Tab toggle — two intents; the active one is a gold pill, the other a ghost. */
+.xp-tabs {
+  display: flex; width: fit-content; gap: .4rem;
+  margin: 0 auto clamp(2rem, 3.5vw, 2.8rem);
+  padding: .3rem; border-radius: 999px;
+  background: rgb(var(--rd-ivory-rgb) / .06); border: 1px solid rgb(var(--rd-ivory-rgb) / .12);
 }
+.xp-tabbtn {
+  appearance: none; border: 0; cursor: pointer;
+  font-family: var(--font-sans); font-weight: 600; font-size: .84rem; letter-spacing: .01em;
+  padding: .6rem 1.35rem; border-radius: 999px;
+  background: transparent; color: rgb(var(--rd-ivory-rgb) / .72);
+  transition: background .3s ease, color .3s ease;
+}
+.xp-tabbtn:hover { color: var(--rd-white); }
+.xp-tabbtn.is-on { background: var(--xp-gold); color: #1A363D; }
+.xp-tabbtn:focus-visible { outline: 2px solid var(--xp-gold); outline-offset: 2px; }
 
 /* Bottom-left arrow + promise share a footer row. The promise kept its own
    top margin before; that now lives on the row. */

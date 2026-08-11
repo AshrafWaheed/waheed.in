@@ -93,63 +93,96 @@ export const expertise = {
   eyebrow: 'Our craft',
   heading: { lead: 'The Solutions to Help You Build & Grow' } as Heading,
 
-  /* The two halves the crafts divide into, each closed by the button the
-     redesign shows under it. `from`/`to` (the grid-row boundary) are a layout
-     fact and live in the component, not here. */
+  /* Tab-based: the two intents the visitor picks between. Each group owns its
+     own doors and its closing button. Per the redesign the Figma splits web and
+     app into TWO solutions, so "build" carries three. Each door names the
+     CraftArtifact index it renders (`art`) and, if it has a page, its `slug`
+     (App reuses the combined web-app page until it gets its own). `desc` copy is
+     verbatim from the Figma; App's is node 14:175. */
   groups: [
-    { label: 'I want to build', cta: { label: 'Contact us',        href: '/contact'  } },
-    { label: 'I want to grow',  cta: { label: 'View our packages', href: '/packages' } },
-  ],
-
-  doors: [
     {
-      num: '01',
-      title: 'Website Design & Development',
-      desc: 'Your website is often your first door to turning visitors into paying customers. Have it clearly communicate your product or offer, load quickly, and deliver a user-optimised experience.',
-      promise: 'Built to convert. Made to last.',
-      soon: false,
+      key: 'build',
+      label: 'I want to build',
+      cta: { label: 'Contact us', href: '/contact' },
+      doors: [
+        {
+          num: '01',
+          title: 'Website Design & Development',
+          desc: 'Your website is often your first door to turning visitors into paying customers. Have it clearly communicate your product or offer, load quickly, and deliver a user-optimised experience.',
+          promise: 'Built to convert. Made to last.',
+          art: 0,
+          slug: 'web-app-development',
+          soon: false,
+        },
+        {
+          num: '02',
+          title: 'Custom Software Design & Development',
+          desc: 'Different operations often require custom software solutions. Build the right systems that pay for themselves through saved hours, streamlined workflows, and clearer decision-making.',
+          promise: 'Software that earns its keep.',
+          art: 1,
+          slug: 'custom-software-development',
+          soon: false,
+        },
+        {
+          num: '03',
+          title: 'App Design & Development',
+          desc: 'Turn your idea into a platform that solves real problems, creates seamless experiences, and supports your business goals.',
+          promise: 'From idea to shipped app.',
+          art: 0,
+          slug: 'web-app-development',
+          soon: false,
+        },
+      ],
     },
     {
-      num: '02',
-      title: 'Custom Software Design & Development',
-      desc: 'Different operations often require custom software solutions. Build the right systems that pay for themselves through saved hours, streamlined workflows, and clearer decision-making.',
-      promise: 'Software that earns its keep.',
-      soon: false,
-    },
-    {
-      num: '03',
-      title: 'Visual & Brand Strategy',
-      desc: 'Great branding shapes people’s perception of your brand. Go from missed to noticed with the right visual identity, positioning, and messaging.',
-      promise: 'Positioning that pre-sells.',
-      soon: false,
-    },
-    {
-      num: '04',
-      title: 'Search Engine Optimisation',
-      desc: "SEO is dead? Nope, it's evolving! Compound your online visibility organically and attract qualified buyers to your door.",
-      promise: 'Traffic that compounds.',
-      soon: false,
-    },
-    {
-      num: '05',
-      title: 'Social Media Growth',
-      desc: 'A long-term successful brand is built on trust, and trust-led brands are community-first. Social media gives you a cost-effective way to build a loyal community.',
-      promise: 'Content engagements, then sales.',
-      soon: false,
-    },
-    {
-      num: '06',
-      title: 'Copywriting',
-      desc: "Great copy makes people feel like they're talking to a trusted friend. Win your audience's heart with jargon-free copywriting that speaks their language and understands cultural nuances.",
-      promise: 'Words that close.',
-      soon: true,
-    },
-    {
-      num: '07',
-      title: 'Creative Asset Design',
-      desc: 'Low-quality, fully AI-generated assets are killing audience trust. Human-led, AI-assisted strategic content design helps you share your message without compromising authenticity and creativity.',
-      promise: 'Creative that earns the click.',
-      soon: true,
+      key: 'grow',
+      label: 'I want to grow',
+      cta: { label: 'View our packages', href: '/packages' },
+      doors: [
+        {
+          num: '04',
+          title: 'Visual & Brand Strategy',
+          desc: 'Great branding shapes people’s perception of your brand. Go from missed to noticed with the right visual identity, positioning, and messaging.',
+          promise: 'Positioning that pre-sells.',
+          art: 2,
+          slug: 'brand-strategy',
+          soon: false,
+        },
+        {
+          num: '05',
+          title: 'Search Engine Optimisation',
+          desc: "SEO is dead? Nope, it's evolving! Compound your online visibility organically and attract qualified buyers to your door.",
+          promise: 'Traffic that compounds.',
+          art: 3,
+          slug: 'seo',
+          soon: false,
+        },
+        {
+          num: '06',
+          title: 'Social Media Growth',
+          desc: 'A long-term successful brand is built on trust, and trust-led brands are community-first. Social media gives you a cost-effective way to build a loyal community.',
+          promise: 'Content engagements, then sales.',
+          art: 4,
+          slug: 'social-media-marketing',
+          soon: false,
+        },
+        {
+          num: '07',
+          title: 'Copywriting',
+          desc: "Great copy makes people feel like they're talking to a trusted friend. Win your audience's heart with jargon-free copywriting that speaks their language and understands cultural nuances.",
+          promise: 'Words that close.',
+          art: 5,
+          soon: true,
+        },
+        {
+          num: '08',
+          title: 'Creative Asset Design',
+          desc: 'Low-quality, fully AI-generated assets are killing audience trust. Human-led, AI-assisted strategic content design helps you share your message without compromising authenticity and creativity.',
+          promise: 'Creative that earns the click.',
+          art: 6,
+          soon: true,
+        },
+      ],
     },
   ],
 } as const;

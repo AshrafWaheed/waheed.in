@@ -42,7 +42,14 @@ export default function ExpertiseHybrid() {
     return () => mm.revert();
   }, []);
 
-  const { eyebrow, heading, doors } = expertise;
+  const { eyebrow, heading } = expertise;
+  // `doors` is now nested under groups (tab-based ExpertiseBento is the live
+  // variant); flatten for this unmounted legacy variant. Cast to the fields it
+  // reads — the two groups' `as const` door shapes differ (slug/art), which
+  // trips flatMap's inference otherwise.
+  const doors = expertise.groups.flatMap((g) => [...g.doors]) as ReadonlyArray<{
+    num: string; title: string; desc: string; promise: string; soon: boolean;
+  }>;
 
   return (
     <section ref={sectionRef} className="hy-expertise" data-section-color="dark">
