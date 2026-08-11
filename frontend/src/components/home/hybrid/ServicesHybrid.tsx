@@ -11,8 +11,11 @@
  * The older paragraph-card version (and the `services` content it read) is gone
  * from here but kept in content for the unmounted Services.tsx variant.
  */
-import SplitReveal from '@/components/motion/SplitReveal';
+import { useRef } from 'react';
+import { motion, useTransform } from 'framer-motion';
 import Spotlight from '@/components/motion/Spotlight';
+import ScrubReveal from '@/components/motion/ScrubReveal';
+import { useScrollProgress } from '@/components/motion/useScrollProgress';
 import StackButton from '@/components/ui/StackButton';
 import { growthPackages } from '@/content/home';
 
@@ -40,25 +43,37 @@ function Sub({ text, underline }: { text: string; underline: string }) {
 
 export default function ServicesHybrid() {
   const { heading, sub, subUnderline, footnote, cta, cards } = growthPackages;
+  const headRef = useRef<HTMLDivElement>(null);
+  const gridRef = useRef<HTMLDivElement>(null);
+  // Heading scroll-reveals (fade-up); the three cards scrub in — left from the
+  // left, the featured middle up, the right from the right.
+  const pHead = useScrollProgress(headRef);
+  const pGrid = useScrollProgress(gridRef, { startVh: 0.95, endVh: 0.5 });
+  const headY = useTransform(pHead, [0, 0.8], [40, 0], { clamp: true });
+  const headO = useTransform(pHead, [0, 0.55], [0, 1], { clamp: true });
 
   return (
     <section className="gp" data-section-color="light">
       <div className="cnt">
-        <div className="gp-head">
-          <h2 className="gp-h">
-            <SplitReveal text={heading} by="word" />
-          </h2>
+        <motion.div className="gp-head" ref={headRef} style={{ y: headY, opacity: headO }}>
+          <h2 className="gp-h">{heading}</h2>
           <p className="gp-sub">
             <Sub text={sub} underline={subUnderline} />
           </p>
-        </div>
+        </motion.div>
 
-        <div className="gp-grid">
-          {cards.map((card) => (
-            <Spotlight
+        <div className="gp-grid" ref={gridRef}>
+          {cards.map((card, i) => (
+            <ScrubReveal
               key={card.title}
+              progress={pGrid}
+              from={0}
+              to={0.85}
+              x={card.featured ? 0 : i === 0 ? -72 : 72}
+              y={card.featured ? 72 : 0}
               className={`gp-card-wrap${card.featured ? ' featured' : ''}`}
             >
+              <Spotlight className="gp-card-spot">
               <article className={`gp-card${card.featured ? ' featured' : ''}`} data-cursor>
                 {'badge' in card && card.badge && <span className="gp-badge">{card.badge}</span>}
 
@@ -79,7 +94,8 @@ export default function ServicesHybrid() {
                   <StackButton href={cta.href} size="sm">{cta.label}</StackButton>
                 </div>
               </article>
-            </Spotlight>
+              </Spotlight>
+            </ScrubReveal>
           ))}
         </div>
 

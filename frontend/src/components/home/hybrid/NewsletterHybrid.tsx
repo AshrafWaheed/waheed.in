@@ -8,8 +8,9 @@
  * Behaviour is unchanged — it still POSTs to /api/newsletter. Copy is the
  * redesign's (`newsletter.title` / `newsletter.body`).
  */
-import { useState } from 'react';
-import SplitReveal from '@/components/motion/SplitReveal';
+import { useRef, useState } from 'react';
+import { motion, useTransform } from 'framer-motion';
+import { useScrollProgress } from '@/components/motion/useScrollProgress';
 import { newsletter } from '@/content/home';
 
 export default function NewsletterHybrid() {
@@ -44,13 +45,17 @@ export default function NewsletterHybrid() {
 
   const { title, body, success, placeholder, submitIdle, submitBusy, note } = newsletter;
 
+  // Scroll-scrubbed fade-in-up for the whole card.
+  const ref = useRef<HTMLDivElement>(null);
+  const p = useScrollProgress(ref);
+  const y = useTransform(p, [0, 0.8], [48, 0], { clamp: true });
+  const opacity = useTransform(p, [0, 0.55], [0, 1], { clamp: true });
+
   return (
     <section className="nl" data-section-color="dark">
-      <div className="cnt">
-        <div className="nl-card">
-          <h2 className="nl-h">
-            <SplitReveal text={title} by="word" />
-          </h2>
+      <div className="cnt" ref={ref}>
+        <motion.div className="nl-card" style={{ y, opacity }}>
+          <h2 className="nl-h">{title}</h2>
           <p className="nl-body">{body}</p>
 
           {submitted ? (
@@ -77,7 +82,7 @@ export default function NewsletterHybrid() {
           )}
           {error && <p className="nl-error">{error}</p>}
           <p className="nl-note">{note}</p>
-        </div>
+        </motion.div>
       </div>
     </section>
   );

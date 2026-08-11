@@ -4201,6 +4201,7 @@ html[data-nav="dark"] .burger span            { background: var(--rd-ivory); }
 
 .xp-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 1.1rem; }
 .xp-cell { border-radius: 20px; }
+.xp-cell-spot { height: 100%; border-radius: 20px; }
 
 /* Directional entrance — each card flies in from the side it occupies, so the
    two halves of a row converge on the centre. The right-hand card trails
@@ -9261,6 +9262,7 @@ html[data-nav="dark"] .burger span         { background: #254851; }
   max-width: 1060px; margin: 0 auto;
 }
 .gp-card-wrap { border-radius: 22px; }
+.gp-card-spot { height: 100%; border-radius: 22px; }
 .gp-card-wrap.featured { margin-top: -1.4rem; }   /* the redesign lifts it */
 
 .gp-card {
@@ -9683,7 +9685,10 @@ html[data-nav="dark"] .burger span         { background: #254851; }
 .rf-h { font-family: var(--font-serif); font-weight: 600; font-size: clamp(1.9rem, 3.8vw, 3rem); color: var(--rd-white); line-height: 1.12; margin-bottom: 1rem; }
 .rf-sub { font-family: var(--font-sans); font-size: 1rem; line-height: 1.6; color: rgb(var(--rd-ivory-rgb) / .78); max-width: 34ch; }
 .rf-uline { text-decoration: underline; text-decoration-color: var(--rf-gold); text-decoration-thickness: 2px; text-underline-offset: 3px; }
-.rf-tiles { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: clamp(.7rem, 1.4vw, 1.1rem); }
+/* position:relative so each tile's offsetLeft/offsetTop is measured against the
+   grid (the deal-out animation reads those). will-change hints the transforms. */
+.rf-tiles { position: relative; list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: clamp(.7rem, 1.4vw, 1.1rem); }
+.rf-tile { will-change: transform, opacity; }
 .rf-tile {
   display: flex; align-items: center; justify-content: center; text-align: center;
   min-height: clamp(56px, 6vw, 76px); padding: .8rem 1rem;
