@@ -38,6 +38,7 @@ import ExplodeButton from '@/components/motion/ExplodeButton';
 import useParallaxOrigin from '@/components/motion/useParallaxOrigin';
 import GirihEngine from '@/components/graphics/GirihEngine';
 import DeviceRig, { type Surface } from '@/components/graphics/DeviceRig';
+import AppRig from '@/components/graphics/AppRig';
 import type { ServicePage } from '@/content/services';
 
 const EASE = [0.22, 1, 0.36, 1] as const;
@@ -121,7 +122,7 @@ export default function WaHero({ page }: { page: ServicePage }) {
             flanks do, and a fade on this container would have made two solid
             cards translucent on the way in. */}
         <div className="wa-art">
-          <DeviceRig surface={surface} />
+          {surface === 'app' ? <AppRig /> : <DeviceRig surface={surface} />}
         </div>
       </div>
 

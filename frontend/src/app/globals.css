@@ -8433,12 +8433,46 @@ html[data-nav="dark"] .burger span            { background: var(--rd-ivory); }
               translate 1.15s cubic-bezier(.22, 1, .36, 1) var(--d);
 }
 
-/* Single-surface rigs (Web / App Development): the one device is the star, so
-   centre and enlarge it. Position via left/width, NOT translate (owned by the
-   entrance) or transform (owned by parallax). */
-.wa-rig--web  .wa-slot--web { left: 6%; right: auto; top: 4%; width: 88%; }
-.wa-rig--app  .wa-slot--app { left: 50%; right: auto; top: 2%; bottom: auto; margin-left: -19%; width: 38%; }
-.wa-rig--web .wa-halo, .wa-rig--app .wa-halo { translate: -50% -50%; }
+/* Single-surface web rig: the browser is the star, centred and enlarged.
+   Position via left/width, NOT translate (owned by the entrance) or transform
+   (owned by parallax). */
+.wa-rig--web .wa-slot--web { left: 6%; right: auto; top: 4%; width: 88%; }
+.wa-rig--web .wa-halo { translate: -50% -50%; }
+
+/* ── AppRig — bespoke App Development scene ─────────────────────────────────
+   Two phones (front + a dimmed second platform), a floating store-rating card,
+   in the same solid-object language as the web rig. */
+.ar-rig { position: relative; width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: flex-end; }
+.ar-rig .wa-halo { translate: -50% -50%; }
+.ar-slot { position: absolute; opacity: 0; translate: 0 34px; }
+.ar-slot--back  { right: 3%;  bottom: 96px; top: auto; width: 33%; z-index: 2; filter: brightness(.6) saturate(.85); }
+.ar-slot--front { left: 10%;  bottom: 48px; top: auto; width: 40%; z-index: 4; }
+.wa-hero.is-in .ar-slot, .wa-hero.is-in .ar-badge {
+  opacity: 1; translate: 0 0;
+  transition: opacity .9s cubic-bezier(.22, 1, .36, 1) var(--d),
+              translate 1.15s cubic-bezier(.22, 1, .36, 1) var(--d);
+}
+
+.ar-badge {
+  position: absolute; left: 2%; bottom: 128px; z-index: 6;
+  display: flex; align-items: center; gap: .6rem;
+  padding: .55rem .8rem; border-radius: 14px; background: var(--rd-white);
+  box-shadow: 0 26px 52px -20px rgb(0 0 0 / .8);
+  opacity: 0; translate: 0 34px;
+}
+.ar-badge-stars { color: #f0b429; font-size: .78rem; letter-spacing: .06em; }
+.ar-badge-txt { display: flex; flex-direction: column; line-height: 1.15; }
+.ar-badge-txt b  { font-family: var(--font-sans); font-weight: 700; font-size: .92rem; color: var(--rd-night); }
+.ar-badge-txt em { font-family: var(--font-mono); font-style: normal; font-size: .56rem; letter-spacing: .08em; text-transform: uppercase; color: #7a8a8e; }
+
+@media (max-width: 900px) {
+  .ar-slot--front { left: 6%; width: 44%; }
+  .ar-slot--back  { right: 2%; width: 36%; }
+  .ar-badge { bottom: 14%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .wa-hero .ar-slot, .wa-hero .ar-badge { opacity: 1 !important; translate: none !important; transition: none !important; }
+}
 
 /* ── The site ──────────────────────────────────────────────────────────── */
 /* Solid white, no border, `.ff-card`'s shadow ramp. `brightness` and not
