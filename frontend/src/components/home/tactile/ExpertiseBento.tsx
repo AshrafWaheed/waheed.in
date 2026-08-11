@@ -7,23 +7,24 @@
  * one swaps the grid to that group's solutions (build 3, grow 5). Each group is
  * its own valid 6-col grid via LAYOUTS below.
  *
- * Motion: a one-shot fly-in on scroll (whileInView) — the heading fades up and
- * the cards fade in on a per-card stagger when the section enters view, no
- * directional slide. Switching tabs remounts the grid (keyed on group.key), so
- * the new cards re-fire their fly-in.
+ * Motion is SCROLL-SCRUBBED (useScrollProgress): the heading reveals (fade-up)
+ * and the cards fade in on a per-card stagger as the section scrolls through the
+ * viewport — no directional fly-in. Because the progress is a live MotionValue,
+ * switching tabs while the section is already in view shows the new cards at the
+ * current (revealed) state; switching mid-scroll scrubs them in.
  *
  * Each door names its own CraftArtifact index (`art`) and page `slug`.
  */
 import Link from 'next/link';
-import { useState } from 'react';
-import { motion, useReducedMotion } from 'framer-motion';
+import { useRef, useState } from 'react';
+import { motion, useTransform } from 'framer-motion';
 import CraftArtifact from '@/components/graphics/CraftArtifact';
 import Spotlight from '@/components/motion/Spotlight';
+import ScrubReveal from '@/components/motion/ScrubReveal';
+import { useScrollProgress } from '@/components/motion/useScrollProgress';
 import Khatam from '@/components/graphics/Khatam';
 import StackButton from '@/components/ui/StackButton';
 import { expertise } from '@/content/home';
-
-const EASE = [0.22, 1, 0.36, 1] as const;
 
 /** A solution card. `slug` is present only for doors that have a page. */
 type Door = {
@@ -59,7 +60,13 @@ function GoArrow() {
 export default function ExpertiseBento() {
   const { heading, groups } = expertise;
   const [active, setActive] = useState(0);
-  const reduce = useReducedMotion();
+
+  const headRef = useRef<HTMLDivElement>(null);
+  const gridRef = useRef<HTMLDivElement>(null);
+  const pHead = useScrollProgress(headRef);
+  const pGrid = useScrollProgress(gridRef, { startVh: 0.95, endVh: 0.4 });
+  const headY = useTransform(pHead, [0, 0.8], [44, 0], { clamp: true });
+  const headO = useTransform(pHead, [0, 0.55], [0, 1], { clamp: true });
 
   const group = groups[active];
   const cells = LAYOUTS[group.key];
@@ -67,13 +74,7 @@ export default function ExpertiseBento() {
   return (
     <section className="xp" data-section-color="dark">
       <div className="cnt">
-        <motion.div
-          className="xp-head"
-          initial={reduce ? false : { opacity: 0, y: 44 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.5 }}
-          transition={{ duration: 0.7, ease: EASE }}
-        >
+        <motion.div className="xp-head" ref={headRef} style={{ y: headY, opacity: headO }}>
           <h2 className="xp-h">{heading.lead}</h2>
         </motion.div>
 
@@ -93,18 +94,19 @@ export default function ExpertiseBento() {
           ))}
         </div>
 
-        <div className="xp-grid" key={group.key}>
+        <div className="xp-grid" ref={gridRef} key={group.key}>
           {(group.doors as ReadonlyArray<Door>).map((d, i) => {
             const cell = cells[i] ?? cells[cells.length - 1];
             const linkable = !!d.slug && !d.soon;
+            const from = Math.min(0.5, i * 0.07);
             return (
-              <motion.div
+              <ScrubReveal
                 key={d.num}
+                progress={pGrid}
+                from={from}
+                to={from + 0.5}
+                y={30}
                 className={`xp-cell s${cell.span} l-${cell.layout}${d.soon ? ' is-soon' : ''}`}
-                initial={reduce ? false : { opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.15 }}
-                transition={{ duration: 0.6, ease: EASE, delay: i * 0.08 }}
               >
                 <Spotlight className="xp-cell-spot">
                   <article className="xp-card is-live" data-cursor>
@@ -133,7 +135,7 @@ export default function ExpertiseBento() {
                     </div>
                   </article>
                 </Spotlight>
-              </motion.div>
+              </ScrubReveal>
             );
           })}
         </div>

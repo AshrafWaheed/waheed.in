@@ -8,11 +8,10 @@
  * Behaviour is unchanged — it still POSTs to /api/newsletter. Copy is the
  * redesign's (`newsletter.title` / `newsletter.body`).
  */
-import { useState } from 'react';
-import { motion, useReducedMotion } from 'framer-motion';
+import { useRef, useState } from 'react';
+import { motion, useTransform } from 'framer-motion';
+import { useScrollProgress } from '@/components/motion/useScrollProgress';
 import { newsletter } from '@/content/home';
-
-const EASE = [0.22, 1, 0.36, 1] as const;
 
 export default function NewsletterHybrid() {
   const [email, setEmail] = useState('');
@@ -46,18 +45,16 @@ export default function NewsletterHybrid() {
 
   const { title, body, success, placeholder, submitIdle, submitBusy, note } = newsletter;
 
-  const reduce = useReducedMotion();
+  // Scroll-scrubbed fade-in-up for the whole card.
+  const ref = useRef<HTMLDivElement>(null);
+  const p = useScrollProgress(ref);
+  const y = useTransform(p, [0, 0.8], [48, 0], { clamp: true });
+  const opacity = useTransform(p, [0, 0.55], [0, 1], { clamp: true });
 
   return (
     <section className="nl" data-section-color="dark">
-      <div className="cnt">
-        <motion.div
-          className="nl-card"
-          initial={reduce ? false : { opacity: 0, y: 48 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.3 }}
-          transition={{ duration: 0.7, ease: EASE }}
-        >
+      <div className="cnt" ref={ref}>
+        <motion.div className="nl-card" style={{ y, opacity }}>
           <h2 className="nl-h">{title}</h2>
           <p className="nl-body">{body}</p>
 

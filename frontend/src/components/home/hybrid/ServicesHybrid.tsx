@@ -11,12 +11,13 @@
  * The older paragraph-card version (and the `services` content it read) is gone
  * from here but kept in content for the unmounted Services.tsx variant.
  */
-import { motion, useReducedMotion } from 'framer-motion';
+import { useRef } from 'react';
+import { motion, useTransform } from 'framer-motion';
 import Spotlight from '@/components/motion/Spotlight';
+import ScrubReveal from '@/components/motion/ScrubReveal';
+import { useScrollProgress } from '@/components/motion/useScrollProgress';
 import StackButton from '@/components/ui/StackButton';
 import { growthPackages } from '@/content/home';
-
-const EASE = [0.22, 1, 0.36, 1] as const;
 
 /** The inclusion bullet — a four-point gold spark, matching the Figma. */
 function Spark() {
@@ -42,34 +43,35 @@ function Sub({ text, underline }: { text: string; underline: string }) {
 
 export default function ServicesHybrid() {
   const { heading, sub, subUnderline, footnote, cta, cards } = growthPackages;
-  const reduce = useReducedMotion();
-  // Fly-in on scroll: heading fades up; the three cards fly in — left from the
+  const headRef = useRef<HTMLDivElement>(null);
+  const gridRef = useRef<HTMLDivElement>(null);
+  // Heading scroll-reveals (fade-up); the three cards scrub in — left from the
   // left, the featured middle up, the right from the right.
+  const pHead = useScrollProgress(headRef);
+  const pGrid = useScrollProgress(gridRef, { startVh: 0.95, endVh: 0.5 });
+  const headY = useTransform(pHead, [0, 0.8], [40, 0], { clamp: true });
+  const headO = useTransform(pHead, [0, 0.55], [0, 1], { clamp: true });
+
   return (
     <section className="gp" data-section-color="light">
       <div className="cnt">
-        <motion.div
-          className="gp-head"
-          initial={reduce ? false : { opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.5 }}
-          transition={{ duration: 0.7, ease: EASE }}
-        >
+        <motion.div className="gp-head" ref={headRef} style={{ y: headY, opacity: headO }}>
           <h2 className="gp-h">{heading}</h2>
           <p className="gp-sub">
             <Sub text={sub} underline={subUnderline} />
           </p>
         </motion.div>
 
-        <div className="gp-grid">
+        <div className="gp-grid" ref={gridRef}>
           {cards.map((card, i) => (
-            <motion.div
+            <ScrubReveal
               key={card.title}
+              progress={pGrid}
+              from={0}
+              to={0.85}
+              x={card.featured ? 0 : i === 0 ? -72 : 72}
+              y={card.featured ? 72 : 0}
               className={`gp-card-wrap${card.featured ? ' featured' : ''}`}
-              initial={reduce ? false : { opacity: 0, x: card.featured ? 0 : i === 0 ? -72 : 72, y: card.featured ? 72 : 0 }}
-              whileInView={{ opacity: 1, x: 0, y: 0 }}
-              viewport={{ once: true, amount: 0.2 }}
-              transition={{ duration: 0.75, ease: EASE, delay: i * 0.08 }}
             >
               <Spotlight className="gp-card-spot">
               <article className={`gp-card${card.featured ? ' featured' : ''}`} data-cursor>
@@ -93,7 +95,7 @@ export default function ServicesHybrid() {
                 </div>
               </article>
               </Spotlight>
-            </motion.div>
+            </ScrubReveal>
           ))}
         </div>
 
