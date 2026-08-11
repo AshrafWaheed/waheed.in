@@ -19,7 +19,7 @@ const base = 'https://waheed.in';
  * date is worth more than a fresh lie. Blog entries are exempt — they carry
  * their own real `published_at`.
  */
-const STATIC_REVISED = new Date('2026-08-05T00:00:00.000Z');
+const STATIC_REVISED = new Date('2026-08-11T00:00:00.000Z');
 
 type ListPost = { slug: string; published_at: string | null };
 
