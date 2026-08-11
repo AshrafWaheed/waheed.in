@@ -8,6 +8,7 @@ import WebAppLayout from '@/components/service/layouts/WebAppLayout';
 import BrandStrategyLayout from '@/components/service/layouts/BrandStrategyLayout';
 import SeoLayout from '@/components/service/layouts/SeoLayout';
 import SmmLayout from '@/components/service/layouts/SmmLayout';
+import CustomSoftwareLayout from '@/components/service/layouts/CustomSoftwareLayout';
 import type { ServiceLayoutProps } from '@/components/service/layouts/types';
 import { services, pages, servicePage } from '@/content/services';
 
@@ -23,6 +24,7 @@ import { services, pages, servicePage } from '@/content/services';
 const LAYOUTS: Record<string, React.ComponentType<ServiceLayoutProps>> = {
   'web-development': WebAppLayout,
   'app-development': WebAppLayout,
+  'custom-software-development': CustomSoftwareLayout,
   'brand-strategy': BrandStrategyLayout,
   seo: SeoLayout,
   'social-media-marketing': SmmLayout,
