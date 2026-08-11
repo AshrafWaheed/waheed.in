@@ -8474,6 +8474,30 @@ html[data-nav="dark"] .burger span            { background: var(--rd-ivory); }
   .wa-hero .ar-slot, .wa-hero .ar-badge { opacity: 1 !important; translate: none !important; transition: none !important; }
 }
 
+/* ── SoftwareRig — Custom Software Development hero ─────────────────────────
+   A central dashboard wired to tooling / automation / commerce / data nodes,
+   data flowing along the connectors. */
+.sw-rig { width: 100%; }
+.sw-rig svg { display: block; width: 100%; height: auto; max-height: 460px; margin: 0 auto; }
+.sw-label { font-family: var(--font-mono); font-size: 8px; letter-spacing: .12em; text-transform: uppercase; fill: #8595a0; }
+
+.sw-flow { stroke-dasharray: 5 8; animation: sw-dash 1.25s linear infinite; }
+@keyframes sw-dash { to { stroke-dashoffset: -26; } }
+
+.sw-bar { transform-box: fill-box; transform-origin: center bottom; animation: sw-grow .75s cubic-bezier(.22, 1, .36, 1) both; }
+@keyframes sw-grow { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+
+.sw-node { transform-box: fill-box; animation: sw-float 5.5s ease-in-out infinite; }
+@keyframes sw-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+
+.sw-live { animation: sw-pulse 1.9s ease-in-out infinite; }
+@keyframes sw-pulse { 0%, 100% { opacity: 1; } 50% { opacity: .35; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .sw-flow, .sw-node, .sw-live { animation: none !important; }
+  .sw-bar { animation: none !important; transform: none !important; }
+}
+
 /* ── The site ──────────────────────────────────────────────────────────── */
 /* Solid white, no border, `.ff-card`'s shadow ramp. `brightness` and not
    `opacity` is what keeps it opaque while it is the far object. */

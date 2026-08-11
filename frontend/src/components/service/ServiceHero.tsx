@@ -24,6 +24,7 @@ import ExplodeButton from '@/components/motion/ExplodeButton';
 import useParallaxOrigin from '@/components/motion/useParallaxOrigin';
 import GirihEngine from '@/components/graphics/GirihEngine';
 import CraftArtifact from '@/components/graphics/CraftArtifact';
+import SoftwareRig from '@/components/graphics/SoftwareRig';
 import type { ServicePage } from '@/content/services';
 
 const EASE = [0.22, 1, 0.36, 1] as const;
@@ -95,7 +96,7 @@ export default function ServiceHero({ page, artifact }: { page: ServicePage; art
           transition={{ duration: 1, ease: EASE, delay: 0.5 }}
           aria-hidden="true"
         >
-          <CraftArtifact i={artifact} live />
+          {page.slug === 'custom-software-development' ? <SoftwareRig /> : <CraftArtifact i={artifact} live />}
         </motion.div>
       </div>
 
