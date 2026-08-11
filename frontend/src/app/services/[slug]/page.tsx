@@ -21,7 +21,8 @@ import { services, pages, servicePage } from '@/content/services';
  * falls back to the default scan-down journey.
  */
 const LAYOUTS: Record<string, React.ComponentType<ServiceLayoutProps>> = {
-  'web-app-development': WebAppLayout,
+  'web-development': WebAppLayout,
+  'app-development': WebAppLayout,
   'brand-strategy': BrandStrategyLayout,
   seo: SeoLayout,
   'social-media-marketing': SmmLayout,

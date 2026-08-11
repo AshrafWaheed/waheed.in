@@ -22,7 +22,8 @@
  * a public 404 behind.
  */
 import type { ServicePage } from './types';
-import webAppDevelopment from './web-app-development';
+import webDevelopment from './web-development';
+import appDevelopment from './app-development';
 import customSoftwareDevelopment from './custom-software-development';
 import brandStrategy from './brand-strategy';
 import seo from './seo';
@@ -48,14 +49,22 @@ export interface Service {
 export const services: readonly Service[] = [
   {
     num: '01',
-    slug: 'web-app-development',
-    title: 'Web & App Development',
-    navLabel: 'Web & App Development',
-    navBlurb: 'Sites and apps built to convert.',
+    slug: 'web-development',
+    title: 'Web Development',
+    navLabel: 'Web Development',
+    navBlurb: 'Sites built to convert.',
     soon: false,
   },
   {
     num: '02',
+    slug: 'app-development',
+    title: 'App Development',
+    navLabel: 'App Development',
+    navBlurb: 'iOS + Android, one codebase.',
+    soon: false,
+  },
+  {
+    num: '03',
     slug: 'custom-software-development',
     title: 'Custom Software Development',
     navLabel: 'Custom Software',
@@ -63,7 +72,7 @@ export const services: readonly Service[] = [
     soon: false,
   },
   {
-    num: '03',
+    num: '04',
     slug: 'brand-strategy',
     title: 'Brand Strategy',
     navLabel: 'Brand Strategy',
@@ -71,7 +80,7 @@ export const services: readonly Service[] = [
     soon: false,
   },
   {
-    num: '04',
+    num: '05',
     slug: 'seo',
     title: 'SEO',
     navLabel: 'SEO',
@@ -79,7 +88,7 @@ export const services: readonly Service[] = [
     soon: false,
   },
   {
-    num: '05',
+    num: '06',
     slug: 'social-media-marketing',
     title: 'Social Media Marketing',
     navLabel: 'Social Media Marketing',
@@ -87,7 +96,7 @@ export const services: readonly Service[] = [
     soon: false,
   },
   {
-    num: '06',
+    num: '07',
     slug: 'conversion-copywriting',
     title: 'Conversion Copywriting',
     navLabel: 'Conversion Copywriting',
@@ -95,7 +104,7 @@ export const services: readonly Service[] = [
     soon: true,
   },
   {
-    num: '07',
+    num: '08',
     slug: 'ad-creatives',
     title: 'Ad Creatives',
     navLabel: 'Ad Creatives',
@@ -112,7 +121,8 @@ export const services: readonly Service[] = [
  * therefore one import and one line — and there is no second place to forget.
  */
 export const pages: Readonly<Record<string, ServicePage>> = {
-  [webAppDevelopment.slug]: webAppDevelopment,
+  [webDevelopment.slug]: webDevelopment,
+  [appDevelopment.slug]: appDevelopment,
   [customSoftwareDevelopment.slug]: customSoftwareDevelopment,
   [brandStrategy.slug]: brandStrategy,
   [seo.slug]: seo,

@@ -27,7 +27,7 @@ const socialMediaMarketing: ServicePage = {
     'Content engines for halal brands — channel strategy, pillars, a production system you can sustain, and community management that turns followers into customers. Built within your production constraints, not around them.',
 
   hero: {
-    eyebrow: 'Service 05',
+    eyebrow: 'Service 06',
     h1: { lead: 'Content that earns', em: 'the sale.' },
     sub:
       'Posting daily and praying for reach is not a strategy. We build content engines that ' +

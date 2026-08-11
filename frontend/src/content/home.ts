@@ -111,7 +111,7 @@ export const expertise = {
           desc: 'Your website is often your first door to turning visitors into paying customers. Have it clearly communicate your product or offer, load quickly, and deliver a user-optimised experience.',
           promise: 'Built to convert. Made to last.',
           art: 0,
-          slug: 'web-app-development',
+          slug: 'web-development',
           soon: false,
         },
         {
@@ -129,7 +129,7 @@ export const expertise = {
           desc: 'Turn your idea into a platform that solves real problems, creates seamless experiences, and supports your business goals.',
           promise: 'From idea to shipped app.',
           art: 0,
-          slug: 'web-app-development',
+          slug: 'app-development',
           soon: false,
         },
       ],

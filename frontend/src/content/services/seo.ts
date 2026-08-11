@@ -29,7 +29,7 @@ const seo: ServicePage = {
     'Technical SEO, intent-driven content and authority building for halal brands — compounding organic visibility that keeps working after the invoice stops, with no bought links and no black-hat shortcuts.',
 
   hero: {
-    eyebrow: 'Service 04',
+    eyebrow: 'Service 05',
     h1: { lead: 'Search that', em: 'compounds.' },
     sub:
       'Ads stop the moment you stop paying. We compound your visibility on Google with ' +

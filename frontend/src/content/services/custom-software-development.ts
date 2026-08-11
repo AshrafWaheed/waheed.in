@@ -25,7 +25,7 @@ const customSoftwareDevelopment: ServicePage = {
     'ERPs, internal platforms, business process automation, API integrations, AI automation and connected-device software — engineered for halal businesses that have outgrown off-the-shelf tools.',
 
   hero: {
-    eyebrow: 'Service 02',
+    eyebrow: 'Service 03',
     h1: { lead: 'Custom Software', em: 'Development' },
     sub:
       'Off-the-shelf tools were not built for your business. We engineer ERPs, internal ' +

@@ -29,7 +29,7 @@ const brandStrategy: ServicePage = {
     'Positioning, narrative and visual systems for halal brands — so the right buyer feels chosen, the wrong buyer moves on, and you stop competing on price.',
 
   hero: {
-    eyebrow: 'Service 03',
+    eyebrow: 'Service 04',
     h1: { lead: 'Brand', em: 'Strategy' },
     sub:
       'A weak brand competes on price; a strong brand commands premium trust. We craft ' +
