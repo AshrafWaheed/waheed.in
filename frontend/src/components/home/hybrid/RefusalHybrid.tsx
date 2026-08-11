@@ -6,17 +6,18 @@
  * Left: heading + a one-line sub with "honour" underlined gold. Right: the six
  * refusals as a 2×3 grid of solid gold tiles (dark text on gold).
  *
- * Motion: SCROLL-SCRUBBED "deal out". The tiles start collapsed into a rotated
- * stack at the grid's centre and, as the section scrolls through, fan out to
- * their natural grid slots. Each tile's travel is its own offset to the grid
- * centre (read from offsetLeft/offsetTop, which layout — not transform — owns),
- * so it lands exactly in place. Driven by the shared scroll progress; reverses
- * on scroll-up, and reduced-motion pins it fully distributed.
+ * Motion: a one-shot "deal out" that PLAYS when the tiles scroll into view. They
+ * start collapsed into a rotated stack at the grid's centre, then fan out to
+ * their natural slots on a per-tile stagger. Each tile's travel is its own offset
+ * to the grid centre (read from offsetLeft/offsetTop, which layout — not
+ * transform — owns), so it lands exactly in place. CSS transitions do the
+ * animation; an IntersectionObserver flips it once. Reduced-motion: no collapse.
  */
 import { useEffect, useRef } from 'react';
-import { motion, useTransform } from 'framer-motion';
-import { useScrollProgress } from '@/components/motion/useScrollProgress';
+import { motion, useReducedMotion } from 'framer-motion';
 import { refusal } from '@/content/home';
+
+const EASE = [0.22, 1, 0.36, 1] as const;
 
 /** Underline the one phrase in the sub. */
 function Sub({ text, underline }: { text: string; underline: string }) {
@@ -33,58 +34,67 @@ function Sub({ text, underline }: { text: string; underline: string }) {
 
 export default function RefusalHybrid() {
   const { title, sub, subUnderline, items } = refusal;
-  const headRef = useRef<HTMLDivElement>(null);
+  const reduce = useReducedMotion();
   const tilesRef = useRef<HTMLUListElement>(null);
-
-  const pHead = useScrollProgress(headRef);
-  const headY = useTransform(pHead, [0, 0.8], [40, 0], { clamp: true });
-  const headO = useTransform(pHead, [0, 0.55], [0, 1], { clamp: true });
-
-  const pTiles = useScrollProgress(tilesRef, { startVh: 0.9, endVh: 0.4 });
 
   useEffect(() => {
     const ul = tilesRef.current;
     if (!ul) return;
     const tiles = Array.from(ul.children) as HTMLElement[];
-    let offsets: { dx: number; dy: number; rot: number }[] = [];
 
-    const measure = () => {
+    if (reduce) {
+      tiles.forEach((t) => { t.style.transform = 'none'; t.style.opacity = '1'; });
+      return;
+    }
+
+    // Collapse into a rotated stack at the grid centre (no transition yet).
+    const collapse = () => {
       const cx = ul.clientWidth / 2;
       const cy = ul.clientHeight / 2;
       const mid = (tiles.length - 1) / 2;
-      offsets = tiles.map((t, i) => ({
-        dx: cx - (t.offsetLeft + t.offsetWidth / 2),
-        dy: cy - (t.offsetTop + t.offsetHeight / 2),
-        rot: (i - mid) * 3.2, // slight fan in the stacked state
-      }));
-    };
-
-    const apply = (v: number) => {
-      const c = 1 - v; // collapse amount: 1 = fully stacked, 0 = placed
-      const s = 0.82 + 0.18 * v;
       tiles.forEach((t, i) => {
-        const o = offsets[i];
-        if (!o) return;
-        t.style.transform = `translate(${o.dx * c}px, ${o.dy * c}px) scale(${s}) rotate(${o.rot * c}deg)`;
-        // The stack reads as one object: only the top tile is opaque collapsed,
-        // the rest fade in as they leave the pile.
-        t.style.opacity = String(Math.min(1, (i === tiles.length - 1 ? 0.55 : 0.12) + v));
+        const dx = cx - (t.offsetLeft + t.offsetWidth / 2);
+        const dy = cy - (t.offsetTop + t.offsetHeight / 2);
+        const rot = (i - mid) * 3.4;
+        t.style.transition = 'none';
+        t.style.transform = `translate(${dx}px, ${dy}px) scale(.82) rotate(${rot}deg)`;
+        t.style.opacity = i === tiles.length - 1 ? '0.6' : '0.14';
         t.style.zIndex = String(i);
       });
     };
 
-    measure();
-    apply(pTiles.get());
-    const unsub = pTiles.on('change', apply);
-    const onResize = () => { measure(); apply(pTiles.get()); };
+    let dealt = false;
+    const deal = () => {
+      dealt = true;
+      tiles.forEach((t, i) => {
+        t.style.transition = `transform .8s cubic-bezier(.22,1,.36,1) ${i * 0.07}s, opacity .5s ${i * 0.07}s`;
+        t.style.transform = 'translate(0, 0) scale(1) rotate(0deg)';
+        t.style.opacity = '1';
+      });
+    };
+
+    collapse();
+    const io = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) { deal(); io.disconnect(); } },
+      { rootMargin: '0px 0px -12% 0px', threshold: 0.25 },
+    );
+    io.observe(ul);
+
+    const onResize = () => { if (!dealt) collapse(); };
     window.addEventListener('resize', onResize);
-    return () => { unsub(); window.removeEventListener('resize', onResize); };
-  }, [pTiles, items.length]);
+    return () => { io.disconnect(); window.removeEventListener('resize', onResize); };
+  }, [reduce, items.length]);
 
   return (
     <section className="rf" data-section-color="dark">
       <div className="cnt rf-grid">
-        <motion.div className="rf-left" ref={headRef} style={{ y: headY, opacity: headO }}>
+        <motion.div
+          className="rf-left"
+          initial={reduce ? false : { opacity: 0, x: -48 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true, amount: 0.4 }}
+          transition={{ duration: 0.7, ease: EASE }}
+        >
           <h2 className="rf-h">{title}</h2>
           <p className="rf-sub">
             <Sub text={sub} underline={subUnderline} />
