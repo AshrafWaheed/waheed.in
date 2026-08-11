@@ -7,11 +7,11 @@
  * one swaps the grid to that group's solutions (build 3, grow 5). Each group is
  * its own valid 6-col grid via LAYOUTS below.
  *
- * Motion is SCROLL-SCRUBBED (useScrollProgress): the heading reveals (fade-up)
- * and the cards fade in on a per-card stagger as the section scrolls through the
- * viewport — no directional fly-in. Because the progress is a live MotionValue,
- * switching tabs while the section is already in view shows the new cards at the
- * current (revealed) state; switching mid-scroll scrubs them in.
+ * Motion is SCROLL-SCRUBBED (useScrollProgress) and attached to scroll: the
+ * heading reveals (fade-up) and the cards FLY IN (rise + fade) on a per-card
+ * stagger as the section scrolls through the viewport, reversing on scroll-up.
+ * Because the progress is a live MotionValue, switching tabs while the section
+ * is already in view shows the new cards at the current state.
  *
  * Each door names its own CraftArtifact index (`art`) and page `slug`.
  */
@@ -105,7 +105,7 @@ export default function ExpertiseBento() {
                 progress={pGrid}
                 from={from}
                 to={from + 0.5}
-                y={30}
+                y={64}
                 className={`xp-cell s${cell.span} l-${cell.layout}${d.soon ? ' is-soon' : ''}`}
               >
                 <Spotlight className="xp-cell-spot">
