@@ -8433,6 +8433,13 @@ html[data-nav="dark"] .burger span            { background: var(--rd-ivory); }
               translate 1.15s cubic-bezier(.22, 1, .36, 1) var(--d);
 }
 
+/* Single-surface rigs (Web / App Development): the one device is the star, so
+   centre and enlarge it. Position via left/width, NOT translate (owned by the
+   entrance) or transform (owned by parallax). */
+.wa-rig--web  .wa-slot--web { left: 6%; right: auto; top: 4%; width: 88%; }
+.wa-rig--app  .wa-slot--app { left: 50%; right: auto; top: 2%; bottom: auto; margin-left: -19%; width: 38%; }
+.wa-rig--web .wa-halo, .wa-rig--app .wa-halo { translate: -50% -50%; }
+
 /* ── The site ──────────────────────────────────────────────────────────── */
 /* Solid white, no border, `.ff-card`'s shadow ramp. `brightness` and not
    `opacity` is what keeps it opaque while it is the far object. */

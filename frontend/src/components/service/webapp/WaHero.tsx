@@ -37,7 +37,7 @@ import SplitReveal from '@/components/motion/SplitReveal';
 import ExplodeButton from '@/components/motion/ExplodeButton';
 import useParallaxOrigin from '@/components/motion/useParallaxOrigin';
 import GirihEngine from '@/components/graphics/GirihEngine';
-import DeviceRig from '@/components/graphics/DeviceRig';
+import DeviceRig, { type Surface } from '@/components/graphics/DeviceRig';
 import type { ServicePage } from '@/content/services';
 
 const EASE = [0.22, 1, 0.36, 1] as const;
@@ -49,7 +49,17 @@ const fadeUp: Variants = {
 type CSSVars = React.CSSProperties & Record<string, string | number>;
 const v = (o: Record<string, string | number>): CSSVars => o as CSSVars;
 
-const STACK = ['Next.js', 'React Native', 'TypeScript', 'One design system', 'iOS · Android · Web'];
+/** The surface (and its stack strip) is decided by the page: the Web and App
+ *  Development pages each show only their own device and only their own stack. */
+const SURFACE: Record<string, Surface> = {
+  'web-development': 'web',
+  'app-development': 'app',
+};
+const STACK: Record<Surface, string[]> = {
+  web: ['Next.js', 'TypeScript', 'Headless CMS', 'One design system', 'Web'],
+  app: ['React Native', 'TypeScript', 'One codebase', 'One design system', 'iOS · Android'],
+  both: ['Next.js', 'React Native', 'TypeScript', 'One design system', 'iOS · Android · Web'],
+};
 
 export default function WaHero({ page }: { page: ServicePage }) {
   const secRef = useRef<HTMLElement | null>(null);
@@ -63,6 +73,7 @@ export default function WaHero({ page }: { page: ServicePage }) {
   useParallaxOrigin(secRef, 9);
 
   const { eyebrow, h1, sub, promise } = page.hero;
+  const surface: Surface = SURFACE[page.slug] ?? 'both';
 
   return (
     <section
@@ -110,12 +121,12 @@ export default function WaHero({ page }: { page: ServicePage }) {
             flanks do, and a fade on this container would have made two solid
             cards translucent on the way in. */}
         <div className="wa-art">
-          <DeviceRig />
+          <DeviceRig surface={surface} />
         </div>
       </div>
 
       <div className="cnt wa-stack" aria-hidden="true">
-        {STACK.map((s, i) => (
+        {STACK[surface].map((s, i) => (
           <span key={s} className="wa-stack-i" style={v({ '--k': i })}>
             {s}
           </span>

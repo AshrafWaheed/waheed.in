@@ -42,6 +42,10 @@ import { useEffect, useState } from 'react';
 const STAGES = ['web', 'app', 'sys'] as const;
 type Stage = (typeof STAGES)[number];
 
+/** Which surfaces the rig argues. Single-surface pages (Web / App Development)
+ *  render only their own device; `both` is the cycling web↔app↔system rig. */
+export type Surface = 'web' | 'app' | 'both';
+
 /** What the rig is saying at each stage — read by the caption and the keys. */
 const CAPTION: Record<Stage, string> = {
   web: 'The site — fast, indexed, built to convert.',
@@ -49,40 +53,56 @@ const CAPTION: Record<Stage, string> = {
   sys: 'One design system, one backend, both surfaces.',
 };
 
-/** Which surfaces are lit. `sys` lights all three: that is the whole point. */
-const KEYS: { label: string; on: (s: Stage) => boolean }[] = [
-  { label: 'Web', on: (s) => s !== 'app' },
-  { label: 'iOS', on: (s) => s !== 'web' },
-  { label: 'Android', on: (s) => s !== 'web' },
+/** Which surfaces are lit, and which pages show each key. */
+const KEYS: { label: string; on: (s: Stage) => boolean; when: Surface[] }[] = [
+  { label: 'Web', on: (s) => s !== 'app', when: ['web', 'both'] },
+  { label: 'iOS', on: (s) => s !== 'web', when: ['app', 'both'] },
+  { label: 'Android', on: (s) => s !== 'web', when: ['app', 'both'] },
 ];
 
 type CSSVars = React.CSSProperties & Record<string, string | number>;
 const v = (o: Record<string, string | number>): CSSVars => o as CSSVars;
 
-export default function DeviceRig() {
-  const [stage, setStage] = useState<Stage>('web');
+export default function DeviceRig({ surface = 'both' }: { surface?: Surface }) {
+  const [stage, setStage] = useState<Stage>(surface === 'app' ? 'app' : 'web');
+  // `ping` re-keys the app's push/tap so their entrance replays on the app-only
+  // page, where the stage never changes to re-arm them.
+  const [ping, setPing] = useState(0);
 
   useEffect(() => {
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      setStage('sys');
-      return;
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (surface === 'web') { setStage('web'); return; }
+    if (surface === 'app') {
+      setStage('app');
+      if (reduce) return;
+      const t = setInterval(() => setPing((p) => p + 1), 3400);
+      return () => clearInterval(t);
     }
+    if (reduce) { setStage('sys'); return; }
     let n = 0;
     const t = setInterval(() => {
       n = (n + 1) % STAGES.length;
       setStage(STAGES[n]);
     }, 3400);
     return () => clearInterval(t);
-  }, []);
+  }, [surface]);
+
+  const showWeb = surface !== 'app';
+  const showApp = surface !== 'web';
+  const caption = surface === 'both' ? CAPTION[stage] : CAPTION[surface];
+  const keys = KEYS.filter((k) => k.when.includes(surface));
+  const appEvent = stage === 'app';
+  const pushKey = surface === 'app' ? ping : 'once';
 
   return (
-    <div className="wa-rig" data-stage={stage} aria-hidden="true">
+    <div className={`wa-rig wa-rig--${surface}`} data-stage={stage} aria-hidden="true">
       <span className="wa-halo" />
 
       {/* ── the site ─────────────────────────────────────────────────────── */}
       {/* `--k` is parallax depth (bigger = nearer), `--d` the entrance stagger,
           both read by .ab-lay and the .is-in transition — same contract the
           homepage flanks use. */}
+      {showWeb && (
       <div className="wa-slot wa-slot--web ab-lay" style={v({ '--k': 1.6, '--d': '.5s' })}>
         <div className="wa-browser">
           <div className="wa-chrome">
@@ -112,8 +132,10 @@ export default function DeviceRig() {
           </div>
         </div>
       </div>
+      )}
 
       {/* ── the app ──────────────────────────────────────────────────────── */}
+      {showApp && (
       <div className="wa-slot wa-slot--app ab-lay" style={v({ '--k': 2.8, '--d': '.72s' })}>
         <div className="wa-phone">
           <span className="wa-notch" />
@@ -162,8 +184,8 @@ export default function DeviceRig() {
           {/* Mounted only on `app`, so unmounting is what rearms the slide-in.
               A solid white card with its own shadow — the same object the
               homepage floats beside the founders. */}
-          {stage === 'app' && (
-            <div className="wa-push">
+          {appEvent && (
+            <div key={`push-${pushKey}`} className="wa-push">
               <span className="wa-push-i" />
               <span className="wa-push-txt">
                 <b />
@@ -171,24 +193,27 @@ export default function DeviceRig() {
               </span>
             </div>
           )}
-          {stage === 'app' && <span className="wa-tap" />}
+          {appEvent && <span key={`tap-${pushKey}`} className="wa-tap" />}
         </div>
       </div>
+      )}
 
-      {/* One component leaving the site and landing in the app — the only thing
-          on the rig that crosses between the two devices. */}
-      {stage === 'sys' && <span className="wa-share" />}
+      {/* One component leaving the site and landing in the app — only on the
+          combined rig, where both devices are present. */}
+      {surface === 'both' && stage === 'sys' && <span className="wa-share" />}
 
-      <div className="wa-keys">
-        {KEYS.map((k) => (
-          <span key={k.label} className={`wa-key${k.on(stage) ? ' is-on' : ''}`}>
-            {k.label}
-          </span>
-        ))}
-      </div>
+      {keys.length > 0 && (
+        <div className="wa-keys">
+          {keys.map((k) => (
+            <span key={k.label} className={`wa-key${k.on(stage) ? ' is-on' : ''}`}>
+              {k.label}
+            </span>
+          ))}
+        </div>
+      )}
 
-      <p key={stage} className="wa-caption">
-        {CAPTION[stage]}
+      <p key={surface === 'both' ? stage : surface} className="wa-caption">
+        {caption}
       </p>
     </div>
   );
