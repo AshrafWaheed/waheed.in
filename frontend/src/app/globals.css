@@ -9037,7 +9037,9 @@ html[data-nav="dark"] .burger span            { background: var(--rd-ivory); }
 .nav-inner {
   background: var(--rd-white);
   border-radius: 999px;
-  padding: .48rem .55rem .48rem 1.4rem;
+  /* Extra right padding pulls the "Talk to us" button in from the pill edge
+     (~12px) and gives its stacked shells room to peek without touching it. */
+  padding: .48rem 1.35rem .48rem 1.4rem;
   box-shadow: 0 16px 40px rgba(8, 20, 25, .28), 0 3px 10px rgba(8, 20, 25, .14);
 }
 .nav.scrolled .nav-inner { box-shadow: 0 10px 30px rgba(8, 20, 25, .26), 0 2px 6px rgba(8, 20, 25, .12); }
