@@ -13,7 +13,7 @@ import { useRef } from 'react';
 import { motion, useTransform } from 'framer-motion';
 import { useScrollProgress } from '@/components/motion/useScrollProgress';
 import StackButton from '@/components/ui/StackButton';
-import Khatam from '@/components/graphics/Khatam';
+import FoundingGlyph from '@/components/graphics/FoundingGlyph';
 import { founding } from '@/content/home';
 
 /** Render a paragraph, underlining the one phrase if present in it. */
@@ -58,11 +58,12 @@ export default function FoundingStoryHybrid() {
           </div>
         </motion.div>
 
-        {/* Placeholder portrait. Branded (a faint khatam on a soft panel) rather
-            than flat grey, so it reads as intentional on the dark ground until a
-            real image lands here. */}
-        <motion.div className="fs-media" style={{ x: mediaX, opacity: mediaO }} role="img" aria-label="Portrait of the Waheed founders — coming soon">
-          <Khatam size={150} inner={0.5} stroke="rgba(37,72,81,.16)" strokeWidth={1.4} className="fs-media-mark" />
+        {/* Crafted brand plate: an illuminated khatam medallion whose message
+            threads converge into one centre — the founding story as one glyph.
+            Stands in for founder photography; swap in an <img> here when a real
+            portrait lands (the panel geometry already frames one). */}
+        <motion.div className="fs-media" style={{ x: mediaX, opacity: mediaO }}>
+          <FoundingGlyph />
         </motion.div>
       </div>
     </section>

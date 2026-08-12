@@ -84,14 +84,19 @@ export const peopleBehind = {
 
 /* ─── §2d The Values We Stand For (redesign) ───────────────────────
    From the WAHEEDWEB Figma "About Us" artboard (nodes 74:499–74:515): a
-   centred heading over a 3×2 checkerboard of teal/gold tiles. NOTE: the Figma
-   tiles are EMPTY — the six value names have not been authored yet. `items` is
-   the fill order (row-major; even index → teal, odd → gold). Populate once the
-   client supplies the values; until then the tiles render blank, matching the
-   design as it stands. */
+   centred heading over a 3×2 checkerboard of teal/gold tiles. `items` is the
+   fill order (row-major; even index → teal, odd → gold) — the six values the
+   client supplied. */
 export const values = {
   heading: 'The Values We Stand For',
-  items: ['', '', '', '', '', ''] as readonly string[],
+  items: [
+    'Ihsan-led',
+    '100% Shariah Compliant',
+    'Human Customer Care',
+    'Embodying Itqan',
+    'Honesty',
+    'Long-term Partnership',
+  ] as readonly string[],
 } as const;
 
 /* ─── §2e The Barakah quote (redesign) ─────────────────────────────
