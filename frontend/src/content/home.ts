@@ -65,6 +65,18 @@ export const trustItems = [
   '100% Shariah-Compliant',
 ] as const;
 
+/* ─── Client logos (marquee) ───────────────────────────────────────
+   Rendered as uniform ivory silhouettes (CSS mask) so a mixed-polarity set
+   — blue, red, gold-on-black, black-on-white — reads as one cohesive wall on
+   the dark strip. `ar` = width/height, used to size each masked box. Assets in
+   public/clients/ (East African's baked black bg was knocked out to alpha). */
+export const clients = [
+  { name: 'Mambo Media', src: '/clients/mambo-media.webp', ar: 1.24 },
+  { name: 'Optipart', src: '/clients/optipart.png', ar: 3.02 },
+  { name: 'East African Cuisine', src: '/clients/east-african.png', ar: 1.25 },
+  { name: 'Waqf Wakalah', src: '/clients/waqf-wakalah.webp', ar: 2.2 },
+] as const;
+
 /* ─── Manifesto (thesis) ───────────────────────────────────────── */
 export const manifesto = {
   lines: [
