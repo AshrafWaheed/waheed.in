@@ -46,9 +46,6 @@ const fadeUp: Variants = {
 type CSSVars = React.CSSProperties & Record<string, string | number>;
 const v = (o: Record<string, string | number>): CSSVars => o as CSSVars;
 
-/** One visual run of the trust marquee. The four client marks are repeated so
- *  the run is dense enough to fill the band before the seamless -50% loop. */
-const LOGO_RUN = [...clients, ...clients];
 
 /**
  * The sub-headline, with the phrases in `hero.subUnderline` wrapped in a gold
@@ -302,24 +299,19 @@ export default function HeroFoundersFlank() {
         </svg>
       </p>
 
-      {/* Client marks, tinted to one ink silhouette (CSS mask) so a mixed-palette
-          set reads as one wall on the white band. Two identical runs in the track
-          make a seamless -50% loop; the second is aria-hidden so the marks are
-          not announced twice. */}
+      {/* A static row (no scroll): the real client marks centred — tinted to one
+          ink silhouette (CSS mask) so a mixed-palette set reads as one wall on
+          the white band — flanked by two "you could be here" invitation slots. */}
       <div className="ff-marquee">
-        <div className="ff-marquee-track">
-          {LOGO_RUN.map((c, i) => (
+        <div className="ff-logos">
+          <span className="ff-slot" aria-hidden="true">You could<br />be here</span>
+          {clients.map((c) => (
             <span
-              key={`a${i}`} className="ff-logo" role="img" aria-label={c.name}
+              key={c.name} className="ff-logo" role="img" aria-label={c.name}
               style={v({ '--logo': `url(${c.src})`, '--ar': c.ar })}
             />
           ))}
-          {LOGO_RUN.map((c, i) => (
-            <span
-              key={`b${i}`} className="ff-logo" aria-hidden="true"
-              style={v({ '--logo': `url(${c.src})`, '--ar': c.ar })}
-            />
-          ))}
+          <span className="ff-slot" aria-hidden="true">You could<br />be here</span>
         </div>
       </div>
     </section>

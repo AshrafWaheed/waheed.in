@@ -9203,10 +9203,11 @@ html[data-nav="dark"] .burger span         { background: #254851; }
   background: var(--rd-white);
   padding: 1.9rem 0; overflow: hidden;
 }
-.ff-marquee-track {
-  display: flex; align-items: center; gap: clamp(2.5rem, 5vw, 4.5rem);
-  width: max-content;
-  animation: ff-marquee 34s linear infinite;
+/* Static, centred row: the real client marks in the middle, flanked by two
+   "you could be here" ghost slots. No scroll. */
+.ff-logos {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: center;
+  gap: clamp(1.8rem, 4vw, 3.5rem); padding: 0 1.5rem;
 }
 .ff-logo {
   flex: 0 0 auto;
@@ -9220,15 +9221,22 @@ html[data-nav="dark"] .burger span         { background: #254851; }
   opacity: .72; transition: opacity .3s ease;
 }
 .ff-logo:hover { opacity: 1; }
-@keyframes ff-marquee { to { transform: translateX(-50%); } }
-.ff-marquee:hover .ff-marquee-track { animation-play-state: paused; }
+/* Ghost invitation slot — a dashed placeholder that reads "you could be here". */
+.ff-slot {
+  flex: 0 0 auto; display: grid; place-items: center; text-align: center;
+  height: clamp(38px, 4.4vw, 52px); padding: 0 clamp(.9rem, 1.6vw, 1.35rem);
+  border: 1.5px dashed rgb(37 72 81 / .3); border-radius: 10px;
+  font-family: var(--font-sans); font-size: clamp(.6rem, .78vw, .68rem);
+  line-height: 1.2; letter-spacing: .12em; text-transform: uppercase;
+  color: rgb(37 72 81 / .5); transition: color .3s ease, border-color .3s ease;
+}
+.ff-slot:hover { color: rgb(37 72 81 / .8); border-color: rgb(37 72 81 / .55); }
 
 /* Reduced motion / no-hover: the torch cannot run (its coordinates come from a
    pointer), so the word must be legible without it, and the marquee holds
    still. */
 @media (prefers-reduced-motion: reduce) {
   .ff-invisible-base { color: rgb(var(--rd-gold-bloom-rgb) / .92); }
-  .ff-marquee-track  { animation: none; }
 }
 @media (hover: none) {
   .ff-invisible-base { color: rgb(var(--rd-gold-bloom-rgb) / .92); }
