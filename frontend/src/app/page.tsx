@@ -3,7 +3,6 @@ import SectionNav from '@/components/motion/useSectionNav';
 // Direction C — the founders flank the copy instead of the collage stacking
 // under it. HeroSignalBoard (B) is kept unmounted for comparison.
 import HeroFoundersFlank from '@/components/home/hybrid/HeroFoundersFlank';
-import ClientsMarquee from '@/components/home/hybrid/ClientsMarquee';
 // Manifesto commented out per the redesign — the hero now runs straight into
 // the solutions grid, with no interstitial manifesto line.
 // import ManifestoHybrid from '@/components/home/hybrid/ManifestoHybrid';
@@ -31,7 +30,6 @@ export default function HomePage() {
       <SiteJsonLd />
       <main>
         <HeroFoundersFlank />
-        <ClientsMarquee />
         {/* <ManifestoHybrid /> — removed per the redesign; hero → solutions. */}
         <ExpertiseBento />
         <ServicesHybrid />

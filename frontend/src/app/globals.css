@@ -3768,32 +3768,6 @@ html[data-nav="dark"] .burger span            { background: var(--rd-ivory); }
   color: var(--rd-gold-bloom); white-space: nowrap;
 }
 
-/* ── Client logo wall (monochrome mask marquee) ─────────────────────────────
-   Component: home/hybrid/ClientsMarquee.tsx. Each logo is a box tinted ivory
-   with the source image as its alpha mask, so a mixed-palette set reads as one
-   cohesive greyscale wall on the dark strip. --ar (w/h) sizes the box. */
-.cl {
-  background: var(--rd-night-2);
-  border-top: 1px solid var(--rd-hairline);
-  border-bottom: 1px solid var(--rd-hairline);
-  padding: clamp(2.4rem, 4.5vw, 3.6rem) 0; overflow: hidden;
-}
-.cl-kicker {
-  text-align: center; font-family: var(--font-sans);
-  font-size: .74rem; letter-spacing: .18em; text-transform: uppercase;
-  color: rgb(var(--rd-ivory-rgb) / .5);
-  margin-bottom: clamp(1.5rem, 3vw, 2.2rem);
-}
-.cl-item { display: inline-flex; align-items: center; padding: 0 clamp(1.8rem, 4vw, 3.6rem); }
-.cl-logo {
-  display: block; height: clamp(30px, 3.6vw, 42px); aspect-ratio: var(--ar);
-  background-color: var(--rd-ivory);
-  -webkit-mask: var(--logo) center / contain no-repeat;
-  mask: var(--logo) center / contain no-repeat;
-  opacity: .58; transition: opacity .3s ease;
-}
-.cl-item:hover .cl-logo { opacity: 1; }
-
 /* ── §3 Manifesto (pinned scrub) ─────────────────────────────────── */
 .hy-manifesto { position: relative; background: var(--rd-night); color: var(--rd-on-night); }
 .hy-manifesto-stage {
@@ -9236,10 +9210,16 @@ html[data-nav="dark"] .burger span         { background: #254851; }
 }
 .ff-logo {
   flex: 0 0 auto;
-  width: clamp(112px, 12vw, 168px); height: clamp(46px, 5vw, 74px);
-  border-radius: 10px;
-  background: #E4E7EB;
+  height: clamp(30px, 3.4vw, 44px); aspect-ratio: var(--ar);
+  /* One ink silhouette per mark: the box is tinted, the logo's own alpha is the
+     mask — so blue / red / black-on-white / gold-on-black all read the same on
+     the white band, and the teal+gold palette stays intact. */
+  background-color: var(--rd-teal);
+  -webkit-mask: var(--logo) center / contain no-repeat;
+  mask: var(--logo) center / contain no-repeat;
+  opacity: .72; transition: opacity .3s ease;
 }
+.ff-logo:hover { opacity: 1; }
 @keyframes ff-marquee { to { transform: translateX(-50%); } }
 .ff-marquee:hover .ff-marquee-track { animation-play-state: paused; }
 

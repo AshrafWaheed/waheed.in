@@ -35,7 +35,7 @@ import { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import type { Variants } from 'framer-motion';
 import StackButton from '@/components/ui/StackButton';
-import { hero } from '@/content/home';
+import { hero, clients } from '@/content/home';
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 const fadeUp: Variants = {
@@ -46,8 +46,9 @@ const fadeUp: Variants = {
 type CSSVars = React.CSSProperties & Record<string, string | number>;
 const v = (o: Record<string, string | number>): CSSVars => o as CSSVars;
 
-/** Placeholder logo slots for the trust marquee — real marks drop in later. */
-const LOGO_SLOTS = Array.from({ length: 6 }, (_, i) => i);
+/** One visual run of the trust marquee. The four client marks are repeated so
+ *  the run is dense enough to fill the band before the seamless -50% loop. */
+const LOGO_RUN = [...clients, ...clients];
 
 /**
  * The sub-headline, with the phrases in `hero.subUnderline` wrapped in a gold
@@ -301,16 +302,23 @@ export default function HeroFoundersFlank() {
         </svg>
       </p>
 
-      {/* Placeholders until the real client marks arrive. Two identical runs in
-          the track make a seamless -50% loop; the second is aria-hidden so the
-          count is not announced twice. */}
+      {/* Client marks, tinted to one ink silhouette (CSS mask) so a mixed-palette
+          set reads as one wall on the white band. Two identical runs in the track
+          make a seamless -50% loop; the second is aria-hidden so the marks are
+          not announced twice. */}
       <div className="ff-marquee">
         <div className="ff-marquee-track">
-          {LOGO_SLOTS.map((i) => (
-            <span key={`a${i}`} className="ff-logo" aria-hidden="true" />
+          {LOGO_RUN.map((c, i) => (
+            <span
+              key={`a${i}`} className="ff-logo" role="img" aria-label={c.name}
+              style={v({ '--logo': `url(${c.src})`, '--ar': c.ar })}
+            />
           ))}
-          {LOGO_SLOTS.map((i) => (
-            <span key={`b${i}`} className="ff-logo" aria-hidden="true" />
+          {LOGO_RUN.map((c, i) => (
+            <span
+              key={`b${i}`} className="ff-logo" aria-hidden="true"
+              style={v({ '--logo': `url(${c.src})`, '--ar': c.ar })}
+            />
           ))}
         </div>
       </div>
