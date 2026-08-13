@@ -15,8 +15,13 @@
  */
 import { useEffect, useRef } from 'react';
 import { motion, useTransform } from 'framer-motion';
+import { Dice5, Percent, Music, VenetianMask, Wine, EyeOff } from 'lucide-react';
 import { useScrollProgress } from '@/components/motion/useScrollProgress';
 import { refusal } from '@/content/home';
+
+/** One icon per refusal, in the order of `refusal.items` (content/home.ts):
+ *  gambling · interest · haram entertainment · manipulation · intoxicants · adult. */
+const ICONS = [Dice5, Percent, Music, VenetianMask, Wine, EyeOff] as const;
 
 /** Underline the one phrase in the sub. */
 function Sub({ text, underline }: { text: string; underline: string }) {
@@ -92,9 +97,15 @@ export default function RefusalHybrid() {
         </motion.div>
 
         <ul className="rf-tiles" ref={tilesRef}>
-          {items.map((item) => (
-            <li key={item} className="rf-tile">{item}</li>
-          ))}
+          {items.map((item, i) => {
+            const Icon = ICONS[i] ?? Dice5;
+            return (
+              <li key={item} className="rf-tile">
+                <span className="rf-tile-i" aria-hidden="true"><Icon size={20} strokeWidth={1.7} /></span>
+                <span className="rf-tile-t">{item}</span>
+              </li>
+            );
+          })}
         </ul>
       </div>
     </section>
