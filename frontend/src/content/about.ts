@@ -32,14 +32,15 @@ export const aboutHero = {
 } as const;
 
 /* ─── §2a Our Founding Story (redesign) ────────────────────────────
-   Verbatim from the WAHEEDWEB Figma "About Us" artboard (node 74:434).
-   The em dash and the straight apostrophe in "da'wah" are as authored —
+   Kept in sync VERBATIM with the homepage teaser (`founding` in home.ts):
+   the /about full story and the / teaser must tell the same story. The straight
+   apostrophes ("That's", "don't", "da'wah") and the em dash are as authored —
    do not tidy. */
 export const foundingStory = {
   heading: 'Our Founding Story',
   paras: [
-    'It all started when one of the founding team received messages from organisations looking for fully Shariah-compliant marketing services. That’s when she realised there was a lack of truly halal alternatives to mainstream marketing—alternatives that don’t compromise the principles, modesty, or peace of mind of halal business and organisation founders and operators, while still helping them achieve meaningful brand growth.',
-    "More than simply serving the community through their technical expertise, the people at Waheed see this initiative as an opportunity for da'wah—a way to demonstrate that brands can grow, create meaningful impact, and achieve success without compromising their faith and values.",
+    "It started when the founding team received messages from organisations looking for fully Shariah-compliant marketing services. That's when they realised there was a lack of truly halal alternatives to mainstream marketing—alternatives that don't compromise the principles, modesty, or peace of mind of halal business and organisation founders and operators, while still helping them achieve meaningful brand growth.",
+    "More than simply serving the community through their technical expertise, the people at Waheed see it as an opportunity for da'wah—a way to demonstrate that brands can grow, create meaningful impact, and achieve success without compromising their faith and values.",
   ],
 } as const;
 
