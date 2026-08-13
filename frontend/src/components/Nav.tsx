@@ -236,22 +236,22 @@ export default function Nav({}: { blogPublic?: boolean }) {
               </Link>
             ))}
 
-            <Link
+            <StackButton
               href="/book"
               onClick={() => setOpen(false)}
-              className="btn btn-gold"
+              arrow
               style={{ alignSelf: 'flex-start', marginTop: '1rem' }}
             >
-              Book a call →
-            </Link>
-            <Link
+              Book a call
+            </StackButton>
+            <StackButton
               href="/contact"
               onClick={() => setOpen(false)}
-              className="btn btn-outline"
+              tone="ghost"
               style={{ alignSelf: 'flex-start', marginTop: '.6rem' }}
             >
               Let&apos;s talk
-            </Link>
+            </StackButton>
           </motion.div>
         )}
       </AnimatePresence>

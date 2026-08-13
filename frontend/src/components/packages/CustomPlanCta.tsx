@@ -17,7 +17,7 @@
  * Copy is verbatim from content/packages.ts.
  */
 import SplitReveal from '@/components/motion/SplitReveal';
-import ExplodeButton from '@/components/motion/ExplodeButton';
+import StackButton from '@/components/ui/StackButton';
 import { customPlan } from '@/content/packages';
 
 export default function CustomPlanCta() {
@@ -32,9 +32,9 @@ export default function CustomPlanCta() {
             <p className="hy-cta-body">{customPlan.body}</p>
           </div>
           <div className="hy-cta-acts">
-            <ExplodeButton href={customPlan.cta.href} className="btn btn-gold">
+            <StackButton href={customPlan.cta.href} size="lg">
               {customPlan.cta.label}
-            </ExplodeButton>
+            </StackButton>
           </div>
         </div>
       </div>

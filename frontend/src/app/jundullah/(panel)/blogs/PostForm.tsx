@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import StackButton from '@/components/ui/StackButton';
 import RichEditor from './RichEditor';
 import { uploadImage } from './uploadImage';
 
@@ -197,21 +198,21 @@ export default function PostForm({
           <span className={`adm-badge adm-badge-${status}`}>{status}</span>
           {justSaved && <span className="adm-saved">Saved ✓</span>}
           {mode === 'edit' && post && (
-            <a
+            <StackButton
               href={`/jundullah/blogs/${post.id}/preview`}
               target="_blank"
-              rel="noopener noreferrer"
-              className="btn adm-preview-link"
+              size="sm"
+              tone="ghost"
             >
               Preview ↗
-            </a>
+            </StackButton>
           )}
-          <button type="button" className="btn adm-save-draft" onClick={() => save('draft')} disabled={saving !== null}>
+          <StackButton type="button" size="sm" tone="ghost" onClick={() => save('draft')} disabled={saving !== null}>
             {saving === 'draft' ? 'Saving…' : 'Save draft'}
-          </button>
-          <button type="button" className="btn btn-gold" onClick={() => save('published')} disabled={saving !== null}>
+          </StackButton>
+          <StackButton type="button" size="sm" onClick={() => save('published')} disabled={saving !== null}>
             {saving === 'published' ? 'Publishing…' : status === 'published' ? 'Update' : 'Publish'}
-          </button>
+          </StackButton>
         </div>
       </div>
 

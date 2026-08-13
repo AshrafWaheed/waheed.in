@@ -11,12 +11,11 @@
  * The chart is the headline's evidence, so it is deliberately not decoration
  * tucked behind the words: it gets its own band and its own labels.
  */
-import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import type { Variants } from 'framer-motion';
 import SplitReveal from '@/components/motion/SplitReveal';
-import ExplodeButton from '@/components/motion/ExplodeButton';
+import StackButton from '@/components/ui/StackButton';
 import CompoundCurve from '@/components/graphics/CompoundCurve';
 import type { ServicePage } from '@/content/services';
 
@@ -58,12 +57,12 @@ export default function SoHero({ page }: { page: ServicePage }) {
               {promise}
             </motion.p>
             <motion.div className="so-hero-acts" custom={1.14} variants={fadeUp} initial="hidden" animate="visible">
-              <ExplodeButton href="/contact" className="btn btn-gold">
-                Book a free clarity call →
-              </ExplodeButton>
-              <Link href="/packages" className="btn btn-outline-lt" data-cursor>
-                See the packages
-              </Link>
+              <StackButton href="/contact" size="lg" arrow>
+            Book a free clarity call
+          </StackButton>
+              <StackButton href="/packages" size="lg" tone="ghost" onDark>
+            See the packages
+          </StackButton>
             </motion.div>
           </div>
         </div>

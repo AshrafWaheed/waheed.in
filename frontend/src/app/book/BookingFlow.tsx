@@ -24,6 +24,7 @@
 
 import { useState, useEffect, type FormEvent } from 'react';
 import { Video, Check, Loader2, CalendarDays, ArrowLeft } from 'lucide-react';
+import StackButton from '@/components/ui/StackButton';
 import SlotPicker from './SlotPicker';
 
 interface CallType {
@@ -36,7 +37,9 @@ interface Booked {
   type: { name: string; duration_min: number };
 }
 
-export default function BookingFlow() {
+interface Prefill { email?: string; company?: string; phone?: string }
+
+export default function BookingFlow({ prefill }: { prefill?: Prefill | null } = {}) {
   const [visitorTz, setVisitorTz] = useState('UTC');
   const [businessTz, setBusinessTz] = useState('UTC');
   const [showTz, setShowTz] = useState('UTC');
@@ -71,6 +74,19 @@ export default function BookingFlow() {
       }));
     }
   }, []);
+
+  // On /book the lead form above hands its captured details down here (rather
+  // than via the URL) after firing the contact lead; merge them in as they
+  // arrive so the booking attaches to that same contact.
+  useEffect(() => {
+    if (!prefill) return;
+    setForm((f) => ({
+      ...f,
+      email: prefill.email || f.email,
+      phone: prefill.phone || f.phone,
+      company: prefill.company || f.company,
+    }));
+  }, [prefill]);
 
   useEffect(() => {
     const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC';
@@ -153,9 +169,9 @@ export default function BookingFlow() {
         <p className="bk-done-tz">{booked.type.duration_min} minutes · times shown in {showTz}</p>
 
         {booked.meet_url ? (
-          <a className="btn btn-gold bk-done-cta" href={booked.meet_url} target="_blank" rel="noopener noreferrer">
+          <StackButton className="bk-done-cta" href={booked.meet_url} target="_blank">
             <Video size={16} /> Join the Google Meet
-          </a>
+          </StackButton>
         ) : (
           <p className="bk-note">
             We&apos;ll email your meeting link shortly. If it hasn&apos;t arrived within the hour,
@@ -234,9 +250,9 @@ export default function BookingFlow() {
               value={form.website} onChange={(e) => setForm({ ...form, website: e.target.value })} />
           </div>
 
-          <button type="submit" className="btn btn-gold bk-submit" disabled={submitting}>
+          <StackButton type="submit" fullWidth className="bk-submit" disabled={submitting}>
             {submitting ? <><Loader2 size={16} className="bk-spin" /> Booking…</> : 'Confirm the call →'}
-          </button>
+          </StackButton>
 
           <p className="bk-fine">
             No payment, no obligation. We&apos;ll only use your details to run this call and follow up on it.
@@ -269,10 +285,10 @@ export default function BookingFlow() {
           />
 
           {slot && (
-            <button type="button" className="btn btn-gold bk-next"
+            <StackButton type="button" fullWidth arrow className="bk-next"
               onClick={() => { setStage('details'); setError(''); }}>
-              Continue with {fmtTime(slot)} →
-            </button>
+              Continue with {fmtTime(slot)}
+            </StackButton>
           )}
         </>
       )}

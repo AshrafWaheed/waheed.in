@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { adminApi } from '@/lib/admin-api';
+import StackButton from '@/components/ui/StackButton';
 import ContactsTable, { type Contact } from './ContactsTable';
 import ExportCsvButton from '../ExportCsvButton';
 
@@ -67,7 +68,7 @@ export default async function ContactsPage({
 
       <form className="adm-filters" method="get">
         <input type="search" name="q" defaultValue={q} placeholder="Search name, email or brand…" />
-        <button type="submit" className="btn adm-filter-btn">Search</button>
+        <StackButton type="submit" size="sm" tone="ghost" className="adm-filter-btn">Search</StackButton>
       </form>
 
       {rows.length === 0 ? (

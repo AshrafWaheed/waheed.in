@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { UserPlus, Pencil, KeyRound, Trash2, X, Check, Copy } from 'lucide-react';
+import StackButton from '@/components/ui/StackButton';
 
 export type ManagedUser = {
   id: number;
@@ -104,9 +105,9 @@ export default function UsersManager({
   return (
     <>
       <div className="adm-users-toolbar">
-        <button type="button" className="btn btn-gold" onClick={openCreate}>
+        <StackButton type="button" size="sm" onClick={openCreate}>
           <UserPlus size={16} /> Add user
-        </button>
+        </StackButton>
       </div>
 
       {notice && (
@@ -202,10 +203,10 @@ export default function UsersManager({
               )}
 
               <div className="adm-modal-actions">
-                <button type="button" className="btn adm-save-draft" onClick={close} disabled={busy}>Cancel</button>
-                <button type="button" className="btn btn-gold" onClick={submit} disabled={busy}>
+                <StackButton type="button" size="sm" tone="ghost" onClick={close} disabled={busy}>Cancel</StackButton>
+                <StackButton type="button" size="sm" onClick={submit} disabled={busy}>
                   <Check size={16} /> {busy ? 'Saving…' : 'Save'}
-                </button>
+                </StackButton>
               </div>
             </div>
           </div>

@@ -13,7 +13,7 @@
  * Copy is verbatim from content/faq.ts.
  */
 import SplitReveal from '@/components/motion/SplitReveal';
-import ExplodeButton from '@/components/motion/ExplodeButton';
+import StackButton from '@/components/ui/StackButton';
 import { faqCta } from '@/content/faq';
 
 export default function FaqCta() {
@@ -27,9 +27,9 @@ export default function FaqCta() {
           <p className="hy-cta-body">{faqCta.body}</p>
         </div>
         <div className="hy-cta-acts">
-          <ExplodeButton href={faqCta.cta.href} className="btn btn-gold">
+          <StackButton href={faqCta.cta.href} size="lg">
             {faqCta.cta.label}
-          </ExplodeButton>
+          </StackButton>
         </div>
       </div>
     </section>

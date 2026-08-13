@@ -15,7 +15,7 @@
  */
 import Link from 'next/link';
 import SplitReveal from '@/components/motion/SplitReveal';
-import ExplodeButton from '@/components/motion/ExplodeButton';
+import StackButton from '@/components/ui/StackButton';
 import type { ServicePage } from '@/content/services';
 
 export default function ServiceCta({ page }: { page: ServicePage }) {
@@ -33,9 +33,9 @@ export default function ServiceCta({ page }: { page: ServicePage }) {
         </h2>
         <p className="sd-cta-b reveal">{body}</p>
         <div className="sd-cta-acts">
-          <ExplodeButton href="/contact" className="btn btn-gold">
-            Book a free clarity call →
-          </ExplodeButton>
+          <StackButton href="/contact" size="lg" arrow>
+            Book a free clarity call
+          </StackButton>
           <Link href="/packages" className="sd-cta-alt" data-cursor>
             Or compare the packages →
           </Link>

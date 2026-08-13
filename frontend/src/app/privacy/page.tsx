@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
+import StackButton from '@/components/ui/StackButton';
 import { pageMeta } from '@/lib/seo';
 
 export const metadata: Metadata = pageMeta({
@@ -57,7 +57,7 @@ export default function PrivacyPage() {
           </div>
 
           <div style={{ marginTop: '3rem', paddingTop: '2rem', borderTop: '1px solid var(--rd-border)' }}>
-            <Link href="/" className="btn btn-teal">← Back to Home</Link>
+            <StackButton href="/" tone="ghost">← Back to Home</StackButton>
           </div>
         </div>
       </section>

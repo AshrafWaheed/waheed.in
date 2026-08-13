@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import StackButton from '@/components/ui/StackButton';
 
 const SOCIAL = [
   {
@@ -87,9 +88,9 @@ export default function Maintenance() {
               required
               disabled={status === 'saving'}
             />
-            <button type="submit" className="btn btn-gold" disabled={status === 'saving'}>
+            <StackButton type="submit" disabled={status === 'saving'}>
               {status === 'saving' ? 'Saving…' : 'Notify me →'}
-            </button>
+            </StackButton>
           </form>
         )}
         {status === 'error' && (

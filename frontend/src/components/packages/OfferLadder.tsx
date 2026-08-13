@@ -26,10 +26,9 @@
  *
  * Copy is verbatim from content/packages.ts.
  */
-import Link from 'next/link';
+import StackButton from '@/components/ui/StackButton';
 import { useEffect, useRef, useState } from 'react';
 import Spotlight from '@/components/motion/Spotlight';
-import Magnetic from '@/components/motion/Magnetic';
 import Khatam from '@/components/graphics/Khatam';
 import { ladder } from '@/content/packages';
 
@@ -105,15 +104,14 @@ export default function OfferLadder() {
 
                 <div className="pk-rung-tail">
                   <p className="pk-rung-desc">{r.desc}</p>
-                  <Magnetic strength={0.35}>
-                    <Link
-                      href={ladder.applyHref}
-                      className={`btn btn-sm ${r.featured ? 'btn-gold' : 'btn-outline'} pk-apply`}
-                      data-cursor
-                    >
-                      {ladder.applyLabel}
-                    </Link>
-                  </Magnetic>
+                  <StackButton
+                    href={ladder.applyHref}
+                    size="sm"
+                    tone={r.featured ? 'gold' : 'ghost'}
+                    className="pk-apply"
+                  >
+                    {ladder.applyLabel}
+                  </StackButton>
                 </div>
               </div>
             </Spotlight>

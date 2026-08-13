@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import StackButton from '@/components/ui/StackButton';
 
 async function post(url: string, method: string, payload: unknown) {
   const res = await fetch(url, {
@@ -84,9 +85,9 @@ export default function ProfileForm({ initialName, initialEmail }: { initialName
           <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
         </label>
         <div className="adm-modal-actions">
-          <button type="button" className="btn btn-gold" onClick={saveDetails} disabled={savingDetails}>
+          <StackButton type="button" size="sm" onClick={saveDetails} disabled={savingDetails}>
             {savingDetails ? 'Saving…' : 'Save changes'}
-          </button>
+          </StackButton>
         </div>
       </section>
 
@@ -108,9 +109,9 @@ export default function ProfileForm({ initialName, initialEmail }: { initialName
           <input type="password" value={confirm} onChange={(e) => setConfirm(e.target.value)} autoComplete="new-password" />
         </label>
         <div className="adm-modal-actions">
-          <button type="button" className="btn btn-gold" onClick={savePassword} disabled={savingPw}>
+          <StackButton type="button" size="sm" onClick={savePassword} disabled={savingPw}>
             {savingPw ? 'Saving…' : 'Update password'}
-          </button>
+          </StackButton>
         </div>
       </section>
     </div>

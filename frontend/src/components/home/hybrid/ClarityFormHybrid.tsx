@@ -13,6 +13,14 @@
  * The contact endpoint requires name/brand/service/message, so `name` is sent
  * as the brand and `service` is fixed to "Clarity call"; `message` is the
  * project text (min 10 chars, matching the endpoint's rule).
+ *
+ * ── Reuse on /book ──────────────────────────────────────────────────────────
+ * The same form leads the /book page, where the calendar sits directly below.
+ * There, redirecting to /book would be a redirect to self, so `onLead` is passed
+ * instead: the form still fires the /api/contact lead, then hands the prefill
+ * back to the page to reveal and scroll to the on-page calendar. `showDirect` is
+ * turned off there too — the "or book directly" link is redundant beside the
+ * calendar it points at.
  */
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
@@ -22,7 +30,23 @@ import { clarityForm } from '@/content/home';
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-export default function ClarityFormHybrid() {
+export interface ClarityLead {
+  email: string;
+  company: string;
+  phone?: string;
+}
+
+interface ClarityFormProps {
+  /**
+   * When set, the form does NOT redirect to /book on success — it calls this
+   * with the captured prefill so the caller can reveal an on-page calendar.
+   */
+  onLead?: (lead: ClarityLead) => void;
+  /** Show the "or book a call directly" secondary link. Default true. */
+  showDirect?: boolean;
+}
+
+export default function ClarityFormHybrid({ onLead, showDirect = true }: ClarityFormProps = {}) {
   const router = useRouter();
   const { heading, body, fields, submitIdle, submitBusy, bookDirect, error: errCopy } = clarityForm;
 
@@ -63,8 +87,15 @@ export default function ClarityFormHybrid() {
         const d = (await res.json().catch(() => ({}))) as { error?: string };
         throw new Error(d.error ?? 'submission_failed');
       }
-      // Carry the email to /book so the booking attaches to the same HubSpot
-      // contact; company/phone prefill the booking form too.
+      // On /book the calendar is on this same page: hand the prefill up instead
+      // of redirecting to self.
+      if (onLead) {
+        onLead({ email, company: brand, phone: phone || undefined });
+        setSubmitting(false);
+        return;
+      }
+      // Otherwise carry the email to /book so the booking attaches to the same
+      // HubSpot contact; company/phone prefill the booking form too.
       const qs = new URLSearchParams({ email, company: brand });
       if (phone) qs.set('phone', phone);
       router.push(`/book?${qs.toString()}`);
@@ -83,9 +114,11 @@ export default function ClarityFormHybrid() {
             <em><SplitReveal text={heading.em!} by="word" /></em>
           </h2>
           <p className="cf-body">{body}</p>
-          <p className="cf-alt">
-            <a href={bookDirect.href} className="cf-alt-link" data-cursor>{bookDirect.label} →</a>
-          </p>
+          {showDirect && (
+            <p className="cf-alt">
+              <a href={bookDirect.href} className="cf-alt-link" data-cursor>{bookDirect.label} →</a>
+            </p>
+          )}
         </div>
 
         <form className="cf-form" onSubmit={onSubmit} noValidate>

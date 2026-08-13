@@ -8790,6 +8790,23 @@ html[data-nav="dark"] .burger span            { background: var(--rd-ivory); }
 
 .bk-body { padding: 3.5rem 0 6rem; background: var(--rd-ivory); }
 
+/* /book leads with the clarity form (`.cf`); as the page's first section it now
+   sits under the fixed nav, so it needs a hero's worth of top clearance. */
+.bk-main .cf { padding-top: clamp(7rem, 10vw, 9rem); }
+
+.bk-body-head { max-width: 880px; margin: 0 auto 1.8rem; text-align: center; }
+.bk-body-head .ab-pill { margin: 0 auto; }
+.bk-body-h {
+  font-family: var(--font-serif); font-weight: 600;
+  font-size: clamp(1.7rem, 3.4vw, 2.5rem); line-height: 1.1;
+  color: var(--rd-night); margin: .7rem 0 0;
+}
+.bk-body-p {
+  margin: .8rem auto 0; max-width: 46ch;
+  font-family: var(--font-sans); font-size: clamp(.92rem, 1.05vw, 1rem);
+  line-height: 1.6; color: var(--rd-teal);
+}
+
 .bk-card {
   max-width: 880px; margin: 0 auto;
   background: var(--rd-white); border: 1px solid var(--rd-border);
@@ -8952,10 +8969,13 @@ html[data-nav="dark"] .burger span            { background: var(--rd-ivory); }
    ═══════════════════════════════════════════════════════════════════════════ */
 
 .stk {
-  /* Scoped, NOT --rd-*. The site accent is currently blue; the redesign moves
-     it to gold. Reaching for --rd-gold today would render this blue-on-blue.
-     When the palette migrates, these four lines change and nothing else. */
-  --stk-face: var(--rd-gold);
+  /* Scoped, and deliberately a LITERAL, not var(--rd-gold). Light bands remap
+     --rd-gold to the dark gold-ink for contrast (see the [data-section-color=
+     "light"] rule), so a face reading that token comes out olive-brown on the
+     contact form, the packages ladder, the admin panel and the blog. The face
+     is the signature bright gold on every ground, so it is pinned here; ink is
+     pure black, which reads on that gold in both themes. */
+  --stk-face: #F0D97A;
   --stk-mid:  #4B8BCB;
   --stk-back: #FFFFFF;
   /* Measured, and NOT --rd-night. The outline and the label are both pure
@@ -9075,6 +9095,37 @@ html[data-nav="dark"] .burger span            { background: var(--rd-ivory); }
   .stk:hover .stk-arrow { transform: none !important; }
   .stk-face:hover   { background: #e6c95f; }
 }
+
+/* ── Ghost tone — the secondary sibling ──────────────────────────────────────
+   The same three plates, drawn as outlines only: transparent face and shells,
+   so all that survives is three offset rings in the ink colour. This is the
+   successor to `.btn-outline` (teal ink) and `.btn-outline-lt` (light ink, set
+   by `.stk--on-dark`). Placed AFTER the base `.stk` block so its --stk-ink
+   override wins on equal specificity. */
+.stk--ghost                { --stk-ink: #254851; }
+.stk--ghost.stk--on-dark   { --stk-ink: rgba(255, 255, 255, .55); }
+.stk--ghost .stk-shell     { background: transparent; }
+.stk--ghost .stk-face {
+  background: transparent;
+  color:      var(--stk-ink);
+}
+/* Ghost is quiet, so it earns a hover fill the gold face doesn't need. The
+   specificity here (0,3,0) also clears the reduced-motion gold-hover rule. */
+.stk--ghost .stk-face:hover            { background: #254851; color: var(--rd-white); }
+.stk--ghost.stk--on-dark .stk-face:hover {
+  background:   rgba(255, 255, 255, .10);
+  color:        var(--rd-white);
+  border-color: var(--rd-gold-bloom);
+}
+.stk--ghost.stk--on-dark .stk-face:focus-visible { outline-color: var(--rd-white); }
+
+/* Full-width — form submits and stacked CTAs. */
+.stk--full           { display: block; }
+.stk--full .stk-face { width: 100%; }
+
+/* Label wrapper — inline-flex so a leading icon (Join the Meet, spinners) sits
+   centred and spaced next to the text. Harmless for the text-only majority. */
+.stk-label { display: inline-flex; align-items: center; gap: .5rem; }
 
 /* ═══════════════════════════════════════════════════════════════════════════
    HERO REDUX + NAV PILL — Figma redesign, WAHEEDWEB Page 2

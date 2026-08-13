@@ -15,12 +15,11 @@
  *
  * `.ab-lay` owns `transform`, so the engine centres with `translate:`.
  */
-import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import type { Variants } from 'framer-motion';
 import SplitReveal from '@/components/motion/SplitReveal';
-import ExplodeButton from '@/components/motion/ExplodeButton';
+import StackButton from '@/components/ui/StackButton';
 import useParallaxOrigin from '@/components/motion/useParallaxOrigin';
 import GirihEngine from '@/components/graphics/GirihEngine';
 import CraftArtifact from '@/components/graphics/CraftArtifact';
@@ -77,12 +76,12 @@ export default function ServiceHero({ page, artifact }: { page: ServicePage; art
           </motion.p>
 
           <motion.div className="sd-hero-acts" custom={1.12} variants={fadeUp} initial="hidden" animate="visible">
-            <ExplodeButton href="/contact" className="btn btn-gold">
-              Book a free clarity call →
-            </ExplodeButton>
-            <Link href="/packages" className="btn btn-outline-lt" data-cursor>
+            <StackButton href="/contact" size="lg" arrow>
+              Book a free clarity call
+            </StackButton>
+            <StackButton href="/packages" size="lg" tone="ghost" onDark>
               See the packages
-            </Link>
+            </StackButton>
           </motion.div>
         </div>
 

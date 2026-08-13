@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { pageMeta } from '@/lib/seo';
-import BookingFlow from './BookingFlow';
+import BookExperience from './BookExperience';
 
 export const metadata: Metadata = pageMeta({
   title: 'Book a call · WAHEED',
@@ -12,33 +12,14 @@ export const metadata: Metadata = pageMeta({
 /**
  * /book — the public booking page.
  *
- * A short hero and then the flow, nothing else. This page has exactly one job,
- * so it carries no scroll cue, no secondary sections and no aside: anything
- * below the calendar is something to scroll past on the way to the only action
- * that matters.
+ * Leads with the homepage's short clarity form, then the calendar directly
+ * below it: tell us about the project, then pick a time. The two are wired
+ * together client-side in BookExperience so there is no page hop between them.
  */
 export default function BookPage() {
   return (
-    <main>
-      <section className="bk-hero" data-section-color="dark">
-        <div className="cnt bk-hero-inner">
-          <p className="ab-pill">A conversation, not a pitch</p>
-          <h1 className="bk-hero-h1">
-            Book a <em>clarity call.</em>
-          </h1>
-          <p className="bk-hero-p">
-            Thirty minutes to talk through what you&apos;re building, what it has to do, and whether
-            we&apos;re the right people to build it. You&apos;ll get a Google Meet link the moment you
-            book.
-          </p>
-        </div>
-      </section>
-
-      <section className="bk-body" data-section-color="light">
-        <div className="cnt">
-          <BookingFlow />
-        </div>
-      </section>
+    <main className="bk-main">
+      <BookExperience />
     </main>
   );
 }

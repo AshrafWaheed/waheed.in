@@ -74,14 +74,40 @@ type Common = {
    * `.btn`'s exact type metrics so the two cannot drift apart.
    */
   size?: 'md' | 'sm' | 'lg';
+  /**
+   * The plate's role. `gold` is the primary — the solid gold face this
+   * component was drawn as. `ghost` is the secondary: the same three plates,
+   * but drawn as outlines only (transparent face and shells), so a hero's
+   * "View packages" beside a gold "Book a call" still reads as the quieter of
+   * the two rather than as a second identical primary. It is the successor to
+   * `.btn-outline` / `.btn-outline-lt`.
+   */
+  tone?: 'gold' | 'ghost';
+  /**
+   * Set on ghost buttons that sit on a DARK section, so the outline and label
+   * switch from teal ink to a light ink (the old `.btn-outline-lt`). Ignored
+   * by the gold tone, whose ink is always the measured near-black.
+   */
+  onDark?: boolean;
+  /** Stretch the face to fill its container (form submits, stacked CTAs). */
+  fullWidth?: boolean;
   /** Trailing arrow, as on the nav's "Talk to us". */
   arrow?: boolean;
   className?: string;
+  style?: React.CSSProperties;
+  id?: string;
+  title?: string;
+  /** Accessible name — for buttons whose children are an icon alone. */
+  ariaLabel?: string;
 };
 
 type AsLink = Common & {
   href: string;
-  onClick?: never;
+  target?: string;
+  rel?: string;
+  download?: boolean | string;
+  /** Side-effect on navigation, e.g. closing a menu. */
+  onClick?: () => void;
   type?: never;
   disabled?: never;
 };
@@ -91,6 +117,9 @@ type AsButton = Common & {
   onClick?: () => void;
   type?: 'button' | 'submit';
   disabled?: boolean;
+  target?: never;
+  rel?: never;
+  download?: never;
 };
 
 export type StackButtonProps = AsLink | AsButton;
@@ -114,7 +143,19 @@ function Arrow() {
 }
 
 export default function StackButton(props: StackButtonProps) {
-  const { children, size = 'md', arrow = false, className } = props;
+  const {
+    children,
+    size = 'md',
+    tone = 'gold',
+    onDark = false,
+    fullWidth = false,
+    arrow = false,
+    className,
+    style,
+    id,
+    title,
+    ariaLabel,
+  } = props;
 
   const wrap = useRef<HTMLSpanElement>(null);
   const [engaged, setEngaged] = useState(false);
@@ -174,6 +215,9 @@ export default function StackButton(props: StackButtonProps) {
   const cls = [
     'stk',
     size === 'md' ? '' : `stk--${size}`,
+    tone === 'ghost' ? 'stk--ghost' : '',
+    onDark ? 'stk--on-dark' : '',
+    fullWidth ? 'stk--full' : '',
     engaged ? 'is-engaged' : '',
     className ?? '',
   ]
@@ -191,6 +235,7 @@ export default function StackButton(props: StackButtonProps) {
     <span
       ref={wrap}
       className={cls}
+      style={style}
       onPointerMove={onMove}
       onPointerLeave={rest}
       onFocus={collapse}
@@ -210,7 +255,18 @@ export default function StackButton(props: StackButtonProps) {
       />
 
       {props.href !== undefined ? (
-        <Link href={props.href} className="stk-face" data-cursor>
+        <Link
+          href={props.href}
+          className="stk-face"
+          data-cursor
+          id={id}
+          title={title}
+          aria-label={ariaLabel}
+          onClick={props.onClick}
+          target={props.target}
+          rel={props.rel ?? (props.target === '_blank' ? 'noopener noreferrer' : undefined)}
+          download={props.download}
+        >
           {face}
         </Link>
       ) : (
@@ -220,6 +276,9 @@ export default function StackButton(props: StackButtonProps) {
           onClick={props.onClick}
           disabled={props.disabled}
           data-cursor
+          id={id}
+          title={title}
+          aria-label={ariaLabel}
         >
           {face}
         </button>

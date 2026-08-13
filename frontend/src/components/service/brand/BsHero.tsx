@@ -12,12 +12,11 @@
  * There is no artifact card here on purpose. A product screenshot on a brand
  * strategy page would be arguing the wrong thing.
  */
-import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import type { Variants } from 'framer-motion';
 import SplitReveal from '@/components/motion/SplitReveal';
-import ExplodeButton from '@/components/motion/ExplodeButton';
+import StackButton from '@/components/ui/StackButton';
 import BrandField from '@/components/graphics/BrandField';
 import type { ServicePage } from '@/content/services';
 
@@ -61,12 +60,12 @@ export default function BsHero({ page }: { page: ServicePage }) {
         </motion.p>
 
         <motion.div className="bs-hero-acts" custom={1.1} variants={fadeUp} initial="hidden" animate="visible">
-          <ExplodeButton href="/contact" className="btn btn-gold">
-            Book a free clarity call →
-          </ExplodeButton>
-          <Link href="/packages" className="btn btn-outline-lt" data-cursor>
+          <StackButton href="/contact" size="lg" arrow>
+            Book a free clarity call
+          </StackButton>
+          <StackButton href="/packages" size="lg" tone="ghost" onDark>
             See the packages
-          </Link>
+          </StackButton>
         </motion.div>
 
         {/* Last, not between the headline and the sub — dead centre belongs to

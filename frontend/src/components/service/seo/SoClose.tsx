@@ -16,7 +16,7 @@
  */
 import Link from 'next/link';
 import SplitReveal from '@/components/motion/SplitReveal';
-import ExplodeButton from '@/components/motion/ExplodeButton';
+import StackButton from '@/components/ui/StackButton';
 import type { ServicePage } from '@/content/services';
 
 /** Same curve as CompoundCurve's organic line, sampled across the section. */
@@ -59,9 +59,9 @@ export default function SoClose({ page }: { page: ServicePage }) {
         </h2>
         <p className="so-close-b reveal">{body}</p>
         <div className="so-close-acts">
-          <ExplodeButton href="/contact" className="btn btn-gold">
-            Book a free clarity call →
-          </ExplodeButton>
+          <StackButton href="/contact" size="lg" arrow>
+            Book a free clarity call
+          </StackButton>
           <Link href="/packages" className="so-close-alt" data-cursor>
             Or compare the packages →
           </Link>

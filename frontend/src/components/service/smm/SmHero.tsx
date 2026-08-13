@@ -13,12 +13,11 @@
  * that most brands are feeding it without a system, so the hero has to show the
  * treadmill before the copy names it.
  */
-import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import type { Variants } from 'framer-motion';
 import SplitReveal from '@/components/motion/SplitReveal';
-import ExplodeButton from '@/components/motion/ExplodeButton';
+import StackButton from '@/components/ui/StackButton';
 import FeedColumns from '@/components/graphics/FeedColumns';
 import type { ServicePage } from '@/content/services';
 
@@ -61,12 +60,12 @@ export default function SmHero({ page }: { page: ServicePage }) {
           </motion.p>
 
           <motion.div className="sm-hero-acts" custom={1.14} variants={fadeUp} initial="hidden" animate="visible">
-            <ExplodeButton href="/contact" className="btn btn-gold">
-              Book a free clarity call →
-            </ExplodeButton>
-            <Link href="/packages" className="btn btn-outline-lt" data-cursor>
-              See the packages
-            </Link>
+            <StackButton href="/contact" size="lg" arrow>
+            Book a free clarity call
+          </StackButton>
+            <StackButton href="/packages" size="lg" tone="ghost" onDark>
+            See the packages
+          </StackButton>
           </motion.div>
         </div>
 

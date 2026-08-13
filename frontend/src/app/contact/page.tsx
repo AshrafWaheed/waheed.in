@@ -13,11 +13,17 @@
  * rather than moving to content/contact.ts, since they are welded to the field
  * names and the validation rules and belong next to them. Only the hero and aside
  * copy was extracted.
+ *
+ * On success the form no longer shows a thank-you card: it hands off to the
+ * /book calendar, prefilled with email/brand/phone (same as the homepage form),
+ * so the application flows straight into picking a call time.
  */
 import { useState, type FormEvent, type ChangeEvent } from 'react';
+import { useRouter } from 'next/navigation';
 import SmoothScroll from '@/components/motion/SmoothScroll';
 import SectionNav from '@/components/motion/useSectionNav';
 import ContactHero from '@/components/contact/ContactHero';
+import StackButton from '@/components/ui/StackButton';
 import Khatam from '@/components/graphics/Khatam';
 import { contactAside } from '@/content/contact';
 
@@ -69,11 +75,11 @@ const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const PHONE_RE = /^[+\d\s().-]+$/;
 
 export default function ContactPage() {
+  const router = useRouter();
   const [form,           setForm]           = useState<FormData>(EMPTY);
   const [customServices, setCustomServices] = useState<string[]>([]);
   const [customSaved,    setCustomSaved]    = useState(false);
   const [submitting,     setSubmitting]     = useState(false);
-  const [submitted,      setSubmitted]      = useState(false);
   const [error,          setError]          = useState('');
   const [fieldErrors,    setFieldErrors]    = useState<FieldErrors>({});
 
@@ -146,10 +152,15 @@ export default function ContactPage() {
         const data = await res.json().catch(() => ({}));
         throw new Error(data.error || 'submission_failed');
       }
-      setSubmitted(true);
+      // Hand straight off to the booking calendar, prefilled — the /book page
+      // reads these params to attach the meeting to the same HubSpot contact
+      // and to scroll past its lead form to the calendar. `submitting` stays
+      // true through the navigation so the button doesn't flash back to idle.
+      const qs = new URLSearchParams({ email: form.email.trim(), company: form.brand.trim() });
+      if (form.phone.trim()) qs.set('phone', form.phone.trim());
+      router.push(`/book?${qs.toString()}`);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Something went wrong. Please try again.');
-    } finally {
       setSubmitting(false);
     }
   }
@@ -238,20 +249,6 @@ export default function ContactPage() {
 
             {/* ── Right: Form ── */}
             <div className="ct-form-wrap reveal">
-              {submitted ? (
-                <div className="contact-success">
-                  <div className="contact-success-icon">
-                    <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" aria-hidden="true">
-                      <polyline points="20 6 9 17 4 12"/>
-                    </svg>
-                  </div>
-                  <h3 className="contact-success-h">Jazakallahu Khayran</h3>
-                  <p className="contact-success-p">
-                    Your application has been received. We&apos;ll review it personally and get back
-                    to you within 24 hours, in shā&apos; Allāh.
-                  </p>
-                </div>
-              ) : (
                 <form onSubmit={submit} noValidate>
                   <h3 className="contact-form-h">Project Application Form</h3>
 
@@ -322,14 +319,9 @@ export default function ContactPage() {
                           </label>
                         ))}
                       </div>
-                      <button
-                        type="button"
-                        className="btn btn-gold"
-                        style={{ padding: '.5rem 1.3rem', fontSize: '.82rem' }}
-                        onClick={() => setCustomSaved(true)}
-                      >
-                        Save selection →
-                      </button>
+                      <StackButton type="button" size="sm" arrow onClick={() => setCustomSaved(true)}>
+                        Save selection
+                      </StackButton>
                       {customSaved && (
                         <span className="custom-saved">✓ Saved</span>
                       )}
@@ -393,18 +385,19 @@ export default function ContactPage() {
                     </p>
                   )}
 
-                  <button
+                  <StackButton
                     type="submit"
-                    className="btn btn-gold ct-submit"
+                    size="lg"
+                    fullWidth
+                    arrow
+                    className="ct-submit"
                     disabled={submitting}
-                    style={{ width: '100%', justifyContent: 'center', opacity: submitting ? .7 : 1 }}
                   >
-                    {submitting ? 'Submitting...' : 'Submit Application →'}
-                  </button>
+                    {submitting ? 'Submitting…' : 'Submit Application'}
+                  </StackButton>
 
                   <p className="form-note">We respond within 24 hours, in shā&apos; Allāh.</p>
                 </form>
-              )}
             </div>
 
           </div>

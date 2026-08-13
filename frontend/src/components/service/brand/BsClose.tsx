@@ -13,7 +13,7 @@
  */
 import Link from 'next/link';
 import SplitReveal from '@/components/motion/SplitReveal';
-import ExplodeButton from '@/components/motion/ExplodeButton';
+import StackButton from '@/components/ui/StackButton';
 import type { ServicePage } from '@/content/services';
 
 export default function BsClose({ page }: { page: ServicePage }) {
@@ -37,9 +37,9 @@ export default function BsClose({ page }: { page: ServicePage }) {
           <div className="bs-close-tail">
             <p className="bs-close-b reveal">{body}</p>
             <div className="bs-close-acts">
-              <ExplodeButton href="/contact" className="btn btn-gold">
-                Book a free clarity call →
-              </ExplodeButton>
+              <StackButton href="/contact" size="lg" arrow>
+            Book a free clarity call
+          </StackButton>
               <Link href="/packages" className="bs-close-alt" data-cursor>
                 Or compare the packages →
               </Link>

@@ -1,6 +1,7 @@
 'use client';
 
 import { Download } from 'lucide-react';
+import StackButton from '@/components/ui/StackButton';
 
 function toCsv(rows: readonly unknown[], columns: { key: string; label: string }[]): string {
   const esc = (v: unknown) => {
@@ -37,9 +38,9 @@ export default function ExportCsvButton({
   }
 
   return (
-    <button type="button" className="btn adm-export-btn" onClick={download} disabled={rows.length === 0}>
+    <StackButton type="button" size="sm" tone="ghost" onClick={download} disabled={rows.length === 0}>
       <Download size={15} />
       Export CSV
-    </button>
+    </StackButton>
   );
 }

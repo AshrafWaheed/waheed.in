@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { adminApi } from '@/lib/admin-api';
+import StackButton from '@/components/ui/StackButton';
 import DeletePostButton from './DeletePostButton';
 
 export const dynamic = 'force-dynamic';
@@ -65,9 +66,9 @@ export default async function BlogsListPage({
           <h1 className="adm-h1">Insights</h1>
           <p className="adm-list-count">{meta.total} post{meta.total === 1 ? '' : 's'}</p>
         </div>
-        <Link href="/jundullah/blogs/new" className="btn btn-gold adm-new-btn">
+        <StackButton href="/jundullah/blogs/new" size="sm" className="adm-new-btn">
           New post
-        </Link>
+        </StackButton>
       </div>
 
       <form className="adm-filters" method="get">
@@ -77,7 +78,7 @@ export default async function BlogsListPage({
           <option value="draft">Draft</option>
           <option value="published">Published</option>
         </select>
-        <button type="submit" className="btn adm-filter-btn">Filter</button>
+        <StackButton type="submit" size="sm" tone="ghost" className="adm-filter-btn">Filter</StackButton>
       </form>
 
       {posts.length === 0 ? (

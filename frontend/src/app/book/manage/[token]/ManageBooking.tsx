@@ -14,6 +14,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { Video, Loader2, CalendarDays, Check, X, ArrowLeft } from 'lucide-react';
+import StackButton from '@/components/ui/StackButton';
 import SlotPicker from '../../SlotPicker';
 
 interface Booking {
@@ -134,7 +135,7 @@ export default function ManageBooking({ token }: { token: string }) {
           that&apos;s wrong, email <a href="mailto:info@waheed.in">info@waheed.in</a> and we&apos;ll
           sort it out.
         </p>
-        <a className="btn btn-gold bk-done-cta" href="/book">Book a new time</a>
+        <StackButton className="bk-done-cta" href="/book">Book a new time</StackButton>
       </div>
     );
   }
@@ -170,9 +171,9 @@ export default function ManageBooking({ token }: { token: string }) {
         />
 
         {slot && (
-          <button type="button" className="btn btn-gold bk-next" onClick={move} disabled={busy !== null}>
+          <StackButton type="button" fullWidth className="bk-next" onClick={move} disabled={busy !== null}>
             {busy === 'move' ? <><Loader2 size={16} className="bk-spin" /> Moving…</> : 'Move my call here →'}
-          </button>
+          </StackButton>
         )}
       </div>
     );
@@ -198,15 +199,15 @@ export default function ManageBooking({ token }: { token: string }) {
       <p className="bk-done-p">Booked for <strong>{booking.name}</strong> ({booking.email}).</p>
 
       {cancelled ? (
-        <a className="btn btn-gold bk-done-cta" href="/book">Book a new time</a>
+        <StackButton className="bk-done-cta" href="/book">Book a new time</StackButton>
       ) : past ? (
         <p className="bk-note">This call has already taken place. <a href="/book">Book another</a> whenever you like.</p>
       ) : (
         <>
           {booking.meet_url && (
-            <a className="btn btn-gold bk-done-cta" href={booking.meet_url} target="_blank" rel="noopener noreferrer">
+            <StackButton className="bk-done-cta" href={booking.meet_url} target="_blank">
               <Video size={16} /> Join the Google Meet
-            </a>
+            </StackButton>
           )}
 
           <div className="bk-manage-actions">

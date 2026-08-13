@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import StackButton from '@/components/ui/StackButton';
 
 export default function LoginForm({ expired = false }: { expired?: boolean }) {
   const router = useRouter();
@@ -77,9 +78,9 @@ export default function LoginForm({ expired = false }: { expired?: boolean }) {
 
           {error && <p className="adm-auth-error">{error}</p>}
 
-          <button type="submit" className="btn btn-gold adm-auth-submit" disabled={status === 'submitting'}>
+          <StackButton type="submit" fullWidth className="adm-auth-submit" disabled={status === 'submitting'}>
             {status === 'submitting' ? 'Signing in…' : 'Sign in →'}
-          </button>
+          </StackButton>
         </form>
       </div>
     </main>

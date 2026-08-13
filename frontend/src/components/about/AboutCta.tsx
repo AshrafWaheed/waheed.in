@@ -19,7 +19,7 @@
  * Copy is verbatim from content/about.ts.
  */
 import SplitReveal from '@/components/motion/SplitReveal';
-import ExplodeButton from '@/components/motion/ExplodeButton';
+import StackButton from '@/components/ui/StackButton';
 import { aboutCta } from '@/content/about';
 
 export default function AboutCta() {
@@ -38,9 +38,9 @@ export default function AboutCta() {
           </h2>
         </div>
         <div className="hy-cta-acts ab-cta-acts">
-          <ExplodeButton href={cta.href} className="btn btn-gold">
+          <StackButton href={cta.href} size="lg">
             {cta.label}
-          </ExplodeButton>
+          </StackButton>
         </div>
       </div>
     </section>

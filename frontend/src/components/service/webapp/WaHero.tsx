@@ -29,12 +29,11 @@
  * The scroll cue the other service heroes carry is dropped here — the strip now
  * occupies the bottom of the section, and a centred cue lands on top of it.
  */
-import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import type { Variants } from 'framer-motion';
 import SplitReveal from '@/components/motion/SplitReveal';
-import ExplodeButton from '@/components/motion/ExplodeButton';
+import StackButton from '@/components/ui/StackButton';
 import useParallaxOrigin from '@/components/motion/useParallaxOrigin';
 import GirihEngine from '@/components/graphics/GirihEngine';
 import DeviceRig, { type Surface } from '@/components/graphics/DeviceRig';
@@ -108,12 +107,12 @@ export default function WaHero({ page }: { page: ServicePage }) {
           </motion.p>
 
           <motion.div className="sd-hero-acts" custom={1.12} variants={fadeUp} initial="hidden" animate="visible">
-            <ExplodeButton href="/contact" className="btn btn-gold">
-              Book a free clarity call →
-            </ExplodeButton>
-            <Link href="/packages" className="btn btn-outline-lt" data-cursor>
-              See the packages
-            </Link>
+            <StackButton href="/contact" size="lg" arrow>
+            Book a free clarity call
+          </StackButton>
+            <StackButton href="/packages" size="lg" tone="ghost" onDark>
+            See the packages
+          </StackButton>
           </motion.div>
         </div>
 

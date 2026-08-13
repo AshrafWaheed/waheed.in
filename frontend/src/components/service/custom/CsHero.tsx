@@ -8,9 +8,8 @@
  * design language (grid field, mono labels, gold-lit HUD panels) so it reads as
  * one custom-built environment rather than the shared service template.
  */
-import Link from 'next/link';
 import { motion } from 'framer-motion';
-import ExplodeButton from '@/components/motion/ExplodeButton';
+import StackButton from '@/components/ui/StackButton';
 import SoftwareRig from '@/components/graphics/SoftwareRig';
 import type { ServicePage } from '@/content/services';
 
@@ -43,12 +42,12 @@ export default function CsHero({ page }: { page: ServicePage }) {
           <motion.p className="cs-hero-promise" {...rise(0.32)}>{`// ${promise}`}</motion.p>
 
           <motion.div className="cs-hero-acts" {...rise(0.4)}>
-            <ExplodeButton href="/contact" className="btn btn-gold">
-              Book a free clarity call →
-            </ExplodeButton>
-            <Link href="/packages" className="btn btn-outline-lt" data-cursor>
-              See the packages
-            </Link>
+            <StackButton href="/contact" size="lg" arrow>
+            Book a free clarity call
+          </StackButton>
+            <StackButton href="/packages" size="lg" tone="ghost" onDark>
+            See the packages
+          </StackButton>
           </motion.div>
         </div>
 

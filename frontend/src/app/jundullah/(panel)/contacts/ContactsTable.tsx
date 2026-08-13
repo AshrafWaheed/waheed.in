@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { X } from 'lucide-react';
+import StackButton from '@/components/ui/StackButton';
 
 export type Contact = {
   id: number;
@@ -94,7 +95,7 @@ export default function ContactsTable({ rows }: { rows: Contact[] }) {
                 <p className="adm-detail-value">{open.message}</p>
               </div>
               <div className="adm-drawer-actions">
-                <a className="btn adm-save-draft" href={`mailto:${open.email}`}>Reply by email</a>
+                <StackButton size="sm" tone="ghost" href={`mailto:${open.email}`}>Reply by email</StackButton>
               </div>
             </div>
           </aside>

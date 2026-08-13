@@ -28,7 +28,7 @@ import { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import type { Variants } from 'framer-motion';
 import SplitReveal from '@/components/motion/SplitReveal';
-import ExplodeButton from '@/components/motion/ExplodeButton';
+import StackButton from '@/components/ui/StackButton';
 import Khatam from '@/components/graphics/Khatam';
 import { webJourney, webEras } from '@/content/services/web-eras';
 
@@ -159,7 +159,9 @@ export default function WebEraJourney() {
           {webJourney.sub}
         </motion.p>
         <motion.div className="we-acts" custom={0.85} variants={fadeUp} initial="hidden" animate="visible">
-          <ExplodeButton href="/contact" className="btn btn-gold">Book a free clarity call →</ExplodeButton>
+          <StackButton href="/contact" size="lg" arrow>
+            Book a free clarity call
+          </StackButton>
           <span className="we-cue" aria-hidden="true">{webJourney.cue}</span>
         </motion.div>
       </div>

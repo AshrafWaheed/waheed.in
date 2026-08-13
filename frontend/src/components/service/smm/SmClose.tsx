@@ -19,7 +19,7 @@
  */
 import Link from 'next/link';
 import SplitReveal from '@/components/motion/SplitReveal';
-import ExplodeButton from '@/components/motion/ExplodeButton';
+import StackButton from '@/components/ui/StackButton';
 import Khatam from '@/components/graphics/Khatam';
 import type { ServicePage } from '@/content/services';
 
@@ -59,9 +59,9 @@ export default function SmClose({ page }: { page: ServicePage }) {
         </h2>
         <p className="sm-close-b reveal">{body}</p>
         <div className="sm-close-acts">
-          <ExplodeButton href="/contact" className="btn btn-gold">
-            Book a free clarity call →
-          </ExplodeButton>
+          <StackButton href="/contact" size="lg" arrow>
+            Book a free clarity call
+          </StackButton>
           <Link href="/packages" className="sm-close-alt" data-cursor>
             Or compare the packages →
           </Link>
