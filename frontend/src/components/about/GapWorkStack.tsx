@@ -20,7 +20,6 @@ import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import { motion, useReducedMotion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
-import Khatam from '@/components/graphics/Khatam';
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 
@@ -34,7 +33,7 @@ const SLOTS = [
 interface Card {
   label: string;
   accent: 'gold' | 'blue' | 'teal';
-  img?: { src: string; alt: string };
+  img: { src: string; alt: string };
 }
 
 const CARDS: Card[] = [
@@ -48,7 +47,11 @@ const CARDS: Card[] = [
     accent: 'blue',
     img: { src: '/about/gap-social.jpeg', alt: 'A social media performance dashboard on a phone, showing reach, engagement and follower growth all up.' },
   },
-  { label: 'Selected work', accent: 'teal' },
+  {
+    label: 'Shariah-compliant strategy',
+    accent: 'teal',
+    img: { src: '/about/gap-shariah.jpeg', alt: 'A “Shariah-Compliant Growth Strategies” brand guide on a tablet — grow your business the halal way, with barakah, purpose and impact.' },
+  },
 ];
 
 export default function GapWorkStack() {
@@ -107,22 +110,14 @@ export default function GapWorkStack() {
               style={{ zIndex: slot.z }}
               transition={{ duration: 0.62, ease: EASE }}
             >
-              {card.img ? (
-                <Image
-                  className="tg-photo"
-                  src={card.img.src}
-                  alt={card.img.alt}
-                  width={340}
-                  height={424}
-                  sizes="(max-width: 820px) 70vw, 340px"
-                />
-              ) : (
-                <span className="tg-brand">
-                  <Khatam size={58} inner={0.5} stroke="rgba(240,217,122,.8)" strokeWidth={1.1} />
-                  <span className="tg-brand-k">Selected work</span>
-                  <span className="tg-brand-t">The kind of brand we build.</span>
-                </span>
-              )}
+              <Image
+                className="tg-photo"
+                src={card.img.src}
+                alt={card.img.alt}
+                width={340}
+                height={424}
+                sizes="(max-width: 820px) 70vw, 340px"
+              />
             </motion.button>
           );
         })}
