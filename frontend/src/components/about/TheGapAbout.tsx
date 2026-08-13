@@ -13,6 +13,7 @@
  * Reveal via whileInView (IntersectionObserver, Lenis-safe): heading splits in,
  * copy fades up, and the three cards fan in back-to-front on a stagger.
  */
+import Image from 'next/image';
 import { motion, useReducedMotion } from 'framer-motion';
 import SplitReveal from '@/components/motion/SplitReveal';
 import { theGap } from '@/content/about';
@@ -48,8 +49,9 @@ export default function TheGapAbout() {
           ))}
         </div>
 
-        {/* Three stacked image placeholders (photo collage to come). */}
-        <div className="tg-stack" role="img" aria-label="Halal brand imagery — coming soon">
+        {/* A diagonal stack: white + blue mats behind, and the gold front card
+            holding a real example of the work — a high-converting brand site. */}
+        <div className="tg-stack">
           {CARDS.map((cls, i) => (
             <motion.div
               key={cls}
@@ -58,7 +60,18 @@ export default function TheGapAbout() {
               whileInView={{ opacity: 1, y: 0, scale: 1 }}
               viewport={{ once: true, amount: 0.35 }}
               transition={{ duration: 0.75, ease: EASE, delay: i * 0.14 }}
-            />
+            >
+              {cls === 'tg-card--front' && (
+                <Image
+                  className="tg-photo"
+                  src="/about/gap-highconverting.jpeg"
+                  alt="A high-converting website built for a values-led Muslim women's brand, shown on a laptop."
+                  width={340}
+                  height={424}
+                  sizes="(max-width: 820px) 86vw, 340px"
+                />
+              )}
+            </motion.div>
           ))}
         </div>
       </div>
