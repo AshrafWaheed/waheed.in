@@ -18,6 +18,7 @@ import {
   Check, ChevronDown, ArrowRight, Wifi, BatteryFull, Star, Package,
 } from 'lucide-react';
 import type { ServicePage } from '@/content/services';
+import AppJourneyRails from './AppJourneyRails';
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 const reveal = {
@@ -59,6 +60,10 @@ export default function AppPhone({ page }: { page: ServicePage }) {
 
   return (
     <section className="md-stage" data-section-color="dark">
+      {/* Ambient "build journey" flanking the phone in the desktop gutters.
+          A pointer-events:none sibling — it never touches the phone content. */}
+      <AppJourneyRails />
+
       <div className="md-frame">
         {/* ── Status bar + dynamic island ─────────────────────────────────── */}
         <div className="md-status">

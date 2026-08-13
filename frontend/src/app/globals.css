@@ -10273,3 +10273,86 @@ html[data-nav="dark"] .burger span         { background: #254851; }
 @media (max-width: 380px) {
   .md-fitrow { grid-template-columns: 1fr; }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   mj- · APP DEVELOPMENT — the "build journey" flanking the phone
+   ═══════════════════════════════════════════════════════════════════════════
+   Ambient decoration in the empty desktop gutters either side of the AppPhone.
+   Component: service/app/AppJourneyRails.tsx. Sits over the stage but under the
+   phone frame and never receives pointer events, so the phone is untouched.
+   Hidden below 1180px, where there is no gutter to fill. */
+.mj {
+  position: absolute; inset: 0; z-index: 1; overflow: hidden;
+  pointer-events: none; display: none;
+  --mj-off: clamp(300px, 27vw, 430px);
+}
+@media (min-width: 1180px) { .mj { display: block; } }
+
+/* ── The two spines + scroll-driven fill ─────────────────────────────────── */
+.mj-rail {
+  position: absolute; top: 6%; bottom: 6%; width: 2px; transform: translateX(-50%);
+  border-radius: 2px;
+  background: linear-gradient(180deg,
+    transparent, rgb(var(--rd-gold-rgb) / .16) 10%,
+    rgb(var(--rd-gold-rgb) / .16) 90%, transparent);
+}
+.mj-rail--l { left: calc(50% - var(--mj-off)); }
+.mj-rail--r { left: calc(50% + var(--mj-off)); }
+.mj-rail-fill {
+  position: absolute; top: 0; left: 0; width: 100%; border-radius: 2px;
+  background: linear-gradient(180deg, rgb(var(--rd-gold-rgb) / 0), #F0D97A 26%, #e7c65a);
+  box-shadow: 0 0 12px rgb(var(--rd-gold-rgb) / .55);
+}
+/* Motes drifting up the spine — a sense of upward momentum. */
+.mj-mote {
+  position: absolute; left: 50%; bottom: 0; width: 4px; height: 4px; border-radius: 50%;
+  transform: translateX(-50%); background: #F0D97A;
+  box-shadow: 0 0 8px rgb(var(--rd-gold-rgb) / .8);
+  animation: mj-drift 6.9s linear infinite;
+}
+@keyframes mj-drift {
+  0%   { opacity: 0; transform: translate(-50%, 0) scale(.6); }
+  12%  { opacity: .9; }
+  85%  { opacity: .9; }
+  100% { opacity: 0; transform: translate(-50%, -78vh) scale(1); }
+}
+
+/* ── Milestone stations ──────────────────────────────────────────────────── */
+.mj-wp { position: absolute; width: 0; height: 0; }
+.mj-wp--l { left: calc(50% - var(--mj-off)); }
+.mj-wp--r { left: calc(50% + var(--mj-off)); }
+
+.mj-node {
+  position: absolute; top: 0; left: 0; margin: -19px 0 0 -19px;
+  width: 38px; height: 38px; display: grid; place-items: center; border-radius: 50%;
+  background: #0e2229; border: 1.5px solid rgb(var(--rd-gold-rgb) / .28);
+  color: rgb(234 241 242 / .55);
+}
+.mj-node-ring {
+  position: absolute; inset: -2px; border-radius: 50%;
+  border: 1.5px solid #F0D97A;
+  box-shadow: 0 0 16px rgb(var(--rd-gold-rgb) / .55), inset 0 0 8px rgb(var(--rd-gold-rgb) / .3);
+}
+
+.mj-card {
+  position: absolute; top: 0; width: 188px; padding: 12px 15px; border-radius: 15px;
+  background: rgb(247 243 237 / .05); border: 1px solid rgb(var(--rd-gold-rgb) / .16);
+  backdrop-filter: blur(7px); -webkit-backdrop-filter: blur(7px);
+  box-shadow: 0 20px 44px -26px rgba(0,0,0,.7);
+}
+.mj-wp--r .mj-card { left: 32px; text-align: left; }
+.mj-wp--l .mj-card { right: 32px; text-align: right; }
+.mj-card-k { font-family: var(--font-mono); font-size: .6rem; letter-spacing: .16em; color: #F0D97A; }
+.mj-card-t { font-family: var(--font-sans); font-weight: 700; font-size: .98rem; color: #eef4f5; margin: .18rem 0 .12rem; letter-spacing: -.01em; }
+.mj-card-b { font-family: var(--font-sans); font-size: .73rem; line-height: 1.4; color: rgb(234 241 242 / .58); margin: 0; }
+
+/* ── Far-gutter brand ornaments ──────────────────────────────────────────── */
+.mj-orn { position: absolute; opacity: .07; animation: mj-spin 90s linear infinite; }
+.mj-orn--top { top: 4%;  left: calc(50% - var(--mj-off) - 150px); }
+.mj-orn--bot { bottom: 3%; left: calc(50% + var(--mj-off) - 40px); animation-direction: reverse; animation-duration: 120s; }
+@keyframes mj-spin { to { transform: rotate(360deg); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .mj-mote { animation: none !important; opacity: 0 !important; }
+  .mj-orn { animation: none !important; }
+}
