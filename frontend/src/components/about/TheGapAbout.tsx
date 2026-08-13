@@ -13,15 +13,12 @@
  * Reveal via whileInView (IntersectionObserver, Lenis-safe): heading splits in,
  * copy fades up, and the three cards fan in back-to-front on a stagger.
  */
-import Image from 'next/image';
 import { motion, useReducedMotion } from 'framer-motion';
 import SplitReveal from '@/components/motion/SplitReveal';
+import GapWorkStack from '@/components/about/GapWorkStack';
 import { theGap } from '@/content/about';
 
 const EASE = [0.22, 1, 0.36, 1] as const;
-
-/** back → front, so the fan-in reads as the stack building up toward the gold. */
-const CARDS = ['tg-card--back', 'tg-card--mid', 'tg-card--front'] as const;
 
 export default function TheGapAbout() {
   const { heading, paras } = theGap;
@@ -49,31 +46,9 @@ export default function TheGapAbout() {
           ))}
         </div>
 
-        {/* A diagonal stack: white + blue mats behind, and the gold front card
-            holding a real example of the work — a high-converting brand site. */}
-        <div className="tg-stack">
-          {CARDS.map((cls, i) => (
-            <motion.div
-              key={cls}
-              className={`tg-card ${cls}`}
-              initial={reduce ? false : { opacity: 0, y: 32, scale: 0.96 }}
-              whileInView={{ opacity: 1, y: 0, scale: 1 }}
-              viewport={{ once: true, amount: 0.35 }}
-              transition={{ duration: 0.75, ease: EASE, delay: i * 0.14 }}
-            >
-              {cls === 'tg-card--front' && (
-                <Image
-                  className="tg-photo"
-                  src="/about/gap-highconverting.jpeg"
-                  alt="A high-converting website built for a values-led Muslim women's brand, shown on a laptop."
-                  width={340}
-                  height={424}
-                  sizes="(max-width: 820px) 86vw, 340px"
-                />
-              )}
-            </motion.div>
-          ))}
-        </div>
+        {/* An interactive stack of real work — the three cards shuffle through
+            the three slots so each is seen fully; see GapWorkStack. */}
+        <GapWorkStack />
       </div>
     </section>
   );
