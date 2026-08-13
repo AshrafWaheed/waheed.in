@@ -15,9 +15,9 @@
  * IntersectionObserver whileInView (works under Lenis) — the heading splits in,
  * the copy fades up, the portrait eases in from the left.
  */
+import Image from 'next/image';
 import { motion, useReducedMotion } from 'framer-motion';
 import SplitReveal from '@/components/motion/SplitReveal';
-import Khatam from '@/components/graphics/Khatam';
 import { foundingStory } from '@/content/about';
 
 const EASE = [0.22, 1, 0.36, 1] as const;
@@ -29,18 +29,23 @@ export default function FoundingStoryAbout() {
   return (
     <section className="afs" data-section-color="light">
       <div className="cnt afs-grid">
-        {/* Portrait placeholder — a faint khatam on a night panel, ready to
-            swap for a real founder portrait (drop an <img> into .afs-media). */}
+        {/* A real inbound message — a stranger who found the founder on LinkedIn
+            and recognised the same Islamic values. The panel's 340:424 ratio
+            matches the image, so it fills edge-to-edge without cropping. */}
         <motion.div
           className="afs-media"
-          role="img"
-          aria-label="The Waheed founders — portrait coming soon"
           initial={reduce ? false : { opacity: 0, x: -40 }}
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true, amount: 0.4 }}
           transition={{ duration: 0.9, ease: EASE }}
         >
-          <Khatam size={150} inner={0.5} stroke="rgba(255,255,255,.16)" strokeWidth={1.4} className="afs-media-mark" />
+          <Image
+            className="afs-photo"
+            src="/founders/founding-testimonial.jpeg"
+            alt="A message from someone who found Waheed on LinkedIn: “Having read your profile and the Islamic principles you stand for, it resonated with me and the values we stand for in our organisation.”"
+            fill
+            sizes="(max-width: 820px) 90vw, 340px"
+          />
         </motion.div>
 
         <div className="afs-copy">

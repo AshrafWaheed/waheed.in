@@ -10,10 +10,10 @@
  * supplied — drop an <img> into `.fs-media` (or wire a content field) to swap it.
  */
 import { useRef } from 'react';
+import Image from 'next/image';
 import { motion, useTransform } from 'framer-motion';
 import { useScrollProgress } from '@/components/motion/useScrollProgress';
 import StackButton from '@/components/ui/StackButton';
-import FoundingGlyph from '@/components/graphics/FoundingGlyph';
 import { founding } from '@/content/home';
 
 /** Render a paragraph, underlining the one phrase if present in it. */
@@ -58,12 +58,17 @@ export default function FoundingStoryHybrid() {
           </div>
         </motion.div>
 
-        {/* Crafted brand plate: an illuminated khatam medallion whose message
-            threads converge into one centre — the founding story as one glyph.
-            Stands in for founder photography; swap in an <img> here when a real
-            portrait lands (the panel geometry already frames one). */}
+        {/* A real inbound message that captures why Waheed exists — a stranger
+            who found the founder on LinkedIn and recognised the same values. Fills
+            the media plate as a full-bleed social-proof panel. */}
         <motion.div className="fs-media" style={{ x: mediaX, opacity: mediaO }}>
-          <FoundingGlyph />
+          <Image
+            className="fs-photo"
+            src="/founders/founding-testimonial.jpeg"
+            alt="A message from someone who found Waheed on LinkedIn: “Having read your profile and the Islamic principles you stand for, it resonated with me and the values we stand for in our organisation.”"
+            fill
+            sizes="(max-width: 820px) 90vw, 440px"
+          />
         </motion.div>
       </div>
     </section>

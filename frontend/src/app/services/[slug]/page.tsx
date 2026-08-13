@@ -4,7 +4,7 @@ import { pageMeta } from '@/lib/seo';
 import SmoothScroll from '@/components/motion/SmoothScroll';
 import SectionNav from '@/components/motion/useSectionNav';
 import DefaultServiceLayout from '@/components/service/layouts/DefaultServiceLayout';
-import WebAppLayout from '@/components/service/layouts/WebAppLayout';
+import WebEraLayout from '@/components/service/layouts/WebEraLayout';
 import BrandStrategyLayout from '@/components/service/layouts/BrandStrategyLayout';
 import SeoLayout from '@/components/service/layouts/SeoLayout';
 import SmmLayout from '@/components/service/layouts/SmmLayout';
@@ -23,7 +23,7 @@ import { services, pages, servicePage } from '@/content/services';
  * falls back to the default scan-down journey.
  */
 const LAYOUTS: Record<string, React.ComponentType<ServiceLayoutProps>> = {
-  'web-development': WebAppLayout,
+  'web-development': WebEraLayout,
   'app-development': AppDeviceLayout,
   'custom-software-development': CustomSoftwareLayout,
   'brand-strategy': BrandStrategyLayout,
