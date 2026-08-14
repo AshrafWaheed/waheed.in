@@ -205,6 +205,11 @@
   gap:             .6rem;
   flex-wrap:       wrap;
   justify-content: center;
+  /* Center, NOT the flex default of stretch: the StackButton's three plates are
+     absolutely inset to the wrapper box, so a stretched wrapper pulls the shells
+     to the input's full height and the gold face floats in a tall, inflated
+     pill. Centre keeps the button at its own height beside the taller input. */
+  align-items:     center;
   width:           100%;
   max-width:       440px;
 }

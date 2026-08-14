@@ -88,7 +88,7 @@ export default function ComingSoon() {
               required
               disabled={status === 'saving'}
             />
-            <StackButton type="submit" disabled={status === 'saving'}>
+            <StackButton type="submit" size="lg" disabled={status === 'saving'}>
               {status === 'saving' ? 'Saving…' : 'Notify me →'}
             </StackButton>
           </form>
