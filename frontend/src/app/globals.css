@@ -9196,9 +9196,9 @@ html[data-nav="dark"] .burger span         { background: #254851; }
        their box. The result reads clean without ever clipping the dropdown. */
 @media (min-width: 861px) {
   .nav-inner {
-    transition: width .42s cubic-bezier(.22,1,.36,1),
-                max-width .42s cubic-bezier(.22,1,.36,1),
-                padding .42s cubic-bezier(.22,1,.36,1);
+    transition: width .55s cubic-bezier(.22,1,.36,1),
+                max-width .55s cubic-bezier(.22,1,.36,1),
+                padding .55s cubic-bezier(.22,1,.36,1);
     will-change: width;
   }
   /* Expanding transition (the resting state's own): the shell reopens and the
@@ -9206,8 +9206,8 @@ html[data-nav="dark"] .burger span         { background: #254851; }
      once so keyboard users can reach the links as they appear. */
   .nav-links {
     max-width: 44rem;                 /* concrete start value so 0↔full animates */
-    transition: max-width .42s cubic-bezier(.22,1,.36,1),
-                opacity .26s ease .2s,
+    transition: max-width .55s cubic-bezier(.22,1,.36,1),
+                opacity .32s ease .26s,
                 visibility 0s;
   }
   /* The CTA must never be squeezed thin enough to wrap its label — at the fully
@@ -9227,9 +9227,9 @@ html[data-nav="dark"] .burger span         { background: #254851; }
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
-    transition: max-width .42s cubic-bezier(.22,1,.36,1),
-                opacity .16s ease,
-                visibility 0s linear .16s;
+    transition: max-width .55s cubic-bezier(.22,1,.36,1),
+                opacity .2s ease,
+                visibility 0s linear .2s;
   }
 }
 
