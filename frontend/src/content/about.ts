@@ -68,7 +68,7 @@ export const peopleBehind = {
   members: [
     {
       name: 'Ashraf Waheed Ansari',
-      title: 'Founder & CEO',
+      title: 'Founder',
       role: 'Technology & Strategy',
       fig: 'man' as const,
       bio: 'Ashraf spent his early career at a tech company led by non-Muslims, where he was dismissed after experiencing Islamophobic discrimination. By the Mercy of Allah, he was granted another means of earning rizq at a halal advertising agency, where he started as a web developer. He eventually progressed to technical lead and ad operations, and those two years of experience—building products and understanding how advertising actually functions—gave him a deep, practical understanding of user experience and Muslim consumer behaviour.',
@@ -134,11 +134,11 @@ export const people = {
   } as Heading,
   sub: 'Committed to craft, clarity, & excellence.',
   intro:
-    'Waheed was founded by two professionals who were both hired into the same halal advertising agency, one of the largest networks reaching Muslim consumers globally. The Founder came from software and strategy — the technical work of making something actually function. The Co-Founder came from brand and marketing — the words and instincts that make a business feel like itself, and the positioning that turns that feeling into trust people act on.',
+    'Waheed was founded by two professionals who were both hired into the same halal advertising agency, one of the largest networks reaching Muslim consumers globally. The Founder came from software and strategy — the technical work of making something actually function. The Managing Partner came from brand and marketing — the words and instincts that make a business feel like itself, and the positioning that turns that feeling into trust people act on.',
   /**
    * `fig` maps each founder to the portrait already used in the homepage hero.
    * The pronouns in the bios fix the mapping: the Founder is "he", the
-   * Co-Founder is "she".
+   * Managing Partner is "she".
    */
   members: [
     {
@@ -148,10 +148,10 @@ export const people = {
       bio: 'The Founder had spent his early career at a tech company led by non-Muslims, where he was fired after facing islamophobic discrimination. By the Mercy of Allah, he was granted another means to earn rizq at the same halal advertising agency, starting as a web developer. He climbed to technical lead and ad operations, and the work — building products and understanding how advertising actually functions — gave him a deep, practical understanding of user experience and Muslim consumer behavior.',
     },
     {
-      label: 'Co-Founder',
+      label: 'Managing Partner',
       role: 'Brand & Marketing',
       fig: 'woman' as const,
-      bio: 'The Co-Founder started her career trying to find work that wouldn’t force her to compromise her Islamic principles. She job-hopped between roles from 2022 onward, until in early 2024 she made the shift from onsite to remote work, earned a digital skills certification, and was hired at the agency as a social media manager. There, she learned how to read what actually earns trust online — audience psychology, halal-compliant content, and the small creative decisions that decide whether a Muslim audience feels spoken to or spoken at.',
+      bio: 'The Managing Partner started her career trying to find work that wouldn’t force her to compromise her Islamic principles. She job-hopped between roles from 2022 onward, until in early 2024 she made the shift from onsite to remote work, earned a digital skills certification, and was hired at the agency as a social media manager. There, she learned how to read what actually earns trust online — audience psychology, halal-compliant content, and the small creative decisions that decide whether a Muslim audience feels spoken to or spoken at.',
     },
   ],
 } as const;
@@ -160,7 +160,7 @@ export const people = {
 export const outro = {
   /** First is set as a lead, second as the body — a deliberate step down. */
   paras: [
-    'The realisation came when a handful of Muslim founders reached out to the Co-Founder, specifically asking for fully Shariah-compliant social media services. That opened her eyes to how much need there was for solutions built for faith-conscious brands. From there, she moved from social media alone into brand and marketing more broadly, seeking to serve Muslim brands and organisations with the right niyyah, a real understanding of Islamic values, and excellence in execution.',
+    'The realisation came when a handful of Muslim founders reached out to the Managing Partner, specifically asking for fully Shariah-compliant social media services. That opened her eyes to how much need there was for solutions built for faith-conscious brands. From there, she moved from social media alone into brand and marketing more broadly, seeking to serve Muslim brands and organisations with the right niyyah, a real understanding of Islamic values, and excellence in execution.',
     "Both of them watched the same problem play out, over and over: Muslim-led brands and ethical initiatives with real potential to reshape the Muslim economy, real revenue, and real ambition, stuck with digital work that either ignored their values or diluted them for the sake of growth. Neither of them was only looking at what this market could generate. They wanted to help these businesses get noticed and taken seriously as authorities in their industries, without ever having to compromise their values to get there. Beyond business, they wanted this to be a form of Da'wah — to entrepreneurs, creators, educators, and leaders — proof that real growth is only possible with Allah's Tawfeeq and Barakah.",
   ],
 } as const;

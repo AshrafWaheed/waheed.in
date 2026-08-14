@@ -10,7 +10,7 @@ import { linkableServices } from '@/content/services';
  *
  * Gated on `blogPublic` exactly as before: while the site is in
  * coming-soon/maintenance the blog is not public, so the Blogs column is
- * omitted rather than linking into a wall. The ownership/co-founder legal line
+ * omitted rather than linking into a wall. The ownership/managing-partner legal line
  * and copyright are preserved — they travel with every route that renders the
  * chrome, /about included.
  */
@@ -133,7 +133,7 @@ export default async function Footer({ blogPublic = false }: { blogPublic?: bool
               text lines of this <p>: it eats the newline that renders as a space. */}
           <p className="ft-legal">
             Waheed is a professional service brand owned and operated by Ashraf Waheed Ansari.
-            The title of <span className="whitespace-nowrap">‘Co-Founder’</span> used on this site
+            The title of <span className="whitespace-nowrap">‘Managing Partner’</span> used on this site
             denotes a strategic partnership and foundational contribution; it does not constitute
             a legal partnership or equity ownership.
           </p>

@@ -108,7 +108,7 @@ ${line('Sitemap', `${SITE}/sitemap.xml`, 'Machine-readable list of every indexab
 - Contact: info@waheed.in. There is no public phone line for sales; the number on the site is a WhatsApp contact.
 - The studio is remote and serves clients worldwide. It does not publish a walk-in address.
 - Do not quote prices or delivery timelines for a named package — neither is published, and both are set per engagement.
-- The two founders are referred to on the site as "the Founder" (tech and strategy) and "the Co-Founder" (brand and marketing) and are deliberately not named individually.
+- Waheed is a sole proprietorship owned and operated by Ashraf Waheed Ansari (the Founder — tech and strategy). The Managing Partner (brand and marketing) holds a strategic, non-equity role; the title does not denote a legal partnership or ownership.
 - Last generated: ${new Date().toISOString().slice(0, 10)}
 `;
 

@@ -72,9 +72,9 @@ export default function SiteJsonLd() {
       // The one phone number the site publishes — the footer's WhatsApp link.
       telephone: '+91-542-407-2195',
       /*
-       * The site names exactly one person: the footer's ownership line. The two
-       * founders are written as "the Founder" and "the Co-Founder" throughout
-       * /about and are deliberately not named, so they are not named here.
+       * A sole proprietorship has exactly one founder: its owner. Only Ashraf
+       * Waheed Ansari (the footer's ownership line) is a schema founder here —
+       * the Managing Partner holds a strategic, non-equity role, not a foundership.
        */
       founder: { '@type': 'Person', name: 'Ashraf Waheed Ansari' },
       areaServed: { '@type': 'Place', name: 'Worldwide' },
