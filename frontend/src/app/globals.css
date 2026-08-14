@@ -8795,10 +8795,6 @@ html[data-nav="dark"] .burger span            { background: var(--rd-ivory); }
 
 .bk-body { padding: 3.5rem 0 6rem; background: var(--rd-ivory); }
 
-/* /book leads with the clarity form (`.cf`); as the page's first section it now
-   sits under the fixed nav, so it needs a hero's worth of top clearance. */
-.bk-main .cf { padding-top: clamp(7rem, 10vw, 9rem); }
-
 .bk-body-head { max-width: 880px; margin: 0 auto 1.8rem; text-align: center; }
 .bk-body-head .ab-pill { margin: 0 auto; }
 .bk-body-h {
