@@ -3708,6 +3708,16 @@ html[data-nav="dark"] .burger span            { background: var(--rd-ivory); }
    HYBRID VARIANT (/) — homepage §1–4
    ══════════════════════════════════════════════════════════════════════════ */
 
+/* Several sections scrub their content in from a horizontal offset (ServicesHybrid
+   cards x:±72, RefusalHybrid's scattered tiles, FoundingStory's sliding columns).
+   On the wide desktop layout those offsets stay inside the section, but on a
+   narrow screen they poke past the viewport and widen the whole page — the white
+   gutter down the right on mobile. Clip the page's horizontal overflow here, once,
+   so no reveal can ever add page width. `clip` (not `hidden`) does NOT create a
+   scroll container, so IhsanProcessTactile's sticky rail and any GSAP pinning keep
+   working, and vertical overflow (shadows, the featured card's lift) is untouched. */
+.hy-main { overflow-x: clip; }
+
 /* ── §1 Hero ─────────────────────────────────────────────────────── */
 .hy-hero {
   position: relative;
@@ -9910,7 +9920,11 @@ html[data-nav="dark"] .burger span         { background: #254851; }
 .rf-uline { text-decoration: underline; text-decoration-color: var(--rf-gold); text-decoration-thickness: 2px; text-underline-offset: 3px; }
 /* position:relative so each tile's offsetLeft/offsetTop is measured against the
    grid (the deal-out animation reads those). will-change hints the transforms. */
-.rf-tiles { position: relative; list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: clamp(.7rem, 1.4vw, 1.1rem); }
+/* minmax(0, 1fr) — NOT a bare 1fr. A 1fr track's auto minimum is its content's
+   min-content, so a tile with an unbreakable phrase forces the two columns wider
+   than the grid and the whole page overflows on narrow screens. minmax(0,…) lets
+   the tracks shrink so the tile text wraps instead. */
+.rf-tiles { position: relative; list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(.7rem, 1.4vw, 1.1rem); }
 .rf-tile { will-change: transform, opacity; }
 .rf-tile {
   display: flex; align-items: center; gap: .75rem; text-align: left;
@@ -9926,6 +9940,11 @@ html[data-nav="dark"] .burger span         { background: #254851; }
 .rf-tile-t { min-width: 0; }
 @media (max-width: 860px) {
   .rf-grid { grid-template-columns: 1fr; gap: 2rem; }
+}
+/* On a phone the two tile columns get too narrow to read the longer refusals, so
+   stack them into one full-width column. */
+@media (max-width: 480px) {
+  .rf-tiles { grid-template-columns: 1fr; }
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════

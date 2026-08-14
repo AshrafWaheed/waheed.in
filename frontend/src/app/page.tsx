@@ -28,7 +28,7 @@ export default function HomePage() {
       {/* Organization + WebSite schema. Homepage only — this is the site's one
           canonical statement of who it is; see the component's header. */}
       <SiteJsonLd />
-      <main>
+      <main className="hy-main">
         <HeroFoundersFlank />
         {/* <ManifestoHybrid /> — removed per the redesign; hero → solutions. */}
         <ExpertiseBento />
