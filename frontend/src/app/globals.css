@@ -9174,6 +9174,73 @@ html[data-nav="dark"] .nav-drop-trigger[aria-expanded="true"] { color: #254851; 
 html[data-nav="dark"] .nav-logo-img        { filter: none; }
 html[data-nav="dark"] .burger span         { background: #254851; }
 
+/* ── Scroll-collapse: the outcrowd.io header morph ──────────────────────────
+   The Nav toggles `.collapsed` on scroll direction (down → compact, up/at-top →
+   full; see components/Nav.tsx). Collapsed, the white pill narrows to just the
+   logo and the "Talk to us" CTA and the link row folds away; expanded, it opens
+   back out. Because the pill uses `justify-content: space-between`, the logo
+   stays pinned to the left inner edge and the CTA to the right, so as the shell
+   narrows the two simply glide toward each other — one continuous motion.
+
+   Desktop only: below 861px the bar is already logo + burger, nothing to fold.
+
+   The link row is the reason this is fiddly. The Services dropdown panel is an
+   absolutely-positioned child of `.nav-links`, so `overflow: hidden` on that row
+   would clip the panel — it is off the table. Instead the row is collapsed to
+   zero width (`min-width:0; max-width:0`) and its now-overflowing links are
+   hidden by OPACITY alone, timed so the fade is never seen mid-fold:
+     · collapsing  — opacity drops fast (.16s) while the row is still wide, so the
+       links vanish in place before the shell has narrowed past them;
+     · expanding   — opacity is DELAYED (.2s) until the shell and the row have
+       already widened enough to hold the links, so they never flash overflowing
+       their box. The result reads clean without ever clipping the dropdown. */
+@media (min-width: 861px) {
+  .nav-inner {
+    transition: width .42s cubic-bezier(.22,1,.36,1),
+                max-width .42s cubic-bezier(.22,1,.36,1),
+                padding .42s cubic-bezier(.22,1,.36,1);
+    will-change: width;
+  }
+  /* Expanding transition (the resting state's own): the shell reopens and the
+     links fade back in after a beat. `visibility 0s` restores focusability at
+     once so keyboard users can reach the links as they appear. */
+  .nav-links {
+    max-width: 44rem;                 /* concrete start value so 0↔full animates */
+    transition: max-width .42s cubic-bezier(.22,1,.36,1),
+                opacity .26s ease .2s,
+                visibility 0s;
+  }
+  /* The CTA must never be squeezed thin enough to wrap its label — at the fully
+     folded width the flex row is only a few px of slack, and default shrink was
+     enough to break "Talk to us" onto two lines. */
+  .nav-ctas { flex-shrink: 0; }
+
+  .nav.collapsed .nav-inner {
+    width: 22rem;                     /* compact pill: logo … CTA, with slack */
+    max-width: 22rem;
+  }
+  /* Collapsing transition: fold to zero width, links fade out fast and up front,
+     then drop out of the tab order once the fade has finished. */
+  .nav.collapsed .nav-links {
+    min-width: 0;                     /* let the flex row shrink below its content */
+    max-width: 0;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: max-width .42s cubic-bezier(.22,1,.36,1),
+                opacity .16s ease,
+                visibility 0s linear .16s;
+  }
+}
+
+/* Motion-sensitive users get a plain fixed bar — no scroll-driven fold. */
+@media (prefers-reduced-motion: reduce) {
+  .nav.collapsed .nav-inner { width: 92%; max-width: 1160px; }
+  .nav.collapsed .nav-links {
+    min-width: auto; max-width: 44rem; opacity: 1; visibility: visible; pointer-events: auto;
+  }
+}
+
 /* ── Hero: local palette + the marquee-carrying column ──────────────────────
    .ff-stage is display:contents so the grid stays on .ff-hero and every
    existing responsive rule keeps working; the trust note and marquee are extra

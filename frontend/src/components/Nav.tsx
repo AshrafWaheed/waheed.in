@@ -23,18 +23,46 @@ const LINKS = [
 const EASE = [0.22, 1, 0.36, 1] as const;
 
 export default function Nav({}: { blogPublic?: boolean }) {
-  const [scrolled, setScrolled] = useState(false);
-  const [open, setOpen]         = useState(false);   // mobile overlay
-  const [drop, setDrop]         = useState(false);   // desktop services panel
-  const pathname                = usePathname();
-  const dropRef                 = useRef<HTMLLIElement | null>(null);
+  const [scrolled, setScrolled]   = useState(false);
+  const [collapsed, setCollapsed] = useState(false); // scroll-down → compact pill
+  const [open, setOpen]           = useState(false);   // mobile overlay
+  const [drop, setDrop]           = useState(false);   // desktop services panel
+  const pathname                  = usePathname();
+  const dropRef                   = useRef<HTMLLIElement | null>(null);
   /** Hover-out is delayed so the pointer can cross the gap to the panel. */
-  const closeTimer              = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const closeTimer                = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const onServices = pathname.startsWith('/services');
 
+  /**
+   * Direction-aware nav (the outcrowd.io morph): scrolling DOWN collapses the
+   * pill to logo + CTA; scrolling UP — or sitting near the top — expands it back
+   * to the full menu. Threshold `TOP` keeps the hero always showing the full
+   * bar; `DELTA` is a jitter gate so a trackpad's micro-oscillation doesn't
+   * flip the state. rAF-throttled: one state read per frame, not per event.
+   */
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 50);
+    const TOP = 80;
+    const DELTA = 5;
+    let lastY = window.scrollY;
+    let ticking = false;
+    const update = () => {
+      const y = window.scrollY;
+      setScrolled(y > 50);
+      if (y < TOP) {
+        setCollapsed(false);
+      } else if (y - lastY > DELTA) {
+        setCollapsed(true);
+        setDrop(false);              // a collapsing bar must not leave a panel open
+      } else if (lastY - y > DELTA) {
+        setCollapsed(false);
+      }
+      lastY = y;
+      ticking = false;
+    };
+    const onScroll = () => {
+      if (!ticking) { ticking = true; requestAnimationFrame(update); }
+    };
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
@@ -75,7 +103,7 @@ export default function Nav({}: { blogPublic?: boolean }) {
 
   return (
     <>
-      <nav className={`nav${scrolled ? ' scrolled' : ''}${open ? ' menu-open' : ''}`}>
+      <nav className={`nav${scrolled ? ' scrolled' : ''}${collapsed ? ' collapsed' : ''}${open ? ' menu-open' : ''}`}>
         <div className="cnt nav-inner">
 
           {/* Logo */}
