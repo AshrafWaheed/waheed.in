@@ -17,7 +17,6 @@
  * `aria-hidden` on both: it is one phrase repeated, and a screen reader should
  * meet it once, in the heading, not eight times as decoration.
  */
-import Link from 'next/link';
 import SplitReveal from '@/components/motion/SplitReveal';
 import StackButton from '@/components/ui/StackButton';
 import Khatam from '@/components/graphics/Khatam';
@@ -62,9 +61,6 @@ export default function SmClose({ page }: { page: ServicePage }) {
           <StackButton href="/contact" size="lg" arrow>
             Book a free clarity call
           </StackButton>
-          <Link href="/packages" className="sm-close-alt" data-cursor>
-            Or compare the packages →
-          </Link>
         </div>
       </div>
 

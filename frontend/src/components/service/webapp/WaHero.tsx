@@ -108,11 +108,8 @@ export default function WaHero({ page }: { page: ServicePage }) {
 
           <motion.div className="sd-hero-acts" custom={1.12} variants={fadeUp} initial="hidden" animate="visible">
             <StackButton href="/contact" size="lg" arrow>
-            Book a free clarity call
-          </StackButton>
-            <StackButton href="/packages" size="lg" tone="ghost" onDark>
-            See the packages
-          </StackButton>
+              Book a free clarity call
+            </StackButton>
           </motion.div>
         </div>
 

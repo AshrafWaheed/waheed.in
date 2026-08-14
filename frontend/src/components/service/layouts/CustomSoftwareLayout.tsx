@@ -12,7 +12,6 @@ import CsProblem from '@/components/service/custom/CsProblem';
 import CsBuild from '@/components/service/custom/CsBuild';
 import CsProcess from '@/components/service/custom/CsProcess';
 import CsOutcomes from '@/components/service/custom/CsOutcomes';
-import ServicePackages from '@/components/service/ServicePackages';
 import ServiceFaq from '@/components/service/ServiceFaq';
 import ServiceCta from '@/components/service/ServiceCta';
 import type { ServiceLayoutProps } from './types';
@@ -25,7 +24,6 @@ export default function CustomSoftwareLayout({ page }: ServiceLayoutProps) {
       <CsBuild page={page} />
       <CsProcess page={page} />
       <CsOutcomes page={page} />
-      <ServicePackages page={page} />
       <ServiceFaq page={page} />
       <ServiceCta page={page} />
     </>

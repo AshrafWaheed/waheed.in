@@ -43,11 +43,8 @@ export default function CsHero({ page }: { page: ServicePage }) {
 
           <motion.div className="cs-hero-acts" {...rise(0.4)}>
             <StackButton href="/contact" size="lg" arrow>
-            Book a free clarity call
-          </StackButton>
-            <StackButton href="/packages" size="lg" tone="ghost" onDark>
-            See the packages
-          </StackButton>
+              Book a free clarity call
+            </StackButton>
           </motion.div>
         </div>
 

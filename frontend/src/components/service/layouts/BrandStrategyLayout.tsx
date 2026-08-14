@@ -25,7 +25,6 @@ import BsDiagnosis from '@/components/service/brand/BsDiagnosis';
 import BsRail from '@/components/service/brand/BsRail';
 import BsSpine from '@/components/service/brand/BsSpine';
 import BsShift from '@/components/service/brand/BsShift';
-import BsPackages from '@/components/service/brand/BsPackages';
 import BsFaq from '@/components/service/brand/BsFaq';
 import BsClose from '@/components/service/brand/BsClose';
 import type { ServiceLayoutProps } from './types';
@@ -38,7 +37,6 @@ export default function BrandStrategyLayout({ page }: ServiceLayoutProps) {
       <BsRail page={page} />
       <BsSpine page={page} />
       <BsShift page={page} />
-      <BsPackages page={page} />
       <BsFaq page={page} />
       <BsClose page={page} />
     </>

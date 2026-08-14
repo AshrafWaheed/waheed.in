@@ -23,7 +23,6 @@ import SmProblem from '@/components/service/smm/SmProblem';
 import SmEngine from '@/components/service/smm/SmEngine';
 import SmCadence from '@/components/service/smm/SmCadence';
 import SmLift from '@/components/service/smm/SmLift';
-import SmPackages from '@/components/service/smm/SmPackages';
 import SmFaq from '@/components/service/smm/SmFaq';
 import SmClose from '@/components/service/smm/SmClose';
 import type { ServiceLayoutProps } from './types';
@@ -36,7 +35,6 @@ export default function SmmLayout({ page }: ServiceLayoutProps) {
       <SmEngine page={page} />
       <SmCadence page={page} />
       <SmLift page={page} />
-      <SmPackages page={page} />
       <SmFaq page={page} />
       <SmClose page={page} />
     </>

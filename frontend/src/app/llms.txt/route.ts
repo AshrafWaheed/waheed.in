@@ -1,7 +1,6 @@
 import { laravelFetch } from '@/lib/laravel';
 import { getSiteMode } from '@/lib/site-config';
 import { linkableServices } from '@/content/services';
-import { ladder } from '@/content/packages';
 import { refusal } from '@/content/home';
 
 /**
@@ -17,8 +16,8 @@ import { refusal } from '@/content/home';
  *
  * ── Generated, not written ─────────────────────────────────────────────────
  * Every list below is built from the registry the site itself renders from:
- * `linkableServices` (the crafts whose pages exist), `ladder.rungs`
- * (/packages), `refusal.items` (the homepage's "what we will not build"), and
+ * `linkableServices` (the crafts whose pages exist), `refusal.items` (the
+ * homepage's "what we will not build"), and
  * the live posts endpoint. A hand-maintained llms.txt is a file that is
  * accurate on the day it is written and quietly wrong six months later — and
  * wrong here means an assistant confidently telling someone we sell a package
@@ -75,7 +74,6 @@ WAHEED (legally Waheed Digital Studio, owned and operated by Ashraf Waheed Ansar
 
 ${line('Home', SITE, 'What the studio does and who it is for')}
 ${line('About', `${SITE}/about`, 'The founding story, the two founders, and the values the work is held to')}
-${line('Packages', `${SITE}/packages`, 'The five engagement tiers, from diagnostic to ongoing partnership')}
 ${line('FAQs', `${SITE}/faq`, 'Common questions on approach, timelines and payment')}
 ${line('Apply', `${SITE}/contact`, 'The enquiry form — brand, timeline and budget')}
 ${line('Book a call', `${SITE}/book`, 'A 30-minute clarity call over Google Meet. No payment, no obligation')}
@@ -83,12 +81,6 @@ ${line('Book a call', `${SITE}/book`, 'A 30-minute clarity call over Google Meet
 ## Services
 
 ${linkableServices.map((s) => line(s.title, `${SITE}/services/${s.slug}`, s.navBlurb)).join('\n')}
-
-## Packages
-
-${ladder.rungs.map((r) => `- **${r.title}** (${r.eyebrow}): ${r.subtitle} ${r.desc}`).join('\n')}
-
-Every package starts with an application at ${SITE}/contact. Pricing is not published; it is set per engagement after the first conversation.
 
 ## What we will not build
 

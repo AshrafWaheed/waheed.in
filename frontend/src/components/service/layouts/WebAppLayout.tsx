@@ -15,7 +15,6 @@ import ServiceProblem from '@/components/service/ServiceProblem';
 import ServiceBuild from '@/components/service/ServiceBuild';
 import ServiceProcess from '@/components/service/ServiceProcess';
 import ServiceOutcomes from '@/components/service/ServiceOutcomes';
-import ServicePackages from '@/components/service/ServicePackages';
 import ServiceFaq from '@/components/service/ServiceFaq';
 import ServiceCta from '@/components/service/ServiceCta';
 import type { ServiceLayoutProps } from './types';
@@ -28,7 +27,6 @@ export default function WebAppLayout({ page }: ServiceLayoutProps) {
       <ServiceBuild page={page} />
       <ServiceProcess page={page} />
       <ServiceOutcomes page={page} />
-      <ServicePackages page={page} />
       <ServiceFaq page={page} />
       <ServiceCta page={page} />
     </>

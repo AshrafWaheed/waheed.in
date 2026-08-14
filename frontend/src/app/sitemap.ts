@@ -52,7 +52,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const staticPages: MetadataRoute.Sitemap = [
     { url: base,                    lastModified: STATIC_REVISED, changeFrequency: 'weekly',  priority: 1.0 },
-    { url: `${base}/packages`,      lastModified: STATIC_REVISED, changeFrequency: 'monthly', priority: 0.9 },
     // Only the crafts whose pages exist — `linkableServices` is the same source
     // the nav links from, so the sitemap can never advertise a 404.
     ...linkableServices.map((s) => ({

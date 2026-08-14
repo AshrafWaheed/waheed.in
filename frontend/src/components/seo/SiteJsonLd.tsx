@@ -1,5 +1,4 @@
 import { linkableServices } from '@/content/services';
-import { ladder } from '@/content/packages';
 
 /**
  * Organization + WebSite structured data, mounted once on the homepage.
@@ -24,10 +23,11 @@ import { ladder } from '@/content/packages';
  *     or founding date because the site does not state one. Structured data
  *     that says something the page does not is a manual-action risk, and a lie
  *     to an LLM is worse than a silence.
- *  2. The services and packages come from `linkableServices` and `ladder`, the
- *     same registries the nav and /packages render, so the graph cannot drift
- *     from the site. `linkableServices` in particular is the list of crafts
- *     whose PAGES exist — a service listed here always resolves.
+ *  2. The services come from `linkableServices`, the same registry the nav
+ *     renders from, so the graph cannot drift from the site — it is the list of
+ *     crafts whose PAGES exist, so a service listed here always resolves. The
+ *     /packages page is deliberately unlisted (kept out of the nav, sitemap and
+ *     this graph), so no OfferCatalog is emitted for it.
  *  3. Stable `@id`s. Other pages' markup can point at
  *     `https://waheed.in/#organization` instead of restating the publisher,
  *     and Google merges the nodes.
@@ -89,17 +89,6 @@ export default function SiteJsonLd() {
           availableLanguage: ['English'],
         },
       ],
-      hasOfferCatalog: {
-        '@type': 'OfferCatalog',
-        name: 'Packages',
-        itemListElement: ladder.rungs.map((r) => ({
-          '@type': 'Offer',
-          name: r.title,
-          description: r.subtitle,
-          category: r.eyebrow,
-          url: `${SITE}/packages`,
-        })),
-      },
       makesOffer: linkableServices.map((s) => ({
         '@type': 'Offer',
         itemOffered: {

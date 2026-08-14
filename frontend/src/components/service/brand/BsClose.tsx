@@ -11,7 +11,6 @@
  * the same left margin the whole page has been reading against, so the last
  * screen lands on the line the reader's eye is already following.
  */
-import Link from 'next/link';
 import SplitReveal from '@/components/motion/SplitReveal';
 import StackButton from '@/components/ui/StackButton';
 import type { ServicePage } from '@/content/services';
@@ -38,11 +37,8 @@ export default function BsClose({ page }: { page: ServicePage }) {
             <p className="bs-close-b reveal">{body}</p>
             <div className="bs-close-acts">
               <StackButton href="/contact" size="lg" arrow>
-            Book a free clarity call
-          </StackButton>
-              <Link href="/packages" className="bs-close-alt" data-cursor>
-                Or compare the packages →
-              </Link>
+                Book a free clarity call
+              </StackButton>
             </div>
           </div>
         </div>

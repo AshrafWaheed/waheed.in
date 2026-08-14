@@ -63,9 +63,6 @@ export default function BsHero({ page }: { page: ServicePage }) {
           <StackButton href="/contact" size="lg" arrow>
             Book a free clarity call
           </StackButton>
-          <StackButton href="/packages" size="lg" tone="ghost" onDark>
-            See the packages
-          </StackButton>
         </motion.div>
 
         {/* Last, not between the headline and the sub — dead centre belongs to

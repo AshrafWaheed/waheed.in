@@ -23,7 +23,6 @@ import SoProblem from '@/components/service/seo/SoProblem';
 import SoStack from '@/components/service/seo/SoStack';
 import SoStairs from '@/components/service/seo/SoStairs';
 import SoGains from '@/components/service/seo/SoGains';
-import SoPackages from '@/components/service/seo/SoPackages';
 import SoFaq from '@/components/service/seo/SoFaq';
 import SoClose from '@/components/service/seo/SoClose';
 import type { ServiceLayoutProps } from './types';
@@ -36,7 +35,6 @@ export default function SeoLayout({ page }: ServiceLayoutProps) {
       <SoStack page={page} />
       <SoStairs page={page} />
       <SoGains page={page} />
-      <SoPackages page={page} />
       <SoFaq page={page} />
       <SoClose page={page} />
     </>

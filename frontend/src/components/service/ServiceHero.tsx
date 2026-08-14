@@ -79,9 +79,6 @@ export default function ServiceHero({ page, artifact }: { page: ServicePage; art
             <StackButton href="/contact" size="lg" arrow>
               Book a free clarity call
             </StackButton>
-            <StackButton href="/packages" size="lg" tone="ghost" onDark>
-              See the packages
-            </StackButton>
           </motion.div>
         </div>
 

@@ -6,12 +6,19 @@ import PackagesHero from '@/components/packages/PackagesHero';
 import OfferLadder from '@/components/packages/OfferLadder';
 import CustomPlanCta from '@/components/packages/CustomPlanCta';
 
-export const metadata: Metadata = pageMeta({
-  title: 'Packages · WAHEED',
-  description:
-    'Five packages built for halal brands: Halal Brand Audit, Foundations Engagement, The Authority System, Halal Brand OS, and Halal Brand Partnership.',
-  path: '/packages',
-});
+export const metadata: Metadata = {
+  ...pageMeta({
+    title: 'Packages · WAHEED',
+    description:
+      'Five packages built for halal brands: Halal Brand Audit, Foundations Engagement, The Authority System, Halal Brand OS, and Halal Brand Partnership.',
+    path: '/packages',
+  }),
+  // Unlisted. The page still resolves and is reachable from the homepage, but it
+  // is deliberately kept out of the nav, the sitemap, the JSON-LD catalog and
+  // /llms.txt — so it is not advertised or indexed. `follow` stays true so the
+  // CTAs on it (contact, book) still pass link equity.
+  robots: { index: false, follow: true },
+};
 
 /**
  * /packages — rebuilt to homepage standard, same three page-level primitives as

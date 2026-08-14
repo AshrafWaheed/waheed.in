@@ -14,11 +14,10 @@ import StackButton from '@/components/ui/StackButton';
  * is a plain destination.
  */
 const LINKS = [
-  { href: '/',         label: 'Home'     },
-  { href: '/about',    label: 'About'    },
-  { href: '/packages', label: 'Packages' },
-  { href: '/blog',     label: 'Blog'     },
-  { href: '/faq',      label: 'FAQs'     },
+  { href: '/',      label: 'Home'  },
+  { href: '/about', label: 'About' },
+  { href: '/blog',  label: 'Blog'  },
+  { href: '/faq',   label: 'FAQs'  },
 ];
 
 const EASE = [0.22, 1, 0.36, 1] as const;

@@ -15,7 +15,7 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import {
   AlertTriangle, Compass, Palette, Smartphone, Bell, Server, Rocket,
-  Check, ChevronDown, ArrowRight, Wifi, BatteryFull, Star, Package,
+  Check, ChevronDown, ArrowRight, Wifi, BatteryFull, Star,
 } from 'lucide-react';
 import type { ServicePage } from '@/content/services';
 import AppJourneyRails from './AppJourneyRails';
@@ -56,7 +56,7 @@ function FaqItem({ q, a }: { q: string; a: string }) {
 }
 
 export default function AppPhone({ page }: { page: ServicePage }) {
-  const { hero, problem, build, process, outcomes, packages, faq, cta } = page;
+  const { hero, problem, build, process, outcomes, faq, cta } = page;
 
   return (
     <section className="md-stage" data-section-color="dark">
@@ -87,7 +87,6 @@ export default function AppPhone({ page }: { page: ServicePage }) {
               <Link href="/contact" className="md-btn md-btn--primary" data-cursor>
                 Book a free clarity call <ArrowRight size={16} />
               </Link>
-              <Link href="/packages" className="md-btn md-btn--ghost" data-cursor>See the packages</Link>
             </div>
             <div className="md-chips">
               <span className="md-chip">iOS</span>
@@ -169,21 +168,6 @@ export default function AppPhone({ page }: { page: ServicePage }) {
                 <p className="md-fit-h">{outcomes.notHeading}</p>
                 <ul>{outcomes.not.map((f, i) => <li key={i}>{f}</li>)}</ul>
               </div>
-            </div>
-          </motion.section>
-
-          {/* ── Packages — plans ──────────────────────────────────────────── */}
-          <motion.section className="md-sec" {...reveal}>
-            <p className="md-label">Where this sits</p>
-            <h2 className="md-h2">The plans that include it.</h2>
-            <div className="md-plans">
-              {packages.map((name) => (
-                <Link key={name} href="/packages" className="md-plan" data-cursor>
-                  <span className="md-plan-i"><Package size={18} strokeWidth={2} /></span>
-                  <span className="md-plan-t">{name}</span>
-                  <ArrowRight className="md-plan-arr" size={16} />
-                </Link>
-              ))}
             </div>
           </motion.section>
 

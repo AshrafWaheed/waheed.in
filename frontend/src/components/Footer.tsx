@@ -53,7 +53,6 @@ const SOCIAL = [
 const QUICK = [
   { label: 'Home',        href: '/'         },
   { label: 'About',       href: '/about'    },
-  { label: 'Packages',    href: '/packages' },
   { label: 'FAQs',        href: '/faq'      },
   { label: 'Book a call', href: '/book'     },
   { label: 'Contact',     href: '/contact'  },
@@ -123,7 +122,7 @@ export default async function Footer({ blogPublic = false }: { blogPublic?: bool
 
         <div className="ft-bottom">
           <p className="ft-copy">
-            © 2026 Waheed Digital Studio
+            © 1448H/2026 Waheed Digital Studio
             {' · '}
             <Link href="/privacy">Privacy</Link>
             {' · '}

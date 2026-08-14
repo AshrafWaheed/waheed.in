@@ -14,7 +14,6 @@
  * `m^1.9` shape as the hero chart, so the closing gesture is the opening claim
  * carried through.
  */
-import Link from 'next/link';
 import SplitReveal from '@/components/motion/SplitReveal';
 import StackButton from '@/components/ui/StackButton';
 import type { ServicePage } from '@/content/services';
@@ -62,9 +61,6 @@ export default function SoClose({ page }: { page: ServicePage }) {
           <StackButton href="/contact" size="lg" arrow>
             Book a free clarity call
           </StackButton>
-          <Link href="/packages" className="so-close-alt" data-cursor>
-            Or compare the packages →
-          </Link>
         </div>
       </div>
     </section>

@@ -61,11 +61,8 @@ export default function SmHero({ page }: { page: ServicePage }) {
 
           <motion.div className="sm-hero-acts" custom={1.14} variants={fadeUp} initial="hidden" animate="visible">
             <StackButton href="/contact" size="lg" arrow>
-            Book a free clarity call
-          </StackButton>
-            <StackButton href="/packages" size="lg" tone="ghost" onDark>
-            See the packages
-          </StackButton>
+              Book a free clarity call
+            </StackButton>
           </motion.div>
         </div>
 

@@ -13,7 +13,6 @@
  * geometry, and the closing gesture on a service page should be the sentence,
  * not the ornament.
  */
-import Link from 'next/link';
 import SplitReveal from '@/components/motion/SplitReveal';
 import StackButton from '@/components/ui/StackButton';
 import type { ServicePage } from '@/content/services';
@@ -36,9 +35,6 @@ export default function ServiceCta({ page }: { page: ServicePage }) {
           <StackButton href="/contact" size="lg" arrow>
             Book a free clarity call
           </StackButton>
-          <Link href="/packages" className="sd-cta-alt" data-cursor>
-            Or compare the packages →
-          </Link>
         </div>
         <span className="sd-cta-rule" aria-hidden="true" />
       </div>
