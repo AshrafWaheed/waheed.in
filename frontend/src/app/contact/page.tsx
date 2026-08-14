@@ -27,12 +27,14 @@ import StackButton from '@/components/ui/StackButton';
 import Khatam from '@/components/graphics/Khatam';
 import { contactAside } from '@/content/contact';
 
+// The three packages shown on the homepage (ServicesHybrid / growthPackages) —
+// the first three rungs of the /packages ladder. Halal Brand OS and Halal Brand
+// Partnership are intentionally omitted here to match the homepage. "Not Sure
+// Yet" and "Custom" are catch-alls, not packages, so they stay.
 const SERVICES = [
   'Halal Brand Audit',
   'Foundations Engagement',
   'The Authority System',
-  'Halal Brand OS',
-  'Halal Brand Partnership',
   'Not Sure Yet, Need Guidance',
   'Custom',
 ] as const;
