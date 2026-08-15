@@ -35,6 +35,15 @@ export interface SplitRevealProps {
   amount?: number;
   /** 'inView' = reveal when scrolled to; 'mount' = reveal immediately. */
   trigger?: 'inView' | 'mount';
+  /**
+   * Whether units fade from opacity:0. Default true. Set false for ABOVE-THE-FOLD
+   * hero headlines: an element that starts at opacity:0 is not "contentful" until
+   * it becomes visible, so a fading headline pins LCP to hydration (~8s on mobile,
+   * since these units animate on mount, after the JS bundle loads). With fade off
+   * the units keep opacity:1 and only rise + de-blur — still the signature effect,
+   * but the text is painted at the first frame, so it can be the LCP without cost.
+   */
+  fade?: boolean;
 }
 
 export default function SplitReveal({
@@ -49,14 +58,17 @@ export default function SplitReveal({
   once = true,
   amount = 0.35,
   trigger = 'inView',
+  fade = true,
 }: SplitRevealProps) {
   const ref = useRef<HTMLSpanElement>(null);
   const inView = useInView(ref, { once, amount });
   const show = trigger === 'mount' ? true : inView;
 
   const words = text.split(' ');
-  const hidden = { opacity: 0, y, filter: `blur(${blur}px)` };
-  const shown = { opacity: 1, y: 0, filter: 'blur(0px)' };
+  // opacity is only part of the reveal when `fade` is on. Off → units stay opaque
+  // (painted at first frame, LCP-safe) and only rise + de-blur. See the prop doc.
+  const hidden = fade ? { opacity: 0, y, filter: `blur(${blur}px)` } : { y, filter: `blur(${blur}px)` };
+  const shown = fade ? { opacity: 1, y: 0, filter: 'blur(0px)' } : { y: 0, filter: 'blur(0px)' };
   const inline: React.CSSProperties = { display: 'inline-block' };
   const wrap: React.CSSProperties = { display: 'inline-block', whiteSpace: 'nowrap' };
 

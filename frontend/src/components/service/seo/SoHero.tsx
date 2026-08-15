@@ -12,18 +12,20 @@
  * tucked behind the words: it gets its own band and its own labels.
  */
 import { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
-import type { Variants } from 'framer-motion';
 import SplitReveal from '@/components/motion/SplitReveal';
 import StackButton from '@/components/ui/StackButton';
 import CompoundCurve from '@/components/graphics/CompoundCurve';
 import type { ServicePage } from '@/content/services';
 
-const EASE = [0.22, 1, 0.36, 1] as const;
-const fadeUp: Variants = {
-  hidden: { opacity: 0, y: 18 },
-  visible: (d: number) => ({ opacity: 1, y: 0, transition: { duration: 0.9, ease: EASE, delay: d } }),
-};
+/**
+ * Hero copy enters via CSS (`.rd-rise` in globals.css), not framer-motion.
+ * framer's initial="hidden" baked opacity:0 into the SSR HTML, so the copy could
+ * not paint until hydration — pinning LCP to ~8s (the sub paragraph is the
+ * measured LCP element). The rise is transform-only and the h1 SplitReveal runs
+ * with fade={false}, so all hero text is painted at the first frame. `--rd`
+ * staggers the lines.
+ */
+const rd = (d: string) => ({ ['--rd']: d } as React.CSSProperties);
 
 export default function SoHero({ page }: { page: ServicePage }) {
   const [inView, setInView] = useState(false);
@@ -37,30 +39,30 @@ export default function SoHero({ page }: { page: ServicePage }) {
   return (
     <section className={`so-hero${inView ? ' is-in' : ''}`} data-section-color="dark">
       <div className="cnt so-hero-in">
-        <motion.p className="so-eyebrow" custom={0.12} variants={fadeUp} initial="hidden" animate="visible">
+        <p className="so-eyebrow rd-rise-fade" style={rd('.12s')}>
           {eyebrow}
-        </motion.p>
+        </p>
 
         <div className="so-hero-grid">
           <h1 className="so-hero-h1">
-            <SplitReveal text={h1.lead} by="char" trigger="mount" delay={0.28} stagger={0.025} />{' '}
+            <SplitReveal text={h1.lead} by="char" trigger="mount" delay={0.28} stagger={0.025} fade={false} />{' '}
             <em>
-              <SplitReveal text={h1.em} by="char" trigger="mount" delay={0.5} stagger={0.025} />
+              <SplitReveal text={h1.em} by="char" trigger="mount" delay={0.5} stagger={0.025} fade={false} />
             </em>
           </h1>
 
           <div className="so-hero-tail">
-            <motion.p className="so-hero-sub" custom={0.9} variants={fadeUp} initial="hidden" animate="visible">
+            <p className="so-hero-sub rd-rise" style={rd('.3s')}>
               {sub}
-            </motion.p>
-            <motion.p className="so-hero-promise" custom={1.02} variants={fadeUp} initial="hidden" animate="visible">
+            </p>
+            <p className="so-hero-promise rd-rise" style={rd('.4s')}>
               {promise}
-            </motion.p>
-            <motion.div className="so-hero-acts" custom={1.14} variants={fadeUp} initial="hidden" animate="visible">
+            </p>
+            <div className="so-hero-acts rd-rise" style={rd('.5s')}>
               <StackButton href="/contact" size="lg" arrow>
                 Book a free clarity call
               </StackButton>
-            </motion.div>
+            </div>
           </div>
         </div>
       </div>

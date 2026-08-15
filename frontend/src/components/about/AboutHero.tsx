@@ -19,18 +19,18 @@
  */
 import { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
-import type { Variants } from 'framer-motion';
 import SplitReveal from '@/components/motion/SplitReveal';
 import useParallaxOrigin from '@/components/motion/useParallaxOrigin';
 import GirihEngine from '@/components/graphics/GirihEngine';
 import Khatam from '@/components/graphics/Khatam';
 import { aboutHero } from '@/content/about';
 
+// The hero copy enters via CSS (`.rd-rise*` in globals.css) rather than
+// framer-motion initial="hidden", which baked opacity:0 into the SSR HTML and so
+// held the copy off-screen until hydration (LCP tax on mobile). The h1 keeps its
+// SplitReveal but with fade={false} so the characters are painted at the first
+// frame. Only the decorative rule (aria-hidden) still uses framer.
 const EASE = [0.22, 1, 0.36, 1] as const;
-const fadeUp: Variants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: (d: number) => ({ opacity: 1, y: 0, transition: { duration: 0.85, ease: EASE, delay: d } }),
-};
 
 type CSSVars = React.CSSProperties & Record<string, string | number>;
 const v = (o: Record<string, string | number>): CSSVars => o as CSSVars;
@@ -63,14 +63,14 @@ export default function AboutHero() {
       </span>
 
       <div className="cnt ab-hero-inner">
-        <motion.p className="ab-pill" custom={0.12} variants={fadeUp} initial="hidden" animate="visible">
+        <p className="ab-pill rd-rise-fade" style={v({ '--rd': '.12s' })}>
           {aboutHero.eyebrow}
-        </motion.p>
+        </p>
 
         <h1 className="ab-hero-h1">
-          <SplitReveal text={aboutHero.headline.lead} by="char" trigger="mount" delay={0.3} stagger={0.022} />{' '}
+          <SplitReveal text={aboutHero.headline.lead} by="char" trigger="mount" delay={0.3} stagger={0.022} fade={false} />{' '}
           <em>
-            <SplitReveal text={aboutHero.headline.em!} by="char" trigger="mount" delay={0.62} stagger={0.022} />
+            <SplitReveal text={aboutHero.headline.em!} by="char" trigger="mount" delay={0.62} stagger={0.022} fade={false} />
           </em>
         </h1>
 

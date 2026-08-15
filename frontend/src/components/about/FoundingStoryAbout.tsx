@@ -32,10 +32,15 @@ export default function FoundingStoryAbout() {
         {/* A real inbound message — a stranger who found the founder on LinkedIn
             and recognised the same Islamic values. The panel's 340:424 ratio
             matches the image, so it fills edge-to-edge without cropping. */}
+        {/* Transform-only reveal (no opacity): this photo is the measured LCP
+            element on /about, and an element that fades from opacity:0 is not
+            "contentful" until visible — which pinned LCP to ~6.5s on mobile. It
+            now paints as soon as it loads (kept eager via `priority`, since it is
+            in the first viewport), then slides in. */}
         <motion.div
           className="afs-media"
-          initial={reduce ? false : { opacity: 0, x: -40 }}
-          whileInView={{ opacity: 1, x: 0 }}
+          initial={reduce ? false : { x: -40 }}
+          whileInView={{ x: 0 }}
           viewport={{ once: true, amount: 0.4 }}
           transition={{ duration: 0.9, ease: EASE }}
         >
@@ -44,6 +49,7 @@ export default function FoundingStoryAbout() {
             src="/founders/founding-testimonial.jpeg"
             alt="A message from someone who found Waheed on LinkedIn: “Having read your profile and the Islamic principles you stand for, it resonated with me and the values we stand for in our organisation.”"
             fill
+            priority
             sizes="(max-width: 820px) 90vw, 340px"
           />
         </motion.div>
