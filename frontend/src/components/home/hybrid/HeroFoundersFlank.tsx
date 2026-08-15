@@ -32,17 +32,20 @@
  */
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
-import { motion } from 'framer-motion';
-import type { Variants } from 'framer-motion';
 import StackButton from '@/components/ui/StackButton';
 import { hero, clients } from '@/content/home';
 
-const EASE = [0.22, 1, 0.36, 1] as const;
-const fadeUp: Variants = {
-  hidden: { opacity: 0, y: 22 },
-  visible: (d: number) => ({ opacity: 1, y: 0, transition: { duration: 0.9, ease: EASE, delay: d } }),
-};
-
+/**
+ * The centre copy's entrance used to be framer-motion (`initial="hidden"`,
+ * opacity:0). Because framer bakes that initial state into the SERVER HTML, the
+ * hero text shipped invisible and could not paint until the JS bundle loaded and
+ * hydrated this (heavy) page — which pinned LCP to Time-to-Interactive (~8s on
+ * throttled mobile; the sub-copy is the measured LCP element). The reveal is now
+ * a pure-CSS load animation (`.rd-rise` / `.rd-rise-fade` in globals.css) that
+ * runs from stylesheet-apply time (~FCP), independent of the JS bundle, with the
+ * stagger delays passed as `--rd`. The rise is transform-only (never opacity), so
+ * the copy is painted at the first frame and LCP no longer waits on JS at all.
+ */
 type CSSVars = React.CSSProperties & Record<string, string | number>;
 const v = (o: Record<string, string | number>): CSSVars => o as CSSVars;
 
@@ -226,21 +229,26 @@ export default function HeroFoundersFlank() {
           </div>
         </div>
 
-        {/* ── centre: the copy ────────────────────────────────────────────── */}
+        {/* ── centre: the copy ────────────────────────────────────────────────
+            Entrance is CSS (`.rd-rise` = transform-only rise; `.rd-rise-fade` =
+            fade only, used on the pill so its optical-centering translateX is not
+            clobbered by the rise's transform, and because it is not the LCP node).
+            `--rd` staggers them; see the note by the imports for why this is CSS
+            and not framer-motion, and why the rise never touches opacity. */}
         <div className="ff-text">
-          <motion.p className="hy-bismillah" lang="ar" custom={0.1} variants={fadeUp} initial="hidden" animate="visible">
+          <p className="hy-bismillah rd-rise" lang="ar" style={v({ '--rd': '.05s' })}>
             {hero.bismillah}
-          </motion.p>
+          </p>
 
-          <motion.p className="ff-pill" custom={0.28} variants={fadeUp} initial="hidden" animate="visible">
+          <p className="ff-pill rd-rise-fade" style={v({ '--rd': '.12s' })}>
             {hero.eyebrow}
-          </motion.p>
+          </p>
 
           <h1 className="hy-hero-h1 ff-h1">
-            <motion.span className="ff-h1-lead" custom={0.42} variants={fadeUp} initial="hidden" animate="visible">
+            <span className="ff-h1-lead rd-rise" style={v({ '--rd': '.2s' })}>
               {hero.headline.lead}
-            </motion.span>
-            <motion.span className="ff-h1-turn" custom={0.62} variants={fadeUp} initial="hidden" animate="visible">
+            </span>
+            <span className="ff-h1-turn rd-rise" style={v({ '--rd': '.3s' })}>
               {/* The word is present for a screen reader (in the base layer) and
                   faint for a mouse user until the cursor-torch crosses it. The
                   glow layer is an aria-hidden duplicate so the word is announced
@@ -255,19 +263,19 @@ export default function HeroFoundersFlank() {
                 </svg>
               </span>
               <em className="ff-trusted">{hero.headline.em}</em>.
-            </motion.span>
+            </span>
           </h1>
 
-          <motion.p className="hy-hero-sub ff-sub" custom={1.15} variants={fadeUp} initial="hidden" animate="visible">
+          <p className="hy-hero-sub ff-sub rd-rise" style={v({ '--rd': '.42s' })}>
             <SubCopy text={hero.sub} phrases={hero.subUnderline} />
-          </motion.p>
+          </p>
 
-          <motion.div className="hy-hero-ctas" custom={1.3} variants={fadeUp} initial="hidden" animate="visible">
+          <div className="hy-hero-ctas rd-rise" style={v({ '--rd': '.55s' })}>
             {/* Single CTA, per the redesign. The three-plate button is NOT
                 wrapped in Magnetic — its face stays put and only the plates
                 behind it track the cursor. */}
             <StackButton href={hero.ctaPrimary.href} size="lg">{hero.ctaPrimary.label}</StackButton>
-          </motion.div>
+          </div>
         </div>
 
         {/* ── right flank: the man, riding high on gold-soft ──────────────── */}

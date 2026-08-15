@@ -5137,6 +5137,32 @@ html[data-nav="dark"] .burger span            { background: var(--rd-ivory); }
   font-size: clamp(.94rem, 1.1vw, 1.02rem); line-height: 1.62;
 }
 
+/* ── hero-copy entrance — shared redesign utility (.rd-rise) ───────────────────
+   CSS-driven (not framer-motion) on purpose. framer's initial="hidden" baked
+   opacity:0 into the SSR HTML, so hero copy could not paint until the JS bundle
+   hydrated the page — pinning LCP to ~8s on mobile (the hero SUB paragraph is the
+   measured LCP element on every hero).
+
+   Two rules matter for LCP:
+     1. Run from the stylesheet, so the reveal starts at ~FCP, not at hydration.
+     2. The reveal is TRANSFORM-ONLY (translateY), never opacity. An element that
+        fades from opacity:0 is not "contentful" until it becomes visible, so an
+        opacity reveal still pushes LCP out by its delay+duration. Keeping opacity
+        at 1 means the text is painted at first frame → LCP == FCP, while the rise
+        gesture is preserved. `--rd` staggers the lines.
+
+   `.rd-rise-fade` is the one opacity fade, reserved for small NON-LCP eyebrows/
+   pills (e.g. .ff-pill, whose base rule also carries a translateX for optical
+   centering that a transform rise would clobber). Never put it on hero H1/sub. */
+@keyframes rd-rise { from { transform: translateY(22px); } to { transform: none; } }
+@keyframes rd-rise-fade { from { opacity: 0; } to { opacity: 1; } }
+.rd-rise { animation: rd-rise .9s cubic-bezier(.22, 1, .36, 1) both; animation-delay: var(--rd, 0s); }
+.rd-rise-fade { animation: rd-rise-fade .9s cubic-bezier(.22, 1, .36, 1) both; animation-delay: var(--rd, 0s); }
+@media (prefers-reduced-motion: reduce) {
+  .rd-rise, .rd-rise-fade { animation: none; opacity: 1; }
+  .rd-rise { transform: none; }
+}
+
 /* ── flanks ────────────────────────────────────────────────────────────── */
 /* The flank is a fixed-ratio box; everything inside is positioned against it in
    percentages, so the whole composition scales with the column. */
