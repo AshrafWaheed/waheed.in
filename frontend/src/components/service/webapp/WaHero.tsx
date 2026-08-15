@@ -30,8 +30,6 @@
  * occupies the bottom of the section, and a centred cue lands on top of it.
  */
 import { useEffect, useRef, useState } from 'react';
-import { motion } from 'framer-motion';
-import type { Variants } from 'framer-motion';
 import SplitReveal from '@/components/motion/SplitReveal';
 import StackButton from '@/components/ui/StackButton';
 import useParallaxOrigin from '@/components/motion/useParallaxOrigin';
@@ -40,12 +38,10 @@ import DeviceRig, { type Surface } from '@/components/graphics/DeviceRig';
 import AppRig from '@/components/graphics/AppRig';
 import type { ServicePage } from '@/content/services';
 
-const EASE = [0.22, 1, 0.36, 1] as const;
-const fadeUp: Variants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: (d: number) => ({ opacity: 1, y: 0, transition: { duration: 0.85, ease: EASE, delay: d } }),
-};
-
+// Hero copy enters via CSS (.rd-rise, transform-only), not framer initial="hidden"
+// — which baked opacity:0 into the SSR HTML and pinned LCP to hydration (~8s
+// mobile). The h1 keeps SplitReveal with fade={false} so its chars paint at the
+// first frame. See the hero-LCP project note.
 type CSSVars = React.CSSProperties & Record<string, string | number>;
 const v = (o: Record<string, string | number>): CSSVars => o as CSSVars;
 
@@ -87,30 +83,30 @@ export default function WaHero({ page }: { page: ServicePage }) {
 
       <div className="cnt sd-hero-grid">
         <div className="sd-hero-copy">
-          <motion.p className="ab-pill" custom={0.12} variants={fadeUp} initial="hidden" animate="visible">
+          <p className="ab-pill rd-rise-fade" style={v({ '--rd': '.12s' })}>
             {eyebrow}
-          </motion.p>
+          </p>
 
           <h1 className="sd-hero-h1">
-            <SplitReveal text={h1.lead} by="char" trigger="mount" delay={0.28} stagger={0.02} />{' '}
+            <SplitReveal text={h1.lead} by="char" trigger="mount" delay={0.28} stagger={0.02} fade={false} />{' '}
             <em>
-              <SplitReveal text={h1.em} by="char" trigger="mount" delay={0.58} stagger={0.02} />
+              <SplitReveal text={h1.em} by="char" trigger="mount" delay={0.58} stagger={0.02} fade={false} />
             </em>
           </h1>
 
-          <motion.p className="sd-hero-sub" custom={0.85} variants={fadeUp} initial="hidden" animate="visible">
+          <p className="sd-hero-sub rd-rise" style={v({ '--rd': '.3s' })}>
             {sub}
-          </motion.p>
+          </p>
 
-          <motion.p className="sd-hero-promise" custom={1} variants={fadeUp} initial="hidden" animate="visible">
+          <p className="sd-hero-promise rd-rise" style={v({ '--rd': '.4s' })}>
             {promise}
-          </motion.p>
+          </p>
 
-          <motion.div className="sd-hero-acts" custom={1.12} variants={fadeUp} initial="hidden" animate="visible">
+          <div className="sd-hero-acts rd-rise" style={v({ '--rd': '.5s' })}>
             <StackButton href="/contact" size="lg" arrow>
               Book a free clarity call
             </StackButton>
-          </motion.div>
+          </div>
         </div>
 
         {/* A bare stage — no wrapper animation. Each device runs its own

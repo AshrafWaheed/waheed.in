@@ -15,17 +15,18 @@
  */
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import type { Variants } from 'framer-motion';
 import SplitReveal from '@/components/motion/SplitReveal';
 import StackButton from '@/components/ui/StackButton';
 import FeedColumns from '@/components/graphics/FeedColumns';
 import type { ServicePage } from '@/content/services';
 
+// Hero copy enters via CSS (.rd-rise, transform-only), not framer initial="hidden"
+// — which baked opacity:0 into the SSR HTML and pinned LCP to hydration (~8s
+// mobile; the sub paragraph is the LCP element). The h1 keeps SplitReveal with
+// fade={false} so its chars are painted at the first frame. The decorative feed
+// keeps its framer fade. See the hero-LCP project note.
 const EASE = [0.22, 1, 0.36, 1] as const;
-const fadeUp: Variants = {
-  hidden: { opacity: 0, y: 18 },
-  visible: (d: number) => ({ opacity: 1, y: 0, transition: { duration: 0.9, ease: EASE, delay: d } }),
-};
+const rd = (d: string) => ({ ['--rd']: d } as React.CSSProperties);
 
 export default function SmHero({ page }: { page: ServicePage }) {
   const [inView, setInView] = useState(false);
@@ -40,30 +41,30 @@ export default function SmHero({ page }: { page: ServicePage }) {
     <section className={`sm-hero${inView ? ' is-in' : ''}`} data-section-color="dark">
       <div className="cnt sm-hero-grid">
         <div className="sm-hero-copy">
-          <motion.p className="sm-eyebrow" custom={0.12} variants={fadeUp} initial="hidden" animate="visible">
+          <p className="sm-eyebrow rd-rise-fade" style={rd('.12s')}>
             {eyebrow}
-          </motion.p>
+          </p>
 
           <h1 className="sm-hero-h1">
-            <SplitReveal text={h1.lead} by="char" trigger="mount" delay={0.28} stagger={0.024} />{' '}
+            <SplitReveal text={h1.lead} by="char" trigger="mount" delay={0.28} stagger={0.024} fade={false} />{' '}
             <em>
-              <SplitReveal text={h1.em} by="char" trigger="mount" delay={0.56} stagger={0.024} />
+              <SplitReveal text={h1.em} by="char" trigger="mount" delay={0.56} stagger={0.024} fade={false} />
             </em>
           </h1>
 
-          <motion.p className="sm-hero-sub" custom={0.9} variants={fadeUp} initial="hidden" animate="visible">
+          <p className="sm-hero-sub rd-rise" style={rd('.3s')}>
             {sub}
-          </motion.p>
+          </p>
 
-          <motion.p className="sm-hero-promise" custom={1.02} variants={fadeUp} initial="hidden" animate="visible">
+          <p className="sm-hero-promise rd-rise" style={rd('.4s')}>
             {promise}
-          </motion.p>
+          </p>
 
-          <motion.div className="sm-hero-acts" custom={1.14} variants={fadeUp} initial="hidden" animate="visible">
+          <div className="sm-hero-acts rd-rise" style={rd('.5s')}>
             <StackButton href="/contact" size="lg" arrow>
               Book a free clarity call
             </StackButton>
-          </motion.div>
+          </div>
         </div>
 
         <motion.div

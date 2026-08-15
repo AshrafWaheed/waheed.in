@@ -38,6 +38,11 @@ const fadeUp: Variants = {
   visible: (d: number) => ({ opacity: 1, y: 0, transition: { duration: 0.8, ease: EASE, delay: d } }),
 };
 
+// The intro/hero copy enters via CSS transform-only rise (.rd-rise), not framer
+// initial="hidden" (opacity:0 in SSR → LCP pinned to hydration; the .we-sub is
+// this page's LCP element). The scroll-scrubbed era journey below keeps framer.
+const rd = (d: string) => ({ ['--rd']: d } as React.CSSProperties);
+
 const N = webEras.length; // 4
 
 /**
@@ -148,22 +153,22 @@ export default function WebEraJourney() {
     <section className="we-journey" data-section-color="dark" data-mode={mode}>
       {/* ── Intro / hero head ─────────────────────────────────────────────── */}
       <div className="cnt we-intro">
-        <motion.p className="ab-pill" custom={0.1} variants={fadeUp} initial="hidden" animate="visible">
+        <p className="ab-pill rd-rise-fade" style={rd('.1s')}>
           {webJourney.eyebrow}
-        </motion.p>
+        </p>
         <h1 className="we-h1">
-          <SplitReveal text={webJourney.h1.lead} by="word" trigger="mount" delay={0.24} stagger={0.04} />{' '}
-          <em><SplitReveal text={webJourney.h1.em} by="word" trigger="mount" delay={0.5} stagger={0.04} /></em>
+          <SplitReveal text={webJourney.h1.lead} by="word" trigger="mount" delay={0.24} stagger={0.04} fade={false} />{' '}
+          <em><SplitReveal text={webJourney.h1.em} by="word" trigger="mount" delay={0.5} stagger={0.04} fade={false} /></em>
         </h1>
-        <motion.p className="we-sub" custom={0.7} variants={fadeUp} initial="hidden" animate="visible">
+        <p className="we-sub rd-rise" style={rd('.3s')}>
           {webJourney.sub}
-        </motion.p>
-        <motion.div className="we-acts" custom={0.85} variants={fadeUp} initial="hidden" animate="visible">
+        </p>
+        <div className="we-acts rd-rise" style={rd('.42s')}>
           <StackButton href="/contact" size="lg" arrow>
             Book a free clarity call
           </StackButton>
           <span className="we-cue" aria-hidden="true">{webJourney.cue}</span>
-        </motion.div>
+        </div>
       </div>
 
       {/* ── The pinned time machine ───────────────────────────────────────── */}

@@ -27,6 +27,10 @@ const reveal = {
   viewport: { once: true, amount: 0.35 },
   transition: { duration: 0.6, ease: EASE },
 };
+// The hero header is above the fold, so it rises via CSS transform-only (.rd-rise)
+// instead of `reveal` — the opacity gate made its .md-hero-sub (this page's LCP
+// element) wait for hydration (~8s mobile). Sections below keep `reveal`.
+const rd = (d: string) => ({ ['--rd']: d } as React.CSSProperties);
 
 const FEATURE_ICONS = [Compass, Palette, Smartphone, Bell, Server, Rocket];
 
@@ -78,7 +82,7 @@ export default function AppPhone({ page }: { page: ServicePage }) {
 
         <div className="md-screen">
           {/* ── Hero ──────────────────────────────────────────────────────── */}
-          <motion.header className="md-hero" {...reveal}>
+          <header className="md-hero rd-rise" style={rd('.1s')}>
             <span className="md-appicon"><Smartphone size={30} strokeWidth={2} /></span>
             <p className="md-hero-kicker">{hero.h1.lead} {hero.h1.em}</p>
             <h1 className="md-hero-title">An app people <em>reopen.</em></h1>
@@ -93,7 +97,7 @@ export default function AppPhone({ page }: { page: ServicePage }) {
               <span className="md-chip">Android</span>
               <span className="md-chip">One codebase</span>
             </div>
-          </motion.header>
+          </header>
 
           {/* ── Problem — alerts ──────────────────────────────────────────── */}
           <motion.section className="md-sec" {...reveal}>

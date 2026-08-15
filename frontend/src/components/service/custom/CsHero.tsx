@@ -13,12 +13,13 @@ import StackButton from '@/components/ui/StackButton';
 import SoftwareRig from '@/components/graphics/SoftwareRig';
 import type { ServicePage } from '@/content/services';
 
+// Hero copy enters via CSS (.rd-rise, transform-only), not framer opacity:0 —
+// which was baked into the SSR HTML and pinned LCP to hydration (~8s mobile; the
+// sub paragraph is the LCP element). The headline (no SplitReveal here) rides the
+// same transform-only rise. The decorative rig keeps its framer fade. See the
+// hero-LCP project note.
 const EASE = [0.22, 1, 0.36, 1] as const;
-const rise = (d: number) => ({
-  initial: { opacity: 0, y: 22 },
-  animate: { opacity: 1, y: 0 },
-  transition: { duration: 0.7, ease: EASE, delay: d },
-});
+const rd = (d: string) => ({ ['--rd']: d } as React.CSSProperties);
 
 export default function CsHero({ page }: { page: ServicePage }) {
   const { eyebrow, h1, sub, promise } = page.hero;
@@ -29,23 +30,23 @@ export default function CsHero({ page }: { page: ServicePage }) {
 
       <div className="cnt cs-hero-in">
         <div className="cs-hero-copy">
-          <motion.p className="cs-eyebrow" {...rise(0.05)}>
+          <p className="cs-eyebrow rd-rise-fade" style={rd('.05s')}>
             <span className="cs-dot" />
             {eyebrow} · SYSTEM ONLINE
-          </motion.p>
+          </p>
 
-          <motion.h1 className="cs-hero-h" {...rise(0.14)}>
+          <h1 className="cs-hero-h rd-rise" style={rd('.14s')}>
             {h1.lead} <em>{h1.em}</em>
-          </motion.h1>
+          </h1>
 
-          <motion.p className="cs-hero-sub" {...rise(0.24)}>{sub}</motion.p>
-          <motion.p className="cs-hero-promise" {...rise(0.32)}>{`// ${promise}`}</motion.p>
+          <p className="cs-hero-sub rd-rise" style={rd('.24s')}>{sub}</p>
+          <p className="cs-hero-promise rd-rise" style={rd('.32s')}>{`// ${promise}`}</p>
 
-          <motion.div className="cs-hero-acts" {...rise(0.4)}>
+          <div className="cs-hero-acts rd-rise" style={rd('.4s')}>
             <StackButton href="/contact" size="lg" arrow>
               Book a free clarity call
             </StackButton>
-          </motion.div>
+          </div>
         </div>
 
         <motion.div
