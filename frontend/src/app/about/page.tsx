@@ -19,9 +19,9 @@ import BrandLockup from '@/components/home/hybrid/BrandLockup';
 // import AboutCta from '@/components/about/AboutCta';
 
 export const metadata: Metadata = pageMeta({
-  title: 'About · WAHEED',
+  title: 'About WAHEED · A Muslim-Led Digital Agency',
   description:
-    'Built for brands that refuse to compromise. Meet the founders behind Waheed Digital Studio — our story, our values, and the halal-first standard behind every build.',
+    'Built for brands that refuse to compromise. Meet the founders behind this Muslim-led digital agency — our story, our values, and the halal-first standard behind every build.',
   path: '/about',
 });
 

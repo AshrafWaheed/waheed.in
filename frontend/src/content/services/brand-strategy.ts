@@ -24,9 +24,9 @@ import type { ServicePage } from './types';
 const brandStrategy: ServicePage = {
   slug: 'brand-strategy',
 
-  metaTitle: 'Brand Strategy · WAHEED',
+  metaTitle: 'Islamic Branding Agency · Muslim Brand Strategy · WAHEED',
   metaDescription:
-    'Positioning, narrative and visual systems for halal brands — so the right buyer feels chosen, the wrong buyer moves on, and you stop competing on price.',
+    'Islamic branding and brand strategy for Muslim businesses — positioning, narrative and visual systems, so the right buyer feels chosen, the wrong buyer moves on, and you stop competing on price.',
 
   hero: {
     eyebrow: 'Service 04',
@@ -199,6 +199,15 @@ const brandStrategy: ServicePage = {
   packages: ['Foundations Engagement', 'The Authority System', 'Halal Brand Audit'],
 
   faq: [
+    {
+      q: 'Is Islamic branding just a crescent, a dome and some calligraphy?',
+      a:
+        'That is the version that fails. Islamic branding is not a motif set — it is what your ' +
+        'brand refuses to do when refusing is expensive, made visible in how you speak, price ' +
+        'and present. Plenty of the strongest Muslim brands carry no religious iconography at ' +
+        'all; the values show in the conduct. We will build you the calligraphy if it genuinely ' +
+        'fits, but we will not sell it to you as a strategy.',
+    },
     {
       q: 'Is this not just a logo and a colour palette?',
       a:

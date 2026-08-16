@@ -22,9 +22,9 @@ import type { ServicePage } from './types';
 const socialMediaMarketing: ServicePage = {
   slug: 'social-media-marketing',
 
-  metaTitle: 'Social Media Marketing · WAHEED',
+  metaTitle: 'Social Media Marketing for Muslim Businesses · WAHEED',
   metaDescription:
-    'Content engines for halal brands — channel strategy, pillars, a production system you can sustain, and community management that turns followers into customers. Built within your production constraints, not around them.',
+    'Social media marketing for Muslim businesses — channel strategy, content pillars, a production system you can sustain, and community management that turns followers into customers.',
 
   hero: {
     eyebrow: 'Service 06',
@@ -196,6 +196,15 @@ const socialMediaMarketing: ServicePage = {
   packages: ['The Authority System', 'Halal Brand Partnership'],
 
   faq: [
+    {
+      q: 'How does social media marketing for Muslim businesses actually differ?',
+      a:
+        'In the constraints, mostly — and constraints are useful. Music, imagery and the ' +
+        'boundaries on what is shown are yours to set, and we plan the content system inside ' +
+        'them rather than treating them as a problem to work around. In practice it rules out ' +
+        'the lazy formats and pushes you towards the ones that build trust anyway: teaching, ' +
+        'proof of work, customer stories, and a real voice.',
+    },
     {
       q: 'Which platforms should we be on?',
       a:

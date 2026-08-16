@@ -20,9 +20,9 @@ import type { ServicePage } from './types';
 const customSoftwareDevelopment: ServicePage = {
   slug: 'custom-software-development',
 
-  metaTitle: 'Custom Software Development · WAHEED',
+  metaTitle: 'Custom Software for Muslim Businesses & Masjids · WAHEED',
   metaDescription:
-    'ERPs, internal platforms, business process automation, API integrations, AI automation and connected-device software — engineered for halal businesses that have outgrown off-the-shelf tools.',
+    'Custom software for Muslim businesses — ERPs, masjid and madrasa management, zakat and donation systems, process automation and AI, for teams that have outgrown off-the-shelf tools.',
 
   hero: {
     eyebrow: 'Service 03',
@@ -81,7 +81,8 @@ const customSoftwareDevelopment: ServicePage = {
         body:
           'Inventory, orders, production, procurement, fulfilment, HR and finance in one ' +
           'system built around how your business actually runs — including the parts no ' +
-          'generic ERP has a screen for. Role-based access, full audit trail.',
+          'generic ERP has a screen for. Masjid and madrasa management, Islamic school ERP ' +
+          'and zakat administration fall here too. Role-based access, full audit trail.',
       },
       {
         num: '02',
@@ -195,6 +196,16 @@ const customSoftwareDevelopment: ServicePage = {
   packages: ['Halal Brand OS', 'Halal Brand Partnership'],
 
   faq: [
+    {
+      q: 'Do you build masjid, madrasa or zakat management software?',
+      a:
+        'Yes — these are ordinary custom builds wearing different words. A masjid management ' +
+        'system is membership, donations, events and a prayer timetable. A madrasa or Islamic ' +
+        'school ERP is admissions, attendance, hifz progress, fees and parent communication. ' +
+        'A zakat or sadaqah platform is a ledger with nisab rules, categories of eligible ' +
+        'recipients and an audit trail a trustee can defend. We scope them the same way we ' +
+        'scope any ERP: map the process first, build in increments.',
+    },
     {
       q: 'What does custom software actually cost?',
       a:

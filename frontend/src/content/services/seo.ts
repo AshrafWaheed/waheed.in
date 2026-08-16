@@ -24,9 +24,9 @@ import type { ServicePage } from './types';
 const seo: ServicePage = {
   slug: 'seo',
 
-  metaTitle: 'SEO · WAHEED',
+  metaTitle: 'SEO for Muslim & Islamic Businesses · WAHEED',
   metaDescription:
-    'Technical SEO, intent-driven content and authority building for halal brands — compounding organic visibility that keeps working after the invoice stops, with no bought links and no black-hat shortcuts.',
+    'SEO for Muslim and Islamic businesses — technical fixes, intent-driven content and authority building that compound long after the invoice stops. No bought links, no black-hat shortcuts.',
 
   hero: {
     eyebrow: 'Service 05',
@@ -200,6 +200,15 @@ const seo: ServicePage = {
   packages: ['The Authority System', 'Halal Brand Partnership', 'Halal Brand Audit'],
 
   faq: [
+    {
+      q: 'Is there anything different about SEO for Muslim businesses?',
+      a:
+        'The technical work is identical — crawlability, speed, structure, intent. What ' +
+        'differs is the search landscape you are competing in. A halal brand is often chasing ' +
+        'terms the generalist agencies do not understand well enough to rank for, which is an ' +
+        'advantage if someone maps them properly. It also rules some tactics out: we do not ' +
+        'buy links, run private blog networks, or pad a page with keywords it does not earn.',
+    },
     {
       q: 'How long before we see results?',
       a:

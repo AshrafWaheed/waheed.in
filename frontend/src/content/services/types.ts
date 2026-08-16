@@ -86,7 +86,7 @@ export interface ServicePage {
    */
   packages: string[];
 
-  /** Four. Rendered as an accordion and emitted as FAQPage JSON-LD. */
+  /** Five or six. Rendered as an accordion and emitted as FAQPage JSON-LD. */
   faq: { q: string; a: string }[];
 
   cta: {

@@ -15,10 +15,10 @@ import type { ServicePage } from './types';
 const webDevelopment: ServicePage = {
   slug: 'web-development',
 
-  metaTitle: 'Web Development · WAHEED',
+  metaTitle: 'Halal Web Design for Muslim Businesses · WAHEED',
   metaDescription:
-    'Websites and web apps for halal brands — fast, conversion-fluent, and built on a design ' +
-    'system you own. Structure, design, build, launch, and 30 days of post-launch optimisation.',
+    'Halal web design and development for Muslim businesses — fast, conversion-fluent sites ' +
+    'on a design system you own, launched with 30 days of post-launch optimisation.',
 
   hero: {
     eyebrow: 'Service 01',
@@ -179,6 +179,23 @@ const webDevelopment: ServicePage = {
   packages: ['Foundations Engagement', 'The Authority System', 'Halal Brand OS'],
 
   faq: [
+    {
+      q: 'What makes this halal web design, exactly?',
+      a:
+        'Less than some people expect, and more than others. There is no separate Islamic way ' +
+        'to write TypeScript — the craft is the craft. What changes is what we will and will ' +
+        'not build: no fake scarcity timers or dark patterns to force a conversion, no ' +
+        'riba-based finance integrations at checkout, and imagery and language held to your ' +
+        'standard rather than ours. If a tactic only works because it misleads someone, it ' +
+        'does not ship.',
+    },
+    {
+      q: 'Do you only do website design for Muslim businesses?',
+      a:
+        'Mostly, and by choice — it is who we understand best. But the standard is the ' +
+        'standard: if you are not a Muslim-led brand and you want a site built this way, we ' +
+        'are glad to talk.',
+    },
     {
       q: 'How long does a build take?',
       a:

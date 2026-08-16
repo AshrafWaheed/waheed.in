@@ -15,10 +15,10 @@ import type { ServicePage } from './types';
 const appDevelopment: ServicePage = {
   slug: 'app-development',
 
-  metaTitle: 'App Development · WAHEED',
+  metaTitle: 'Muslim App Developers · Islamic App Development · WAHEED',
   metaDescription:
-    'iOS and Android apps for halal brands — one codebase, both stores. Product definition, ' +
-    'native-grade design, build, store release, and 30 days of post-launch optimisation.',
+    'Islamic app development for Muslim businesses — iOS and Android from one codebase. ' +
+    'Product definition, native-grade design, store release, and 30 days after.',
 
   hero: {
     eyebrow: 'Service 02',
@@ -189,6 +189,15 @@ const appDevelopment: ServicePage = {
   packages: ['The Authority System', 'Halal Brand OS'],
 
   faq: [
+    {
+      q: 'Do you do Islamic app development — prayer times, Quran, donations?',
+      a:
+        'Yes. Prayer and qibla calculation, a Quran or hifz reader with audio and bookmarks, ' +
+        'Hijri calendars, donation and zakat flows, masjid and community apps. The religious ' +
+        'logic needs care — calculation methods differ by school and region, and getting a ' +
+        'prayer time wrong is not a normal bug — so we agree the method and the source of ' +
+        'truth in writing before a screen is drawn.',
+    },
     {
       q: 'Native or cross-platform?',
       a:

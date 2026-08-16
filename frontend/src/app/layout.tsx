@@ -82,9 +82,9 @@ const amiri = Amiri({
  * alt text from the matching .alt.txt. See design/og/og-card.html.
  */
 export const metadata: Metadata = {
-  title: "WAHEED · Halal Digital Studio",
+  title: "WAHEED · Halal Digital Marketing Agency for Muslim Brands",
   description:
-    "We help Muslim-led brands grow with integrity. Strategy, design, and digital products built on Shariah-aligned values. No shortcuts. No compromise.",
+    "A halal digital marketing agency for Muslim-led brands. Strategy, design, and digital products built on Shariah-aligned values. No shortcuts. No compromise.",
   metadataBase: new URL("https://waheed.in"),
   alternates: {
     canonical: "https://waheed.in",
@@ -188,6 +188,13 @@ export default async function RootLayout({
             })(window, document, "clarity", "script", "xi6caj4oqk");
           `}
         </Script>
+
+        {/* Ahrefs Web Analytics */}
+        <Script
+          src="https://analytics.ahrefs.com/analytics.js"
+          data-key="KkmkaCew/+aq5rYTtzftCQ"
+          strategy="afterInteractive"
+        />
       </body>
     </html>
   );
