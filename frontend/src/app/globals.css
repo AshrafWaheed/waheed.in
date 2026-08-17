@@ -338,7 +338,12 @@
 }
 .adm-logout:hover { background: rgb(var(--rd-ivory-rgb) / .1); border-color: rgb(var(--rd-ivory-rgb) / .5); }
 .adm-logout:disabled { opacity: .5; cursor: default; }
-.adm-main { max-width: 1100px; margin: 0 auto; padding: 3rem 1.5rem; }
+/* 1100px dated from the old full-width topbar layout, where it centred against
+   the whole viewport. The panel now sits beside a 258px sidebar, so the same cap
+   centres inside what is left and leaves ~270px of dead gutter each side on a
+   desktop screen — enough that wide tables scroll their last column out of
+   reach while the space to fix it sits empty. */
+.adm-main { max-width: 1440px; margin: 0 auto; padding: 3rem 1.5rem; }
 .adm-h1 {
   font-family: var(--font-serif); font-size: clamp(1.8rem, 4vw, 2.6rem); font-weight: 500;
   color: #254851; margin-bottom: .8rem;
@@ -442,6 +447,11 @@
 .adm-link:hover { color: var(--rd-gold); text-decoration: underline; }
 
 /* Admin: post editor */
+/* Wider than it was, but held back from the full 1440px the list pages take.
+   The body column is one of two here, so the full width would put the writing
+   measure past 100 characters a line — the one place on the admin where more
+   room actively makes the work harder. */
+.adm-editor { max-width: 1240px; }
 .adm-editor-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 1rem; margin-bottom: 1.4rem; flex-wrap: wrap; }
 .adm-editor-head .adm-h1 { margin-top: .4rem; margin-bottom: 0; }
 .adm-editor-actions { display: flex; align-items: center; gap: .7rem; flex-wrap: wrap; }
@@ -3175,7 +3185,8 @@ html[data-nav="dark"] .nav:not(.scrolled) .nav-ghost:hover {
 }
 
 /* Page scaffolding */
-.adm-page { max-width: 1120px; margin: 0 auto; padding: 2.5rem 2rem; }
+/* Matches .adm-main — same sidebar, same dead gutter, same fix. */
+.adm-page { max-width: 1440px; margin: 0 auto; padding: 2.5rem 2rem; }
 .adm-page-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; margin-bottom: 2rem; flex-wrap: wrap; }
 .adm-sub { font-family: var(--font-sans); font-size: .9rem; color: #5a6b6f; margin-top: .3rem; }
 .adm-note { background: #fff9df; border: 1px solid rgb(var(--rd-gold-rgb) / .3); border-radius: 8px; padding: .8rem 1rem; font-family: var(--font-sans); font-size: .82rem; color: #4a5a5e; margin-bottom: 1.5rem; line-height: 1.6; }
