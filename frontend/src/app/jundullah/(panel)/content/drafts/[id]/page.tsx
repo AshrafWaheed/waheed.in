@@ -11,15 +11,25 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
+export type Verdict = 'confirmed' | 'corrected' | 'removed';
+
 export type Claim = {
   id: number;
   claim: string;
   source_url: string | null;
   model_confidence: 'high' | 'medium' | 'low';
   verified_at: string | null;
-  verdict: 'confirmed' | 'corrected' | 'removed' | null;
+  verdict: Verdict | null;
   note: string | null;
   verifier: { id: number; name: string } | null;
+
+  // The agent lane. A machine pass that has already read the sources; it can
+  // recommend but never clears the gate, which stays keyed to verified_at.
+  agent_verdict: Verdict | null;
+  agent_note: string | null;
+  agent_source_url: string | null;
+  agent_checked_at: string | null;
+  agent_model: string | null;
 };
 
 export type DraftPayload = {

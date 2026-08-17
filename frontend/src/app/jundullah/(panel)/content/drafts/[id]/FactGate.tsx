@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useMemo, useState } from 'react';
-import { ExternalLink, Check, PencilLine, Trash2, RotateCcw, AlertTriangle } from 'lucide-react';
+import { ExternalLink, Check, PencilLine, Trash2, RotateCcw, AlertTriangle, Bot } from 'lucide-react';
 import StackButton from '@/components/ui/StackButton';
 import RevisePanel from './RevisePanel';
 import type { Claim, DraftPayload } from './page';
@@ -16,10 +16,16 @@ import type { Claim, DraftPayload } from './page';
  * hand-written post in this niche: a superseded government statistic, and a
  * false claim about a company's ownership. Both read as perfectly plausible.
  *
- * Design priority is throughput. Thirty claims is a grind, so the unverified
- * ones sort LOW confidence first: the model's own uncertainty is the best
- * available signal for where the errors are, and checking those first means
- * the expensive mistakes surface early rather than on claim 28.
+ * Design priority is throughput. Thirty claims is a grind, so ordering carries
+ * the weight. Where an agent pass has run, its findings sort first: a claim it
+ * flagged is where the work actually is, and a claim it matched against the
+ * source is a glance rather than a click-through. Absent an agent pass the
+ * fallback is LOW confidence first, on the reasoning that the model's own
+ * uncertainty is the best available signal for where the errors hide.
+ *
+ * The agent lane never satisfies the gate. `Post::factCheckCleared()` reads
+ * `verified_at`, and nothing on this screen writes that except a person
+ * pressing a button. The machine reads sources; the human still decides.
  */
 
 const CONFIDENCE_STYLE: Record<Claim['model_confidence'], { bg: string; fg: string; label: string }> = {
@@ -30,6 +36,19 @@ const CONFIDENCE_STYLE: Record<Claim['model_confidence'], { bg: string; fg: stri
 
 const CONFIDENCE_RANK: Record<Claim['model_confidence'], number> = { low: 0, medium: 1, high: 2 };
 
+/**
+ * Flagged by the agent → not looked at → agent says it matched. The last group
+ * is the cheap one, so it goes last: work the expensive claims while fresh.
+ */
+const agentRank = (c: Claim): number =>
+  c.agent_verdict === 'corrected' || c.agent_verdict === 'removed' ? 0 : c.agent_verdict ? 2 : 1;
+
+const AGENT_STYLE: Record<string, { bg: string; fg: string; label: string }> = {
+  confirmed: { bg: '#E5EFE6', fg: '#3C7A5B', label: 'source checked, matches' },
+  corrected: { bg: '#F6ECD3', fg: '#9c6f1c', label: 'needs a change' },
+  removed: { bg: '#F4E2D8', fg: '#a1502f', label: 'suggests cutting' },
+};
+
 export default function FactGate({ initial }: { initial: DraftPayload }) {
   const [data, setData] = useState<DraftPayload>(initial);
   const [busyId, setBusyId] = useState<number | null>(null);
@@ -37,17 +56,29 @@ export default function FactGate({ initial }: { initial: DraftPayload }) {
   const [noteFor, setNoteFor] = useState<number | null>(null);
   const [note, setNote] = useState('');
 
-  const { pending, done } = useMemo(() => {
+  const { pending, done, agent } = useMemo(() => {
     const p = data.claims
       .filter((c) => !c.verified_at)
       .sort(
         (a, b) =>
+          agentRank(a) - agentRank(b) ||
           CONFIDENCE_RANK[a.model_confidence] - CONFIDENCE_RANK[b.model_confidence] ||
           // Unsourced claims next: nothing to click through means they need the
           // most thought, so surface them before the easy confirmations.
           Number(!!a.source_url) - Number(!!b.source_url),
       );
-    return { pending: p, done: data.claims.filter((c) => c.verified_at) };
+
+    const checked = data.claims.filter((c) => c.agent_verdict);
+    return {
+      pending: p,
+      done: data.claims.filter((c) => c.verified_at),
+      agent: {
+        ran: checked.length > 0,
+        model: checked[0]?.agent_model ?? null,
+        flagged: checked.filter((c) => c.agent_verdict !== 'confirmed').length,
+        matched: checked.filter((c) => c.agent_verdict === 'confirmed').length,
+      },
+    };
   }, [data.claims]);
 
   const total = data.claims.length;
@@ -188,8 +219,20 @@ export default function FactGate({ initial }: { initial: DraftPayload }) {
       ) : (
         <>
           <h2 style={{ fontSize: '1rem', margin: '0 0 10px' }}>
-            To check ({pending.length}) — least confident first
+            To check ({pending.length}) —{' '}
+            {agent.ran ? 'flagged first, then the easy ones' : 'least confident first'}
           </h2>
+
+          {/* What the agent pass did and did not do. Stated plainly, because a
+              reader who thinks the machine cleared these will stop reading them. */}
+          {agent.ran && (
+            <p style={{ fontSize: '.86em', opacity: 0.8, margin: '0 0 12px', lineHeight: 1.55 }}>
+              <Bot size={13} style={{ verticalAlign: '-2px' }} /> {agent.model ?? 'An agent'} read
+              every cited source: <strong>{agent.flagged}</strong> need a change,{' '}
+              <strong>{agent.matched}</strong> matched what they cite. That is a recommendation, not
+              a verification — the claims below are still unverified until you say otherwise.
+            </p>
+          )}
           <div style={{ display: 'grid', gap: 10, marginBottom: 30 }}>
             {pending.map((c) => {
               const conf = CONFIDENCE_STYLE[c.model_confidence];
@@ -235,6 +278,56 @@ export default function FactGate({ initial }: { initial: DraftPayload }) {
                   </div>
 
                   <p style={{ margin: '0 0 12px', lineHeight: 1.5 }}>{c.claim}</p>
+
+                  {c.agent_verdict && (
+                    <div
+                      style={{
+                        borderLeft: `3px solid ${AGENT_STYLE[c.agent_verdict].fg}`,
+                        background: 'rgba(0,0,0,.02)',
+                        borderRadius: '0 8px 8px 0',
+                        padding: '10px 12px',
+                        margin: '0 0 12px',
+                        fontSize: '.88em',
+                        lineHeight: 1.55,
+                      }}
+                    >
+                      <span
+                        style={{
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: 5,
+                          color: AGENT_STYLE[c.agent_verdict].fg,
+                          fontWeight: 600,
+                          fontSize: '.86em',
+                          letterSpacing: '.02em',
+                          textTransform: 'uppercase',
+                        }}
+                      >
+                        <Bot size={13} /> {AGENT_STYLE[c.agent_verdict].label}
+                      </span>
+                      {c.agent_note && (
+                        <p style={{ margin: '5px 0 0', opacity: 0.85 }}>{c.agent_note}</p>
+                      )}
+                      {/* Kept beside the model's original citation rather than
+                          replacing it — a citation that drifted is evidence
+                          about the generator, and overwriting destroys it. */}
+                      {c.agent_source_url && (
+                        <p style={{ margin: '6px 0 0' }}>
+                          Use instead:{' '}
+                          <a
+                            href={c.agent_source_url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="adm-link"
+                            style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}
+                          >
+                            {hostOf(c.agent_source_url)}
+                            <ExternalLink size={12} />
+                          </a>
+                        </p>
+                      )}
+                    </div>
+                  )}
 
                   {noteFor === c.id && (
                     <input

@@ -16,11 +16,25 @@ class PostClaim extends Model
     protected $fillable = [
         'post_id', 'claim', 'source_url', 'model_confidence',
         'verified_by', 'verified_at', 'verdict', 'note',
+        'agent_verdict', 'agent_note', 'agent_source_url',
+        'agent_checked_at', 'agent_model',
     ];
 
     protected function casts(): array
     {
-        return ['verified_at' => 'datetime'];
+        return [
+            'verified_at' => 'datetime',
+            'agent_checked_at' => 'datetime',
+        ];
+    }
+
+    /**
+     * An agent pass found something the human needs to look at properly, as
+     * opposed to something they can confirm at a glance.
+     */
+    public function scopeAgentFlagged($query)
+    {
+        return $query->whereIn('agent_verdict', ['corrected', 'removed']);
     }
 
     public function post(): BelongsTo
