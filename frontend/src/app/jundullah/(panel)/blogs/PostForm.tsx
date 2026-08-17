@@ -24,6 +24,10 @@ export type PostData = {
   reading_mins: number | null;
   published_at: string | null;
   author?: { id: number; name: string } | null;
+  /** Came out of the content engine, so it has a draft workspace behind it. */
+  generated?: boolean;
+  /** Claims still blocking publish. Present on single-post responses only. */
+  unverified_claims?: number;
 };
 
 export type TaxonomyOptions = { categories: string[]; tags: string[] };
@@ -193,6 +197,23 @@ export default function PostForm({
         <div>
           <Link href="/jundullah/blogs" className="adm-link">← All posts</Link>
           <h1 className="adm-h1">{mode === 'create' ? 'New post' : 'Edit post'}</h1>
+          {/* This screen and the draft workspace are two views of one post.
+              Saying so here is the difference between finding the revise box
+              and hunting for it. */}
+          {mode === 'edit' && post?.generated && (
+            <p style={{ fontSize: '.84em', opacity: 0.75, margin: '4px 0 0' }}>
+              Written by the content engine ·{' '}
+              <Link href={`/jundullah/content/drafts/${post.id}`} className="adm-link">
+                ask for a change, or check its facts →
+              </Link>
+              {typeof post.unverified_claims === 'number' && post.unverified_claims > 0 && (
+                <span style={{ color: '#a1502f' }}>
+                  {' '}· {post.unverified_claims} unverified claim
+                  {post.unverified_claims === 1 ? '' : 's'} blocking publish
+                </span>
+              )}
+            </p>
+          )}
         </div>
         <div className="adm-editor-actions">
           <span className={`adm-badge adm-badge-${status}`}>{status}</span>

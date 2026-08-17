@@ -67,13 +67,13 @@ class PostController extends Controller
             $post->tags()->sync(Tag::idsForNames($data['tags'] ?? []));
         }
 
-        return (new PostResource($post->load(['author', 'category', 'tags'])))->response()->setStatusCode(201);
+        return (new PostResource($this->withEngineCounts($post)))->response()->setStatusCode(201);
     }
 
     /** Show a single post. */
     public function show(Post $post): PostResource
     {
-        return new PostResource($post->load(['author', 'category', 'tags']));
+        return new PostResource($this->withEngineCounts($post));
     }
 
     /** Update a post (partial). */
@@ -140,7 +140,7 @@ class PostController extends Controller
             $post->tags()->sync(Tag::idsForNames($data['tags'] ?? []));
         }
 
-        return new PostResource($post->load(['author', 'category', 'tags']));
+        return new PostResource($this->withEngineCounts($post));
     }
 
     /** Delete a post. */
@@ -152,6 +152,18 @@ class PostController extends Controller
     }
 
     // ── helpers ──────────────────────────────────────────────────────────────
+
+    /**
+     * Load what a single-post response needs, including the outstanding claim
+     * count so the editor can point at the fact gate instead of just failing to
+     * publish. Deliberately not used by index(): that would be a count query per
+     * row, and the list has no use for the number.
+     */
+    private function withEngineCounts(Post $post): Post
+    {
+        return $post->load(['author', 'category', 'tags'])
+            ->loadCount(['claims as unverified_claims_count' => fn ($q) => $q->whereNull('verified_at')]);
+    }
 
     /** Slugify + ensure uniqueness (ignoring the given id on update). */
     private function uniqueSlug(string $base, ?int $ignoreId = null): string

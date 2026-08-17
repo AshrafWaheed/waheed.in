@@ -145,10 +145,12 @@ export default async function ContentEnginePage() {
                     {t.bridge_target ?? <em>authority piece</em>}
                   </td>
                   <td>{t.status}</td>
+                  {/* "Open draft" not "Fact check": that screen is also where
+                      you ask the model to rewrite the post. */}
                   <td style={{ textAlign: 'right' }}>
                     {t.post ? (
                       <Link href={`/jundullah/content/drafts/${t.post.id}`} className="adm-link">
-                        Fact check →
+                        Open draft →
                       </Link>
                     ) : (
                       <GenerateTopicButton topicId={t.id} authors={authors} disabled={!!blocked} />

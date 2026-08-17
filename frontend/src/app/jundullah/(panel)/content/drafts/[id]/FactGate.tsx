@@ -165,7 +165,7 @@ export default function FactGate({ initial }: { initial: DraftPayload }) {
     <section className="adm-main">
       <div className="adm-list-head">
         <div>
-          <h1 className="adm-h1">Fact check</h1>
+          <h1 className="adm-h1">Draft workspace</h1>
           <p className="adm-list-count">
             <Link href={`/jundullah/blogs/${data.post.id}/edit`} className="adm-link">
               {data.post.title}
