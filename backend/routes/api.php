@@ -83,6 +83,7 @@ Route::prefix('admin')->group(function () {
             Route::post('topics/{topic}/generate', [ContentEngineController::class, 'generate']);
             Route::get('drafts/{post}', [ContentEngineController::class, 'show']);
             Route::post('drafts/{post}/revise', [ContentEngineController::class, 'revise']);
+            Route::post('drafts/{post}/accept-agent-check', [ContentEngineController::class, 'acceptAgentCheck']);
             Route::post('claims/{claim}/verify', [ContentEngineController::class, 'verifyClaim']);
             Route::delete('claims/{claim}/verify', [ContentEngineController::class, 'unverifyClaim']);
         });

@@ -55,6 +55,8 @@ export default function FactGate({ initial }: { initial: DraftPayload }) {
   const [error, setError] = useState<string | null>(null);
   const [noteFor, setNoteFor] = useState<number | null>(null);
   const [note, setNote] = useState('');
+  const [confirmingAccept, setConfirmingAccept] = useState(false);
+  const [accepting, setAccepting] = useState(false);
 
   const { pending, done, agent } = useMemo(() => {
     const p = data.claims
@@ -77,6 +79,9 @@ export default function FactGate({ initial }: { initial: DraftPayload }) {
         model: checked[0]?.agent_model ?? null,
         flagged: checked.filter((c) => c.agent_verdict !== 'confirmed').length,
         matched: checked.filter((c) => c.agent_verdict === 'confirmed').length,
+        // Of the ones still awaiting a human, how many the pass never reached.
+        unchecked: p.filter((c) => !c.agent_verdict).length,
+        corrected: p.filter((c) => c.agent_verdict === 'corrected').length,
       },
     };
   }, [data.claims]);
@@ -118,6 +123,33 @@ export default function FactGate({ initial }: { initial: DraftPayload }) {
    */
   const verify = (c: Claim, verdict: Claim['verdict']) =>
     send(c.id, 'POST', { verdict, note: noteFor === c.id && note ? note : undefined });
+
+  /**
+   * Accept the whole agent pass at once. Deliberately a two-step: the shortcut
+   * trades a second pair of eyes for speed, and that is worth one considered
+   * press rather than a reflex on a button sitting next to thirty others.
+   */
+  async function acceptPass() {
+    setAccepting(true);
+    setError(null);
+    try {
+      const res = await fetch(`/api/admin/content/drafts/${data.post.id}/accept-agent-check`, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+      });
+      const json = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        setError(json.message ?? `Failed (${res.status}).`);
+        return;
+      }
+      setData(json as DraftPayload);
+      setConfirmingAccept(false);
+    } catch {
+      setError('Network error. Nothing was saved.');
+    } finally {
+      setAccepting(false);
+    }
+  }
 
   /** Model-supplied URLs are not guaranteed parseable, and a throw here would
    *  blank the whole page rather than one card. */
@@ -232,6 +264,65 @@ export default function FactGate({ initial }: { initial: DraftPayload }) {
               <strong>{agent.matched}</strong> matched what they cite. That is a recommendation, not
               a verification — the claims below are still unverified until you say otherwise.
             </p>
+          )}
+
+          {/* The shortcut. Offered only on a complete pass, because a partial one
+              would clear claims nothing ever read — the exact failure the gate
+              exists to prevent. */}
+          {agent.ran && agent.unchecked === 0 && (
+            <div
+              style={{
+                border: '1px solid var(--line, #E4DACA)',
+                borderRadius: 10,
+                padding: '12px 16px',
+                marginBottom: 18,
+                fontSize: '.9em',
+              }}
+            >
+              {!confirmingAccept ? (
+                <div style={{ display: 'flex', gap: 12, alignItems: 'center', flexWrap: 'wrap' }}>
+                  <span style={{ opacity: 0.8 }}>
+                    Not going to check these yourself? You can accept the pass wholesale.
+                  </span>
+                  <StackButton size="sm" tone="ghost" onClick={() => setConfirmingAccept(true)}>
+                    Accept all {pending.length}
+                  </StackButton>
+                </div>
+              ) : (
+                <>
+                  <strong style={{ display: 'block', marginBottom: 6 }}>
+                    Accept {pending.length} claim{pending.length === 1 ? '' : 's'} on the agent pass?
+                  </strong>
+                  <p style={{ margin: '0 0 10px', opacity: 0.85, lineHeight: 1.55 }}>
+                    Every cited source was fetched and compared against the claim. What you give up
+                    is a second pair of eyes. Your name goes on the decision, and the record will
+                    show these were accepted from an agent pass rather than read individually.
+                    {agent.corrected > 0 && (
+                      <>
+                        {' '}
+                        <strong>
+                          {agent.corrected} claim{agent.corrected === 1 ? '' : 's'} needed a change
+                        </strong>{' '}
+                        — accepting says that change is already made in the article.
+                      </>
+                    )}
+                  </p>
+                  <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+                    <StackButton size="sm" onClick={acceptPass} disabled={accepting}>
+                      <Check size={14} /> {accepting ? 'Accepting…' : 'Yes, accept the pass'}
+                    </StackButton>
+                    <StackButton
+                      size="sm"
+                      tone="ghost"
+                      onClick={() => setConfirmingAccept(false)}
+                      disabled={accepting}
+                    >
+                      Cancel
+                    </StackButton>
+                  </div>
+                </>
+              )}
+            </div>
           )}
           <div style={{ display: 'grid', gap: 10, marginBottom: 30 }}>
             {pending.map((c) => {
@@ -385,14 +476,24 @@ export default function FactGate({ initial }: { initial: DraftPayload }) {
                     <td style={{ width: 90, fontSize: '.8em' }}>{c.verdict}</td>
                     <td style={{ fontSize: '.88em' }}>
                       {c.claim}
-                      {c.note && (
+                      {/* Falls back to the agent's note so an accepted pass still
+                          shows its reasoning rather than an empty cell. */}
+                      {(c.note ?? c.agent_note) && (
                         <span style={{ display: 'block', opacity: 0.65, fontSize: '.9em', marginTop: 2 }}>
-                          {c.note}
+                          {c.note ?? c.agent_note}
                         </span>
                       )}
                     </td>
                     <td style={{ width: 110, fontSize: '.78em', opacity: 0.65 }}>
                       {c.verifier?.name ?? '—'}
+                      {c.verified_via === 'agent' && (
+                        <span
+                          style={{ display: 'flex', alignItems: 'center', gap: 3, marginTop: 2 }}
+                          title="Accepted from an agent pass, not read individually"
+                        >
+                          <Bot size={11} /> via agent
+                        </span>
+                      )}
                     </td>
                     <td style={{ width: 44, textAlign: 'right' }}>
                       <button

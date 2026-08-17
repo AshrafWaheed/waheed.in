@@ -19,6 +19,9 @@ export type Claim = {
   source_url: string | null;
   model_confidence: 'high' | 'medium' | 'low';
   verified_at: string | null;
+  // How it was verified: someone read the source, or someone accepted a machine
+  // pass that read the source. `verifier` names the accountable person either way.
+  verified_via: 'human' | 'agent' | null;
   verdict: Verdict | null;
   note: string | null;
   verifier: { id: number; name: string } | null;

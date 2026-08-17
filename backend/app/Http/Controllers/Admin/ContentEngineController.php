@@ -169,6 +169,7 @@ class ContentEngineController extends Controller
             'source_url' => $data['source_url'] ?? $claim->source_url,
             'verified_by' => $request->user()->id,
             'verified_at' => now(),
+            'verified_via' => 'human', // someone pressed this on the claim itself
         ]);
 
         $post = $claim->post;
@@ -185,10 +186,72 @@ class ContentEngineController extends Controller
         return response()->json($this->payload($post->fresh()));
     }
 
+    /**
+     * Accept a completed agent pass for every claim on this post, in one act.
+     *
+     * This is a deliberate shortcut across the gate, not a hole in it. The gate
+     * exists so that nothing publishes on a claim nobody checked — and on an
+     * accepted pass, something did check it: it fetched every cited source and
+     * compared it against the assertion. What it did not get is a second pair of
+     * eyes. That is a real reduction in assurance and the record says so, rather
+     * than filing 35 machine reads as 35 human ones.
+     *
+     * Three conditions make it safe enough to offer:
+     *  - the pass must be complete. A partial pass would silently clear the
+     *    claims it never looked at, which is the exact failure the gate is for.
+     *  - `verified_by` still names whoever pressed the button. Accepting is a
+     *    decision someone is answerable for, even though they did not read.
+     *  - `verified_via = 'agent'` marks every row, so "which posts went out on
+     *    an unreviewed pass" stays answerable in one query afterwards.
+     */
+    public function acceptAgentCheck(Request $request, Post $post): JsonResponse
+    {
+        $total = $post->claims()->count();
+        if ($total === 0) {
+            return response()->json(['message' => 'This post has no claims to accept.'], 422);
+        }
+
+        $unchecked = $post->claims()->whereNull('agent_verdict')->count();
+        if ($unchecked > 0) {
+            return response()->json([
+                'message' => "The agent pass is incomplete: {$unchecked} of {$total} claim(s) were "
+                    .'never checked. Accepting now would clear those without anything having read '
+                    .'them. Run the pass to completion, or verify the remainder by hand.',
+            ], 422);
+        }
+
+        // Claims the agent wanted removed are not a formality — the prose still
+        // contains them until someone takes them out. Refusing here keeps the
+        // shortcut away from the one verdict that implies an unmade edit.
+        $toRemove = $post->claims()->where('agent_verdict', 'removed')->count();
+        if ($toRemove > 0) {
+            return response()->json([
+                'message' => "{$toRemove} claim(s) were flagged for removal from the article. Those "
+                    .'need handling by hand before the rest of the pass can be accepted.',
+            ], 422);
+        }
+
+        $now = now();
+        foreach ($post->claims()->whereNull('verified_at')->get() as $claim) {
+            $claim->update([
+                'verdict' => $claim->agent_verdict,
+                'verified_at' => $now,
+                'verified_by' => $request->user()->id,
+                'verified_via' => 'agent',
+            ]);
+        }
+
+        $post->update(['fact_check_state' => 'cleared']);
+
+        return response()->json($this->payload($post->fresh()));
+    }
+
     /** Undo a verification (wrong tick, or the claim changed). */
     public function unverifyClaim(PostClaim $claim): JsonResponse
     {
-        $claim->update(['verified_at' => null, 'verified_by' => null, 'verdict' => null]);
+        $claim->update([
+            'verified_at' => null, 'verified_by' => null, 'verified_via' => null, 'verdict' => null,
+        ]);
         $post = $claim->post;
         $post->update([
             'fact_check_state' => $post->claims()->whereNotNull('verified_at')->count() === 0
