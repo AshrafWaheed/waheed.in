@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\ContactController as AdminContactController;
+use App\Http\Controllers\Admin\ContentEngineController;
 use App\Http\Controllers\Admin\BookingAdminController;
 use App\Http\Controllers\Admin\BookingSettingsController;
 use App\Http\Controllers\Admin\GoogleAuthController;
@@ -73,6 +74,18 @@ Route::prefix('admin')->group(function () {
 
         // Posts CRUD: GET/POST /posts, GET/PUT/PATCH/DELETE /posts/{post}
         Route::apiResource('posts', PostController::class);
+
+        // ── Content engine (documents/CONTENT_ENGINE.md) ──────────────────
+        Route::prefix('content')->group(function () {
+            Route::get('status', [ContentEngineController::class, 'status']);
+            Route::get('topics', [ContentEngineController::class, 'topics']);
+            Route::post('topics', [ContentEngineController::class, 'storeTopic']);
+            Route::post('topics/{topic}/generate', [ContentEngineController::class, 'generate']);
+            Route::get('drafts/{post}', [ContentEngineController::class, 'show']);
+            Route::post('drafts/{post}/revise', [ContentEngineController::class, 'revise']);
+            Route::post('claims/{claim}/verify', [ContentEngineController::class, 'verifyClaim']);
+            Route::delete('claims/{claim}/verify', [ContentEngineController::class, 'unverifyClaim']);
+        });
     });
 });
 

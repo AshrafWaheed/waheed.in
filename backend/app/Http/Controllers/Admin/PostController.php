@@ -104,6 +104,24 @@ class PostController extends Controller
             $post->seo_desc = $data['seo_desc'];
         }
         if (array_key_exists('status', $data)) {
+            /*
+             * The fact gate, enforced (documents/CONTENT_ENGINE.md §2 P2).
+             *
+             * A generated post carries one `post_claims` row per factual
+             * assertion, and every one has to be checked by a human before the
+             * post can go public. Doing this here rather than only in the UI is
+             * the point: the gate has to hold whoever calls the API and however
+             * the button is wired, or it is advice rather than a control.
+             *
+             * Hand-written posts have no claims and pass straight through.
+             */
+            if ($data['status'] === 'published' && ! $post->factCheckCleared()) {
+                $outstanding = $post->claims()->unverified()->count();
+
+                abort(422, "This post has {$outstanding} unverified factual claim(s). "
+                    .'Check them at /jundullah/content/drafts/'.$post->id.' before publishing.');
+            }
+
             $post->status = $data['status'];
         }
         if (array_key_exists('category', $data)) {

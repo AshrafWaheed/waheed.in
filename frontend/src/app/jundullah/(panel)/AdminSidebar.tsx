@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation';
 import {
   LayoutDashboard,
   Newspaper,
+  Sparkles,
   Inbox,
   CalendarCheck,
   Mail,
@@ -21,6 +22,7 @@ import {
 const NAV = [
   { href: '/jundullah/dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/jundullah/blogs', label: 'Blog posts', icon: Newspaper },
+  { href: '/jundullah/content', label: 'Content engine', icon: Sparkles },
   { href: '/jundullah/contacts', label: 'Contact submissions', icon: Inbox },
   { href: '/jundullah/bookings', label: 'Bookings', icon: CalendarCheck },
   { href: '/jundullah/subscribers', label: 'Subscribers', icon: Mail },

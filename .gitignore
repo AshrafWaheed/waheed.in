@@ -18,6 +18,9 @@ frontend/data/
 
 # Docs / planning (*.md files; CLAUDE.md exempt as already-tracked)
 *.md
+# All planning docs live here. Ignored wholesale so non-.md assets
+# (diagrams, exports) dropped alongside them stay untracked too.
+documents/
 
 # General
 .DS_Store
