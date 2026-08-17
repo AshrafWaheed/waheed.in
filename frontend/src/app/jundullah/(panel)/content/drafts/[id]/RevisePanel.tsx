@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { GitBranch, MessageSquare } from 'lucide-react';
 import StackButton from '@/components/ui/StackButton';
+import { runContentJob } from '@/lib/content-job';
 import type { DraftPayload } from './page';
 
 /**
@@ -55,31 +56,24 @@ export default function RevisePanel({
     const tick = setInterval(() => setElapsed((s) => s + 1), 1000);
 
     try {
-      const res = await fetch(`/api/admin/content/drafts/${data.post.id}/revise`, {
-        method: 'POST',
-        headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ instruction: instruction.trim(), fork }),
+      // Queued, not synchronous: a turn runs for minutes and the request path
+      // gives up at sixty seconds. The job outlives this page.
+      const job = await runContentJob(`/api/admin/content/drafts/${data.post.id}/revise`, {
+        instruction: instruction.trim(),
+        fork,
       });
-      const json = await res.json().catch(() => ({}));
 
-      if (!res.ok) {
-        setError(json.message ?? `Revision failed (${res.status}).`);
+      if (fork && job.post_id && job.post_id !== data.post.id) {
+        // A fork wrote a sibling draft; this page is showing the original.
+        window.location.href = `/jundullah/content/drafts/${job.post_id}`;
         return;
       }
 
-      if (fork) {
-        // A fork produced a sibling draft; this page is showing the original.
-        window.location.href = `/jundullah/content/drafts/${json.post.id}`;
-        return;
-      }
-
-      onResult(json as DraftPayload);
+      const res = await fetch(`/api/admin/content/drafts/${data.post.id}`);
+      if (res.ok) onResult((await res.json()) as DraftPayload);
       setInstruction('');
-    } catch {
-      setError(
-        'Connection dropped. The turn may still have completed on the server — '
-          + 'reload before sending it again, or you will pay for it twice.',
-      );
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'Revision failed.');
     } finally {
       clearInterval(tick);
       setBusy(false);
@@ -187,8 +181,8 @@ export default function RevisePanel({
 
       {busy && (
         <p style={{ fontSize: '.8em', opacity: 0.65, marginTop: 8 }}>
-          Research turns take three to seven minutes. Leave this tab open — closing it
-          does not stop the run, but you will lose the result.
+          Research turns take three to seven minutes. This runs on the queue, so closing the
+          tab does not stop it — reopen this page and the result will be here.
         </p>
       )}
     </section>

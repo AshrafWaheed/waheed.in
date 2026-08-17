@@ -44,6 +44,27 @@ return [
             'after_commit' => false,
         ],
 
+        /*
+         * Content generation runs for one to nine minutes, which the default
+         * connection cannot express: `retry_after: 90` would decide a job had
+         * died at ninety seconds and hand it to a second worker, so a 213s
+         * variant would be generated two or three times over. Each of those is
+         * a full agent run against the plan's usage window, and two of them
+         * would race to write the same row.
+         *
+         * retry_after therefore sits above the job's own timeout, which in turn
+         * sits above the CLI's. Each layer gets to give up before the one above
+         * it does, so a failure is always reported by the layer that knows why.
+         */
+        'content' => [
+            'driver' => 'database',
+            'connection' => env('DB_QUEUE_CONNECTION'),
+            'table' => env('DB_QUEUE_TABLE', 'jobs'),
+            'queue' => 'content',
+            'retry_after' => (int) env('CONTENT_TIMEOUT', 900) + 300,
+            'after_commit' => false,
+        ],
+
         'beanstalkd' => [
             'driver' => 'beanstalkd',
             'host' => env('BEANSTALKD_QUEUE_HOST', 'localhost'),

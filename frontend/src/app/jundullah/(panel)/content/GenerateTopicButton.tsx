@@ -3,6 +3,7 @@
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import StackButton from '@/components/ui/StackButton';
+import { runContentJob } from '@/lib/content-job';
 
 type Author = { id: number; name: string };
 
@@ -31,26 +32,27 @@ export default function GenerateTopicButton({
   const [instructions, setInstructions] = useState('');
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [elapsed, setElapsed] = useState(0);
 
   async function generate() {
     if (busy || authorId === '') return;
     setBusy(true);
     setError(null);
+    setElapsed(0);
+    const tick = setInterval(() => setElapsed((s) => s + 1), 1000);
     try {
-      const res = await fetch(`/api/admin/content/topics/${topicId}/generate`, {
-        method: 'POST',
-        headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ author_id: authorId, instructions: instructions || undefined }),
+      // Queued: research and drafting runs for minutes, well past the sixty
+      // seconds the request path allows. The job survives this page.
+      const job = await runContentJob(`/api/admin/content/topics/${topicId}/generate`, {
+        author_id: authorId,
+        instructions: instructions || undefined,
       });
-      const data = await res.json().catch(() => ({}));
-      if (!res.ok) {
-        setError(data.message ?? `Generation failed (${res.status}).`);
-        return;
-      }
-      router.push(`/jundullah/blogs/${data.post.id}/edit`);
-    } catch {
-      setError('Network error. The draft may still be generating — reload before retrying.');
+      if (job.post_id) router.push(`/jundullah/content/drafts/${job.post_id}`);
+      else router.refresh();
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'Generation failed.');
     } finally {
+      clearInterval(tick);
       setBusy(false);
     }
   }
@@ -99,7 +101,7 @@ export default function GenerateTopicButton({
 
       <div style={{ display: 'flex', gap: 8 }}>
         <StackButton size="sm" onClick={generate} disabled={busy || authorId === ''}>
-          {busy ? 'Researching…' : 'Generate'}
+          {busy ? `Researching… ${Math.floor(elapsed / 60)}m ${elapsed % 60}s` : 'Generate'}
         </StackButton>
         <StackButton size="sm" tone="ghost" onClick={() => setOpen(false)} disabled={busy}>
           Cancel
@@ -108,7 +110,8 @@ export default function GenerateTopicButton({
 
       {busy && (
         <p style={{ fontSize: '.78em', opacity: 0.6, marginTop: 6 }}>
-          Searching sources and drafting. This takes a few minutes.
+          Searching sources and drafting, on the queue. Takes a few minutes, and closing
+          the tab does not stop it.
         </p>
       )}
     </div>

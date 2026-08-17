@@ -85,6 +85,10 @@ Route::prefix('admin')->group(function () {
             Route::post('drafts/{post}/revise', [ContentEngineController::class, 'revise']);
             Route::post('drafts/{post}/accept-agent-check', [ContentEngineController::class, 'acceptAgentCheck']);
 
+            // Queued generation: every expensive endpoint returns a job handle.
+            Route::get('jobs', [ContentEngineController::class, 'activeJobs']);
+            Route::get('jobs/{job}', [ContentEngineController::class, 'job']);
+
             // Phase 2 — platform variants
             Route::get('platforms', [ContentEngineController::class, 'platforms']);
             Route::get('drafts/{post}/variants', [ContentEngineController::class, 'variants']);

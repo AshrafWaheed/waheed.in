@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { Check, Copy, RefreshCw, Trash2, AlertTriangle, Share2, RotateCcw } from 'lucide-react';
 import StackButton from '@/components/ui/StackButton';
+import { runContentJob } from '@/lib/content-job';
 import type { VariantPayload, Variant } from './page';
 
 /**
@@ -67,8 +68,27 @@ export default function VariantPanel({
     }
   }
 
-  const generate = (platform: string) =>
-    call(`gen:${platform}`, `/api/admin/content/drafts/${postId}/variants`, 'POST', { platform });
+  /**
+   * Generation is queued, not synchronous: it runs for minutes and the request
+   * path gives up at sixty seconds. Fire it, then poll until it lands and
+   * refetch the panel.
+   */
+  async function generate(platform: string) {
+    setBusy(`gen:${platform}`);
+    setError(null);
+    setElapsed(0);
+    const tick = setInterval(() => setElapsed((s) => s + 1), 1000);
+    try {
+      await runContentJob(`/api/admin/content/drafts/${postId}/variants`, { platform });
+      const res = await fetch(`/api/admin/content/drafts/${postId}/variants`);
+      if (res.ok) setData((await res.json()) as VariantPayload);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'Generation failed.');
+    } finally {
+      clearInterval(tick);
+      setBusy(null);
+    }
+  }
 
   /** Clipboard needs a secure context; the admin is HTTPS, but fail visibly. */
   async function copy(v: Variant) {
@@ -151,8 +171,9 @@ export default function VariantPanel({
 
       {busy?.startsWith('gen:') && (
         <p style={{ fontSize: '.8em', opacity: 0.65, marginBottom: 12 }}>
-          It forks the session this article was researched in, so it keeps the sources rather
-          than looking them up again. Usually one to three minutes.
+          Running on the queue, so this survives you closing the tab. It forks the session the
+          article was researched in and keeps the sources rather than looking them up again.
+          Usually one to three minutes.
         </p>
       )}
 

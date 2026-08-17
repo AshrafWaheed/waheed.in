@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Jobs\RunContentGeneration;
+use App\Models\ContentJob;
 use App\Models\GenerationRun;
 use App\Models\Post;
 use App\Models\PostClaim;
@@ -19,8 +21,11 @@ use RuntimeException;
 /**
  * Admin endpoints for the content engine. See documents/CONTENT_ENGINE.md.
  *
- * Generation runs synchronously: a research turn takes minutes, and the editor
- * is sitting there waiting for it. Phase 2 moves this to a streamed queue job.
+ * Every generation endpoint returns 202 and a job handle rather than the
+ * finished work. A research turn takes one to nine minutes, and the request
+ * path (nginx → Next.js BFF → nginx → PHP-FPM) gives up at sixty seconds, so
+ * the synchronous version could not complete through a browser at all — it
+ * only ever worked from the CLI, where no proxy is in the way.
  */
 class ContentEngineController extends Controller
 {
@@ -107,13 +112,17 @@ class ContentEngineController extends Controller
             ], 409);
         }
 
-        try {
-            $post = $this->generator->draft($topic, $data['author_id'], $data['instructions'] ?? null);
-        } catch (RuntimeException $e) {
-            return response()->json(['message' => $e->getMessage()], 422);
+        if ($busy = $this->alreadyRunning(['topic_id' => $topic->id])) {
+            return $busy;
         }
 
-        return response()->json($this->payload($post), 201);
+        return $this->queued(ContentJob::create([
+            'kind' => 'draft',
+            'topic_id' => $topic->id,
+            'author_id' => $data['author_id'],
+            'user_id' => $request->user()->id,
+            'instructions' => $data['instructions'] ?? null,
+        ]));
     }
 
     /**
@@ -140,15 +149,17 @@ class ContentEngineController extends Controller
             ], 429);
         }
 
-        try {
-            $result = $this->generator->revise(
-                $post, $data['instruction'], $request->user()->id, (bool) ($data['fork'] ?? false)
-            );
-        } catch (RuntimeException $e) {
-            return response()->json(['message' => $e->getMessage()], 422);
+        if ($busy = $this->alreadyRunning(['post_id' => $post->id])) {
+            return $busy;
         }
 
-        return response()->json($this->payload($result));
+        return $this->queued(ContentJob::create([
+            'kind' => 'revise',
+            'post_id' => $post->id,
+            'user_id' => $request->user()->id,
+            'instructions' => $data['instruction'],
+            'fork' => (bool) ($data['fork'] ?? false),
+        ]));
     }
 
     /** Draft + claims + house-rule warnings, for the editor screen. */
@@ -298,15 +309,27 @@ class ContentEngineController extends Controller
             return $guard;
         }
 
-        try {
-            $this->variants->generate(
-                $post, $data['platform'], $request->user()->id, $data['instructions'] ?? null
-            );
-        } catch (RuntimeException $e) {
-            return response()->json(['message' => $e->getMessage()], 422);
+        // The fact gate is cheap to check and worth failing fast on, rather than
+        // queueing work that will refuse itself four minutes later.
+        if (! $post->factCheckCleared()) {
+            return response()->json([
+                'message' => 'This post still has '.$post->claims()->unverified()->count()
+                    .' unverified claim(s). Variants argue from the same material, so they '
+                    .'inherit the same problem on every platform they reach.',
+            ], 422);
         }
 
-        return response()->json($this->variantPayload($post->fresh()), 201);
+        if ($busy = $this->alreadyRunning(['post_id' => $post->id])) {
+            return $busy;
+        }
+
+        return $this->queued(ContentJob::create([
+            'kind' => 'variant',
+            'post_id' => $post->id,
+            'platform' => $data['platform'],
+            'user_id' => $request->user()->id,
+            'instructions' => $data['instructions'] ?? null,
+        ]));
     }
 
     /** Every variant on a post, plus what could still be generated. */
@@ -384,6 +407,76 @@ class ContentEngineController extends Controller
         $variant->delete();
 
         return response()->json($this->variantPayload($post->fresh()));
+    }
+
+    // ── queued generation ────────────────────────────────────────────────
+
+    /**
+     * Poll one job. This is what the UI watches instead of holding a request
+     * open for nine minutes behind a proxy that gives up at sixty seconds.
+     */
+    public function job(ContentJob $job): JsonResponse
+    {
+        return response()->json($this->jobPayload($job));
+    }
+
+    /** Anything currently running, so a reloaded page can pick the thread back up. */
+    public function activeJobs(Request $request): JsonResponse
+    {
+        $jobs = ContentJob::active()
+            ->when($request->query('post_id'), fn ($q, $v) => $q->where('post_id', $v))
+            ->when($request->query('topic_id'), fn ($q, $v) => $q->where('topic_id', $v))
+            ->latest('id')
+            ->get();
+
+        return response()->json(['data' => $jobs->map(fn ($j) => $this->jobPayload($j))]);
+    }
+
+    /**
+     * One generation at a time per post or topic.
+     *
+     * Not a lock for its own sake: two concurrent runs on the same post would
+     * both write the body, and the loser's work is silently destroyed after
+     * costing several minutes. The click that started it is also easy to
+     * repeat, because nothing appears to happen for the first minute.
+     */
+    private function alreadyRunning(array $scope): ?JsonResponse
+    {
+        $existing = ContentJob::active()->where($scope)->first();
+        if (! $existing) {
+            return null;
+        }
+
+        return response()->json([
+            'message' => 'A generation is already running for this '
+                .(isset($scope['topic_id']) ? 'topic' : 'post')
+                .' ('.$existing->elapsed_seconds.'s so far). Wait for it to finish.',
+            'job' => $this->jobPayload($existing),
+        ], 409);
+    }
+
+    private function queued(ContentJob $job): JsonResponse
+    {
+        RunContentGeneration::dispatch($job->id);
+
+        // 202: accepted, not done. The body carries the handle to poll.
+        return response()->json(['job' => $this->jobPayload($job)], 202);
+    }
+
+    private function jobPayload(ContentJob $job): array
+    {
+        return [
+            'id' => $job->id,
+            'kind' => $job->kind,
+            'status' => $job->status,
+            'platform' => $job->platform,
+            'topic_id' => $job->topic_id,
+            'post_id' => $job->post_id,
+            'variant_id' => $job->variant_id,
+            'error' => $job->error,
+            'elapsed_seconds' => $job->elapsed_seconds,
+            'created_at' => $job->created_at?->toIso8601String(),
+        ];
     }
 
     // ── helpers ──────────────────────────────────────────────────────────

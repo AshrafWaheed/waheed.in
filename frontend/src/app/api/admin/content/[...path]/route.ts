@@ -22,6 +22,8 @@ const ALLOWED: ReadonlyArray<RegExp> = [
   /^drafts\/\d+\/accept-agent-check$/,
   /^claims\/\d+\/verify$/,
   /^platforms$/,
+  /^jobs$/,
+  /^jobs\/\d+$/,
   /^drafts\/\d+\/variants$/,
   /^variants\/\d+$/,
   /^variants\/\d+\/approve$/,

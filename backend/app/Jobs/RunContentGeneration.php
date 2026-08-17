@@ -1,0 +1,113 @@
+<?php
+
+namespace App\Jobs;
+
+use App\Models\ContentJob;
+use App\Models\Post;
+use App\Services\Content\BlogGenerator;
+use App\Services\Content\VariantGenerator;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Foundation\Queue\Queueable;
+use Illuminate\Support\Facades\Log;
+use Throwable;
+
+/**
+ * Runs one generation off the request cycle.
+ *
+ * Everything here is shaped by one fact: a turn takes one to nine minutes.
+ *
+ * `$tries = 1` is deliberate and important. The default retry behaviour would
+ * re-run a generation that failed near the end, and each attempt is a fresh
+ * multi-minute agent run against the plan's usage window. Worse, a partially
+ * applied one could produce a second variant or a duplicate post. A failed
+ * generation should surface to a human, not silently cost three more.
+ *
+ * `$timeout` sits above the CLI's own timeout so the process gets to fail on
+ * its own terms and record why, rather than being shot by the worker first.
+ */
+class RunContentGeneration implements ShouldQueue
+{
+    use Queueable;
+
+    public int $tries = 1;
+
+    /** No backoff, because there is no retry. */
+    public bool $failOnTimeout = true;
+
+    public function __construct(public int $contentJobId)
+    {
+        // Its own connection, not just its own queue name: retry_after is a
+        // per-connection setting, and the default 90s would re-dispatch this
+        // mid-run. See config/queue.php.
+        $this->onConnection('content')->onQueue('content');
+    }
+
+    public function timeout(): int
+    {
+        return (int) config('content.claude.timeout', 900) + 120;
+    }
+
+    public function handle(BlogGenerator $blog, VariantGenerator $variants): void
+    {
+        $job = ContentJob::find($this->contentJobId);
+        if (! $job || $job->status !== 'queued') {
+            return; // cancelled, or already picked up
+        }
+
+        $job->update(['status' => 'running', 'started_at' => now()]);
+
+        try {
+            match ($job->kind) {
+                'draft' => $this->draft($job, $blog),
+                'revise' => $this->revise($job, $blog),
+                'variant' => $this->variant($job, $variants),
+            };
+
+            $job->update(['status' => 'done', 'finished_at' => now()]);
+        } catch (Throwable $e) {
+            Log::warning('content generation failed', [
+                'content_job' => $job->id, 'kind' => $job->kind, 'error' => $e->getMessage(),
+            ]);
+
+            $job->update([
+                'status' => 'failed',
+                'error' => $e->getMessage(),
+                'finished_at' => now(),
+            ]);
+        }
+    }
+
+    private function draft(ContentJob $job, BlogGenerator $blog): void
+    {
+        $post = $blog->draft($job->topic, $job->author_id, $job->instructions);
+        $job->update(['post_id' => $post->id]);
+    }
+
+    private function revise(ContentJob $job, BlogGenerator $blog): void
+    {
+        $post = $blog->revise($job->post, $job->instructions, $job->user_id, $job->fork);
+        // A fork writes a sibling; point the job at whatever it actually produced
+        // so the UI sends the user to the right draft.
+        $job->update(['post_id' => $post->id]);
+    }
+
+    private function variant(ContentJob $job, VariantGenerator $variants): void
+    {
+        $variant = $variants->generate($job->post, $job->platform, $job->user_id, $job->instructions);
+        $job->update(['variant_id' => $variant->id]);
+    }
+
+    /**
+     * Reached when the worker kills the job (timeout) rather than the code
+     * throwing — without this the row would sit on `running` for ever and the
+     * UI would spin against nothing.
+     */
+    public function failed(?Throwable $e): void
+    {
+        ContentJob::where('id', $this->contentJobId)->where('status', '!=', 'done')->update([
+            'status' => 'failed',
+            'error' => $e?->getMessage() ?? 'The job was stopped before it finished.',
+            'finished_at' => now(),
+        ]);
+    }
+}
