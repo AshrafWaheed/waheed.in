@@ -21,6 +21,10 @@ const ALLOWED: ReadonlyArray<RegExp> = [
   /^drafts\/\d+\/revise$/,
   /^drafts\/\d+\/accept-agent-check$/,
   /^claims\/\d+\/verify$/,
+  /^platforms$/,
+  /^drafts\/\d+\/variants$/,
+  /^variants\/\d+$/,
+  /^variants\/\d+\/approve$/,
 ];
 
 function resolve(path: string[]): string | null {
@@ -52,6 +56,10 @@ export async function GET(req: Request, ctx: Ctx) {
 
 export async function POST(req: Request, ctx: Ctx) {
   return proxy(req, (await ctx.params).path, 'POST');
+}
+
+export async function PATCH(req: Request, ctx: Ctx) {
+  return proxy(req, (await ctx.params).path, 'PATCH');
 }
 
 export async function DELETE(req: Request, ctx: Ctx) {

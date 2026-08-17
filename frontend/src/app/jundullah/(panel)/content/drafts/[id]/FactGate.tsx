@@ -5,7 +5,8 @@ import { useMemo, useState } from 'react';
 import { ExternalLink, Check, PencilLine, Trash2, RotateCcw, AlertTriangle, Bot } from 'lucide-react';
 import StackButton from '@/components/ui/StackButton';
 import RevisePanel from './RevisePanel';
-import type { Claim, DraftPayload } from './page';
+import VariantPanel from './VariantPanel';
+import type { Claim, DraftPayload, VariantPayload } from './page';
 
 /**
  * The fact gate (documents/CONTENT_ENGINE.md §2 P2).
@@ -49,7 +50,13 @@ const AGENT_STYLE: Record<string, { bg: string; fg: string; label: string }> = {
   removed: { bg: '#F4E2D8', fg: '#a1502f', label: 'suggests cutting' },
 };
 
-export default function FactGate({ initial }: { initial: DraftPayload }) {
+export default function FactGate({
+  initial,
+  variants,
+}: {
+  initial: DraftPayload;
+  variants: VariantPayload | null;
+}) {
   const [data, setData] = useState<DraftPayload>(initial);
   const [busyId, setBusyId] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -217,6 +224,11 @@ export default function FactGate({ initial }: { initial: DraftPayload }) {
       </div>
 
       <RevisePanel data={data} onResult={setData} />
+
+      {/* Above the claims list rather than below it: once the gate is cleared
+          this is the active work, and 35 claim cards is a long way to scroll
+          past to reach it. */}
+      {variants && <VariantPanel initial={variants} postId={data.post.id} />}
 
       {data.warnings.length > 0 && (
         <div

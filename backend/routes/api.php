@@ -84,6 +84,15 @@ Route::prefix('admin')->group(function () {
             Route::get('drafts/{post}', [ContentEngineController::class, 'show']);
             Route::post('drafts/{post}/revise', [ContentEngineController::class, 'revise']);
             Route::post('drafts/{post}/accept-agent-check', [ContentEngineController::class, 'acceptAgentCheck']);
+
+            // Phase 2 — platform variants
+            Route::get('platforms', [ContentEngineController::class, 'platforms']);
+            Route::get('drafts/{post}/variants', [ContentEngineController::class, 'variants']);
+            Route::post('drafts/{post}/variants', [ContentEngineController::class, 'generateVariant']);
+            Route::patch('variants/{variant}', [ContentEngineController::class, 'updateVariant']);
+            Route::post('variants/{variant}/approve', [ContentEngineController::class, 'approveVariant']);
+            Route::delete('variants/{variant}/approve', [ContentEngineController::class, 'unapproveVariant']);
+            Route::delete('variants/{variant}', [ContentEngineController::class, 'destroyVariant']);
             Route::post('claims/{claim}/verify', [ContentEngineController::class, 'verifyClaim']);
             Route::delete('claims/{claim}/verify', [ContentEngineController::class, 'unverifyClaim']);
         });

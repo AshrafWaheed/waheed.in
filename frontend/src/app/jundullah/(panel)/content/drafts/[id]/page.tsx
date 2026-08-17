@@ -57,16 +57,50 @@ export type DraftPayload = {
   turns_max: number;
 };
 
+export type Variant = {
+  id: number;
+  platform: string;
+  label: string;
+  format: 'html' | 'text';
+  publish: 'api' | 'manual';
+  title: string;
+  body_html: string;
+  angle: string;
+  tags: string[] | null;
+  status: 'draft' | 'approved' | 'queued' | 'published' | 'failed';
+  canonical_url: string;
+  external_url: string | null;
+  char_count: number;
+  max_chars: number | null;
+  is_stale: boolean;
+  warnings: string[];
+  approver: { id: number; name: string } | null;
+};
+
+export type VariantPayload = {
+  post: { id: number; title: string; slug: string; status: string };
+  can_generate: boolean;
+  blocked_reason: string | null;
+  variants: Variant[];
+  available: { key: string; label: string; publish: 'api' | 'manual' }[];
+};
+
 export default async function DraftFactCheckPage({
   params,
 }: {
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const res = await adminApi(`/admin/content/drafts/${id}`);
+  const [res, varRes] = await Promise.all([
+    adminApi(`/admin/content/drafts/${id}`),
+    adminApi(`/admin/content/drafts/${id}/variants`),
+  ]);
   if (!res.ok) notFound();
 
   const data = (await res.json()) as DraftPayload;
+  // Variants are secondary: a failure there should not take down the fact gate,
+  // which is the screen's actual job.
+  const variants = varRes.ok ? ((await varRes.json()) as VariantPayload) : null;
 
-  return <FactGate initial={data} />;
+  return <FactGate initial={data} variants={variants} />;
 }

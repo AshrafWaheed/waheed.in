@@ -6,11 +6,14 @@ use App\Http\Controllers\Controller;
 use App\Models\GenerationRun;
 use App\Models\Post;
 use App\Models\PostClaim;
+use App\Models\PostVariant;
 use App\Models\Topic;
 use App\Services\Content\BlogGenerator;
+use App\Services\Content\VariantGenerator;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Mews\Purifier\Facades\Purifier;
 use RuntimeException;
 
 /**
@@ -21,7 +24,10 @@ use RuntimeException;
  */
 class ContentEngineController extends Controller
 {
-    public function __construct(private BlogGenerator $generator) {}
+    public function __construct(
+        private BlogGenerator $generator,
+        private VariantGenerator $variants,
+    ) {}
 
     /** Engine status + this month's spend, for the dashboard card. */
     public function status(): JsonResponse
@@ -261,6 +267,125 @@ class ContentEngineController extends Controller
         return response()->json($this->payload($post->fresh()));
     }
 
+    // ── variants (phase 2) ───────────────────────────────────────────────
+
+    /** The platforms we can syndicate to, and what each one is for. */
+    public function platforms(): JsonResponse
+    {
+        return response()->json([
+            'data' => collect(config('content.platforms'))
+                ->map(fn ($spec, $key) => [
+                    'key' => $key,
+                    'label' => $spec['label'],
+                    'format' => $spec['format'],
+                    'max_chars' => $spec['max_chars'],
+                    'publish' => $spec['publish'],
+                    'angle' => $spec['angle'],
+                ])
+                ->values(),
+        ]);
+    }
+
+    /** Derive one platform's variant. Another expensive one. */
+    public function generateVariant(Request $request, Post $post): JsonResponse
+    {
+        $data = $request->validate([
+            'platform' => ['required', 'string', Rule::in(array_keys(config('content.platforms')))],
+            'instructions' => ['nullable', 'string', 'max:4000'],
+        ]);
+
+        if ($guard = $this->guard()) {
+            return $guard;
+        }
+
+        try {
+            $this->variants->generate(
+                $post, $data['platform'], $request->user()->id, $data['instructions'] ?? null
+            );
+        } catch (RuntimeException $e) {
+            return response()->json(['message' => $e->getMessage()], 422);
+        }
+
+        return response()->json($this->variantPayload($post->fresh()), 201);
+    }
+
+    /** Every variant on a post, plus what could still be generated. */
+    public function variants(Post $post): JsonResponse
+    {
+        return response()->json($this->variantPayload($post));
+    }
+
+    /** Hand edits to a variant, same as editing the blog body. */
+    public function updateVariant(Request $request, PostVariant $variant): JsonResponse
+    {
+        $data = $request->validate([
+            'title' => ['sometimes', 'string', 'max:140'],
+            'body_html' => ['sometimes', 'string', 'max:60000'],
+            'tags' => ['sometimes', 'array', 'max:8'],
+            'tags.*' => ['string', 'max:40'],
+        ]);
+
+        if (array_key_exists('body_html', $data)) {
+            $data['body_html'] = $variant->spec()['format'] === 'html'
+                ? Purifier::clean($data['body_html'])
+                : trim(html_entity_decode(strip_tags($data['body_html'])));
+        }
+
+        /*
+         * Editing un-approves. An approval is of a specific text, and silently
+         * carrying it across an edit would let something reach a platform that
+         * nobody approved in the form it went out in.
+         */
+        if ($variant->status === 'approved') {
+            $data += ['status' => 'draft', 'approved_at' => null, 'approved_by' => null];
+        }
+
+        $variant->update($data);
+
+        return response()->json($this->variantPayload($variant->post->fresh()));
+    }
+
+    /**
+     * Approve a variant for syndication.
+     *
+     * Refuses on a stale one: the article has changed since this was derived
+     * from it, so approving would ship a piece that argues from a version of
+     * the post that no longer exists.
+     */
+    public function approveVariant(Request $request, PostVariant $variant): JsonResponse
+    {
+        if ($variant->isStale()) {
+            return response()->json([
+                'message' => 'The article has been edited since this variant was written from it. '
+                    .'Regenerate it, or edit it by hand so it matches, then approve.',
+            ], 422);
+        }
+
+        $variant->update([
+            'status' => 'approved',
+            'approved_at' => now(),
+            'approved_by' => $request->user()->id,
+        ]);
+
+        return response()->json($this->variantPayload($variant->post->fresh()));
+    }
+
+    /** Take an approval back. */
+    public function unapproveVariant(PostVariant $variant): JsonResponse
+    {
+        $variant->update(['status' => 'draft', 'approved_at' => null, 'approved_by' => null]);
+
+        return response()->json($this->variantPayload($variant->post->fresh()));
+    }
+
+    public function destroyVariant(PostVariant $variant): JsonResponse
+    {
+        $post = $variant->post;
+        $variant->delete();
+
+        return response()->json($this->variantPayload($post->fresh()));
+    }
+
     // ── helpers ──────────────────────────────────────────────────────────
 
     /** Whichever auth mode is configured, is it actually usable? */
@@ -315,6 +440,48 @@ class ContentEngineController extends Controller
         }
 
         return null;
+    }
+
+    /**
+     * Variants for a post, each with its own warnings and staleness, plus the
+     * platforms not yet generated so the UI can offer them without holding a
+     * second copy of the platform list.
+     */
+    private function variantPayload(Post $post): array
+    {
+        $post->loadMissing('variants.approver:id,name');
+        $specs = config('content.platforms');
+
+        $rows = $post->variants
+            ->sortBy(fn ($v) => array_search($v->platform, array_keys($specs), true))
+            ->values()
+            ->map(fn (PostVariant $v) => [
+                ...$v->toArray(),
+                'label' => $v->spec()['label'] ?? $v->platform,
+                'format' => $v->spec()['format'] ?? 'html',
+                'max_chars' => $v->spec()['max_chars'] ?? null,
+                'publish' => $v->spec()['publish'] ?? 'manual',
+                'char_count' => mb_strlen(trim(html_entity_decode(strip_tags($v->body_html)))),
+                'is_stale' => $v->isStale(),
+                'warnings' => $this->variants->warnings($v),
+                'approver' => $v->approver?->only(['id', 'name']),
+            ]);
+
+        $have = $post->variants->pluck('platform')->all();
+
+        return [
+            'post' => $post->only(['id', 'title', 'slug', 'status']),
+            'can_generate' => $post->factCheckCleared(),
+            'blocked_reason' => $post->factCheckCleared() ? null
+                : $post->claims()->unverified()->count().' claim(s) still unverified. Variants '
+                  .'argue from the same material, so they would carry the same problem onto '
+                  .'every platform.',
+            'variants' => $rows,
+            'available' => collect($specs)
+                ->reject(fn ($s, $k) => in_array($k, $have, true))
+                ->map(fn ($s, $k) => ['key' => $k, 'label' => $s['label'], 'publish' => $s['publish']])
+                ->values(),
+        ];
     }
 
     private function payload(Post $post): array

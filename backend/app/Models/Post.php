@@ -48,6 +48,11 @@ class Post extends Model
         return $this->hasMany(PostClaim::class);
     }
 
+    public function variants(): HasMany
+    {
+        return $this->hasMany(PostVariant::class);
+    }
+
     public function topic(): BelongsTo
     {
         return $this->belongsTo(Topic::class);

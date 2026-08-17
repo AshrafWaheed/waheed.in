@@ -12,6 +12,13 @@ return [
     // Master switch. Off until an API key exists and the feature is reviewed.
     'enabled' => env('CONTENT_ENGINE_ENABLED', false),
 
+    /*
+     * Public site root, used to build the canonical URL every syndicated variant
+     * points back at. Read here rather than via env() at call time so it keeps
+     * working under `config:cache`, where env() returns null.
+     */
+    'site_url' => rtrim(env('FRONTEND_URL', 'https://waheed.in'), '/'),
+
     'claude' => [
         'binary' => env('CLAUDE_BINARY', '/home/dev/.local/bin/claude'),
         'model' => env('CONTENT_MODEL', 'claude-opus-5'),
@@ -84,6 +91,77 @@ return [
         // Bumped whenever the generator instructions change materially, so a
         // quality shift can be traced to a specific version.
         'draft_version' => 'gen-v3',
+        'variant_version' => 'var-v1',
+    ],
+
+    /*
+     * Syndication targets (CONTENT_ENGINE.md §2 P7, §6 stage 6).
+     *
+     * A variant is a DIFFERENT PIECE arguing from the same research, not the
+     * blog post reformatted. That is the whole design: reprinting the article
+     * on four sites creates four near-duplicates competing with the original,
+     * and canonical tags are a request rather than a guarantee. Writing a
+     * genuinely different angle that links back removes the problem at source
+     * instead of papering over it, and is better for the reader besides.
+     *
+     * `angle` is the standing brief for how this platform's piece should differ.
+     * `max_chars` is a hard ceiling the generator is held to and the UI checks.
+     * `publish` records reality, not ambition:
+     *   api    — a real publishing API exists (Blogger v3)
+     *   manual — no usable API. Medium closed new integration tokens in 2023;
+     *            Substack has never had a publishing API; LinkedIn article
+     *            posting is not in the public API. These are copy-paste, and
+     *            pretending otherwise would just build a broken button.
+     */
+    'platforms' => [
+        'linkedin' => [
+            'label' => 'LinkedIn',
+            'format' => 'text',
+            'max_chars' => 3000,
+            'publish' => 'manual',
+            'angle' => 'A first-person practitioner note. One specific thing you have seen '
+                .'go wrong for a Muslim business owner, what it cost them, and the single '
+                .'decision that avoids it. No listicle, no "in today\'s digital landscape". '
+                .'Opens with the concrete situation, not a thesis. Ends by pointing at the '
+                .'full article for the reasoning and the sources.',
+        ],
+        'medium' => [
+            'label' => 'Medium',
+            'format' => 'html',
+            'max_chars' => 12000,
+            'publish' => 'manual',
+            'angle' => 'The essay the blog post could not be, because the blog post has to '
+                .'answer a search query. Take one idea from the article and argue it '
+                .'properly for a general technical readership who may not be Muslim: what '
+                .'the constraint actually is, why it produces better work rather than '
+                .'worse, what a non-Muslim reader can take from it.',
+        ],
+        'substack' => [
+            'label' => 'Substack',
+            'format' => 'html',
+            'max_chars' => 9000,
+            'publish' => 'manual',
+            'angle' => 'A letter to people who already know us. Warmer, more direct, allowed '
+                .'to be opinionated and to reference what we are working on. Assumes the '
+                .'reader trusts us and wants the judgement, not the 101.',
+        ],
+        'blogger' => [
+            'label' => 'Blogger',
+            'format' => 'html',
+            'max_chars' => 9000,
+            'publish' => 'api',
+            'angle' => 'A practical walkthrough aimed squarely at the beginner the main '
+                .'article assumes past: define the terms, work one worked example end to '
+                .'end, and keep the fiqh light. Where the article rules, this one shows.',
+        ],
+        'tumblr' => [
+            'label' => 'Tumblr',
+            'format' => 'html',
+            'max_chars' => 4000,
+            'publish' => 'api',
+            'angle' => 'Short, punchy, one argument. Written for people who scroll. A strong '
+                .'opening claim, three or four tight paragraphs of support, done.',
+        ],
     ],
 
     'limits' => [
