@@ -87,6 +87,29 @@ return [
         'timeout' => (int) env('CONTENT_TIMEOUT', 600),
     ],
 
+    /*
+     * Google, for the indexation gate and Blogger publishing. Reuses the single
+     * OAuth account the booking module already connects.
+     *
+     * `request_scopes` is off by default and must stay off until BOTH of these
+     * are done in the Google Cloud console, or the authorize call fails and
+     * takes the working booking connect flow down with it:
+     *   1. Search Console API and Blogger API v3 enabled on the project
+     *   2. webmasters.readonly and blogger listed on the OAuth consent screen
+     * Then set CONTENT_GOOGLE_SCOPES=true and reconnect Google once. Existing
+     * calendar access survives — Google is asked with include_granted_scopes.
+     *
+     * `property` is the Search Console property to inspect. Domain properties
+     * take the form sc-domain:waheed.in; URL-prefix properties are the full
+     * https://waheed.in/ with the trailing slash. Getting this wrong returns
+     * 403, not 404, which reads like a permissions problem rather than a typo.
+     */
+    'google' => [
+        'request_scopes' => (bool) env('CONTENT_GOOGLE_SCOPES', false),
+        'property' => env('CONTENT_GSC_PROPERTY', 'sc-domain:waheed.in'),
+        'blogger_blog_id' => env('CONTENT_BLOGGER_BLOG_ID'),
+    ],
+
     'prompts' => [
         // Bumped whenever the generator instructions change materially, so a
         // quality shift can be traced to a specific version.
@@ -158,7 +181,12 @@ return [
             'label' => 'Tumblr',
             'format' => 'html',
             'max_chars' => 4000,
-            'publish' => 'api',
+            // Tumblr does have a publishing API, but it needs its own app
+            // registration and OAuth flow rather than the Google account
+            // everything else here reuses. Until that adapter exists this says
+            // manual, because config that claims a capability the code does not
+            // have produces a button that only ever returns an error.
+            'publish' => 'manual',
             'angle' => 'Short, punchy, one argument. Written for people who scroll. A strong '
                 .'opening claim, three or four tight paragraphs of support, done.',
         ],

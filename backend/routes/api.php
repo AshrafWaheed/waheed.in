@@ -97,6 +97,13 @@ Route::prefix('admin')->group(function () {
             Route::post('variants/{variant}/approve', [ContentEngineController::class, 'approveVariant']);
             Route::delete('variants/{variant}/approve', [ContentEngineController::class, 'unapproveVariant']);
             Route::delete('variants/{variant}', [ContentEngineController::class, 'destroyVariant']);
+
+            // Phase 3 — indexation gate + syndication
+            Route::get('drafts/{post}/indexation', [ContentEngineController::class, 'indexationStatus']);
+            Route::post('drafts/{post}/indexation/check', [ContentEngineController::class, 'checkIndexation']);
+            Route::post('drafts/{post}/indexation/confirm', [ContentEngineController::class, 'confirmIndexation']);
+            Route::post('variants/{variant}/publish', [ContentEngineController::class, 'publishVariant']);
+            Route::post('variants/{variant}/external-url', [ContentEngineController::class, 'recordVariantUrl']);
             Route::post('claims/{claim}/verify', [ContentEngineController::class, 'verifyClaim']);
             Route::delete('claims/{claim}/verify', [ContentEngineController::class, 'unverifyClaim']);
         });

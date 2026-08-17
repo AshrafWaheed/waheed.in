@@ -48,6 +48,46 @@ class GoogleOAuthService
         'https://www.googleapis.com/auth/calendar.readonly',
     ];
 
+    /**
+     * Extra scopes the content engine needs, kept OUT of SCOPES on purpose.
+     *
+     * SCOPES is the booking module's baseline and `missingScopes()` measures
+     * against it, so folding these in would make a perfectly healthy
+     * calendar-only account report as broken. They are also not free to ask
+     * for: each has to be listed on the OAuth consent screen and its API
+     * enabled on the project, and requesting an unconfigured scope fails the
+     * whole authorize call — which would break the working booking connect
+     * flow to add a feature nobody had switched on yet.
+     *
+     * So they are requested only when CONTENT_GOOGLE_SCOPES=true.
+     *
+     *   webmasters.readonly — Search Console URL Inspection, for the
+     *     indexation gate (CONTENT_ENGINE.md §2 P4)
+     *   blogger — publishing variants to Blogger
+     */
+    public const CONTENT_SCOPES = [
+        'https://www.googleapis.com/auth/webmasters.readonly',
+        'https://www.googleapis.com/auth/blogger',
+    ];
+
+    /** Everything this install will actually ask Google for. */
+    public static function requestedScopes(): array
+    {
+        return config('content.google.request_scopes')
+            ? [...self::SCOPES, ...self::CONTENT_SCOPES]
+            : self::SCOPES;
+    }
+
+    /** Has the connected account actually granted this one? */
+    public function hasScope(?GoogleAccount $account, string $scope): bool
+    {
+        if (! $account) {
+            return false;
+        }
+
+        return in_array($scope, preg_split('/\s+/', (string) $account->scopes, -1, PREG_SPLIT_NO_EMPTY) ?: [], true);
+    }
+
     public function isConfigured(): bool
     {
         return (bool) config('services.google.client_id')
@@ -69,7 +109,7 @@ class GoogleOAuthService
             'client_id' => config('services.google.client_id'),
             'redirect_uri' => config('services.google.redirect'),
             'response_type' => 'code',
-            'scope' => implode(' ', self::SCOPES),
+            'scope' => implode(' ', self::requestedScopes()),
             'access_type' => 'offline',
             'prompt' => 'consent',
             'include_granted_scopes' => 'true',

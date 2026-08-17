@@ -75,12 +75,28 @@ export type Variant = {
   is_stale: boolean;
   warnings: string[];
   approver: { id: number; name: string } | null;
+  published_at: string | null;
+  attempts: number;
+  last_error: string | null;
+  /** Why this can or cannot be sent anywhere yet. */
+  syndication: { ready: boolean; reason: string | null; automatable: boolean };
+};
+
+export type Indexation = {
+  url: string;
+  post_status: string;
+  indexed_at: string | null;
+  /** Whether Search Console can be queried, or manual confirmation is the only route. */
+  can_query: boolean;
+  ready: boolean;
+  reason: string | null;
 };
 
 export type VariantPayload = {
   post: { id: number; title: string; slug: string; status: string };
   can_generate: boolean;
   blocked_reason: string | null;
+  indexation: Indexation;
   variants: Variant[];
   available: { key: string; label: string; publish: 'api' | 'manual' }[];
 };

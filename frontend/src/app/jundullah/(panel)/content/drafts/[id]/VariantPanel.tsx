@@ -1,9 +1,13 @@
 'use client';
 
 import { useState } from 'react';
-import { Check, Copy, RefreshCw, Trash2, AlertTriangle, Share2, RotateCcw } from 'lucide-react';
+import {
+  Check, Copy, RefreshCw, Trash2, AlertTriangle, Share2, RotateCcw, Send, ExternalLink, Link2,
+} from 'lucide-react';
 import StackButton from '@/components/ui/StackButton';
 import { runContentJob } from '@/lib/content-job';
+import IndexationGate from './IndexationGate';
+import { hostOf } from '@/lib/url';
 import type { VariantPayload, Variant } from './page';
 
 /**
@@ -14,11 +18,14 @@ import type { VariantPayload, Variant } from './page';
  * exactly that reason: it is the one field that makes "these are genuinely
  * different" checkable in a glance instead of a claim in a design doc.
  *
- * Publishing is not here. Medium closed new integration tokens in 2023,
- * Substack has never had a publishing API, and LinkedIn article posting is not
- * in the public API — so for most of these the honest affordance is Copy, and
- * a button that promised otherwise would just be a broken one. Blogger and
- * Tumblr do have APIs; those get wired in Phase 3.
+ * Publishing splits by what each platform actually allows. Blogger has a real
+ * API and gets a Publish button. Medium closed new integration tokens in 2023,
+ * Substack has never shipped a publishing API, and LinkedIn article posting is
+ * not in the public API — those get Copy plus a field to paste back where it
+ * went, which is a first-class path rather than a fallback, because it is how
+ * most of the set will always work.
+ *
+ * Nothing publishes anywhere until the indexation gate above is open (P4).
  */
 
 const STATUS_STYLE: Record<string, { bg: string; fg: string }> = {
@@ -32,9 +39,11 @@ const STATUS_STYLE: Record<string, { bg: string; fg: string }> = {
 export default function VariantPanel({
   initial,
   postId,
+  postSlug,
 }: {
   initial: VariantPayload;
   postId: number;
+  postSlug: string;
 }) {
   const [data, setData] = useState<VariantPayload>(initial);
   const [busy, setBusy] = useState<string | null>(null);
@@ -42,6 +51,8 @@ export default function VariantPanel({
   const [elapsed, setElapsed] = useState(0);
   const [copied, setCopied] = useState<number | null>(null);
   const [openId, setOpenId] = useState<number | null>(null);
+  const [urlFor, setUrlFor] = useState<number | null>(null);
+  const [externalUrl, setExternalUrl] = useState('');
 
   async function call(key: string, url: string, method: string, body?: unknown) {
     setBusy(key);
@@ -128,6 +139,13 @@ export default function VariantPanel({
         Each one is a different piece arguing from the same research, not this article reposted.
         Reposting would put near-duplicates on five domains competing with the original.
       </p>
+
+      <IndexationGate
+        initial={data.indexation}
+        postId={postId}
+        postSlug={postSlug}
+        onChange={(next) => next && setData(next)}
+      />
 
       {!data.can_generate && (
         <div
@@ -307,6 +325,91 @@ export default function VariantPanel({
                 <p style={{ fontSize: '.76em', opacity: 0.6, margin: '8px 0 0' }}>
                   Approved by {v.approver.name}
                 </p>
+              )}
+
+              {/* Syndication. Kept below approval because that is the order it
+                  happens in, and separated by a rule so the two decisions do
+                  not read as one row of equivalent buttons. */}
+              {v.status !== 'draft' && (
+                <div style={{ borderTop: '1px solid var(--line, #E4DACA)', marginTop: 10, paddingTop: 10 }}>
+                  {v.status === 'published' && v.external_url ? (
+                    <p style={{ margin: 0, fontSize: '.85em' }}>
+                      Published to {v.label} ·{' '}
+                      <a
+                        href={v.external_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="adm-link"
+                        style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}
+                      >
+                        {hostOf(v.external_url)} <ExternalLink size={11} />
+                      </a>
+                    </p>
+                  ) : (
+                    <>
+                      {v.last_error && (
+                        <p style={{ color: '#a1502f', fontSize: '.83em', margin: '0 0 8px' }}>
+                          Last attempt failed{v.attempts > 1 ? ` (${v.attempts} tries)` : ''}:{' '}
+                          {v.last_error}
+                        </p>
+                      )}
+
+                      {v.syndication.ready ? (
+                        <StackButton
+                          size="sm"
+                          disabled={working || v.status === 'queued'}
+                          onClick={() => call(`v:${v.id}`, `/api/admin/content/variants/${v.id}/publish`, 'POST')}
+                        >
+                          <Send size={13} />{' '}
+                          {v.status === 'queued' ? 'Publishing…' : `Publish to ${v.label}`}
+                        </StackButton>
+                      ) : (
+                        <p style={{ fontSize: '.83em', opacity: 0.72, margin: '0 0 8px', lineHeight: 1.5 }}>
+                          {v.syndication.reason}
+                        </p>
+                      )}
+
+                      {/* Three of the five platforms will only ever be
+                          copy-paste, so recording where it went by hand is a
+                          first-class path, not a fallback. */}
+                      {!v.syndication.automatable && data.indexation.ready && (
+                        urlFor === v.id ? (
+                          <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginTop: 6 }}>
+                            <input
+                              autoFocus
+                              value={externalUrl}
+                              onChange={(e) => setExternalUrl(e.target.value)}
+                              placeholder={`https://… where you posted it`}
+                              style={{ flex: '1 1 260px' }}
+                              disabled={working}
+                            />
+                            <StackButton
+                              size="sm"
+                              disabled={working || !externalUrl.trim()}
+                              onClick={() =>
+                                call(`v:${v.id}`, `/api/admin/content/variants/${v.id}/external-url`, 'POST', {
+                                  external_url: externalUrl.trim(),
+                                }).then(() => {
+                                  setUrlFor(null);
+                                  setExternalUrl('');
+                                })
+                              }
+                            >
+                              Save
+                            </StackButton>
+                            <StackButton size="sm" tone="ghost" onClick={() => setUrlFor(null)}>
+                              Cancel
+                            </StackButton>
+                          </div>
+                        ) : (
+                          <StackButton size="sm" tone="ghost" onClick={() => { setUrlFor(v.id); setExternalUrl(''); }}>
+                            <Link2 size={13} /> I posted it — record the URL
+                          </StackButton>
+                        )
+                      )}
+                    </>
+                  )}
+                </div>
               )}
             </article>
           );

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Jobs\PublishVariant;
 use App\Jobs\RunContentGeneration;
 use App\Models\ContentJob;
 use App\Models\GenerationRun;
@@ -11,6 +12,8 @@ use App\Models\PostClaim;
 use App\Models\PostVariant;
 use App\Models\Topic;
 use App\Services\Content\BlogGenerator;
+use App\Services\Content\IndexationService;
+use App\Services\Content\Publishing\Syndicator;
 use App\Services\Content\VariantGenerator;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -32,6 +35,8 @@ class ContentEngineController extends Controller
     public function __construct(
         private BlogGenerator $generator,
         private VariantGenerator $variants,
+        private IndexationService $indexation,
+        private Syndicator $syndicator,
     ) {}
 
     /** Engine status + this month's spend, for the dashboard card. */
@@ -409,6 +414,112 @@ class ContentEngineController extends Controller
         return response()->json($this->variantPayload($post->fresh()));
     }
 
+    // ── indexation + syndication (phase 3) ───────────────────────────────
+
+    /**
+     * Where a post stands against the indexation gate (CONTENT_ENGINE.md P4).
+     * Cheap and read-only; the Search Console call is a separate action.
+     */
+    public function indexationStatus(Post $post): JsonResponse
+    {
+        return response()->json($this->indexationPayload($post));
+    }
+
+    /** Ask Search Console directly. Marks the post indexed if Google says PASS. */
+    public function checkIndexation(Post $post): JsonResponse
+    {
+        try {
+            $result = $this->indexation->query($post);
+        } catch (RuntimeException $e) {
+            return response()->json(['message' => $e->getMessage()], 422);
+        }
+
+        if ($result['indexed']) {
+            $this->indexation->markIndexed($post, 'search-console');
+        }
+
+        return response()->json($this->indexationPayload($post->fresh()) + ['check' => $result]);
+    }
+
+    /**
+     * Confirm indexation by hand.
+     *
+     * Kept deliberately, not as a stopgap: Search Console access needs console
+     * setup and a verified property, and a gate that cannot be satisfied until
+     * that is done is a gate people route around rather than use.
+     */
+    public function confirmIndexation(Request $request, Post $post): JsonResponse
+    {
+        $request->validate(['indexed' => ['required', 'boolean']]);
+
+        /*
+         * An unpublished post is a 404 to the public, so Google cannot have
+         * indexed it and confirming that it has is always a mistake. The UI
+         * disables the button, but enforcing it only there would make it a
+         * suggestion rather than a rule, and this particular mistake writes a
+         * timestamp the release schedule is later measured from.
+         */
+        if ($request->boolean('indexed') && $post->status !== 'published') {
+            return response()->json([
+                'message' => 'This post is still a draft, so it returns a 404 publicly and Google '
+                    .'cannot have indexed it. Publish it first.',
+            ], 422);
+        }
+
+        $request->boolean('indexed')
+            ? $this->indexation->markIndexed($post, 'manual:'.$request->user()->id)
+            : $this->indexation->clear($post);
+
+        return response()->json($this->indexationPayload($post->fresh()));
+    }
+
+    private function indexationPayload(Post $post): array
+    {
+        $gate = $this->indexation->gate($post);
+
+        return [
+            'url' => $this->indexation->urlFor($post),
+            'post_status' => $post->status,
+            'indexed_at' => $post->indexed_at?->toIso8601String(),
+            'can_query' => $this->indexation->canQuery(),
+            'ready' => $gate['ready'],
+            'reason' => $gate['reason'],
+        ];
+    }
+
+    /** Hand an approved variant to its platform's API. */
+    public function publishVariant(PostVariant $variant): JsonResponse
+    {
+        $gate = $this->syndicator->gate($variant);
+        if (! $gate['ready']) {
+            return response()->json(['message' => $gate['reason']], 422);
+        }
+
+        $variant->update(['status' => 'queued', 'last_error' => null]);
+        PublishVariant::dispatch($variant->id);
+
+        return response()->json($this->variantPayload($variant->post->fresh()), 202);
+    }
+
+    /**
+     * Record a publication done by hand. The only route for the three
+     * platforms with no publishing API, which is most of them.
+     */
+    public function recordVariantUrl(Request $request, PostVariant $variant): JsonResponse
+    {
+        $data = $request->validate([
+            'external_url' => ['required', 'url:https', 'max:512'],
+        ]);
+
+        try {
+            $this->syndicator->recordManual($variant, $data['external_url']);
+        } catch (RuntimeException $e) {
+            return response()->json(['message' => $e->getMessage()], 422);
+        }
+
+        return response()->json($this->variantPayload($variant->post->fresh()));
+    }
+
     // ── queued generation ────────────────────────────────────────────────
 
     /**
@@ -558,6 +669,9 @@ class ContentEngineController extends Controller
                 'is_stale' => $v->isStale(),
                 'warnings' => $this->variants->warnings($v),
                 'approver' => $v->approver?->only(['id', 'name']),
+                // Why this can or cannot be sent anywhere yet, so the UI never
+                // shows a button that will only produce a 422.
+                'syndication' => $this->syndicator->gate($v),
             ]);
 
         $have = $post->variants->pluck('platform')->all();
@@ -569,6 +683,7 @@ class ContentEngineController extends Controller
                 : $post->claims()->unverified()->count().' claim(s) still unverified. Variants '
                   .'argue from the same material, so they would carry the same problem onto '
                   .'every platform.',
+            'indexation' => $this->indexationPayload($post),
             'variants' => $rows,
             'available' => collect($specs)
                 ->reject(fn ($s, $k) => in_array($k, $have, true))

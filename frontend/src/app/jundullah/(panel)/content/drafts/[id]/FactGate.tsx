@@ -6,6 +6,7 @@ import { ExternalLink, Check, PencilLine, Trash2, RotateCcw, AlertTriangle, Bot 
 import StackButton from '@/components/ui/StackButton';
 import RevisePanel from './RevisePanel';
 import VariantPanel from './VariantPanel';
+import { hostOf } from '@/lib/url';
 import type { Claim, DraftPayload, VariantPayload } from './page';
 
 /**
@@ -158,16 +159,6 @@ export default function FactGate({
     }
   }
 
-  /** Model-supplied URLs are not guaranteed parseable, and a throw here would
-   *  blank the whole page rather than one card. */
-  const hostOf = (url: string): string => {
-    try {
-      return new URL(url).hostname.replace(/^www\./, '');
-    } catch {
-      return url.slice(0, 40);
-    }
-  };
-
   return (
     <section className="adm-main">
       <div className="adm-list-head">
@@ -228,7 +219,7 @@ export default function FactGate({
       {/* Above the claims list rather than below it: once the gate is cleared
           this is the active work, and 35 claim cards is a long way to scroll
           past to reach it. */}
-      {variants && <VariantPanel initial={variants} postId={data.post.id} />}
+      {variants && <VariantPanel initial={variants} postId={data.post.id} postSlug={data.post.slug} />}
 
       {data.warnings.length > 0 && (
         <div

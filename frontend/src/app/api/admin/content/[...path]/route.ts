@@ -27,6 +27,9 @@ const ALLOWED: ReadonlyArray<RegExp> = [
   /^drafts\/\d+\/variants$/,
   /^variants\/\d+$/,
   /^variants\/\d+\/approve$/,
+  /^drafts\/\d+\/indexation$/,
+  /^drafts\/\d+\/indexation\/(check|confirm)$/,
+  /^variants\/\d+\/(publish|external-url)$/,
 ];
 
 function resolve(path: string[]): string | null {
