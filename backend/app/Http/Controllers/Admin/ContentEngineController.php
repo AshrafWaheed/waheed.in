@@ -9,12 +9,17 @@ use App\Models\ContentJob;
 use App\Models\GenerationRun;
 use App\Models\Post;
 use App\Models\PostClaim;
+use App\Models\PostEdit;
 use App\Models\PostVariant;
+use App\Models\StyleRule;
 use App\Models\Topic;
 use App\Services\Content\BlogGenerator;
+use App\Services\Content\EditCapture;
 use App\Services\Content\IndexationService;
 use App\Services\Content\Publishing\Syndicator;
+use App\Services\Content\StyleRuleExtractor;
 use App\Services\Content\VariantGenerator;
+use App\Services\Content\VoiceCompiler;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -37,6 +42,9 @@ class ContentEngineController extends Controller
         private VariantGenerator $variants,
         private IndexationService $indexation,
         private Syndicator $syndicator,
+        private VoiceCompiler $voice,
+        private StyleRuleExtractor $extractor,
+        private EditCapture $edits,
     ) {}
 
     /** Engine status + this month's spend, for the dashboard card. */
@@ -585,8 +593,247 @@ class ContentEngineController extends Controller
             'post_id' => $job->post_id,
             'variant_id' => $job->variant_id,
             'error' => $job->error,
+            'result' => $job->result,
             'elapsed_seconds' => $job->elapsed_seconds,
             'created_at' => $job->created_at?->toIso8601String(),
+        ];
+    }
+
+    // ── phase 4: the learning loop ───────────────────────────────────────
+
+    /**
+     * The voice screen: what has been learned, what is waiting, what it costs.
+     */
+    public function voice(): JsonResponse
+    {
+        $rules = StyleRule::orderByRaw("FIELD(status,'proposed','approved','retired','rejected')")
+            ->orderBy('category')->orderByDesc('id')->get();
+
+        return response()->json([
+            'ruleset_version' => $this->voice->version(),
+            'rules' => $rules->map(fn (StyleRule $r) => $this->rulePayload($r)),
+            'counts' => [
+                'proposed' => $rules->where('status', 'proposed')->count(),
+                'approved' => $rules->where('status', 'approved')->count(),
+                'retired' => $rules->where('status', 'retired')->count(),
+                'rejected' => $rules->where('status', 'rejected')->count(),
+            ],
+            'pending_edits' => PostEdit::whereNull('consumed_by_batch')->count(),
+            'batch_size' => (int) config('content.learning.batch_size'),
+            'ready_to_run' => $this->extractor->readyToRun(),
+            'holdout_every' => (int) config('content.learning.holdout_every'),
+            'retire_after_posts' => (int) config('content.learning.retire_after_posts'),
+            // What the generator will actually be given. Shown in full rather
+            // than summarised: a reviewer approving a rule is entitled to read
+            // the paragraph it lands in, not a description of it.
+            'preview' => $this->voice->preview(),
+            'comparison' => $this->comparison(),
+            'recent_edits' => PostEdit::with('post:id,title')->latest('id')->limit(12)->get()
+                ->map(fn (PostEdit $e) => [
+                    'id' => $e->id,
+                    'post_id' => $e->post_id,
+                    'post_title' => $e->post?->title,
+                    'paragraphs_changed' => $e->paragraphs_changed,
+                    'words_before' => $e->words_before,
+                    'words_after' => $e->words_after,
+                    'consumed' => filled($e->consumed_by_batch),
+                    'created_at' => $e->created_at?->toIso8601String(),
+                ]),
+        ]);
+    }
+
+    /** Queue a learning batch. Same 202-and-poll contract as every other turn. */
+    public function extractRules(Request $request): JsonResponse
+    {
+        if ($blocked = $this->guard()) {
+            return $blocked;
+        }
+
+        if ($running = ContentJob::active()->where('kind', 'extract')->first()) {
+            return response()->json([
+                'message' => 'A learning batch is already running ('.$running->elapsed_seconds.'s so far).',
+                'job' => $this->jobPayload($running),
+            ], 409);
+        }
+
+        if ($this->extractor->pending()->isEmpty()) {
+            return response()->json([
+                'message' => 'There are no unread edits to learn from. Rules are derived from '
+                    .'the difference between what the generator wrote and what you changed it '
+                    .'to, so edit a generated draft first.',
+            ], 422);
+        }
+
+        return $this->queued(ContentJob::create([
+            'kind' => 'extract',
+            'user_id' => $request->user()->id,
+        ]));
+    }
+
+    /**
+     * Approve a rule into the voice.
+     *
+     * This is the only path by which anything reaches a future generation (P6),
+     * which is why it mints a new ruleset version and recompiles immediately:
+     * an approval that needed a second, separate "publish" press would sooner or
+     * later leave the file and the database disagreeing about what the voice is.
+     */
+    public function approveRule(Request $request, StyleRule $rule): JsonResponse
+    {
+        if ($rule->status === 'approved') {
+            return response()->json(['message' => 'That rule is already in the voice.'], 422);
+        }
+
+        $version = $this->voice->bump();
+        $fields = [
+            'status' => 'approved',
+            'effective_from' => $version,
+            'effective_to' => null,
+            'approved_by' => $request->user()->id,
+            'approved_at' => now(),
+            'decision_note' => $request->input('note'),
+        ];
+
+        if ($rule->effective_from !== null) {
+            /*
+             * This rule has been live before, so it already owns an interval.
+             * Bringing it back mints a SECOND row pointing at the first rather
+             * than rewriting the first's dates — otherwise the record would
+             * claim the rule was never in force between v1 and v2, and every
+             * post generated in that window would reconstruct against a voice
+             * it was not written with.
+             */
+            $rule = StyleRule::create([
+                ...$fields,
+                'rule' => $rule->rule,
+                'category' => $rule->category,
+                'rationale' => $rule->rationale,
+                'evidence' => $rule->evidence,
+                'evidence_count' => $rule->evidence_count,
+                'batch' => $rule->batch,
+                'last_reinforced_at' => $rule->last_reinforced_at,
+                'supersedes_id' => $rule->id,
+            ]);
+        } else {
+            $rule->update($fields);
+        }
+
+        $this->voice->forget();
+        $this->voice->compile();
+
+        return response()->json([
+            'rule' => $this->rulePayload($rule->fresh()),
+            'ruleset_version' => $this->voice->version(),
+        ]);
+    }
+
+    /** Turn a proposal down. Kept, not deleted: see rulePayload. */
+    public function rejectRule(Request $request, StyleRule $rule): JsonResponse
+    {
+        $wasLive = $rule->status === 'approved';
+
+        $rule->update([
+            'status' => 'rejected',
+            'decision_note' => $request->input('note'),
+            'approved_by' => $request->user()->id,
+            'approved_at' => now(),
+            // Only a rule that was actually in force closes a version. Rejecting
+            // a proposal changes nothing about what the generator reads, and
+            // minting a version for it would make the history unreadable.
+            'effective_to' => $wasLive ? $this->voice->bump() : null,
+        ]);
+
+        if ($wasLive) {
+            $this->voice->forget();
+            $this->voice->compile();
+        }
+
+        return response()->json([
+            'rule' => $this->rulePayload($rule->fresh()),
+            'ruleset_version' => $this->voice->version(),
+        ]);
+    }
+
+    /**
+     * Retire an approved rule that has stopped being reinforced.
+     *
+     * Separate from rejection on purpose. A rejected rule was wrong; a retired
+     * one was right and has stopped being needed, most often because the
+     * generator learned it. Collapsing the two would throw away the only
+     * evidence that the loop is working.
+     */
+    public function retireRule(Request $request, StyleRule $rule): JsonResponse
+    {
+        if ($rule->status !== 'approved') {
+            return response()->json(['message' => 'Only a rule in the voice can be retired.'], 422);
+        }
+
+        $rule->update([
+            'status' => 'retired',
+            'effective_to' => $this->voice->bump(),
+            'decision_note' => $request->input('note'),
+        ]);
+
+        $this->voice->forget();
+        $this->voice->compile();
+
+        return response()->json([
+            'rule' => $this->rulePayload($rule->fresh()),
+            'ruleset_version' => $this->voice->version(),
+        ]);
+    }
+
+    private function rulePayload(StyleRule $rule): array
+    {
+        return [
+            'id' => $rule->id,
+            'rule' => $rule->rule,
+            'category' => $rule->category,
+            'rationale' => $rule->rationale,
+            'status' => $rule->status,
+            'evidence' => $rule->evidence ?? [],
+            'evidence_count' => $rule->evidence_count,
+            'effective_from' => $rule->effective_from,
+            'effective_to' => $rule->effective_to,
+            'batch' => $rule->batch,
+            'supersedes_id' => $rule->supersedes_id,
+            'decision_note' => $rule->decision_note,
+            'posts_since_reinforced' => $rule->status === 'approved' ? $rule->postsSinceReinforced() : null,
+            'stale' => $rule->isStale(),
+            'approved_at' => $rule->approved_at?->toIso8601String(),
+            'created_at' => $rule->created_at?->toIso8601String(),
+        ];
+    }
+
+    /**
+     * Does the ruleset actually help? (§7, "the trap".)
+     *
+     * Compares how much editing a human had to do on posts written WITH the
+     * learned rules against posts written without them. Only posts somebody has
+     * actually edited are counted: an untouched draft scores zero not because
+     * it was perfect but because nobody looked at it, and letting those in would
+     * make whichever group is less finished look like the better one.
+     */
+    private function comparison(): array
+    {
+        $edited = PostEdit::distinct()->pluck('post_id');
+
+        $posts = Post::whereNotNull('generated_body_html')
+            ->whereIn('id', $edited)
+            ->get(['id', 'title', 'holdout', 'style_ruleset_version', 'body_html', 'generated_body_html']);
+
+        $summarise = fn ($group) => [
+            'posts' => $group->count(),
+            'mean_edit_burden' => $group->isEmpty()
+                ? null
+                : round($group->avg(fn (Post $p) => $this->edits->burden($p) ?? 0), 4),
+        ];
+
+        return [
+            'with_rules' => $summarise($posts->where('holdout', false)->where('style_ruleset_version', '>', 0)),
+            'holdout' => $summarise($posts->where('holdout', true)),
+            'before_rules' => $summarise($posts->where('holdout', false)
+                ->filter(fn (Post $p) => (int) $p->style_ruleset_version === 0)),
         ];
     }
 

@@ -9,16 +9,20 @@ use App\Http\Resources\PostResource;
 use App\Models\Category;
 use App\Models\Post;
 use App\Models\Tag;
+use App\Services\Content\EditCapture;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Mews\Purifier\Facades\Purifier;
 
 class PostController extends Controller
 {
+    public function __construct(private EditCapture $edits) {}
+
     /** List posts with optional status + search filters, newest first, paginated. */
     public function index(Request $request): AnonymousResourceCollection
     {
@@ -90,6 +94,15 @@ class PostController extends Controller
         if (array_key_exists('excerpt', $data)) {
             $post->excerpt = $data['excerpt'];
         }
+        /*
+         * Tier 1 of the learning loop (CONTENT_ENGINE.md §7). Captured here,
+         * before the body is overwritten, because this is the only moment both
+         * versions exist. Recording it is worth nothing today and everything at
+         * post twenty: the corpus cannot be reconstructed later from a database
+         * that only ever kept the final text.
+         */
+        $bodyBefore = $post->body_html;
+
         if (array_key_exists('body_html', $data)) {
             $post->body_html = Purifier::clean($data['body_html']);
             $post->reading_mins = $this->readingMinutes($post->body_html);
@@ -138,6 +151,19 @@ class PostController extends Controller
 
         if (array_key_exists('tags', $data)) {
             $post->tags()->sync(Tag::idsForNames($data['tags'] ?? []));
+        }
+
+        if ($post->body_html !== $bodyBefore) {
+            /*
+             * Never at the cost of the save. Training data is worth having; it
+             * is not worth a 500 on a post someone just wrote, and the failure
+             * mode of a broken diff is silent and total.
+             */
+            try {
+                $this->edits->capture($post, (string) $bodyBefore, (string) $post->body_html, $request->user()?->id);
+            } catch (\Throwable $e) {
+                Log::warning('edit capture failed', ['post' => $post->id, 'error' => $e->getMessage()]);
+            }
         }
 
         return new PostResource($this->withEngineCounts($post));

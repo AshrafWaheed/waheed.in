@@ -83,6 +83,12 @@ export default async function ContentEnginePage() {
             {queued.length} queued · {active.length} in progress · {done.length} published
           </p>
         </div>
+        {/* The learning loop is a separate screen because it is a separate
+            decision: approving a voice rule changes every future post, and
+            that does not belong next to a per-topic Generate button. */}
+        <Link href="/jundullah/content/voice" className="adm-link">
+          House voice &rarr;
+        </Link>
       </div>
 
       {blocked && (

@@ -28,8 +28,12 @@
 - Homepage redesign (3 variants: Hybrid `/`, Wahda-cinematic `/home2`, Outcrowd-tactile `/home3`) — see `documents/SESSION_PLAN_REDESIGN.md`. Copy is verbatim from `src/content/home.ts`.
 - Content Engine (topic → researched blog → multi-platform syndication, driven by `claude -p`) —
   plan in `documents/CONTENT_ENGINE.md`, build status in `documents/CONTENT_ENGINE_TRACKER.md`.
-  Phase 1 (topic queue, generator, fact gate) is live at `/jundullah/content`. Phases 2–5 pending.
+  Phases 1–4 are live: topic queue + fact gate at `/jundullah/content`, platform variants and
+  the indexation gate on each draft, the learning loop at `/jundullah/content/voice`. Phase 5
+  (performance feedback) pending.
   The agent's tool allowlist (`config/content.php`) is a security boundary — never widen it.
+  `--append-system-prompt-file` is resolved inside `ClaudeRunner` from `VoiceCompiler`, never
+  from a caller: it reads a file into the model's context and the model has WebFetch.
 
 ## Reference
 - `documents/outcrowd.io.md` — first-hand teardown of outcrowd.io (the design bar for the

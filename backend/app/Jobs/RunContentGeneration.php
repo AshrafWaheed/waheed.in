@@ -5,6 +5,7 @@ namespace App\Jobs;
 use App\Models\ContentJob;
 use App\Models\Post;
 use App\Services\Content\BlogGenerator;
+use App\Services\Content\StyleRuleExtractor;
 use App\Services\Content\VariantGenerator;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
@@ -47,7 +48,7 @@ class RunContentGeneration implements ShouldQueue
         return (int) config('content.claude.timeout', 900) + 120;
     }
 
-    public function handle(BlogGenerator $blog, VariantGenerator $variants): void
+    public function handle(BlogGenerator $blog, VariantGenerator $variants, StyleRuleExtractor $rules): void
     {
         $job = ContentJob::find($this->contentJobId);
         if (! $job || $job->status !== 'queued') {
@@ -61,6 +62,7 @@ class RunContentGeneration implements ShouldQueue
                 'draft' => $this->draft($job, $blog),
                 'revise' => $this->revise($job, $blog),
                 'variant' => $this->variant($job, $variants),
+                'extract' => $this->extract($job, $rules),
             };
 
             $job->update(['status' => 'done', 'finished_at' => now()]);
@@ -95,6 +97,19 @@ class RunContentGeneration implements ShouldQueue
     {
         $variant = $variants->generate($job->post, $job->platform, $job->user_id, $job->instructions);
         $job->update(['variant_id' => $variant->id]);
+    }
+
+    /**
+     * The learning batch. Not a generation in the usual sense: it produces no
+     * post, and its output is a set of PROPOSALS nobody has agreed to yet. It
+     * runs on the same queue because it has the same shape from the browser's
+     * side — minutes long, and a 504 if attempted in the request cycle.
+     */
+    private function extract(ContentJob $job, StyleRuleExtractor $rules): void
+    {
+        $result = $rules->extract($job->user_id);
+
+        $job->update(['result' => $result]);
     }
 
     /**

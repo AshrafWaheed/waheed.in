@@ -30,6 +30,9 @@ const ALLOWED: ReadonlyArray<RegExp> = [
   /^drafts\/\d+\/indexation$/,
   /^drafts\/\d+\/indexation\/(check|confirm)$/,
   /^variants\/\d+\/(publish|external-url)$/,
+  /^voice$/,
+  /^voice\/extract$/,
+  /^voice\/rules\/\d+\/(approve|reject|retire)$/,
 ];
 
 function resolve(path: string[]): string | null {

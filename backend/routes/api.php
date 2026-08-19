@@ -106,6 +106,14 @@ Route::prefix('admin')->group(function () {
             Route::post('variants/{variant}/external-url', [ContentEngineController::class, 'recordVariantUrl']);
             Route::post('claims/{claim}/verify', [ContentEngineController::class, 'verifyClaim']);
             Route::delete('claims/{claim}/verify', [ContentEngineController::class, 'unverifyClaim']);
+
+            // Phase 4 — the learning loop. Nothing here changes a generation
+            // until a rule is approved; see CONTENT_ENGINE.md §7 (P6).
+            Route::get('voice', [ContentEngineController::class, 'voice']);
+            Route::post('voice/extract', [ContentEngineController::class, 'extractRules']);
+            Route::post('voice/rules/{rule}/approve', [ContentEngineController::class, 'approveRule']);
+            Route::post('voice/rules/{rule}/reject', [ContentEngineController::class, 'rejectRule']);
+            Route::post('voice/rules/{rule}/retire', [ContentEngineController::class, 'retireRule']);
         });
     });
 });

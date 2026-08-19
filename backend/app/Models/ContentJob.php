@@ -14,7 +14,7 @@ class ContentJob extends Model
 {
     protected $fillable = [
         'kind', 'status', 'topic_id', 'post_id', 'variant_id', 'platform',
-        'user_id', 'author_id', 'instructions', 'fork', 'error',
+        'user_id', 'author_id', 'instructions', 'fork', 'error', 'result',
         'started_at', 'finished_at',
     ];
 
@@ -32,6 +32,7 @@ class ContentJob extends Model
     {
         return [
             'fork' => 'boolean',
+            'result' => 'array',
             'started_at' => 'datetime',
             'finished_at' => 'datetime',
         ];

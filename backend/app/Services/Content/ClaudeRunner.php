@@ -36,6 +36,8 @@ class ClaudeRunner
     /** Tokens that must never appear in a rendered prompt. Belt and braces. */
     private const FORBIDDEN_IN_PROMPT = ["\0"];
 
+    public function __construct(private VoiceCompiler $voice) {}
+
     /**
      * Run one turn.
      *
@@ -44,6 +46,7 @@ class ClaudeRunner
      * @param  bool         $resume     Continue $sessionId rather than create it.
      * @param  bool         $fork       With $resume: branch to a new session id.
      * @param  string|null  $schema     Filename in the schema dir, e.g. blog_draft.json
+     * @param  bool         $holdout    Run without the learned style rules (§7 control).
      * @return array{json: array|null, raw: string, session_id: string, usage: array, duration_ms: int}
      */
     public function run(
@@ -55,6 +58,7 @@ class ClaudeRunner
         ?int $postId = null,
         string $stage = 'draft',
         ?int $userId = null,
+        bool $holdout = false,
     ): array {
         $cfg = config('content.claude');
 
@@ -83,7 +87,8 @@ class ClaudeRunner
         }
 
         $sessionId ??= (string) Str::uuid();
-        $args = $this->buildArgs($cfg, $sessionId, $resume, $fork, $schema);
+        $rulesetVersion = $holdout ? 0 : $this->voice->version();
+        $args = $this->buildArgs($cfg, $sessionId, $resume, $fork, $schema, $holdout);
 
         // run_as is off by default; it needs its own claude install (§4.2 layer 3).
         if (filled($cfg['run_as'])) {
@@ -119,6 +124,7 @@ class ClaudeRunner
             'stage' => $stage,
             'session_id' => $parsed['session_id'] ?? $sessionId,
             'prompt_version' => config('content.prompts.draft_version'),
+            'ruleset_version' => $rulesetVersion,
             'model_id' => $cfg['model'],
             'input_tokens' => $parsed['usage']['input_tokens'] ?? null,
             'output_tokens' => $parsed['usage']['output_tokens'] ?? null,
@@ -155,8 +161,25 @@ class ClaudeRunner
     }
 
     /** @return list<string> */
-    private function buildArgs(array $cfg, string $sessionId, bool $resume, bool $fork, ?string $schema): array
-    {
+    private function buildArgs(
+        array $cfg,
+        string $sessionId,
+        bool $resume,
+        bool $fork,
+        ?string $schema,
+        bool $holdout,
+    ): array {
+        /*
+         * The system-prompt path is resolved HERE, from the compiler, and is
+         * never accepted from a caller. --append-system-prompt-file reads a file
+         * off this box and puts its contents into the model's context, and the
+         * model has WebFetch, so a caller-supplied path is a file-read primitive
+         * with an exfiltration route attached. Pointing it at backend/.env would
+         * be enough. The only two possible values are the base voice file and
+         * the compiled one, both under the contentbot directory.
+         */
+        $voiceFile = $this->voice->fileFor($holdout);
+
         $args = [
             $cfg['binary'],
             '-p',
@@ -172,7 +195,7 @@ class ClaudeRunner
             '--model', $cfg['model'],
             '--permission-mode', $cfg['permission_mode'],
             '--allowedTools', implode(' ', $cfg['allowed_tools']),
-            '--append-system-prompt-file', $cfg['brand_voice_file'],
+            '--append-system-prompt-file', $voiceFile,
             '--output-format', 'json',
         ];
 

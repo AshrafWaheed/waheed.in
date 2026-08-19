@@ -22,12 +22,14 @@ class BlogGenerator
     public function __construct(
         private ClaudeRunner $runner,
         private SiteContext $site,
+        private VoiceCompiler $voice,
     ) {}
 
     /** First turn: research and draft. Creates the Post and its claims. */
     public function draft(Topic $topic, int $authorId, ?string $extraInstructions = null): Post
     {
         $sessionId = (string) Str::uuid();
+        $holdout = $this->isHoldout();
 
         $result = $this->runner->run(
             prompt: $this->draftPrompt($topic, $extraInstructions),
@@ -35,14 +37,15 @@ class BlogGenerator
             schema: 'blog_draft.json',
             stage: 'draft',
             userId: $authorId,
+            holdout: $holdout,
         );
 
         $data = $result['json'] ?? throw new RuntimeException(
             'Generator returned no structured output. Raw: '.Str::limit($result['raw'], 300)
         );
 
-        return DB::transaction(function () use ($data, $topic, $authorId, $result) {
-            $post = $this->persist($data, $topic, $authorId, $result['session_id']);
+        return DB::transaction(function () use ($data, $topic, $authorId, $result, $holdout) {
+            $post = $this->persist($data, $topic, $authorId, $result['session_id'], $holdout);
             $topic->update(['status' => 'in_progress', 'post_id' => $post->id]);
 
             /*
@@ -83,6 +86,9 @@ class BlogGenerator
             postId: $post->id,
             stage: $fork ? 'fork' : 'revise',
             userId: $userId,
+            // A control that picks up the learned rules on its second turn is
+            // not a control any more.
+            holdout: (bool) $post->holdout,
         );
 
         $data = $result['json'] ?? throw new RuntimeException('Revision returned no structured output.');
@@ -90,7 +96,9 @@ class BlogGenerator
         return DB::transaction(function () use ($post, $data, $result, $fork) {
             if ($fork) {
                 // Branch: a sibling draft, original untouched.
-                $sibling = $this->persist($data, $post->topic, $post->author_id, $result['session_id']);
+                $sibling = $this->persist(
+                    $data, $post->topic, $post->author_id, $result['session_id'], (bool) $post->holdout
+                );
                 $sibling->update(['title' => $sibling->title.' (alt)']);
 
                 return $sibling;
@@ -105,7 +113,26 @@ class BlogGenerator
 
     // ── persistence ──────────────────────────────────────────────────────
 
-    private function persist(array $data, ?Topic $topic, int $authorId, string $sessionId): Post
+    /**
+     * Is this draft the control?
+     *
+     * Counted over generated posts, so hand-written ones do not shift the cycle.
+     * Nothing is held out until there is a ruleset to hold out FROM — before the
+     * first approved rule every post is already a control, and marking one as
+     * such would just put a misleading badge on it.
+     */
+    private function isHoldout(): bool
+    {
+        $every = (int) config('content.learning.holdout_every', 10);
+
+        if ($every < 2 || $this->voice->version() === 0) {
+            return false;
+        }
+
+        return (Post::whereNotNull('claude_session_id')->count() + 1) % $every === 0;
+    }
+
+    private function persist(array $data, ?Topic $topic, int $authorId, string $sessionId, bool $holdout = false): Post
     {
         $body = $this->sanitise($data['body_html'] ?? '');
 
@@ -123,6 +150,10 @@ class BlogGenerator
             'topic_id' => $topic?->id,
             'claude_session_id' => $sessionId,
             'generator_prompt_version' => config('content.prompts.draft_version'),
+            // Which learned voice produced this. 0 means none were in force,
+            // either because none are approved yet or because this is a control.
+            'style_ruleset_version' => $holdout ? 0 : $this->voice->version(),
+            'holdout' => $holdout,
             'model_id' => config('content.claude.model'),
             'fact_check_state' => 'pending',
             'published_at' => null,
@@ -142,6 +173,18 @@ class BlogGenerator
             'title' => $data['title'] ?? $post->title,
             'excerpt' => $data['excerpt'] ?? $post->excerpt,
             'body_html' => $body,
+            /*
+             * Re-freeze the snapshot. This column means "the last thing the
+             * machine wrote", and a revision is the machine writing. Leaving it
+             * pinned to turn one would make every subsequent diff attribute the
+             * model's own rewrites to a human editor, which is the single worst
+             * thing that could happen to the learning corpus: the system would
+             * be learning its own habits back from itself.
+             *
+             * Human edits made before this point are already safe — they were
+             * captured as their own post_edits rows at save time.
+             */
+            'generated_body_html' => $body,
             'seo_title' => $data['seo_title'] ?? $post->seo_title,
             'seo_desc' => $data['seo_desc'] ?? $post->seo_desc,
             'reading_mins' => $this->readingMinutes($body),

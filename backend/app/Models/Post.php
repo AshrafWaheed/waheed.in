@@ -31,6 +31,7 @@ class Post extends Model
         'fact_check_state',
         'indexed_at',
         'generated_body_html',
+        'holdout',
     ];
 
     protected function casts(): array
@@ -40,6 +41,7 @@ class Post extends Model
             'indexed_at' => 'datetime',
             'reading_mins' => 'integer',
             'style_ruleset_version' => 'integer',
+            'holdout' => 'boolean',
         ];
     }
 
@@ -51,6 +53,12 @@ class Post extends Model
     public function variants(): HasMany
     {
         return $this->hasMany(PostVariant::class);
+    }
+
+    /** Human edits to generated output — the learning corpus. See PostEdit. */
+    public function edits(): HasMany
+    {
+        return $this->hasMany(PostEdit::class);
     }
 
     public function topic(): BelongsTo

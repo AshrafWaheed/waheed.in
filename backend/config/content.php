@@ -192,6 +192,30 @@ return [
         ],
     ],
 
+    /*
+     * The learning loop (CONTENT_ENGINE.md §7).
+     *
+     * `batch_size` is when an extraction is worth running, not a hard gate: five
+     * edits is roughly where a pattern stops being one editor's mood on one
+     * afternoon. Running earlier is allowed and sometimes right; the UI just
+     * stops nagging above this.
+     *
+     * `holdout_every` is the control. Every Nth generated draft is written with
+     * the base voice only, so the learned ruleset can be measured against
+     * something rather than assumed to be working. Setting it to 0 switches the
+     * control off, which also switches off the only evidence that the ruleset is
+     * still earning the context it costs.
+     *
+     * `retire_after_posts` is when an approved rule that has not been seen again
+     * in the edits gets flagged for review. Flagged, not removed: dropping a rule
+     * silently is the same category of mistake as adding one silently.
+     */
+    'learning' => [
+        'batch_size' => (int) env('CONTENT_LEARN_BATCH', 5),
+        'holdout_every' => (int) env('CONTENT_HOLDOUT_EVERY', 10),
+        'retire_after_posts' => (int) env('CONTENT_RETIRE_AFTER', 20),
+    ],
+
     'limits' => [
         'max_turns_per_draft' => (int) env('CONTENT_MAX_TURNS', 40),
         'monthly_budget_usd' => (float) env('CONTENT_MONTHLY_BUDGET', 50),
