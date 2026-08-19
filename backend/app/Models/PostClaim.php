@@ -14,7 +14,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class PostClaim extends Model
 {
     protected $fillable = [
-        'post_id', 'claim', 'source_url', 'model_confidence',
+        'post_id', 'claim', 'source_url',
+        'source_about', 'model_confidence',
         'verified_by', 'verified_at', 'verified_via', 'verdict', 'note',
         'agent_verdict', 'agent_note', 'agent_source_url',
         'agent_checked_at', 'agent_model',

@@ -373,6 +373,26 @@ export default function FactGate({
 
                   <p style={{ margin: '0 0 12px', lineHeight: 1.5 }}>{c.claim}</p>
 
+                  {/* gen-v4. Read this against the claim above before opening
+                      the tab: every sourcing failure this project has had was a
+                      sound claim behind a page about something adjacent, and
+                      that mismatch is visible here in one second. Presented as
+                      the model's description, not as fact, because it is the
+                      thing being checked rather than evidence for it. */}
+                  {c.source_about && (
+                    <p
+                      style={{
+                        margin: '-6px 0 12px',
+                        fontSize: '.85em',
+                        lineHeight: 1.5,
+                        color: '#6b7a7e',
+                      }}
+                    >
+                      <span style={{ opacity: 0.7 }}>Says the source is: </span>
+                      {c.source_about}
+                    </p>
+                  )}
+
                   {c.agent_verdict && (
                     <div
                       style={{

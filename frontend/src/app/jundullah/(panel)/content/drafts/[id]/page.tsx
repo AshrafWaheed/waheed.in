@@ -17,6 +17,8 @@ export type Claim = {
   id: number;
   claim: string;
   source_url: string | null;
+  /** gen-v4: what the cited page is about, in the model's own words. */
+  source_about: string | null;
   model_confidence: 'high' | 'medium' | 'low';
   verified_at: string | null;
   // How it was verified: someone read the source, or someone accepted a machine

@@ -113,7 +113,7 @@ return [
     'prompts' => [
         // Bumped whenever the generator instructions change materially, so a
         // quality shift can be traced to a specific version.
-        'draft_version' => 'gen-v3',
+        'draft_version' => 'gen-v4',
         'variant_version' => 'var-v1',
     ],
 

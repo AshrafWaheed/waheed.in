@@ -217,6 +217,7 @@ class BlogGenerator
             $post->claims()->create([
                 'claim' => $c['claim'],
                 'source_url' => $c['source_url'] ?? null,
+                'source_about' => $c['source_about'] ?? null,
                 'model_confidence' => in_array($c['confidence'] ?? '', ['high', 'medium', 'low'], true)
                     ? $c['confidence'] : 'medium',
                 'verified_by' => $prior?->verified_by,
@@ -227,6 +228,16 @@ class BlogGenerator
         }
 
         $post->update(['fact_check_state' => $this->factState($post->fresh())]);
+    }
+
+    /**
+     * The numeric part of a prompt version, so checks can say "gen-v4 onward"
+     * without being rewritten at every bump. Unversioned (hand-written) posts
+     * return 0 and are asked for nothing.
+     */
+    private function promptVersion(?string $version): int
+    {
+        return preg_match('/(\d+)/', (string) $version, $m) ? (int) $m[1] : 0;
     }
 
     private function claimKey(string $claim): string
@@ -330,6 +341,48 @@ class BlogGenerator
         }
 
         /*
+         * gen-v4: the source description, checked rather than trusted.
+         *
+         * Every sourcing failure this project has actually had was citation
+         * drift — a sound claim behind a page that did not support it — and
+         * `model_confidence` could not see it, because confidence is a property
+         * of the assertion and the fit is a relationship between two things.
+         * So the model now describes the page independently. That only helps if
+         * the description is genuinely independent, and the way this degrades
+         * silently is the model paraphrasing the claim back instead of
+         * describing the page. Checked here so the degradation surfaces as a
+         * warning rather than as a field everyone stops reading.
+         *
+         * Only asked of posts generated under a prompt that asked for it.
+         * Warning a gen-v3 post about a field it was never told to fill would
+         * put 35 rows of noise on post 7 and teach the reader to skip warnings.
+         */
+        if ($this->promptVersion($post->generator_prompt_version) >= 4) {
+            $sourced = $post->claims()->whereNotNull('source_url')->get();
+
+            $undescribed = $sourced->filter(fn ($c) => blank($c->source_about))->count();
+            if ($undescribed > 0) {
+                $w[] = "{$undescribed} sourced claim(s) do not say what the cited page is about. "
+                    .'That description is what catches a citation pointing at the wrong page.';
+            }
+
+            $echoed = $sourced->filter(function ($c) {
+                if (blank($c->source_about)) {
+                    return false;
+                }
+                similar_text(Str::lower($c->claim), Str::lower($c->source_about), $percent);
+
+                return $percent >= 80;
+            });
+
+            if ($echoed->isNotEmpty()) {
+                $w[] = $echoed->count().' claim(s) describe the source in almost the same words as '
+                    .'the claim itself. The description is meant to say what the page covers, '
+                    .'independently, or it cannot disagree with the claim and catches nothing.';
+            }
+        }
+
+        /*
          * Recording a source and showing it are different things, and the first
          * generated post got this wrong: it quoted an IslamQA fatwa verbatim and
          * linked nothing, so the sources existed only in the verification table
@@ -406,6 +459,15 @@ class BlogGenerator
         - Populate `claims` with EVERY factual assertion you make. A human verifies
           each one before this publishes, so an incomplete list wastes their time and
           a dishonest confidence rating is worse than a low one.
+        - For every claim carrying a `source_url`, fill `source_about` with what that
+          page IS, described to someone who has not read the claim: its real subject
+          and scope, which question it answers, which contract or ruling or dataset it
+          covers. Then read the two side by side. If the honest description does not
+          obviously cover the claim, you have reached for the wrong page — find the
+          right one or cut the claim. Do not stretch the description to fit. Every
+          sourcing failure this project has actually had was this exact shape: a sound
+          claim behind a citation that did not support it, rated high confidence,
+          because confidence describes the assertion and not the fit.
         - Every source you cite in `claims` must also be a clickable <a href> link in
           the article itself, on its first mention, with the source's name as the
           anchor text. Readers in this niche check whether you actually know the
