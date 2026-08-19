@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { adminApi } from '@/lib/admin-api';
 import GenerateTopicButton from './GenerateTopicButton';
+import TopicStatusButton from './TopicStatusButton';
 
 export const dynamic = 'force-dynamic';
 
@@ -36,6 +37,13 @@ type Status = {
 };
 
 type Author = { id: number; name: string };
+
+const STATUS_LABEL: Record<string, string> = {
+  queued: 'Queued',
+  in_progress: 'Drafted',
+  published: 'Done',
+  parked: 'Parked',
+};
 
 const PILLAR_LABEL: Record<string, string> = {
   'halal-income': 'Halal income',
@@ -80,7 +88,7 @@ export default async function ContentEnginePage() {
         <div>
           <h1 className="adm-h1">Content engine</h1>
           <p className="adm-list-count">
-            {queued.length} queued · {active.length} in progress · {done.length} published
+            {queued.length} queued · {active.length} drafted · {done.length} done
           </p>
         </div>
         {/* The learning loop is a separate screen because it is a separate
@@ -150,17 +158,26 @@ export default async function ContentEnginePage() {
                   <td style={{ fontSize: '.82em', opacity: 0.75 }}>
                     {t.bridge_target ?? <em>authority piece</em>}
                   </td>
-                  <td>{t.status}</td>
+                  <td>
+                    <span className="adm-topic-status" data-status={t.status}>
+                      {STATUS_LABEL[t.status] ?? t.status}
+                    </span>
+                  </td>
                   {/* "Open draft" not "Fact check": that screen is also where
                       you ask the model to rewrite the post. */}
                   <td style={{ textAlign: 'right' }}>
-                    {t.post ? (
-                      <Link href={`/jundullah/content/drafts/${t.post.id}`} className="adm-link">
-                        Open draft →
-                      </Link>
-                    ) : (
-                      <GenerateTopicButton topicId={t.id} authors={authors} disabled={!!blocked} />
-                    )}
+                    <div className="adm-topic-actions">
+                      {t.post ? (
+                        <Link href={`/jundullah/content/drafts/${t.post.id}`} className="adm-link">
+                          Open draft →
+                        </Link>
+                      ) : (
+                        t.status !== 'published' && (
+                          <GenerateTopicButton topicId={t.id} authors={authors} disabled={!!blocked} />
+                        )
+                      )}
+                      <TopicStatusButton topicId={t.id} status={t.status} hasPost={!!t.post} />
+                    </div>
                   </td>
                 </tr>
               ))}

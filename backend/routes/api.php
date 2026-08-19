@@ -81,6 +81,7 @@ Route::prefix('admin')->group(function () {
             Route::get('topics', [ContentEngineController::class, 'topics']);
             Route::post('topics', [ContentEngineController::class, 'storeTopic']);
             Route::post('topics/{topic}/generate', [ContentEngineController::class, 'generate']);
+            Route::post('topics/{topic}/status', [ContentEngineController::class, 'setTopicStatus']);
             Route::get('drafts/{post}', [ContentEngineController::class, 'show']);
             Route::post('drafts/{post}/revise', [ContentEngineController::class, 'revise']);
             Route::post('drafts/{post}/accept-agent-check', [ContentEngineController::class, 'acceptAgentCheck']);

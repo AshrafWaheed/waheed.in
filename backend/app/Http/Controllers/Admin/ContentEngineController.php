@@ -105,6 +105,32 @@ class ContentEngineController extends Controller
     }
 
     /**
+     * Move a topic through the queue by hand.
+     *
+     * The queue is a to-do list, and a to-do list you cannot tick off stops
+     * being one. A post may be generated here and then published by hand, or
+     * written entirely outside the engine, or dropped: in all three cases the
+     * topic is finished and should stop reading as outstanding work.
+     *
+     * Deliberately NOT coupled to the post's own status. The topic status
+     * answers "is this piece of work still on my list"; the post status answers
+     * "is this live on waheed.in". They usually agree and are allowed not to,
+     * and forcing them into one field would mean either publishing a post
+     * nobody reviewed or refusing to close a topic that was published
+     * somewhere else.
+     */
+    public function setTopicStatus(Request $request, Topic $topic): JsonResponse
+    {
+        $data = $request->validate([
+            'status' => ['required', Rule::in(['queued', 'in_progress', 'published', 'parked'])],
+        ]);
+
+        $topic->update(['status' => $data['status']]);
+
+        return response()->json($topic->fresh()->load('post:id,title,slug,status'));
+    }
+
+    /**
      * Generate a draft from a topic. The expensive one.
      */
     public function generate(Request $request, Topic $topic): JsonResponse

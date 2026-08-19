@@ -17,6 +17,7 @@ const ALLOWED: ReadonlyArray<RegExp> = [
   /^status$/,
   /^topics$/,
   /^topics\/\d+\/generate$/,
+  /^topics\/\d+\/status$/,
   /^drafts\/\d+$/,
   /^drafts\/\d+\/revise$/,
   /^drafts\/\d+\/accept-agent-check$/,

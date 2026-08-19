@@ -10911,3 +10911,16 @@ html[data-nav="dark"] .burger span         { background: #254851; }
 .adm-voice-ev-before, .adm-voice-ev-after { margin: .25rem 0 0; line-height: 1.55; font-size: .84rem; }
 .adm-voice-ev-before { color: #a1502f; text-decoration: line-through; text-decoration-color: rgba(161,80,47,.35); }
 .adm-voice-ev-after { color: #3C7A5B; }
+
+/* Content engine topic queue: status chip + row actions */
+.adm-topic-status {
+  font-family: var(--font-sans); font-size: .7rem; letter-spacing: .04em;
+  text-transform: uppercase; padding: .2em .55em; border-radius: 999px;
+  background: #EFEAE1; color: #5c5449; white-space: nowrap;
+}
+.adm-topic-status[data-status='published'] { background: #E5EFE6; color: #3C7A5B; }
+.adm-topic-status[data-status='in_progress'] { background: #F6ECD3; color: #9c6f1c; }
+.adm-topic-actions {
+  display: flex; gap: .5rem; align-items: center; justify-content: flex-end;
+  flex-wrap: wrap;
+}
