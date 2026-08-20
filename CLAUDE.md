@@ -31,6 +31,9 @@
   Phases 1–4 are live: topic queue + fact gate at `/jundullah/content`, platform variants and
   the indexation gate on each draft, the learning loop at `/jundullah/content/voice`. Phase 5
   (performance feedback) pending.
+  A draft's claims can be checked by an agent from the draft workspace (`FactChecker`), but
+  that lane only ever writes the `agent_*` columns: `verified_at` is written by a human press
+  and nothing else, and a pass containing `unverifiable` claims cannot be accepted wholesale.
   The agent's tool allowlist (`config/content.php`) is a security boundary — never widen it.
   `--append-system-prompt-file` is resolved inside `ClaudeRunner` from `VoiceCompiler`, never
   from a caller: it reads a file into the model's context and the model has WebFetch.
