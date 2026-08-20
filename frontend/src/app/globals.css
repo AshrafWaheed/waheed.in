@@ -10924,3 +10924,63 @@ html[data-nav="dark"] .burger span         { background: #254851; }
   display: flex; gap: .5rem; align-items: center; justify-content: flex-end;
   flex-wrap: wrap;
 }
+
+/* ── Fact gate: drafted corrections ──────────────────────────────────────────
+   The before/after pair is the whole control. A correction the reviewer cannot
+   take in at a glance is one they rubber-stamp, so the changed span is shown on
+   its own, monospaced, red struck through above green — never as a paragraph of
+   prose the eye has to diff by itself. */
+.adm-fix-offer {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+  border: 1px solid var(--line, #e4dacA);
+  border-radius: 10px;
+  padding: 12px 16px;
+  margin-bottom: 14px;
+  font-size: 0.9em;
+}
+.adm-fix-panel {
+  border: 1px solid var(--line, #e4dacA);
+  border-radius: 10px;
+  padding: 14px 16px;
+  margin-bottom: 18px;
+  font-size: 0.9em;
+}
+.adm-fix { border-top: 1px solid var(--line, #e4dacA); padding: 12px 0; }
+.adm-fix:first-of-type { border-top: 0; padding-top: 0; }
+.adm-fix-why { margin-bottom: 8px; line-height: 1.55; }
+.adm-fix-id {
+  font-size: 0.8em;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  opacity: 0.6;
+  margin-right: 6px;
+}
+.adm-fix-before,
+.adm-fix-after {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.85em;
+  line-height: 1.5;
+  padding: 7px 10px;
+  border-radius: 6px;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+.adm-fix-before {
+  background: #f7e9e4;
+  color: #8d3f24;
+  text-decoration: line-through;
+  text-decoration-color: rgba(141, 63, 36, 0.45);
+  margin-bottom: 4px;
+}
+.adm-fix-after { background: #e5efe6; color: #2f6a4a; }
+.adm-fix-skipped {
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid var(--line, #e4dacA);
+  line-height: 1.55;
+  opacity: 0.9;
+}

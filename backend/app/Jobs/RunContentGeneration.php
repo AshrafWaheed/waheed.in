@@ -5,6 +5,7 @@ namespace App\Jobs;
 use App\Models\ContentJob;
 use App\Models\Post;
 use App\Services\Content\BlogGenerator;
+use App\Services\Content\ClaimFixer;
 use App\Services\Content\FactChecker;
 use App\Services\Content\StyleRuleExtractor;
 use App\Services\Content\VariantGenerator;
@@ -54,6 +55,7 @@ class RunContentGeneration implements ShouldQueue
         VariantGenerator $variants,
         StyleRuleExtractor $rules,
         FactChecker $facts,
+        ClaimFixer $fixer,
     ): void
     {
         $job = ContentJob::find($this->contentJobId);
@@ -70,6 +72,7 @@ class RunContentGeneration implements ShouldQueue
                 'variant' => $this->variant($job, $variants),
                 'extract' => $this->extract($job, $rules),
                 'factcheck' => $this->factcheck($job, $facts),
+                'fix' => $this->fix($job, $fixer),
             };
 
             $job->update(['status' => 'done', 'finished_at' => now()]);
@@ -128,6 +131,20 @@ class RunContentGeneration implements ShouldQueue
     private function factcheck(ContentJob $job, FactChecker $facts): void
     {
         $result = $facts->check($job->post, $job->user_id);
+
+        $job->update(['result' => $result]);
+    }
+
+    /**
+     * Propose concrete edits for the claims the fact-check flagged.
+     *
+     * Produces nothing but a list on the job. Applying it is a separate call
+     * behind a separate press, because this is the step where a machine would
+     * otherwise be rewriting published prose on its own initiative.
+     */
+    private function fix(ContentJob $job, ClaimFixer $fixer): void
+    {
+        $result = $fixer->propose($job->post, $job->user_id);
 
         $job->update(['result' => $result]);
     }

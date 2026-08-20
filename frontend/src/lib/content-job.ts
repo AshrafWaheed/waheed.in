@@ -12,7 +12,7 @@ export type JobStatus = 'queued' | 'running' | 'done' | 'failed';
 
 export type ContentJobHandle = {
   id: number;
-  kind: 'draft' | 'revise' | 'variant' | 'extract' | 'factcheck';
+  kind: 'draft' | 'revise' | 'variant' | 'extract' | 'factcheck' | 'fix';
   status: JobStatus;
   platform: string | null;
   topic_id: number | null;

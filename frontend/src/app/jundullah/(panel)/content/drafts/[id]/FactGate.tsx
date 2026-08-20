@@ -57,6 +57,15 @@ const agentRank = (c: Claim): number =>
       ? 2
       : 1;
 
+/** One substitution the fix pass proposes. `find` must still match the body once. */
+type ProposedFix = {
+  claim_id: number;
+  find: string;
+  replace: string;
+  rationale: string;
+  source_url: string | null;
+};
+
 const AGENT_STYLE: Record<string, { bg: string; fg: string; label: string }> = {
   confirmed: { bg: '#E5EFE6', fg: '#3C7A5B', label: 'source checked, matches' },
   corrected: { bg: '#F6ECD3', fg: '#9c6f1c', label: 'needs a change' },
@@ -80,6 +89,11 @@ export default function FactGate({
   const [accepting, setAccepting] = useState(false);
   const [checking, setChecking] = useState(false);
   const [checkNote, setCheckNote] = useState<string | null>(null);
+  const [fixes, setFixes] = useState<ProposedFix[] | null>(null);
+  const [fixSkipped, setFixSkipped] = useState<Record<string, string>>({});
+  const [fixNotes, setFixNotes] = useState<string>('');
+  const [fixing, setFixing] = useState(false);
+  const [applying, setApplying] = useState(false);
 
   const { pending, done, agent } = useMemo(() => {
     const p = data.claims
@@ -108,6 +122,10 @@ export default function FactGate({
         // The pass looked but never got to read the page. These cannot be
         // accepted wholesale — nothing has actually checked them.
         unverifiable: p.filter((c) => c.agent_verdict === 'unverifiable').length,
+        // Flagged claims still awaiting a person: what the fix pass works on.
+        fixable: p.filter(
+          (c) => c.agent_verdict === 'corrected' || c.agent_verdict === 'removed',
+        ).length,
       },
     };
   }, [data.claims]);
@@ -194,6 +212,73 @@ export default function FactGate({
       setCheckNote(null);
     } finally {
       setChecking(false);
+    }
+  }
+
+  /**
+   * Ask for concrete edits for the flagged claims. Proposals only — this writes
+   * nothing to the article. Applying them is the separate press below.
+   */
+  async function proposeFixes() {
+    setFixing(true);
+    setError(null);
+    try {
+      const job = await runContentJob(
+        `/api/admin/content/drafts/${data.post.id}/fixes`,
+        {},
+        { onTick: (j: ContentJobHandle) => setCheckNote(`Drafting the edits… ${j.elapsed_seconds ?? 0}s`) },
+      );
+      const r = (job.result ?? {}) as {
+        fixes?: ProposedFix[];
+        notes?: string;
+        skipped?: Record<string, string>;
+      };
+      setFixes(r.fixes ?? []);
+      setFixSkipped(r.skipped ?? {});
+      setFixNotes(r.notes ?? '');
+      setCheckNote(null);
+    } catch (e) {
+      setError(e instanceof JobFailedError ? e.message : 'Could not draft the edits.');
+      setCheckNote(null);
+    } finally {
+      setFixing(false);
+    }
+  }
+
+  /**
+   * Write the approved edits into the article.
+   *
+   * The claims stay unverified afterwards on purpose: making the correction and
+   * signing the claim off are two decisions, and rolling them together would
+   * mean a machine edit cleared the fact gate.
+   */
+  async function applyFixes() {
+    if (!fixes?.length) return;
+    setApplying(true);
+    setError(null);
+    try {
+      const res = await fetch(`/api/admin/content/drafts/${data.post.id}/fixes/apply`, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ fixes }),
+      });
+      const json = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        setError(json.message ?? `Failed (${res.status}).`);
+        return;
+      }
+      if (json.payload) setData(json.payload as DraftPayload);
+      const skipped = Object.keys(json.skipped ?? {}).length;
+      setCheckNote(
+        `Applied ${json.applied} edit(s) to the article` +
+          (skipped ? `, ${skipped} could not be applied and still need you.` : '.') +
+          ' The claims are still unverified — confirm them below.',
+      );
+      setFixes(null);
+    } catch {
+      setError('Network error. Nothing was changed.');
+    } finally {
+      setApplying(false);
     }
   }
 
@@ -357,6 +442,84 @@ export default function FactGate({
             <p style={{ fontSize: '.86em', opacity: 0.8, margin: '0 0 12px', lineHeight: 1.55 }}>
               {checkNote}
             </p>
+          )}
+
+          {/* The flagged claims are the ones that need the ARTICLE changed, not
+              just a verdict recorded. Offer to draft those edits rather than
+              handing the user a list of things to retype. */}
+          {agent.fixable > 0 && fixes === null && (
+            <div className="adm-fix-offer">
+              <span style={{ flex: '1 1 260px', lineHeight: 1.55, opacity: 0.85 }}>
+                <strong>{agent.fixable}</strong> claim{agent.fixable === 1 ? '' : 's'} need the
+                article itself changed, not just a verdict. Pressing a verdict below records your
+                decision; it does not edit the post.
+              </span>
+              <StackButton size="sm" tone="ghost" onClick={proposeFixes} disabled={fixing}>
+                <PencilLine size={14} /> {fixing ? 'Drafting…' : 'Draft the edits'}
+              </StackButton>
+            </div>
+          )}
+
+          {/* Proposals. Shown as before/after on the exact span that changes,
+              because a correction you cannot see in one glance is a correction
+              nobody actually reviews. */}
+          {fixes !== null && (
+            <div className="adm-fix-panel">
+              <strong style={{ display: 'block', marginBottom: 4 }}>
+                {fixes.length === 0
+                  ? 'No mechanical edit could be drafted.'
+                  : `${fixes.length} edit${fixes.length === 1 ? '' : 's'} ready to apply`}
+              </strong>
+              <p style={{ margin: '0 0 12px', opacity: 0.8, lineHeight: 1.55 }}>
+                Nothing has been changed yet. Read them, then apply.
+              </p>
+
+              {fixes.map((f) => (
+                <div key={f.claim_id} className="adm-fix">
+                  <div className="adm-fix-why">
+                    <span className="adm-fix-id">claim {f.claim_id}</span> {f.rationale}
+                  </div>
+                  <div className="adm-fix-before">{f.find}</div>
+                  <div className="adm-fix-after">{f.replace}</div>
+                  {f.source_url && (
+                    <div style={{ fontSize: '.85em', opacity: 0.75, marginTop: 4 }}>
+                      citation on the record becomes {f.source_url}
+                    </div>
+                  )}
+                </div>
+              ))}
+
+              {Object.keys(fixSkipped).length > 0 && (
+                <div className="adm-fix-skipped">
+                  <AlertTriangle size={13} style={{ verticalAlign: '-2px' }} /> Still needs you:
+                  <ul style={{ margin: '6px 0 0', paddingLeft: 20 }}>
+                    {Object.entries(fixSkipped).map(([id, why]) => (
+                      <li key={id} style={{ marginBottom: 3 }}>
+                        <strong>claim {id}</strong> — {why}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {fixNotes && (
+                <p style={{ fontSize: '.86em', opacity: 0.8, margin: '10px 0 0', lineHeight: 1.55 }}>
+                  {fixNotes}
+                </p>
+              )}
+
+              <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginTop: 12 }}>
+                {fixes.length > 0 && (
+                  <StackButton size="sm" onClick={applyFixes} disabled={applying}>
+                    <Check size={14} />{' '}
+                    {applying ? 'Applying…' : `Apply ${fixes.length} edit${fixes.length === 1 ? '' : 's'}`}
+                  </StackButton>
+                )}
+                <StackButton size="sm" tone="ghost" onClick={() => setFixes(null)} disabled={applying}>
+                  {fixes.length > 0 ? 'Not now' : 'Close'}
+                </StackButton>
+              </div>
+            </div>
           )}
 
           {/* What the agent pass did and did not do. Stated plainly, because a

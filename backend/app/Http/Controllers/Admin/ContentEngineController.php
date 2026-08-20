@@ -15,6 +15,7 @@ use App\Models\StyleRule;
 use App\Models\Topic;
 use App\Services\Content\BlogGenerator;
 use App\Services\Content\EditCapture;
+use App\Services\Content\ClaimFixer;
 use App\Services\Content\FactChecker;
 use App\Services\Content\IndexationService;
 use App\Services\Content\Publishing\Syndicator;
@@ -47,6 +48,7 @@ class ContentEngineController extends Controller
         private StyleRuleExtractor $extractor,
         private EditCapture $edits,
         private FactChecker $facts,
+        private ClaimFixer $fixer,
     ) {}
 
     /** Engine status + this month's spend, for the dashboard card. */
@@ -303,6 +305,64 @@ class ContentEngineController extends Controller
             'post_id' => $post->id,
             'user_id' => $request->user()->id,
         ]));
+    }
+
+    /**
+     * Ask for concrete edits for the claims the pass flagged. Queued: it reads
+     * the whole article alongside the findings.
+     */
+    public function proposeFixes(Request $request, Post $post): JsonResponse
+    {
+        if ($blocked = $this->guard()) {
+            return $blocked;
+        }
+
+        if ($busy = $this->alreadyRunning(['post_id' => $post->id])) {
+            return $busy;
+        }
+
+        if ($this->fixer->fixable($post)->isEmpty()) {
+            return response()->json([
+                'message' => 'Nothing on this post is flagged as needing a change. Run the agent '
+                    .'pass first, or there is genuinely nothing to correct.',
+            ], 422);
+        }
+
+        return $this->queued(ContentJob::create([
+            'kind' => 'fix',
+            'post_id' => $post->id,
+            'user_id' => $request->user()->id,
+        ]));
+    }
+
+    /**
+     * Apply edits the user has just read and approved.
+     *
+     * This is the press that P1 is about. The proposals arrived minutes ago and
+     * are re-validated against the current body here, so a fix whose text has
+     * moved on is skipped and reported rather than forced through.
+     *
+     * It writes the article body and nothing else. The claims stay unverified:
+     * making the correction and signing off the claim are two different
+     * decisions, and collapsing them would mean a machine edit clears the gate.
+     */
+    public function applyFixes(Request $request, Post $post): JsonResponse
+    {
+        $data = $request->validate([
+            'fixes' => ['required', 'array', 'min:1'],
+            'fixes.*.claim_id' => ['required', 'integer'],
+            'fixes.*.find' => ['required', 'string'],
+            'fixes.*.replace' => ['required', 'string'],
+            'fixes.*.source_url' => ['nullable', 'string', 'max:1024'],
+        ]);
+
+        $outcome = $this->fixer->apply($post, $data['fixes'], $request->user()->id);
+
+        return response()->json([
+            'applied' => $outcome['applied'],
+            'skipped' => $outcome['skipped'],
+            'payload' => $this->payload($post->fresh()),
+        ]);
     }
 
     public function acceptAgentCheck(Request $request, Post $post): JsonResponse
