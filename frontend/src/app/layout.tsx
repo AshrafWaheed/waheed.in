@@ -82,9 +82,9 @@ const amiri = Amiri({
  * alt text from the matching .alt.txt. See design/og/og-card.html.
  */
 export const metadata: Metadata = {
-  title: "WAHEED · Halal Digital Marketing Agency for Muslim Brands",
+  title: "WAHEED · Halal Tech & Marketing Agency",
   description:
-    "A halal digital marketing agency for Muslim-led brands. Strategy, design, and digital products built on Shariah-aligned values. No shortcuts. No compromise.",
+    "A halal tech and marketing agency for Muslim-led brands. Websites, apps, custom software, integrations, SEO and social, built on Shariah-aligned values.",
   metadataBase: new URL("https://waheed.in"),
   alternates: {
     canonical: "https://waheed.in",
@@ -93,9 +93,9 @@ export const metadata: Metadata = {
     },
   },
   openGraph: {
-    title: "WAHEED · Halal Digital Studio",
+    title: "WAHEED · Halal Tech & Marketing Agency",
     description:
-      "We help Muslim-led brands grow with integrity. Strategy, design, and digital products built on Shariah-aligned values.",
+      "We help Muslim-led brands grow with integrity. Websites, apps, custom software, integrations, SEO and social, built on Shariah-aligned values.",
     url: "https://waheed.in",
     siteName: "WAHEED",
     locale: "en_GB",

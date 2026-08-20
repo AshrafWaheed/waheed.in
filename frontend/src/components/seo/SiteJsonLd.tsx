@@ -58,8 +58,9 @@ export default function SiteJsonLd() {
       alternateName: 'Waheed Digital Studio',
       url: SITE,
       description:
-        'A halal-first digital studio. We help Muslim-led brands grow with integrity — ' +
-        'strategy, brand, websites and custom software built on Shariah-aligned values.',
+        'A halal-first tech and marketing agency. We help Muslim-led brands grow ' +
+        'with integrity — brand strategy, websites, apps, custom software, SEO and social, ' +
+        'built on Shariah-aligned values.',
       slogan: 'Scale your brand online without compromising your values.',
       logo: {
         '@type': 'ImageObject',
@@ -114,7 +115,7 @@ export default function SiteJsonLd() {
       '@type': 'WebPage',
       '@id': `${SITE}/#webpage`,
       url: SITE,
-      name: 'WAHEED · Halal Digital Studio',
+      name: 'WAHEED · Halal Tech & Marketing Agency',
       isPartOf: { '@id': `${SITE}/#website` },
       about: { '@id': ORG_ID },
       inLanguage: 'en-GB',
