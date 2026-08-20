@@ -178,8 +178,20 @@ export default async function RootLayout({
           `}
         </Script>
 
+        {/*
+         * Clarity and Ahrefs run on `lazyOnload` (after window.load) rather
+         * than `afterInteractive` (during hydration). Between them they were
+         * costing ~90ms of blocking time and ~220ms of main thread while the
+         * page was still trying to become interactive, and neither needs to be
+         * early: Clarity records the session either way, it just starts a beat
+         * later, and Ahrefs is a pageview beacon.
+         *
+         * GA deliberately stays on `afterInteractive`. It is the one whose
+         * count has to be right, and lazyOnload would drop every visitor who
+         * leaves before window.load fires.
+         */}
         {/* Microsoft Clarity */}
-        <Script id="ms-clarity" strategy="afterInteractive">
+        <Script id="ms-clarity" strategy="lazyOnload">
           {`
             (function(c,l,a,r,i,t,y){
                 c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
@@ -193,7 +205,7 @@ export default async function RootLayout({
         <Script
           src="https://analytics.ahrefs.com/analytics.js"
           data-key="KkmkaCew/+aq5rYTtzftCQ"
-          strategy="afterInteractive"
+          strategy="lazyOnload"
         />
       </body>
     </html>
