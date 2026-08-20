@@ -7,6 +7,7 @@ import StackButton from '@/components/ui/StackButton';
 import RevisePanel from './RevisePanel';
 import VariantPanel from './VariantPanel';
 import { hostOf } from '@/lib/url';
+import { runContentJob, JobFailedError, type ContentJobHandle } from '@/lib/content-job';
 import type { Claim, DraftPayload, VariantPayload } from './page';
 
 /**
@@ -41,14 +42,26 @@ const CONFIDENCE_RANK: Record<Claim['model_confidence'], number> = { low: 0, med
 /**
  * Flagged by the agent → not looked at → agent says it matched. The last group
  * is the cheap one, so it goes last: work the expensive claims while fresh.
+ *
+ * `unverifiable` sorts with the flagged ones and not with the checked ones,
+ * which is the whole reason it is a separate verdict. A claim whose source the
+ * pass never managed to open has had LESS attention than one it never reached,
+ * because the green badges around it imply the page was read.
  */
 const agentRank = (c: Claim): number =>
-  c.agent_verdict === 'corrected' || c.agent_verdict === 'removed' ? 0 : c.agent_verdict ? 2 : 1;
+  c.agent_verdict === 'corrected' ||
+  c.agent_verdict === 'removed' ||
+  c.agent_verdict === 'unverifiable'
+    ? 0
+    : c.agent_verdict
+      ? 2
+      : 1;
 
 const AGENT_STYLE: Record<string, { bg: string; fg: string; label: string }> = {
   confirmed: { bg: '#E5EFE6', fg: '#3C7A5B', label: 'source checked, matches' },
   corrected: { bg: '#F6ECD3', fg: '#9c6f1c', label: 'needs a change' },
   removed: { bg: '#F4E2D8', fg: '#a1502f', label: 'suggests cutting' },
+  unverifiable: { bg: '#EEEAE3', fg: '#6b5f4e', label: 'source could not be read' },
 };
 
 export default function FactGate({
@@ -65,6 +78,8 @@ export default function FactGate({
   const [note, setNote] = useState('');
   const [confirmingAccept, setConfirmingAccept] = useState(false);
   const [accepting, setAccepting] = useState(false);
+  const [checking, setChecking] = useState(false);
+  const [checkNote, setCheckNote] = useState<string | null>(null);
 
   const { pending, done, agent } = useMemo(() => {
     const p = data.claims
@@ -90,6 +105,9 @@ export default function FactGate({
         // Of the ones still awaiting a human, how many the pass never reached.
         unchecked: p.filter((c) => !c.agent_verdict).length,
         corrected: p.filter((c) => c.agent_verdict === 'corrected').length,
+        // The pass looked but never got to read the page. These cannot be
+        // accepted wholesale — nothing has actually checked them.
+        unverifiable: p.filter((c) => c.agent_verdict === 'unverifiable').length,
       },
     };
   }, [data.claims]);
@@ -131,6 +149,53 @@ export default function FactGate({
    */
   const verify = (c: Claim, verdict: Claim['verdict']) =>
     send(c.id, 'POST', { verdict, note: noteFor === c.id && note ? note : undefined });
+
+  /**
+   * Start a machine pass over the outstanding claims.
+   *
+   * Queued and polled like every other multi-minute call: this fetches one page
+   * per claim, so it is minutes, not seconds. When it lands the draft is
+   * re-fetched rather than patched from the job result — the pass touches every
+   * claim row and the server payload is the only thing that knows the truth.
+   */
+  async function runPass() {
+    setChecking(true);
+    setError(null);
+    setCheckNote(null);
+    try {
+      const job = await runContentJob(
+        `/api/admin/content/drafts/${data.post.id}/factcheck`,
+        {},
+        {
+          onTick: (j: ContentJobHandle) =>
+            setCheckNote(
+              j.status === 'running'
+                ? `Reading the sources… ${j.elapsed_seconds ?? 0}s`
+                : 'Queued…',
+            ),
+        },
+      );
+
+      const res = await fetch(`/api/admin/content/drafts/${data.post.id}`);
+      if (res.ok) setData((await res.json()) as DraftPayload);
+
+      const r = (job.result ?? {}) as Record<string, number | string>;
+      setCheckNote(
+        typeof r.checked === 'number'
+          ? `Read ${r.checked} claim(s) in ${r.runs} run(s): ${r.confirmed} matched, ` +
+            `${r.corrected} need a change, ${r.removed} should come out, ` +
+            `${r.unverifiable} could not be checked.`
+          : null,
+      );
+    } catch (e) {
+      setError(
+        e instanceof JobFailedError ? e.message : 'The fact-check pass could not be started.',
+      );
+      setCheckNote(null);
+    } finally {
+      setChecking(false);
+    }
+  }
 
   /**
    * Accept the whole agent pass at once. Deliberately a two-step: the shortcut
@@ -258,21 +323,78 @@ export default function FactGate({
             {agent.ran ? 'flagged first, then the easy ones' : 'least confident first'}
           </h2>
 
+          {/* Offer the machine pass when there is anything it has not read yet.
+              It fetches one page per claim, so it is minutes — hence the queue,
+              the elapsed counter, and no spinner pretending to be instant. */}
+          {agent.unchecked > 0 && (
+            <div
+              style={{
+                border: '1px solid var(--line, #E4DACA)',
+                borderRadius: 10,
+                padding: '12px 16px',
+                marginBottom: 14,
+                fontSize: '.9em',
+                display: 'flex',
+                gap: 12,
+                alignItems: 'center',
+                flexWrap: 'wrap',
+              }}
+            >
+              <span style={{ opacity: 0.85, flex: '1 1 260px', lineHeight: 1.55 }}>
+                {agent.ran
+                  ? `${agent.unchecked} claim(s) have not been read by an agent yet.`
+                  : 'An agent can fetch each cited page and report what it found, so you review ' +
+                    'findings instead of opening every link. It still cannot verify anything ' +
+                    'for you.'}
+              </span>
+              <StackButton size="sm" tone="ghost" onClick={runPass} disabled={checking}>
+                <Bot size={14} /> {checking ? 'Running…' : `Check ${agent.unchecked} with an agent`}
+              </StackButton>
+            </div>
+          )}
+
+          {checkNote && (
+            <p style={{ fontSize: '.86em', opacity: 0.8, margin: '0 0 12px', lineHeight: 1.55 }}>
+              {checkNote}
+            </p>
+          )}
+
           {/* What the agent pass did and did not do. Stated plainly, because a
               reader who thinks the machine cleared these will stop reading them. */}
           {agent.ran && (
             <p style={{ fontSize: '.86em', opacity: 0.8, margin: '0 0 12px', lineHeight: 1.55 }}>
-              <Bot size={13} style={{ verticalAlign: '-2px' }} /> {agent.model ?? 'An agent'} read
-              every cited source: <strong>{agent.flagged}</strong> need a change,{' '}
-              <strong>{agent.matched}</strong> matched what they cite. That is a recommendation, not
-              a verification — the claims below are still unverified until you say otherwise.
+              <Bot size={13} style={{ verticalAlign: '-2px' }} /> {agent.model ?? 'An agent'}{' '}
+              checked the cited sources: <strong>{agent.flagged}</strong> need a change,{' '}
+              <strong>{agent.matched}</strong> matched what they cite
+              {agent.unverifiable > 0 && (
+                <>
+                  , and <strong>{agent.unverifiable}</strong> could not be read at all
+                </>
+              )}
+              . That is a recommendation, not a verification — the claims below are still
+              unverified until you say otherwise.
             </p>
           )}
 
           {/* The shortcut. Offered only on a complete pass, because a partial one
               would clear claims nothing ever read — the exact failure the gate
               exists to prevent. */}
-          {agent.ran && agent.unchecked === 0 && (
+          {agent.ran && agent.unchecked === 0 && agent.unverifiable > 0 && (
+            <p
+              style={{
+                fontSize: '.86em',
+                margin: '0 0 14px',
+                lineHeight: 1.55,
+                opacity: 0.85,
+              }}
+            >
+              <AlertTriangle size={13} style={{ verticalAlign: '-2px' }} /> The pass could not read
+              the source for {agent.unverifiable} of these, so there is nothing to accept wholesale.
+              Verify those {agent.unverifiable} by hand and the shortcut comes back for the rest.
+            </p>
+          )}
+
+          {agent.ran && agent.unchecked === 0 && agent.unverifiable === 0 && (
             <div
               style={{
                 border: '1px solid var(--line, #E4DACA)',

@@ -13,6 +13,15 @@ export const metadata: Metadata = {
 
 export type Verdict = 'confirmed' | 'corrected' | 'removed';
 
+/**
+ * The agent lane carries one value the human lane does not. A person who
+ * cannot verify a claim goes and finds another source; an agent working
+ * through a batch cannot, and needs a way to say "I never read the page"
+ * that is not one of the three real verdicts. Keeping it out of `Verdict`
+ * is what stops it ever being written to the human decision.
+ */
+export type AgentVerdict = Verdict | 'unverifiable';
+
 export type Claim = {
   id: number;
   claim: string;
@@ -30,7 +39,7 @@ export type Claim = {
 
   // The agent lane. A machine pass that has already read the sources; it can
   // recommend but never clears the gate, which stays keyed to verified_at.
-  agent_verdict: Verdict | null;
+  agent_verdict: AgentVerdict | null;
   agent_note: string | null;
   agent_source_url: string | null;
   agent_checked_at: string | null;

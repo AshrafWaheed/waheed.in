@@ -5,6 +5,7 @@ namespace App\Jobs;
 use App\Models\ContentJob;
 use App\Models\Post;
 use App\Services\Content\BlogGenerator;
+use App\Services\Content\FactChecker;
 use App\Services\Content\StyleRuleExtractor;
 use App\Services\Content\VariantGenerator;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -48,7 +49,12 @@ class RunContentGeneration implements ShouldQueue
         return (int) config('content.claude.timeout', 900) + 120;
     }
 
-    public function handle(BlogGenerator $blog, VariantGenerator $variants, StyleRuleExtractor $rules): void
+    public function handle(
+        BlogGenerator $blog,
+        VariantGenerator $variants,
+        StyleRuleExtractor $rules,
+        FactChecker $facts,
+    ): void
     {
         $job = ContentJob::find($this->contentJobId);
         if (! $job || $job->status !== 'queued') {
@@ -63,6 +69,7 @@ class RunContentGeneration implements ShouldQueue
                 'revise' => $this->revise($job, $blog),
                 'variant' => $this->variant($job, $variants),
                 'extract' => $this->extract($job, $rules),
+                'factcheck' => $this->factcheck($job, $facts),
             };
 
             $job->update(['status' => 'done', 'finished_at' => now()]);
@@ -108,6 +115,19 @@ class RunContentGeneration implements ShouldQueue
     private function extract(ContentJob $job, StyleRuleExtractor $rules): void
     {
         $result = $rules->extract($job->user_id);
+
+        $job->update(['result' => $result]);
+    }
+
+    /**
+     * The machine fact-check pass. Like `extract`, it produces no post — its
+     * output lands on the claims themselves, in the agent lane, and the summary
+     * goes on the job so the browser has something to show when it stops
+     * polling. Also like `extract`, nothing it writes clears the fact gate.
+     */
+    private function factcheck(ContentJob $job, FactChecker $facts): void
+    {
+        $result = $facts->check($job->post, $job->user_id);
 
         $job->update(['result' => $result]);
     }

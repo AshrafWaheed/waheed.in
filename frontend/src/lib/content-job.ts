@@ -12,14 +12,14 @@ export type JobStatus = 'queued' | 'running' | 'done' | 'failed';
 
 export type ContentJobHandle = {
   id: number;
-  kind: 'draft' | 'revise' | 'variant' | 'extract';
+  kind: 'draft' | 'revise' | 'variant' | 'extract' | 'factcheck';
   status: JobStatus;
   platform: string | null;
   topic_id: number | null;
   post_id: number | null;
   variant_id: number | null;
   error: string | null;
-  /** Set only by jobs whose product is not a row elsewhere, i.e. a learning batch. */
+  /** Set by jobs whose product is not a row elsewhere: a learning batch, a fact-check pass. */
   result: Record<string, unknown> | null;
   elapsed_seconds: number | null;
 };

@@ -84,6 +84,7 @@ Route::prefix('admin')->group(function () {
             Route::post('topics/{topic}/status', [ContentEngineController::class, 'setTopicStatus']);
             Route::get('drafts/{post}', [ContentEngineController::class, 'show']);
             Route::post('drafts/{post}/revise', [ContentEngineController::class, 'revise']);
+            Route::post('drafts/{post}/factcheck', [ContentEngineController::class, 'runFactCheck']);
             Route::post('drafts/{post}/accept-agent-check', [ContentEngineController::class, 'acceptAgentCheck']);
 
             // Queued generation: every expensive endpoint returns a job handle.

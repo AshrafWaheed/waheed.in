@@ -15,6 +15,7 @@ use App\Models\StyleRule;
 use App\Models\Topic;
 use App\Services\Content\BlogGenerator;
 use App\Services\Content\EditCapture;
+use App\Services\Content\FactChecker;
 use App\Services\Content\IndexationService;
 use App\Services\Content\Publishing\Syndicator;
 use App\Services\Content\StyleRuleExtractor;
@@ -45,6 +46,7 @@ class ContentEngineController extends Controller
         private VoiceCompiler $voice,
         private StyleRuleExtractor $extractor,
         private EditCapture $edits,
+        private FactChecker $facts,
     ) {}
 
     /** Engine status + this month's spend, for the dashboard card. */
@@ -260,6 +262,49 @@ class ContentEngineController extends Controller
      *  - `verified_via = 'agent'` marks every row, so "which posts went out on
      *    an unreviewed pass" stays answerable in one query afterwards.
      */
+    /**
+     * Run a machine pass over this draft's outstanding claims.
+     *
+     * Queued, like every other multi-minute call in here: a pass over twenty-odd
+     * claims fetches twenty-odd pages and the request cycle gives up long before
+     * that. 202 with a job handle, and the browser polls.
+     *
+     * Worth being clear about what this endpoint does NOT do, because the name
+     * invites the wrong assumption: it writes only the agent lane. The post is
+     * no closer to publishable when it finishes than when it started. Clearing
+     * the gate needs acceptAgentCheck below, which is a separate deliberate
+     * press by a person who has read the findings.
+     */
+    public function runFactCheck(Request $request, Post $post): JsonResponse
+    {
+        if ($blocked = $this->guard()) {
+            return $blocked;
+        }
+
+        if ($busy = $this->alreadyRunning(['post_id' => $post->id])) {
+            return $busy;
+        }
+
+        if ($post->claims()->count() === 0) {
+            return response()->json([
+                'message' => 'This post has no recorded claims. Only generated posts carry them.',
+            ], 422);
+        }
+
+        if (! $this->facts->canRun($post)) {
+            return response()->json([
+                'message' => 'Every claim here has already been verified by a person. A machine '
+                    .'pass has nothing left to add.',
+            ], 422);
+        }
+
+        return $this->queued(ContentJob::create([
+            'kind' => 'factcheck',
+            'post_id' => $post->id,
+            'user_id' => $request->user()->id,
+        ]));
+    }
+
     public function acceptAgentCheck(Request $request, Post $post): JsonResponse
     {
         $total = $post->claims()->count();
@@ -284,6 +329,23 @@ class ContentEngineController extends Controller
             return response()->json([
                 'message' => "{$toRemove} claim(s) were flagged for removal from the article. Those "
                     .'need handling by hand before the rest of the pass can be accepted.',
+            ], 422);
+        }
+
+        /*
+         * `unverifiable` means the pass never got to read the source — a dead
+         * link, a block, a page that no longer says it. Accepting those would
+         * stamp "verified via agent" on the claims nobody has checked at all,
+         * which is the precise opposite of what the lane is for, and worse than
+         * leaving them plainly unverified.
+         */
+        $unread = $post->claims()->whereNull('verified_at')
+            ->where('agent_verdict', 'unverifiable')->count();
+        if ($unread > 0) {
+            return response()->json([
+                'message' => "{$unread} claim(s) could not be checked against their source — the "
+                    .'pass never read the page. Those have to be verified by hand; the rest can '
+                    .'be accepted once they are.',
             ], 422);
         }
 
