@@ -11,6 +11,7 @@ import HeroFoundersFlank from '@/components/home/hybrid/HeroFoundersFlank';
 import ExpertiseBento from '@/components/home/tactile/ExpertiseBento';
 import AudienceHybrid from '@/components/home/hybrid/AudienceHybrid';
 import ServicesHybrid from '@/components/home/hybrid/ServicesHybrid';
+import CaseStudiesHybrid from '@/components/home/hybrid/CaseStudiesHybrid';
 import IhsanProcessTactile from '@/components/home/tactile/IhsanProcessTactile';
 import FoundingStoryHybrid from '@/components/home/hybrid/FoundingStoryHybrid';
 import RefusalHybrid from '@/components/home/hybrid/RefusalHybrid';
@@ -33,6 +34,9 @@ export default function HomePage() {
         {/* <ManifestoHybrid /> — removed per the redesign; hero → solutions. */}
         <ExpertiseBento />
         <ServicesHybrid />
+        {/* Proof, straight after the packages: the visitor has just read what we
+            sell, so this is the moment they ask whether we have done it. */}
+        <CaseStudiesHybrid />
         <IhsanProcessTactile />
         <FoundingStoryHybrid />
         <AudienceHybrid />

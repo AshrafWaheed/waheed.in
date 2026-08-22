@@ -11382,3 +11382,382 @@ body:has(.ck-bar) .wa-float { bottom: calc(1.6rem + 128px); }
   background: var(--rd-ivory-dk); border-radius: 4px; padding: .1rem .35rem;
 }
 .adm-bridge-wait { color: #7a8a8e; }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   CASE STUDIES  (cs- section, csm- modal)
+
+   Sits between the light Growth Packages band and the Ihsan Process. Dark, so
+   the page alternates rather than running three light sections together, and
+   so the gold accent resolves to its bright cut instead of the ink cut.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.cs {
+  padding-block: clamp(4.5rem, 9vw, 8rem);
+  background: linear-gradient(140deg, var(--rd-night-hi) 0%, var(--rd-night-mid) 48%, var(--rd-night) 100%);
+  color: var(--rd-on-night);
+  overflow: hidden;
+}
+
+.cs-head { max-width: 46rem; margin-bottom: clamp(2.5rem, 5vw, 4rem); }
+.cs-eyebrow {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: .68rem; letter-spacing: .22em; text-transform: uppercase;
+  color: var(--rd-gold);
+  margin-bottom: .9rem;
+}
+.cs-h {
+  font-family: var(--font-serif);
+  font-size: clamp(1.9rem, 4vw, 3rem);
+  font-weight: 500; line-height: 1.12;
+  color: var(--rd-white);
+  margin: 0 0 .8rem;
+}
+.cs-sub {
+  font-family: var(--font-sans);
+  font-size: clamp(.95rem, 1.4vw, 1.05rem);
+  line-height: 1.7;
+  color: var(--rd-on-night-dim);
+  margin: 0;
+}
+
+.cs-body { display: grid; gap: 2rem; }
+
+/* ── The card ────────────────────────────────────────────────────────────── */
+.cs-card {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  gap: clamp(1.5rem, 3vw, 3rem);
+  align-items: center;
+  padding: clamp(1.25rem, 2.4vw, 2rem);
+  border: 1px solid rgb(var(--rd-ivory-rgb) / .12);
+  border-radius: 18px;
+  background: rgb(var(--rd-ivory-rgb) / .035);
+  cursor: pointer;
+  transition: transform .38s cubic-bezier(.22,1,.36,1),
+              border-color .38s ease, background .38s ease, box-shadow .38s ease;
+}
+.cs-card:hover {
+  transform: translateY(-4px);
+  border-color: rgb(var(--rd-gold-rgb) / .42);
+  background: rgb(var(--rd-ivory-rgb) / .06);
+  box-shadow: 0 26px 60px -30px rgba(0,0,0,.75);
+}
+/* The card is not focusable; its button is, so the ring is drawn on the card
+   when the button inside has it. Keeps the hit target and the focus indicator
+   describing the same thing. */
+.cs-card:has(.cs-open:focus-visible) {
+  border-color: var(--rd-gold);
+  box-shadow: 0 0 0 3px rgb(var(--rd-gold-rgb) / .25);
+}
+
+.cs-media {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--rd-white);
+  /* The wireframe is a tall document; show its head and let the rest fall away
+     under the veil rather than squashing the aspect ratio. */
+  aspect-ratio: 4 / 3;
+}
+.cs-media-img {
+  width: 100%; height: auto; display: block;
+  transition: transform .6s cubic-bezier(.22,1,.36,1);
+}
+.cs-card:hover .cs-media-img { transform: scale(1.035); }
+.cs-media-veil {
+  position: absolute; inset: 0;
+  background: linear-gradient(to bottom, rgba(17,39,46,0) 42%, rgba(17,39,46,.55) 100%);
+  pointer-events: none;
+}
+
+.cs-content { min-width: 0; }
+.cs-client {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: .7rem; letter-spacing: .2em; text-transform: uppercase;
+  color: var(--rd-gold);
+  margin-bottom: .6rem;
+}
+.cs-tagline {
+  font-family: var(--font-serif);
+  font-size: clamp(1.25rem, 2.2vw, 1.7rem);
+  font-weight: 500; line-height: 1.28;
+  color: var(--rd-white);
+  margin: 0 0 .8rem;
+}
+.cs-blurb {
+  font-family: var(--font-sans);
+  font-size: .92rem; line-height: 1.7;
+  color: rgb(var(--rd-ivory-rgb) / .72);
+  margin: 0 0 1.2rem;
+}
+
+.cs-services {
+  display: flex; flex-wrap: wrap; gap: .45rem;
+  list-style: none; padding: 0; margin: 0 0 1.4rem;
+}
+.cs-services li {
+  font-family: var(--font-mono);
+  font-size: .64rem; letter-spacing: .1em; text-transform: uppercase;
+  color: rgb(var(--rd-ivory-rgb) / .7);
+  border: 1px solid rgb(var(--rd-ivory-rgb) / .18);
+  border-radius: 999px;
+  padding: .34rem .7rem;
+}
+
+.cs-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(112px, 1fr));
+  gap: 1rem 1.2rem;
+  margin: 0 0 1.5rem;
+  padding-top: 1.3rem;
+  border-top: 1px solid rgb(var(--rd-ivory-rgb) / .12);
+}
+.cs-stat { margin: 0; }
+.cs-stat-n {
+  display: block;
+  font-family: var(--font-serif);
+  font-size: clamp(1.7rem, 3vw, 2.3rem);
+  font-weight: 500; line-height: 1;
+  color: var(--rd-gold);
+}
+.cs-stat-l {
+  display: block;
+  margin: .4rem 0 0;
+  font-family: var(--font-sans);
+  font-size: .72rem; line-height: 1.45;
+  color: rgb(var(--rd-ivory-rgb) / .55);
+}
+
+.cs-open {
+  display: inline-flex; align-items: center; gap: .5rem;
+  font-family: var(--font-sans);
+  font-size: .85rem; font-weight: 500;
+  color: var(--rd-gold);
+  background: none; border: 0; padding: 0;
+  cursor: pointer;
+}
+.cs-open svg { transition: transform .3s cubic-bezier(.22,1,.36,1); }
+.cs-card:hover .cs-open svg { transform: translate(3px, -3px); }
+.cs-open:focus-visible { outline: none; } /* the card draws the ring, see above */
+
+@media (max-width: 900px) {
+  .cs-card { grid-template-columns: 1fr; }
+  .cs-media { aspect-ratio: 16 / 10; }
+}
+
+/* ═══ The reader dialog ═══════════════════════════════════════════════════ */
+
+.csm-scrim {
+  position: fixed; inset: 0;
+  z-index: 1200;
+  background: rgba(9, 22, 27, .74);
+  backdrop-filter: blur(4px);
+  display: flex; align-items: flex-start; justify-content: center;
+  padding: clamp(0px, 3vh, 40px) clamp(0px, 3vw, 32px);
+  animation: ck-fade .22s ease both;
+}
+
+.csm {
+  position: relative;
+  width: 100%;
+  max-width: 900px;
+  max-height: 100%;
+  overflow-y: auto;
+  overscroll-behavior: contain;   /* wheel at the end must not scroll the page */
+  background: var(--rd-white);
+  color: #254851;
+  border-radius: 16px;
+  box-shadow: 0 40px 100px -30px rgba(0,0,0,.6);
+  /* Light surface: pull the accent to its ink cut so gold text stays legible. */
+  --rd-gold: var(--rd-gold-ink);
+  animation: csm-in .34s cubic-bezier(.22,1,.36,1) both;
+}
+@keyframes csm-in { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: none; } }
+
+.csm-bar {
+  position: sticky; top: 0; z-index: 2;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: .85rem clamp(1.25rem, 3vw, 2.5rem);
+  background: rgb(var(--rd-white-rgb) / .92);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--rd-border);
+}
+.csm-bar-client {
+  font-family: var(--font-mono);
+  font-size: .68rem; letter-spacing: .2em; text-transform: uppercase;
+  color: var(--rd-gold-ink);
+}
+.csm-close {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  border: 1px solid var(--rd-border-strong);
+  background: var(--rd-white);
+  color: #254851;
+  cursor: pointer;
+  transition: background .2s ease, border-color .2s ease, transform .2s ease;
+}
+.csm-close:hover { background: var(--rd-ivory-dk); transform: rotate(90deg); }
+.csm-close:focus-visible { outline: 2px solid var(--rd-gold-ink); outline-offset: 2px; }
+
+.csm-inner { padding: clamp(1.75rem, 4vw, 3.25rem) clamp(1.25rem, 3vw, 2.5rem) clamp(2rem, 4vw, 3rem); }
+
+/* One shared entrance for every block inside the dialog. Transform + opacity
+   only, so it composites and never triggers layout mid-scroll. */
+[data-csm-reveal] {
+  opacity: 0;
+  transform: translateY(26px);
+  transition: opacity .6s ease, transform .7s cubic-bezier(.22,1,.36,1);
+}
+[data-csm-reveal].is-in { opacity: 1; transform: none; }
+
+.csm-eyebrow {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: .66rem; letter-spacing: .22em; text-transform: uppercase;
+  color: var(--rd-gold-ink);
+  margin-bottom: .7rem;
+}
+.csm-title {
+  font-family: var(--font-serif);
+  font-size: clamp(2.4rem, 7vw, 4.2rem);
+  font-weight: 500; line-height: 1;
+  color: #11272e;
+  margin: 0 0 .6rem;
+  letter-spacing: -.02em;
+}
+.csm-title:focus-visible { outline: 2px solid var(--rd-gold-ink); outline-offset: 6px; border-radius: 4px; }
+.csm-tagline {
+  font-family: var(--font-serif);
+  font-size: clamp(1.1rem, 2.2vw, 1.45rem);
+  font-weight: 400; line-height: 1.4;
+  color: #4A5568;
+  margin: 0 0 1.3rem;
+  max-width: 34ch;
+}
+.csm-services {
+  display: flex; flex-wrap: wrap; gap: .45rem;
+  list-style: none; padding: 0; margin: 0;
+}
+.csm-services li {
+  font-family: var(--font-mono);
+  font-size: .62rem; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--rd-gold-ink);
+  background: var(--rd-gold-bloom-lt);
+  border: 1px solid rgb(var(--rd-gold-line-rgb) / .4);
+  border-radius: 999px;
+  padding: .34rem .7rem;
+}
+
+/* The numbers. Deliberately the loudest thing in the dialog. */
+.csm-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: clamp(1.25rem, 3vw, 2rem);
+  margin: clamp(2.25rem, 5vw, 3.5rem) 0;
+  padding: clamp(1.5rem, 3vw, 2rem) 0;
+  border-block: 1px solid var(--rd-border);
+}
+.csm-stat-n {
+  display: block;
+  font-family: var(--font-serif);
+  font-size: clamp(3rem, 8vw, 4.75rem);
+  font-weight: 500; line-height: .92;
+  letter-spacing: -.03em;
+  color: var(--rd-gold-ink);
+  font-variant-numeric: tabular-nums;   /* no width jitter while counting */
+}
+.csm-stat-l {
+  display: block;
+  margin-top: .6rem;
+  font-family: var(--font-sans);
+  font-size: .78rem; line-height: 1.5;
+  color: #6b7a80;
+}
+
+.csm-sec { margin-top: clamp(2.25rem, 5vw, 3.5rem); }
+.csm-sec-h {
+  font-family: var(--font-serif);
+  font-size: clamp(1.35rem, 3vw, 1.9rem);
+  font-weight: 500; line-height: 1.2;
+  color: #11272e;
+  margin: 0 0 1rem;
+}
+.csm-block { margin-top: 1.75rem; }
+.csm-block-h {
+  font-family: var(--font-mono);
+  font-size: .68rem; letter-spacing: .16em; text-transform: uppercase;
+  color: var(--rd-gold-ink);
+  margin: 0 0 .7rem;
+}
+.csm-p {
+  font-family: var(--font-sans);
+  font-size: .95rem; line-height: 1.78;
+  color: #4A5568;
+  margin: 0 0 1rem;
+  max-width: 68ch;
+}
+.csm-list {
+  list-style: none; padding: 0;
+  margin: 0 0 1rem;
+  max-width: 68ch;
+}
+.csm-list li {
+  position: relative;
+  padding-left: 1.5rem;
+  margin-bottom: .7rem;
+  font-family: var(--font-sans);
+  font-size: .92rem; line-height: 1.72;
+  color: #4A5568;
+}
+.csm-list li::before {
+  content: '';
+  position: absolute;
+  left: .3rem; top: .72em;
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--rd-gold-line);
+}
+
+.csm-fig { margin: 1.75rem 0 0; }
+.csm-fig-img {
+  width: 100%; height: auto; display: block;
+  border: 1px solid var(--rd-border);
+  border-radius: 10px;
+  background: var(--rd-white);
+}
+.csm-fig figcaption {
+  margin-top: .7rem;
+  font-family: var(--font-sans);
+  font-size: .78rem; line-height: 1.55;
+  color: #8a9699;
+}
+
+.csm-close-note {
+  margin-top: clamp(2.5rem, 5vw, 3.75rem);
+  padding-top: clamp(1.75rem, 4vw, 2.5rem);
+  border-top: 1px solid var(--rd-border);
+}
+.csm-closing {
+  font-family: var(--font-serif);
+  font-size: clamp(1.15rem, 2.6vw, 1.6rem);
+  font-weight: 400; line-height: 1.45;
+  color: #11272e;
+  margin: 0 0 1.6rem;
+  max-width: 40ch;
+}
+
+@media (max-width: 700px) {
+  .csm-scrim { padding: 0; }
+  .csm { border-radius: 0; max-height: 100%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cs-card, .cs-media-img, .cs-open svg, .csm-close { transition: none !important; }
+  .cs-card:hover { transform: none !important; }
+  .cs-card:hover .cs-media-img { transform: none !important; }
+  .csm, .csm-scrim { animation: none !important; }
+  [data-csm-reveal] { transition: none !important; }
+}
