@@ -11371,3 +11371,14 @@ body:has(.ck-bar) .wa-float { bottom: calc(1.6rem + 128px); }
    login, and looking identical to the internal routes would mislead. */
 .adm-sb-link--out .adm-sb-out { margin-left: auto; opacity: .45; flex: none; }
 .adm-sb-link--out:hover .adm-sb-out { opacity: .85; }
+
+/* The Umami hand-off page. Barely seen — it redirects as soon as the token is
+   written — but it is what an admin stares at if the bridge fails. */
+.adm-bridge { max-width: 640px; padding: 2rem 0; font-family: var(--font-sans); }
+.adm-bridge p { font-size: .92rem; line-height: 1.7; color: #4A5568; margin-bottom: .9rem; }
+.adm-bridge a { color: var(--rd-gold-ink); text-decoration: underline; text-underline-offset: 2px; }
+.adm-bridge code {
+  font-family: var(--font-mono); font-size: .85em;
+  background: var(--rd-ivory-dk); border-radius: 4px; padding: .1rem .35rem;
+}
+.adm-bridge-wait { color: #7a8a8e; }

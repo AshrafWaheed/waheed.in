@@ -31,10 +31,12 @@ type NavItem = {
 
 const NAV: NavItem[] = [
   { href: '/jundullah/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-  // Umami is a separate application on this box (pm2 waheed-umami, :3003),
-  // not a page in this panel. It has its own session, so this is a doorway
-  // rather than a route — hence external, hence a new tab.
-  { href: '/stats', label: 'Site analytics', icon: BarChart3, external: true },
+  // Umami is a separate application on this box (pm2 waheed-umami, :3003).
+  // This points at the bridge page, not at /stats directly: the bridge mints
+  // an Umami session for the already-authenticated admin and forwards. Still
+  // marked external, because that is where you end up and the new tab keeps
+  // your place in the panel.
+  { href: '/jundullah/stats', label: 'Site analytics', icon: BarChart3, external: true },
   { href: '/jundullah/blogs', label: 'Blog posts', icon: Newspaper },
   { href: '/jundullah/content', label: 'Content engine', icon: Sparkles },
   { href: '/jundullah/contacts', label: 'Contact submissions', icon: Inbox },
