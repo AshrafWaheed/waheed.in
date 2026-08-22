@@ -11365,3 +11365,9 @@ body:has(.ck-bar) .wa-float { bottom: calc(1.6rem + 128px); }
   color: #8a9699;
   margin: .75rem 0 0;
 }
+
+/* Sidebar link that leaves the panel (Umami at /stats — its own app). The
+   arrow is the honest signal: this one opens a new tab and asks for its own
+   login, and looking identical to the internal routes would mislead. */
+.adm-sb-link--out .adm-sb-out { margin-left: auto; opacity: .45; flex: none; }
+.adm-sb-link--out:hover .adm-sb-out { opacity: .85; }

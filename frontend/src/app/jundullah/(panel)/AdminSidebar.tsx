@@ -14,13 +14,27 @@ import {
   UserCircle,
   Power,
   Palette,
+  BarChart3,
+  ExternalLink,
   Menu,
   X,
   LogOut,
 } from 'lucide-react';
 
-const NAV = [
+type NavItem = {
+  href: string;
+  label: string;
+  icon: typeof LayoutDashboard;
+  /** Lives outside the panel — its own app, its own login. Opens in a new tab. */
+  external?: true;
+};
+
+const NAV: NavItem[] = [
   { href: '/jundullah/dashboard', label: 'Dashboard', icon: LayoutDashboard },
+  // Umami is a separate application on this box (pm2 waheed-umami, :3003),
+  // not a page in this panel. It has its own session, so this is a doorway
+  // rather than a route — hence external, hence a new tab.
+  { href: '/stats', label: 'Site analytics', icon: BarChart3, external: true },
   { href: '/jundullah/blogs', label: 'Blog posts', icon: Newspaper },
   { href: '/jundullah/content', label: 'Content engine', icon: Sparkles },
   { href: '/jundullah/contacts', label: 'Contact submissions', icon: Inbox },
@@ -77,7 +91,24 @@ export default function AdminSidebar({ name, email }: { name: string; email: str
         </div>
 
         <nav className="adm-sb-nav">
-          {NAV.map(({ href, label, icon: Icon }) => {
+          {NAV.map(({ href, label, icon: Icon, external }) => {
+            if (external) {
+              return (
+                <a
+                  key={href}
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="adm-sb-link adm-sb-link--out"
+                  onClick={() => setOpen(false)}
+                >
+                  <Icon size={18} className="adm-sb-icon" />
+                  <span>{label}</span>
+                  <ExternalLink size={13} className="adm-sb-out" aria-hidden="true" />
+                </a>
+              );
+            }
+
             const active = pathname === href || pathname.startsWith(href + '/');
             return (
               <Link
