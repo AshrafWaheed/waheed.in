@@ -102,6 +102,17 @@ export default function ComingSoon() {
           <p className="coming-note">Be the first to know when we launch.</p>
         )}
 
+        {/* The gate screen collects an email address, so the notice describing
+            what happens to it has to be reachable from here rather than after
+            launch. src/proxy.ts exempts these three routes from the gate. */}
+        <p className="coming-legal">
+          <a href="/privacy">Privacy</a>
+          {' · '}
+          <a href="/terms">Terms</a>
+          {' · '}
+          <a href="/cookies">Cookies</a>
+        </p>
+
         <div className="coming-social">
           {SOCIAL.map((s) => (
             <a

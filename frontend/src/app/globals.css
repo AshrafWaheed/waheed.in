@@ -10162,8 +10162,8 @@ html[data-nav="dark"] .burger span         { background: #254851; }
 
 .ft-bottom { margin-top: clamp(2.4rem, 5vw, 3.6rem); padding-top: 1.5rem; border-top: 1px solid rgb(var(--rd-ivory-rgb) / .12); }
 .ft-copy { font-family: var(--font-sans); font-size: .82rem; color: rgb(var(--rd-ivory-rgb) / .7); }
-.ft-copy a { color: rgb(var(--rd-ivory-rgb) / .85); text-decoration: none; }
-.ft-copy a:hover { color: var(--rd-gold-bloom); }
+.ft-copy a, .ft-copy .ck-settings-link { color: rgb(var(--rd-ivory-rgb) / .85); text-decoration: none; }
+.ft-copy a:hover, .ft-copy .ck-settings-link:hover { color: var(--rd-gold-bloom); }
 .ft-legal { margin-top: .8rem; font-family: var(--font-sans); font-size: .72rem; line-height: 1.55; color: rgb(var(--rd-ivory-rgb) / .45); max-width: 72ch; }
 
 @media (max-width: 860px) {
@@ -10984,3 +10984,346 @@ html[data-nav="dark"] .burger span         { background: #254851; }
   line-height: 1.55;
   opacity: 0.9;
 }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   COOKIE CONSENT  (ck-)
+   Two layers: a non-blocking bottom bar, and a modal preferences panel.
+
+   The one rule that is a legal constraint rather than a taste call: .ck-btn-yes
+   and .ck-btn-no must stay identical in size, shape, padding and type. Only the
+   fill differs, and both fills are solid at similar lightness. A reject styled
+   as a text link beside a filled accept is the dark pattern the EDPB banner
+   taskforce named in January 2023, and it is the single easiest way to make
+   every consent this site holds invalid. Do not restyle one without the other.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.ck-bar {
+  position: fixed;
+  left: 0; right: 0; bottom: 0;
+  z-index: 1000;
+  background: rgba(17, 39, 46, .97);
+  border-top: 1px solid rgb(var(--rd-gold-rgb) / .3);
+  box-shadow: 0 -12px 40px rgba(0, 0, 0, .28);
+  backdrop-filter: blur(6px);
+  padding: 1rem 0 calc(1rem + env(safe-area-inset-bottom, 0px));
+  animation: ck-rise .32s cubic-bezier(.22, 1, .36, 1) both;
+}
+@keyframes ck-rise { from { transform: translateY(100%); } to { transform: translateY(0); } }
+
+.ck-bar-in {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1.75rem;
+}
+.ck-bar-txt { flex: 1 1 auto; min-width: 0; }
+.ck-bar-h {
+  font-family: var(--font-mono);
+  font-size: .68rem;
+  font-weight: 500;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--rd-gold);
+  margin: 0 0 .4rem;
+}
+.ck-bar-txt p {
+  font-family: var(--font-sans);
+  font-size: .85rem;
+  line-height: 1.6;
+  color: rgb(var(--rd-ivory-rgb) / .82);
+  margin: 0;
+  max-width: 66ch;
+}
+.ck-bar-txt a, .ck-panel-foot a, .ck-blocked a {
+  color: var(--rd-gold);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.ck-actions { display: flex; align-items: center; gap: .6rem; flex: none; }
+.ck-actions-panel { margin-top: 1.5rem; flex-wrap: wrap; }
+
+/* Base is shared so -yes and -no cannot drift apart. See the header note. */
+.ck-btn {
+  font-family: var(--font-sans);
+  font-size: .82rem;
+  font-weight: 500;
+  line-height: 1;
+  padding: .72rem 1.15rem;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: transform .16s ease, background .16s ease, border-color .16s ease;
+}
+.ck-btn:hover { transform: translateY(-1px); }
+.ck-btn:focus-visible { outline: 2px solid var(--rd-gold); outline-offset: 3px; }
+
+.ck-btn-yes { background: var(--rd-gold);  color: #11272e; }
+.ck-btn-no  { background: var(--rd-ivory); color: #11272e; }
+.ck-btn-yes:hover { background: var(--rd-gold-bloom); }
+.ck-btn-no:hover  { background: var(--rd-white); }
+
+.ck-btn-alt {
+  background: transparent;
+  color: rgb(var(--rd-ivory-rgb) / .85);
+  border-color: rgb(var(--rd-ivory-rgb) / .32);
+}
+.ck-btn-alt:hover { background: rgb(var(--rd-ivory-rgb) / .1); border-color: rgb(var(--rd-ivory-rgb) / .6); }
+
+/* The bar is fixed, so without this it sits ON TOP of whatever is at the
+   bottom of the page — the footer's own privacy links included, which would be
+   a poor joke. Reserving the height keeps every page fully reachable while an
+   undecided visitor reads, which is also what "does not block content" means.
+   The float gets the same treatment for the same reason. */
+body:has(.ck-bar) { padding-bottom: 132px; }
+body:has(.ck-bar) .wa-float { bottom: calc(1.6rem + 128px); }
+
+/* ── Layer two ───────────────────────────────────────────────────────────── */
+.ck-scrim {
+  position: fixed; inset: 0;
+  z-index: 1001;
+  background: rgba(17, 39, 46, .62);
+  backdrop-filter: blur(3px);
+  display: flex; align-items: center; justify-content: center;
+  padding: 1.5rem;
+  overflow-y: auto;
+  animation: ck-fade .2s ease both;
+}
+@keyframes ck-fade { from { opacity: 0; } to { opacity: 1; } }
+
+.ck-panel {
+  background: var(--rd-white);
+  color: #254851;
+  border-radius: 14px;
+  box-shadow: 0 30px 80px -24px rgba(0, 0, 0, .55);
+  width: 100%;
+  max-width: 620px;
+  max-height: min(88vh, 780px);
+  overflow-y: auto;
+  padding: 2rem 2rem 1.6rem;
+  /* Panel sits on light, so pull the accent to its ink cut for readable text. */
+  --rd-gold: var(--rd-gold-ink);
+}
+.ck-panel-h {
+  font-family: var(--font-serif);
+  font-size: 1.5rem;
+  font-weight: 500;
+  margin: 0 0 .5rem;
+  color: #11272e;
+}
+.ck-panel-h:focus-visible { outline: 2px solid var(--rd-gold-ink); outline-offset: 4px; border-radius: 3px; }
+.ck-panel-sub {
+  font-family: var(--font-sans);
+  font-size: .87rem;
+  line-height: 1.65;
+  color: #5a6b6f;
+  margin: 0 0 1.5rem;
+}
+.ck-panel-sub em { font-style: normal; color: var(--rd-gold-ink); }
+
+.ck-group {
+  border-top: 1px solid var(--rd-border);
+  padding: 1.15rem 0;
+}
+.ck-group-head { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+.ck-group-title { font-family: var(--font-sans); font-size: .95rem; font-weight: 500; color: #11272e; }
+.ck-group-detail {
+  font-family: var(--font-sans);
+  font-size: .82rem;
+  line-height: 1.65;
+  color: #5a6b6f;
+  margin: .55rem 0 0;
+}
+.ck-group-who {
+  font-family: var(--font-mono);
+  font-size: .68rem;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: #8a9699;
+  margin: .5rem 0 0;
+}
+.ck-always {
+  font-family: var(--font-mono);
+  font-size: .64rem;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--rd-gold-ink);
+  background: var(--rd-gold-bloom-lt);
+  border: 1px solid rgb(var(--rd-gold-line-rgb) / .45);
+  border-radius: 999px;
+  padding: .3rem .65rem;
+  flex: none;
+}
+
+/* Toggle. The native checkbox stays in the DOM and keeps every keyboard and
+   assistive behaviour; it is only made invisible, never replaced. */
+/* `position: relative` is load-bearing, not decoration: the input below is
+   absolutely positioned, and without a positioned ancestor it resolves against
+   the viewport instead of the label. Invisible either way, but it would land
+   as a stray 1px click target somewhere in the top-left of the page. */
+.ck-toggle { position: relative; display: flex; align-items: center; gap: .8rem; cursor: pointer; flex: 1; }
+.ck-toggle input {
+  position: absolute;
+  top: 0; left: 0;
+  width: 1px; height: 1px;
+  opacity: 0;
+  margin: 0;
+  /* Not display:none and not visibility:hidden — both take the control out of
+     the accessibility tree and off the keyboard tab order, which would leave
+     the toggle unreachable without a mouse. */
+}
+.ck-track {
+  flex: none;
+  width: 42px; height: 24px;
+  border-radius: 999px;
+  background: var(--rd-ivory-dk);
+  border: 1px solid var(--rd-border-strong);
+  position: relative;
+  transition: background .18s ease, border-color .18s ease;
+}
+.ck-track::after {
+  content: '';
+  position: absolute;
+  top: 2px; left: 2px;
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  background: var(--rd-white);
+  box-shadow: 0 1px 3px rgba(37, 72, 81, .35);
+  transition: transform .18s cubic-bezier(.22, 1, .36, 1);
+}
+.ck-toggle input:checked + .ck-track {
+  background: var(--rd-gold-ink);
+  border-color: var(--rd-gold-ink);
+}
+.ck-toggle input:checked + .ck-track::after { transform: translateX(18px); }
+.ck-toggle input:focus-visible + .ck-track { outline: 2px solid var(--rd-gold-ink); outline-offset: 3px; }
+
+.ck-blocked {
+  font-family: var(--font-sans);
+  font-size: .82rem;
+  line-height: 1.6;
+  color: #8d3f24;
+  background: #f7e9e4;
+  border-radius: 8px;
+  padding: .8rem 1rem;
+  margin: 1.25rem 0 0;
+}
+.ck-panel-foot {
+  font-family: var(--font-sans);
+  font-size: .78rem;
+  color: #8a9699;
+  margin: 1.25rem 0 0;
+  text-align: center;
+}
+.ck-panel-foot a { color: var(--rd-gold-ink); }
+
+/* The footer's withdrawal control — a button that has to read as a footer link. */
+.ck-settings-link {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.ck-settings-link:hover { color: var(--rd-gold); }
+
+@media (max-width: 860px) {
+  .ck-bar { padding-top: .85rem; }
+  .ck-bar-in { flex-direction: column; align-items: stretch; gap: .85rem; padding: 0 1.1rem; }
+  .ck-bar-txt p { font-size: .8rem; line-height: 1.55; }
+  .ck-actions { flex-wrap: wrap; gap: .5rem; }
+  .ck-btn { flex: 1 1 auto; text-align: center; padding: .68rem .9rem; }
+  body:has(.ck-bar) { padding-bottom: 216px; }
+  body:has(.ck-bar) .wa-float { bottom: calc(1.6rem + 210px); }
+}
+@media (max-width: 520px) {
+  .ck-panel { padding: 1.5rem 1.25rem 1.25rem; }
+  .ck-actions-panel .ck-btn { flex: 1 1 100%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ck-bar, .ck-scrim { animation: none !important; }
+  .ck-btn:hover { transform: none !important; }
+  .ck-track, .ck-track::after { transition: none !important; }
+}
+
+/* ── Cookie policy page (/cookies) ──────────────────────────────────────── */
+.ck-choice-box {
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 1rem;
+  background: var(--rd-ivory);
+  border: 1px solid var(--rd-border);
+  border-radius: 12px;
+  padding: 1.15rem 1.35rem;
+  margin: 1.75rem 0;
+}
+.ck-choice-box p { margin: 0; flex: 1 1 240px; }
+/* The shared .ck-btn lives on dark; on this light page it needs its own ink. */
+.ck-choice-box .ck-btn-yes { background: var(--rd-gold-ink); color: var(--rd-white); flex: none; }
+.ck-choice-box .ck-btn-yes:hover { background: #5d470b; }
+
+.ck-doc-group { margin-top: 2rem; }
+.ck-doc-h {
+  display: flex; align-items: center; gap: .7rem; flex-wrap: wrap;
+  font-family: var(--font-serif);
+  font-size: 1.05rem; font-weight: 500; color: #254851;
+  margin: 0 0 .5rem;
+}
+.ck-doc-tag {
+  font-family: var(--font-mono);
+  font-size: .6rem; letter-spacing: .14em; text-transform: uppercase;
+  color: var(--rd-gold-ink);
+  background: var(--rd-gold-bloom-lt);
+  border: 1px solid rgb(var(--rd-gold-line-rgb) / .45);
+  border-radius: 999px; padding: .28rem .6rem;
+}
+
+/* The table is the one thing on a legal page that genuinely cannot reflow, so
+   it scrolls inside its own box rather than pushing the page sideways. */
+.ck-table-wrap { overflow-x: auto; margin: 1rem 0 0; }
+.ck-table {
+  width: 100%; min-width: 540px;
+  border-collapse: collapse;
+  font-family: var(--font-sans); font-size: .8rem; line-height: 1.55;
+}
+.ck-table th, .ck-table td {
+  text-align: left; vertical-align: top;
+  padding: .6rem .75rem;
+  border-bottom: 1px solid var(--rd-border);
+}
+.ck-table th {
+  font-family: var(--font-mono);
+  font-size: .62rem; letter-spacing: .13em; text-transform: uppercase;
+  color: #8a9699; font-weight: 500;
+  border-bottom-color: var(--rd-border-strong);
+}
+.ck-table td { color: #4A5568; }
+.ck-table code {
+  font-family: var(--font-mono); font-size: .78rem;
+  color: #254851; background: var(--rd-ivory-dk);
+  border-radius: 4px; padding: .1rem .35rem;
+  word-break: break-all;
+}
+.ck-party {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: .58rem; letter-spacing: .12em; text-transform: uppercase;
+  color: #9aa4a7; margin-top: .25rem;
+}
+
+/* Legal links on the gate screen. See src/proxy.ts: these three routes stay
+   reachable while the rest of the site is behind the coming-soon wall. */
+.coming-legal {
+  margin-top: 1.6rem;
+  font-family: var(--font-sans);
+  font-size: .74rem;
+  color: rgb(var(--rd-ivory-rgb) / .42);
+}
+.coming-legal a { color: rgb(var(--rd-ivory-rgb) / .62); text-decoration: none; }
+.coming-legal a:hover { color: var(--rd-gold-bloom); }

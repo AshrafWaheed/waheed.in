@@ -68,6 +68,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${base}/faq`,           lastModified: STATIC_REVISED, changeFrequency: 'monthly', priority: 0.6 },
     { url: `${base}/privacy`,       lastModified: STATIC_REVISED, changeFrequency: 'yearly',  priority: 0.3 },
     { url: `${base}/terms`,         lastModified: STATIC_REVISED, changeFrequency: 'yearly',  priority: 0.3 },
+    { url: `${base}/cookies`,       lastModified: STATIC_REVISED, changeFrequency: 'yearly',  priority: 0.3 },
   ];
 
   return [...staticPages, ...(await blogEntries())];

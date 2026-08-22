@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Script from "next/script";
-import { headers } from "next/headers";
+import { cookies, headers } from "next/headers";
 import { Amiri, JetBrains_Mono, Space_Grotesk } from "next/font/google";
 import ScrollProgress  from "@/components/ScrollProgress";
 import ScrollReveal    from "@/components/ScrollReveal";
@@ -8,6 +8,8 @@ import Nav             from "@/components/Nav";
 import Footer          from "@/components/Footer";
 import WhatsAppFloat   from "@/components/WhatsAppFloat";
 import PreviewBanner   from "@/components/PreviewBanner";
+import CookieConsent    from "@/components/consent/CookieConsent";
+import { CONSENT_COOKIE, parseConsent } from "@/lib/consent";
 import "./globals.css";
 
 /**
@@ -142,6 +144,36 @@ export default async function RootLayout({
   // The blog is only public once the site is fully live (chrome + not a preview).
   const blogPublic = showChrome && !showPreview;
 
+  /*
+   * ── The consent gate ─────────────────────────────────────────────────────
+   *
+   * ePrivacy Art 5(3) wants consent BEFORE anything non-essential touches the
+   * device, so the gate is here, in the server render, rather than in a client
+   * "consent mode" that loads the vendor script and then asks it to behave. If
+   * the cookie does not permit a purpose, that purpose's <Script> is simply not
+   * in the HTML: no request, no vendor-side sighting of the IP, nothing to
+   * audit. It also means the trackers cannot be re-enabled by a bug in client
+   * code, because there is no client code holding them back.
+   *
+   * `Sec-GPC: 1` is Global Privacy Control, a browser-level "do not sell or
+   * share" signal. Treating it as a refusal is both the intent of the spec and
+   * the honest reading of an Art 21 objection, so a visitor sending it is never
+   * shown the banner at all — being asked again after you have already answered
+   * at the browser level is the nagging the rule exists to stop. An explicit
+   * choice stored later still wins over the signal, which is why `stored` is
+   * checked first: opting in deliberately has to remain possible.
+   *
+   * This whole layout is already request-time (it reads headers()), so reading
+   * cookies() costs no additional dynamism.
+   */
+  const trackable = h.get("x-waheed-track") === "1";
+  const stored = parseConsent((await cookies()).get(CONSENT_COOKIE)?.value);
+  const gpc = h.get("sec-gpc") === "1";
+  const consent = stored ?? (gpc ? { version: 1, analytics: false, recording: false, at: 0 } : null);
+
+  const allowAnalytics = trackable && consent?.analytics === true;
+  const allowRecording = trackable && consent?.recording === true;
+
   return (
     <html
       lang="en-GB"
@@ -164,19 +196,35 @@ export default async function RootLayout({
 
         {showPreview && <PreviewBanner mode={previewMode as 'coming-soon' | 'maintenance'} />}
 
-        {/* Google Analytics (gtag.js) — loads on all pages, incl. coming-soon */}
-        <Script
-          src="https://www.googletagmanager.com/gtag/js?id=G-JWK6HQKXGY"
-          strategy="afterInteractive"
-        />
-        <Script id="ga-gtag" strategy="afterInteractive">
-          {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', 'G-JWK6HQKXGY');
-          `}
-        </Script>
+        {trackable && <CookieConsent consent={consent} />}
+
+        {/*
+         * Everything below is gated on consent. GA and Ahrefs answer the same
+         * question (how many people, which pages) and travel together as
+         * "audience measurement"; Clarity is split out because recording and
+         * replaying what a person does with their pointer is a different order
+         * of intrusion from counting them, and consent has to be specific to a
+         * purpose rather than to a bundle. A visitor who is happy to be counted
+         * and not happy to be filmed can say exactly that.
+         */}
+
+        {/* Google Analytics (gtag.js) */}
+        {allowAnalytics && (
+          <>
+            <Script
+              src="https://www.googletagmanager.com/gtag/js?id=G-JWK6HQKXGY"
+              strategy="afterInteractive"
+            />
+            <Script id="ga-gtag" strategy="afterInteractive">
+              {`
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', 'G-JWK6HQKXGY');
+              `}
+            </Script>
+          </>
+        )}
 
         {/*
          * Clarity and Ahrefs run on `lazyOnload` (after window.load) rather
@@ -191,22 +239,27 @@ export default async function RootLayout({
          * leaves before window.load fires.
          */}
         {/* Microsoft Clarity */}
-        <Script id="ms-clarity" strategy="lazyOnload">
-          {`
-            (function(c,l,a,r,i,t,y){
-                c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-                t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-                y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-            })(window, document, "clarity", "script", "xi6caj4oqk");
-          `}
-        </Script>
+        {allowRecording && (
+          <Script id="ms-clarity" strategy="lazyOnload">
+            {`
+              (function(c,l,a,r,i,t,y){
+                  c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+                  t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+                  y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+              })(window, document, "clarity", "script", "xi6caj4oqk");
+            `}
+          </Script>
+        )}
 
         {/* Ahrefs Web Analytics */}
-        <Script
-          src="https://analytics.ahrefs.com/analytics.js"
-          data-key="KkmkaCew/+aq5rYTtzftCQ"
-          strategy="lazyOnload"
-        />
+        {allowAnalytics && (
+          <Script
+            src="https://analytics.ahrefs.com/analytics.js"
+            data-key="KkmkaCew/+aq5rYTtzftCQ"
+            strategy="lazyOnload"
+          />
+        )}
+
       </body>
     </html>
   );

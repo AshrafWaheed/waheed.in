@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import CookieSettingsLink from '@/components/consent/CookieSettingsLink';
 import { recentPosts } from '@/lib/recent-posts';
 import { linkableServices } from '@/content/services';
 
@@ -127,6 +128,12 @@ export default async function Footer({ blogPublic = false }: { blogPublic?: bool
             <Link href="/privacy">Privacy</Link>
             {' · '}
             <Link href="/terms">Terms</Link>
+            {' · '}
+            <Link href="/cookies">Cookies</Link>
+            {' · '}
+            {/* Art 7(3): withdrawing consent has to be as easy as giving it, which
+                means a control that is always here — not an email address. */}
+            <CookieSettingsLink />
           </p>
           {/* Ownership + title disclaimer — travels with every route that renders
               the chrome, /about included. No JSX comment may sit between the two
