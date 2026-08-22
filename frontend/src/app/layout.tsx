@@ -195,6 +195,35 @@ export default async function RootLayout({
 
         {showPreview && <PreviewBanner mode={previewMode as 'coming-soon' | 'maintenance'} />}
 
+        {/*
+         * Umami — our own analytics, on our own server, ungated on purpose.
+         *
+         * This is NOT an oversight and NOT a "strictly necessary" fudge. The
+         * consent requirement in ePrivacy Art 5(3) attaches to storing or
+         * reading something on the visitor's device. This tracker does neither:
+         * it sets no cookie and writes nothing to browser storage, so there is
+         * nothing to ask permission for. Visits are grouped by a hash of IP +
+         * user-agent whose salt rotates DAILY (SALT_ROTATION=day in
+         * /var/www/umami/app/.env, deliberately not the shipped default of
+         * 'month'), so the hash cannot link a person across days.
+         *
+         * `data-do-not-track` makes it skip anyone sending DNT, matching how
+         * Sec-GPC is honoured above. `data-domains` means our website id is
+         * inert if the script is ever loaded from somewhere else.
+         *
+         * Served first-party from /stats, so no third party sees the request.
+         * It is 2.3 KB gzipped against gtag.js's 186 KB.
+         */}
+        {trackable && (
+          <Script
+            src="/stats/script.js"
+            data-website-id="bb66f26e-2fa0-4362-b8cf-9e92fb7ec4a6"
+            data-do-not-track="true"
+            data-domains="waheed.in,www.waheed.in"
+            strategy="afterInteractive"
+          />
+        )}
+
         {trackable && <CookieConsent consent={consent} />}
 
         {/*

@@ -76,11 +76,26 @@ export default function PrivacyPage() {
                 and duplicate bookings.
               </li>
             </ul>
-            <p>Information collected automatically, and only if you allow it:</p>
+            <p>
+              Information collected automatically by our own software, without cookies:
+            </p>
             <ul>
               <li>
-                Analytics about your visit: which pages you read, roughly where in the world you
-                are, what referred you, what browser you use.
+                Which pages you read, what referred you here, and your browser, operating system,
+                device type, screen size, language and approximate country. This is counted by our
+                own copy of Umami, running on the same server in Germany that served you this page.
+                It sets no cookies and stores nothing in your browser. Your visit is grouped under
+                a one-way hash of your IP address and browser, and the secret behind that hash is
+                regenerated every day, so your visits on two different days cannot be joined
+                together. We never store your IP address itself: there is no column for it in the
+                database. If your browser sends Do Not Track, nothing is counted at all.
+              </li>
+            </ul>
+            <p>Information collected only if you allow it:</p>
+            <ul>
+              <li>
+                Deeper analytics from Google Analytics and Ahrefs, which is what the cookie banner
+                asks about.
               </li>
             </ul>
             <p>
@@ -148,6 +163,10 @@ export default function PrivacyPage() {
                 booked calls, and Google Analytics if you have consented to it.
               </li>
               <li>
+                <strong>Nobody, for our visit counting.</strong> Umami is software we run
+                ourselves, not a service we send you to. That data never leaves our server.
+              </li>
+              <li>
                 <strong>Ahrefs</strong> (Singapore) provides a second page-view count, only if you
                 have consented to it.
               </li>
@@ -183,6 +202,7 @@ export default function PrivacyPage() {
               <li>Newsletter subscriptions: until you unsubscribe.</li>
               <li>Your cookie choice: 180 days, after which we ask again.</li>
               <li>Server access logs: 14 days, then they are rotated away.</li>
+              <li>Visit counts: kept as aggregate statistics, with no identifier that can be traced back to you after the day of your visit.</li>
             </ul>
             <p>
               If we are working together, records connected to the engagement are kept for as long

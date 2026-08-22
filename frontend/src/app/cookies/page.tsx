@@ -56,6 +56,16 @@ export default function CookiesPage() {
               <CookieSettingsLink className="ck-btn ck-btn-yes" />
             </div>
 
+            <h2>Why some things need no permission</h2>
+            <p>
+              The rule bites on <em>storing something on your device, or reading something already
+              there</em>. Our own visit counter does neither: no cookie, nothing written to browser
+              storage. So there is nothing for you to consent to, and no switch for it below. That
+              is a different reason from the two strictly necessary cookies, which are exempt
+              because the site cannot work without them, and we have listed them separately rather
+              than filing both under one comfortable heading.
+            </p>
+
             <h2>Why you get asked</h2>
             <p>
               Under the EU ePrivacy rules and the GDPR, anything stored on or read from your device
@@ -84,9 +94,12 @@ export default function CookiesPage() {
               <section key={p.id} className="ck-doc-group">
                 <h3 className="ck-doc-h">
                   {p.title}
-                  <span className="ck-doc-tag">{p.locked ? 'No choice needed' : 'Your choice'}</span>
+                  <span className="ck-doc-tag">{p.locked ? 'No switch' : 'Your choice'}</span>
                 </h3>
                 <p>{p.detail}</p>
+                {p.cookies.length === 0 && (
+                  <p className="ck-doc-nocookies">Sets no cookies at all, so there is nothing to list.</p>
+                )}
 
                 {p.vendors.length > 0 && (
                   <ul>
@@ -102,6 +115,7 @@ export default function CookiesPage() {
                   </ul>
                 )}
 
+                {p.cookies.length > 0 && (
                 <div className="ck-table-wrap">
                   <table className="ck-table">
                     <thead>
@@ -129,6 +143,7 @@ export default function CookiesPage() {
                     </tbody>
                   </table>
                 </div>
+                )}
               </section>
             ))}
 

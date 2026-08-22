@@ -7,6 +7,7 @@ import {
   CONSENT_COOKIE,
   CONSENT_EVENT,
   CONSENT_MAX_AGE,
+  LOCKED_PURPOSES,
   OPTIONAL_PURPOSES,
   RETIRED_COOKIES,
   firstPartyCookies,
@@ -256,16 +257,18 @@ export default function CookieConsent({ consent }: { consent: Consent | null }) 
           the <em>Cookie settings</em> link in the footer.
         </p>
 
-        <div className="ck-group ck-group-locked">
-          <div className="ck-group-head">
-            <span className="ck-group-title">Strictly necessary</span>
-            <span className="ck-always">Always on</span>
+        {/* No-switch purposes, rendered from the register rather than written
+            out here — they do not share a reason for having no switch, and the
+            register is where that reason is recorded. */}
+        {LOCKED_PURPOSES.map((p) => (
+          <div className="ck-group ck-group-locked" key={p.id}>
+            <div className="ck-group-head">
+              <span className="ck-group-title">{p.title}</span>
+              <span className="ck-always">No switch</span>
+            </div>
+            <p className="ck-group-detail">{p.summary}</p>
           </div>
-          <p className="ck-group-detail">
-            Remembers the choice you make here, and keeps an administrator signed in. Sets no
-            identifier that follows you anywhere else.
-          </p>
-        </div>
+        ))}
 
         {OPTIONAL_PURPOSES.map((p) => (
           <div className="ck-group" key={p.id}>

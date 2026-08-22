@@ -11358,3 +11358,10 @@ body:has(.ck-bar) .wa-float { bottom: calc(1.6rem + 128px); }
 }
 .coming-legal a { color: rgb(var(--rd-ivory-rgb) / .62); text-decoration: none; }
 .coming-legal a:hover { color: var(--rd-gold-bloom); }
+.ck-doc-nocookies {
+  font-family: var(--font-mono);
+  font-size: .72rem;
+  letter-spacing: .04em;
+  color: #8a9699;
+  margin: .75rem 0 0;
+}

@@ -57,7 +57,25 @@ export const CONSENT_MAX_AGE = 60 * 60 * 24 * 180;
 /** Fired on `window` to reopen the preferences panel from anywhere. */
 export const CONSENT_EVENT = 'waheed:cookie-settings';
 
+/** Purposes a visitor can switch. Only these get a toggle. */
 export type Purpose = 'analytics';
+
+/**
+ * Purposes with no switch — but for two DIFFERENT reasons, which is why they
+ * are separate entries rather than one lump labelled "necessary".
+ *
+ *   'essential' is exempt because it is strictly necessary for a service the
+ *   visitor asked for (remembering their cookie choice, keeping an admin
+ *   signed in). That is the ePrivacy Art 5(3) carve-out.
+ *
+ *   'counting' is exempt because Art 5(3) never applies to it at all. Our
+ *   self-hosted Umami stores nothing on the device and reads nothing from it,
+ *   so there is no "storing of information, or gaining of access to
+ *   information already stored" to consent to. Calling that "strictly
+ *   necessary" would be the same sloppiness this whole change set removed:
+ *   counting visits is necessary for US, not for the visitor.
+ */
+export type LockedPurpose = 'essential' | 'counting';
 
 export type Consent = {
   version: number;
@@ -148,7 +166,7 @@ export type Vendor = {
 };
 
 export type PurposeSpec = {
-  id: 'essential' | Purpose;
+  id: LockedPurpose | Purpose;
   title: string;
   /** One line, sits next to the toggle. */
   summary: string;
@@ -189,6 +207,30 @@ export const PURPOSES: PurposeSpec[] = [
           'Only ever set for a signed-in administrator of this site. Never set for a visitor.',
       },
     ],
+  },
+  {
+    id: 'counting',
+    title: 'Visit counting',
+    summary: 'A count of pages read, on our own server, with nothing stored on your device.',
+    detail:
+      'We run our own copy of Umami on the same server in Germany that serves this page. It '
+      + 'counts which pages get read and where visitors arrived from. It sets no cookies, writes '
+      + 'nothing to your browser storage, and the data never leaves our server or reaches another '
+      + 'company. Your visit is grouped under a one-way hash of your IP address and browser, and '
+      + 'the secret behind that hash is regenerated every day, so the same person on Monday and '
+      + 'Tuesday is two unrelated rows that cannot be joined up. There is no switch here because '
+      + 'there is nothing on your device to consent to. If your browser sends Do Not Track, it is '
+      + 'skipped anyway.',
+    locked: true,
+    vendors: [
+      {
+        name: 'Umami (self-hosted)',
+        role: 'Counts page views. Runs on our own server, not as a service we send you to.',
+        transfer: 'Nowhere. It stays on the same Hetzner server in Nuremberg, Germany.',
+        policy: 'https://umami.is/docs/faq',
+      },
+    ],
+    cookies: [],
   },
   {
     id: 'analytics',
@@ -238,6 +280,11 @@ export const PURPOSES: PurposeSpec[] = [
 /** The purposes a visitor can actually switch, in the order they are shown. */
 export const OPTIONAL_PURPOSES = PURPOSES.filter(
   (p): p is PurposeSpec & { id: Purpose } => !p.locked,
+);
+
+/** Purposes shown for information only. No toggle, for the reasons on LockedPurpose. */
+export const LOCKED_PURPOSES = PURPOSES.filter(
+  (p): p is PurposeSpec & { id: LockedPurpose } => !!p.locked,
 );
 
 /**
