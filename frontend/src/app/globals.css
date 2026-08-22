@@ -11201,6 +11201,37 @@ body:has(.ck-bar) .wa-float { bottom: calc(1.6rem + 128px); }
 .ck-toggle input:checked + .ck-track::after { transform: translateX(18px); }
 .ck-toggle input:focus-visible + .ck-track { outline: 2px solid var(--rd-gold-ink); outline-offset: 3px; }
 
+/*
+ * Panel-surface button cuts.
+ *
+ * The three .ck-btn variants above are tuned for the dark bar. Dropped onto the
+ * white panel two of them fail outright: --rd-gold resolves to --rd-gold-ink
+ * inside .ck-panel, so .ck-btn-yes became dark brown fill under dark navy text,
+ * and .ck-btn-alt is near-white text with no fill, which on white is invisible.
+ *
+ * Parity still holds. -yes and -no keep identical geometry and both stay solid;
+ * only the fills differ, and both clear 5.9:1 against their own text.
+ */
+.ck-panel .ck-btn-yes {
+  background: var(--rd-gold-ink);
+  color: var(--rd-white);
+}
+.ck-panel .ck-btn-yes:hover { background: #5d470b; }
+
+.ck-panel .ck-btn-no {
+  background: var(--rd-ivory-dk);
+  color: #11272e;
+  border-color: var(--rd-border-strong);
+}
+.ck-panel .ck-btn-no:hover { background: var(--rd-border); }
+
+.ck-panel .ck-btn-alt {
+  color: #254851;
+  border-color: var(--rd-border-strong);
+}
+.ck-panel .ck-btn-alt:hover { background: var(--rd-ivory); border-color: #8a9699; }
+.ck-panel .ck-btn:focus-visible { outline-color: var(--rd-gold-ink); }
+
 .ck-blocked {
   font-family: var(--font-sans);
   font-size: .82rem;
