@@ -46,7 +46,9 @@ export default function CookiesPage() {
             </p>
             <p>
               We do not run advertising cookies, we do not sell or share your data with data
-              brokers, and there is no third-party ad network anywhere on this site.
+              brokers, and there is no third-party ad network anywhere on this site. We do not
+              record your session: the site ran Microsoft Clarity until 22 August 2026 and it has
+              been removed.
             </p>
 
             <div className="ck-choice-box">
@@ -133,9 +135,15 @@ export default function CookiesPage() {
             <h2>What happens when you switch something off</h2>
             <p>
               We delete the first-party cookies for that purpose immediately and reload the page so
-              the script is no longer running in it. Cookies set on someone else&rsquo;s domain are a
-              different matter: we can stop sending you to Microsoft, but only Microsoft or your
-              browser can delete a cookie on <code>clarity.ms</code>. To clear those, use{' '}
+              the script is no longer running in it. Nothing lingers waiting for a browser restart.
+            </p>
+            <p>
+              We also sweep, on every single load, the cookies of anything we have retired. This
+              site ran Microsoft Clarity session recording until 22 August 2026; if you were here
+              before then you are carrying <code>_clck</code> and <code>_clsk</code>, and we delete
+              them whether you consented to them or not, because the purpose they served no longer
+              exists. Microsoft&rsquo;s own cookies sit on Microsoft&rsquo;s domains and only your
+              browser or{' '}
               <a
                 href="https://privacy.microsoft.com/privacystatement"
                 target="_blank"
@@ -143,7 +151,7 @@ export default function CookiesPage() {
               >
                 Microsoft&rsquo;s privacy dashboard
               </a>{' '}
-              or your browser&rsquo;s site-data settings.
+              can clear those.
             </p>
             <p>
               You can also refuse everything at the browser level, before any site gets a say.

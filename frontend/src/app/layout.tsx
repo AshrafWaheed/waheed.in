@@ -9,7 +9,7 @@ import Footer          from "@/components/Footer";
 import WhatsAppFloat   from "@/components/WhatsAppFloat";
 import PreviewBanner   from "@/components/PreviewBanner";
 import CookieConsent    from "@/components/consent/CookieConsent";
-import { CONSENT_COOKIE, parseConsent } from "@/lib/consent";
+import { CONSENT_COOKIE, CONSENT_VERSION, parseConsent } from "@/lib/consent";
 import "./globals.css";
 
 /**
@@ -169,10 +169,9 @@ export default async function RootLayout({
   const trackable = h.get("x-waheed-track") === "1";
   const stored = parseConsent((await cookies()).get(CONSENT_COOKIE)?.value);
   const gpc = h.get("sec-gpc") === "1";
-  const consent = stored ?? (gpc ? { version: 1, analytics: false, recording: false, at: 0 } : null);
+  const consent = stored ?? (gpc ? { version: CONSENT_VERSION, analytics: false, at: 0 } : null);
 
   const allowAnalytics = trackable && consent?.analytics === true;
-  const allowRecording = trackable && consent?.recording === true;
 
   return (
     <html
@@ -199,13 +198,16 @@ export default async function RootLayout({
         {trackable && <CookieConsent consent={consent} />}
 
         {/*
-         * Everything below is gated on consent. GA and Ahrefs answer the same
-         * question (how many people, which pages) and travel together as
-         * "audience measurement"; Clarity is split out because recording and
-         * replaying what a person does with their pointer is a different order
-         * of intrusion from counting them, and consent has to be specific to a
-         * purpose rather than to a bundle. A visitor who is happy to be counted
-         * and not happy to be filmed can say exactly that.
+         * Everything below is gated on consent. Both vendors answer the same
+         * question — how many people, which pages — so they share one purpose.
+         *
+         * Microsoft Clarity used to sit here as a second, separate purpose.
+         * It was session recording: it captured pointer movement, clicks,
+         * scrolling and page layout as a replayable video. It was removed on
+         * 2026-08-22 by the owner's decision, which is why there is now only
+         * one switch. If anything of that shape is ever added back, it needs
+         * its own purpose again rather than being folded in here — consent has
+         * to be specific, and "count me" is not "film me".
          */}
 
         {/* Google Analytics (gtag.js) */}
@@ -227,30 +229,14 @@ export default async function RootLayout({
         )}
 
         {/*
-         * Clarity and Ahrefs run on `lazyOnload` (after window.load) rather
-         * than `afterInteractive` (during hydration). Between them they were
-         * costing ~90ms of blocking time and ~220ms of main thread while the
-         * page was still trying to become interactive, and neither needs to be
-         * early: Clarity records the session either way, it just starts a beat
-         * later, and Ahrefs is a pageview beacon.
+         * Ahrefs runs on `lazyOnload` (after window.load) rather than
+         * `afterInteractive` (during hydration): it is a pageview beacon and
+         * nothing waits on it.
          *
          * GA deliberately stays on `afterInteractive`. It is the one whose
          * count has to be right, and lazyOnload would drop every visitor who
          * leaves before window.load fires.
          */}
-        {/* Microsoft Clarity */}
-        {allowRecording && (
-          <Script id="ms-clarity" strategy="lazyOnload">
-            {`
-              (function(c,l,a,r,i,t,y){
-                  c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-                  t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-                  y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-              })(window, document, "clarity", "script", "xi6caj4oqk");
-            `}
-          </Script>
-        )}
-
         {/* Ahrefs Web Analytics */}
         {allowAnalytics && (
           <Script

@@ -7,8 +7,8 @@ import {
   CONSENT_COOKIE,
   CONSENT_EVENT,
   CONSENT_MAX_AGE,
-  DENY_ALL,
   OPTIONAL_PURPOSES,
+  RETIRED_COOKIES,
   firstPartyCookies,
   serializeConsent,
   type Consent,
@@ -41,7 +41,17 @@ import {
  */
 
 type View = 'hidden' | 'banner' | 'panel';
-type Choice = { analytics: boolean; recording: boolean };
+type Choice = Record<Purpose, boolean>;
+
+/*
+ * Every purpose this component knows about comes from the register, never from
+ * a literal here. When Microsoft Clarity was removed the compiler found six
+ * hardcoded 'recording' strings in this file; deriving them means the next
+ * removal is a one-line edit to consent.ts and nothing else.
+ */
+const ids = () => OPTIONAL_PURPOSES.map((p) => p.id);
+const allSet = (on: boolean): Choice =>
+  Object.fromEntries(ids().map((id) => [id, on])) as Choice;
 
 /**
  * Delete the first-party cookies for a purpose that has just been switched off.
@@ -51,19 +61,28 @@ type Choice = { analytics: boolean; recording: boolean };
  * do not tell us which they used. Over-firing is free; a missed spelling leaves
  * the cookie sitting there after the visitor asked us to stop.
  */
-function purge(purposes: Purpose[]): void {
+function purgeCookies(names: string[]): void {
+  if (names.length === 0) return;
+
   const host = window.location.hostname;
   const bare = host.replace(/^www\./, '');
   const domains = ['', host, `.${host}`, bare, `.${bare}`];
 
-  for (const purpose of purposes) {
-    for (const name of firstPartyCookies(purpose)) {
-      for (const domain of domains) {
-        const scope = domain ? `; Domain=${domain}` : '';
-        document.cookie = `${name}=; Max-Age=0; Path=/${scope}`;
-      }
+  for (const name of names) {
+    for (const domain of domains) {
+      const scope = domain ? `; Domain=${domain}` : '';
+      document.cookie = `${name}=; Max-Age=0; Path=/${scope}`;
     }
   }
+}
+
+/** The cookies a given set of purposes is responsible for. */
+const cookiesFor = (purposes: Purpose[]): string[] =>
+  purposes.flatMap((p) => firstPartyCookies(p));
+
+/** A stored decision as a Choice, defaulting anything unanswered to off. */
+function pick(consent: Consent | null): Choice {
+  return Object.fromEntries(ids().map((id) => [id, consent?.[id] === true])) as Choice;
 }
 
 export default function CookieConsent({ consent }: { consent: Consent | null }) {
@@ -72,14 +91,14 @@ export default function CookieConsent({ consent }: { consent: Consent | null }) 
   // Derived from a server prop, so the server and the first client render agree
   // and the bar does not flash in for visitors who decided months ago.
   const [view, setView] = useState<View>(consent ? 'hidden' : 'banner');
-  const [choice, setChoice] = useState<Choice>(consent ?? DENY_ALL);
+  const [choice, setChoice] = useState<Choice>(() => pick(consent));
   const [blocked, setBlocked] = useState(false);
 
   const panelRef = useRef<HTMLDivElement>(null);
   const headingRef = useRef<HTMLHeadingElement>(null);
 
   const openPanel = useCallback(() => {
-    setChoice(consent ?? DENY_ALL);
+    setChoice(pick(consent));
     setBlocked(false);
     setView('panel');
   }, [consent]);
@@ -107,8 +126,10 @@ export default function CookieConsent({ consent }: { consent: Consent | null }) 
    * the answer.
    */
   useEffect(() => {
-    const denied = (['analytics', 'recording'] as const).filter((p) => !consent?.[p]);
-    if (denied.length > 0) purge(denied);
+    const denied = ids().filter((p) => !consent?.[p]);
+    // RETIRED_COOKIES go every time regardless of consent: they belong to a
+    // vendor this site no longer runs, so no answer permits them to stay.
+    purgeCookies([...cookiesFor(denied), ...RETIRED_COOKIES]);
   }, [consent]);
 
   const decide = useCallback(
@@ -128,14 +149,12 @@ export default function CookieConsent({ consent }: { consent: Consent | null }) 
       // Which purposes were ON in the page as it currently stands, and are now
       // off. Those scripts are already running, so the cookie alone is not
       // enough: they have to be taken out of the document.
-      const revoked = (['analytics', 'recording'] as const).filter(
-        (p) => consent?.[p] && !next[p],
-      );
+      const revoked = ids().filter((p) => consent?.[p] && !next[p]);
 
       setView('hidden');
 
       if (revoked.length > 0) {
-        purge(revoked);
+        purgeCookies(cookiesFor(revoked));
         window.location.reload();
         return;
       }
@@ -147,8 +166,8 @@ export default function CookieConsent({ consent }: { consent: Consent | null }) 
     [consent, router],
   );
 
-  const acceptAll = () => decide({ analytics: true, recording: true });
-  const rejectAll = () => decide({ analytics: false, recording: false });
+  const acceptAll = () => decide(allSet(true));
+  const rejectAll = () => decide(allSet(false));
 
   // ── Panel behaviour: focus in, Escape out, Tab stays inside ───────────────
   useEffect(() => {

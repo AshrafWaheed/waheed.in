@@ -18,8 +18,8 @@
  *
  * ── The cookie ─────────────────────────────────────────────────────────────
  *
- * `waheed_consent`, value `version.analytics.recording.unixSeconds`, e.g.
- * `1.1.0.1755823200`. Deliberately not JSON: it rides in a cookie, and a format
+ * `waheed_consent`, value `version.analytics.unixSeconds`, e.g. `2.1.1755823200`.
+ * Deliberately not JSON: it rides in a cookie, and a format
  * with no quotes, braces or `=` cannot be mangled by an intermediary or trip a
  * strict cookie parser. It carries no identifier and no personal data — it
  * records a preference, which is why the cookie itself needs no consent.
@@ -37,9 +37,15 @@ export const CONSENT_COOKIE = 'waheed_consent';
  * Consent is specific to what was disclosed at the time it was given, so
  * consent to "GA4 and Clarity" is not consent to a tracker added afterwards.
  * A version mismatch parses as "no decision", which puts the banner back and
- * asks again. That is the intended cost of adding a tracker.
+ * asks again. That is the intended cost of ADDING a tracker.
+ *
+ * REMOVING one is the opposite case and gets a migration instead, in
+ * parseConsent below. Consent to "A and B" still covers A on its own, so
+ * re-asking everyone because we deleted something would be friction with no
+ * legal purchase behind it. v1 carried a `recording` bit for Microsoft Clarity;
+ * v2 does not, and a v1 cookie is read forward rather than expired.
  */
-export const CONSENT_VERSION = 1;
+export const CONSENT_VERSION = 2;
 
 /**
  * 180 days. The CNIL's guidance is that a choice should not be remembered
@@ -51,12 +57,11 @@ export const CONSENT_MAX_AGE = 60 * 60 * 24 * 180;
 /** Fired on `window` to reopen the preferences panel from anywhere. */
 export const CONSENT_EVENT = 'waheed:cookie-settings';
 
-export type Purpose = 'analytics' | 'recording';
+export type Purpose = 'analytics';
 
 export type Consent = {
   version: number;
   analytics: boolean;
-  recording: boolean;
   /** Unix seconds. Kept so a visitor can be told when they chose. */
   at: number;
 };
@@ -64,8 +69,21 @@ export type Consent = {
 /** All-off. What an undecided visitor gets, and what a GPC signal resolves to. */
 export const DENY_ALL: Omit<Consent, 'version' | 'at'> = {
   analytics: false,
-  recording: false,
 };
+
+/**
+ * Cookies from trackers this site NO LONGER RUNS.
+ *
+ * Deleting a vendor stops new cookies; it does nothing about the ones already
+ * sitting in the browsers of everyone who said yes while it was live. Those are
+ * swept on every load, unconditionally, because there is no consent state in
+ * which they are allowed to stay — the purpose they belonged to does not exist.
+ *
+ * Microsoft Clarity, removed 2026-08-22. Note we can only reach the first-party
+ * pair; MUID/CLID live on Microsoft's own domains and only Microsoft or the
+ * visitor's browser can clear those.
+ */
+export const RETIRED_COOKIES: string[] = ['_clck', '_clsk'];
 
 /**
  * Read a stored decision. Returns null for "no valid decision", which is what
@@ -75,22 +93,33 @@ export const DENY_ALL: Omit<Consent, 'version' | 'at'> = {
 export function parseConsent(raw?: string | null): Consent | null {
   if (!raw) return null;
 
-  const parts = raw.split('.');
-  if (parts.length !== 4) return null;
+  const parts = raw.split('.').map((n) => Number.parseInt(n, 10));
+  const bit = (n: number) => n === 0 || n === 1;
+  const stamp = (n: number) => Number.isFinite(n) && n > 0;
 
-  const [version, analytics, recording, at] = parts.map((n) => Number.parseInt(n, 10));
+  /*
+   * v1: `1.analytics.recording.at`. Microsoft Clarity is gone, so the third
+   * field is read and dropped. The stored cookie is left as it is rather than
+   * rewritten — it expires on its own schedule, and a silent Set-Cookie on a
+   * page render is not something a consent mechanism should be doing.
+   */
+  if (parts[0] === 1 && parts.length === 4) {
+    const [, analytics, , at] = parts;
+    if (!bit(analytics) || !stamp(at)) return null;
+    return { version: CONSENT_VERSION, analytics: analytics === 1, at };
+  }
 
-  if (version !== CONSENT_VERSION) return null;
-  if (!Number.isFinite(at) || at <= 0) return null;
-  if (analytics !== 0 && analytics !== 1) return null;
-  if (recording !== 0 && recording !== 1) return null;
+  if (parts[0] !== CONSENT_VERSION || parts.length !== 3) return null;
 
-  return { version, analytics: analytics === 1, recording: recording === 1, at };
+  const [version, analytics, at] = parts;
+  if (!bit(analytics) || !stamp(at)) return null;
+
+  return { version, analytics: analytics === 1, at };
 }
 
 export function serializeConsent(c: Omit<Consent, 'version' | 'at'>): string {
   const at = Math.floor(Date.now() / 1000);
-  return `${CONSENT_VERSION}.${c.analytics ? 1 : 0}.${c.recording ? 1 : 0}.${at}`;
+  return `${CONSENT_VERSION}.${c.analytics ? 1 : 0}.${at}`;
 }
 
 // ── The register ────────────────────────────────────────────────────────────
@@ -201,53 +230,6 @@ export const PURPOSES: PurposeSpec[] = [
         domain: 'waheed.in',
         ttl: '2 years',
         purpose: 'Keeps the state of a single visit for this specific Analytics property.',
-      },
-    ],
-  },
-  {
-    id: 'recording',
-    title: 'Session recording',
-    summary: 'Records your mouse, clicks and scrolling on the page so we can watch it back.',
-    detail:
-      'This is the intrusive one, and it is separate from the count above so you can refuse it ' +
-      'on its own. Microsoft Clarity records what you do on the page: where the pointer moves, ' +
-      'what you click, how far you scroll, and the layout of the page as you saw it. We watch ' +
-      'those recordings back to find the places where the site is confusing. Clarity masks form ' +
-      'fields and text by default, but we would rather you decided knowing what it is than ' +
-      'knowing what it is called.',
-    vendors: [
-      {
-        name: 'Microsoft Clarity',
-        role: 'Records and replays individual visits, and builds heatmaps from them.',
-        transfer:
-          'Microsoft Ireland Operations Limited, with onward transfer to Microsoft Corporation ' +
-          'in the United States under the EU-US Data Privacy Framework.',
-        policy: 'https://privacy.microsoft.com/privacystatement',
-      },
-    ],
-    cookies: [
-      {
-        name: '_clck',
-        party: 'first',
-        domain: 'waheed.in',
-        ttl: '1 year',
-        purpose: 'Ties the recordings of your separate visits together as one browser.',
-      },
-      {
-        name: '_clsk',
-        party: 'first',
-        domain: 'waheed.in',
-        ttl: '1 day',
-        purpose: 'Joins the page views within a single visit into one replayable session.',
-      },
-      {
-        name: 'MUID, CLID, SM, ANONCHK',
-        party: 'third',
-        domain: '.clarity.ms, .c.clarity.ms, .bing.com',
-        ttl: 'Up to 13 months',
-        purpose:
-          'Set by Microsoft on its own domains. We can stop sending you to Microsoft, but we ' +
-          'cannot delete a cookie on a domain that is not ours. Use the Microsoft link below.',
       },
     ],
   },

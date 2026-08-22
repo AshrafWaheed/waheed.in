@@ -82,14 +82,11 @@ export default function PrivacyPage() {
                 Analytics about your visit: which pages you read, roughly where in the world you
                 are, what referred you, what browser you use.
               </li>
-              <li>
-                A recording of your session: pointer movement, clicks and scrolling on the page.
-              </li>
             </ul>
             <p>
-              Both of those are off until you turn them on. This is the part of the policy that used
-              to say we did not use analytics at all, which was wrong, and we would rather correct it
-              plainly than quietly. The full list of what each one sets is on our{' '}
+              That is off until you turn it on. This is the part of the policy that used to say we
+              did not use analytics at all, which was wrong, and we would rather correct it plainly
+              than quietly. The full list of what it sets is on our{' '}
               <Link href="/cookies">cookie policy</Link>, and you can change your answer at any time:{' '}
               <CookieSettingsLink />.
             </p>
@@ -151,14 +148,21 @@ export default function PrivacyPage() {
                 booked calls, and Google Analytics if you have consented to it.
               </li>
               <li>
-                <strong>Microsoft</strong> (Ireland and United States) provides Clarity session
-                recording, only if you have consented to it.
-              </li>
-              <li>
                 <strong>Ahrefs</strong> (Singapore) provides a second page-view count, only if you
                 have consented to it.
               </li>
             </ul>
+
+            <h2>What we stopped doing</h2>
+            <p>
+              Until 22 August 2026 this site ran Microsoft Clarity, which recorded visits as
+              replayable sessions: pointer movement, clicks, scrolling and the page as you saw it.
+              We have removed it. It is no longer loaded on any page, for anyone, with or without
+              consent, and the cookies it left behind are deleted from your browser the next time
+              you load the site. We are naming it here rather than quietly deleting the paragraph,
+              because if you visited before that date you were recorded, and you are entitled to
+              know that from us.
+            </p>
 
             <h2>Where your data is stored and sent</h2>
             <p>
