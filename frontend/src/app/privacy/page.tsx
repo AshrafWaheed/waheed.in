@@ -177,10 +177,14 @@ export default function PrivacyPage() {
             <ul>
               <li>Contact and booking records: up to 3 years after our last contact with you.</li>
               <li>Newsletter subscriptions: until you unsubscribe.</li>
-              <li>Client project records: for the duration of the engagement and 6 years after, for tax and legal reasons.</li>
               <li>Your cookie choice: 180 days, after which we ask again.</li>
-              <li>Server access logs: 30 days.</li>
+              <li>Server access logs: 14 days, then they are rotated away.</li>
             </ul>
+            <p>
+              If we are working together, records connected to the engagement are kept for as long
+              as accounting and tax rules require. Ask us and we will tell you exactly what we still
+              hold on you.
+            </p>
 
             <h2>Your rights</h2>
             <p>Wherever you are, and free of charge, you can ask us to:</p>
